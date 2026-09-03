@@ -10,11 +10,11 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="Project · Guita_Ink">
 <meta property="og:description" content="Guita_Ink · illustration project page. Character design, covers and webtoon work by Frederico Guita.">
-<!-- ⏳ trocar por https://guitaink.com/ quando o domínio apontar ao Netlify -->
-<meta property="og:url" content="https://guita-ink.netlify.app/projeto.html">
-<meta property="og:image" content="https://guita-ink.netlify.app/images/oc.jpg">
+<!-- dominio proprio, activo. Se algum dia mudar, e aqui e no sitemap/robots. -->
+<meta property="og:url" content="https://guitaink.com/projeto.html">
+<meta property="og:image" content="https://guitaink.com/images/oc.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="canonical" href="https://guita-ink.netlify.app/projeto.html">
+<link rel="canonical" href="https://guitaink.com/projeto.html">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232E45FF'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23F2F0EC' font-family='serif'%3E墨%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -67,7 +67,7 @@ const CONFIG = {
      Export ~1600px on the long side, .jpg, under ~400 KB.
      imageBase is prepended only to paths that aren't already absolute — leave it
      empty to use the local /images/ folder, or set it to
-     "https://guita-ink.netlify.app/" to pull straight from the live deploy.     */
+     "https://guitaink.com/" to pull straight from the live deploy.     */
   imageBase: "",
   hero: { src: "images/oc.jpg", label: "OC — 01", ratio: "34" },
   artworks: [
@@ -343,10 +343,10 @@ if(!tp){
   /* SEO — overwrite the static per-page defaults with this project's own copy.
      Only reaches crawlers/unfurlers that execute JS (Google, Bing); others still
      get the generic fallback set in <head>, which beats no tags at all. */
-  const pageUrl = `https://guita-ink.netlify.app/projeto.html?p=${encodeURIComponent(proj.key)}`;
+  const pageUrl = `https://guitaink.com/projeto.html?p=${encodeURIComponent(proj.key)}`;
   const shareImg = proj.src
-    ? `https://guita-ink.netlify.app/${proj.src}`
-    : 'https://guita-ink.netlify.app/images/oc.jpg';
+    ? `https://guitaink.com/${proj.src}`
+    : 'https://guitaink.com/images/oc.jpg';
   document.querySelector('meta[name="description"]').setAttribute('content', tp.desc);
   document.querySelector('meta[property="og:title"]').setAttribute('content', `${tp.title} · Guita_Ink`);
   document.querySelector('meta[property="og:description"]').setAttribute('content', tp.desc);

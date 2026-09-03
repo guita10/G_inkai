@@ -1,5 +1,5 @@
-# Trocar o domínio quando guitaink.com estiver ativo.
+# Dominio proprio, activo.
 User-agent: *
 Allow: /
 
-Sitemap: https://guita-ink.netlify.app/sitemap.xml
+Sitemap: https://guitaink.com/sitemap.xml
