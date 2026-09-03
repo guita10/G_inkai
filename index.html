@@ -121,8 +121,6 @@ const CONFIG = {
   ],
 
   /* 28 peças reais, exportadas a 1600px do pacote original (era 414 MB → 5,5 MB) */
-  /* the 3 small monochrome thumbs in the hero strip — indexes into artworks[] */
-  heroStrip: ["mira-starborn","the-witch","geisha"],   // por nome de ficheiro, não por posição
 
   projects: [
     /* src ficou vazio de propósito: não há arte de SoK / Tokyo Revengers / PAMP
@@ -188,8 +186,8 @@ const CONFIG = {
       steps: [
         { n:"01", t:"Brief",    d:"You tell me the character, the mood, the references. I confirm scope and price." },
         { n:"02", t:"Sketch",   d:"Composition and pose for your approval. Changes are easy at this stage." },
-        { n:"03", t:"Line art", d:"Inked lines, locked in. 50% of the fee is due here." },
-        { n:"04", t:"Colour",   d:"Rendering and lighting. Final files on delivery, with the remaining 50%." },
+        { n:"03", t:"Line art", d:"Inked lines, locked in before colour begins." },
+        { n:"04", t:"Colour",   d:"Rendering and lighting. Final files sent on delivery." },
       ],
       turnaround: "2–4 weeks · 2 revision rounds included · full terms come with the acceptance email",
       commIntro: "Four formats, four stages — sketch, lineart, color, final — with your approval at each one. Typical turnaround is 2–4 weeks. Full terms come with the acceptance email.",
@@ -251,8 +249,8 @@ const CONFIG = {
       steps: [
         { n:"01", t:"Briefing", d:"Dizes-me a personagem, o ambiente, as referências. Confirmo âmbito e preço." },
         { n:"02", t:"Esboço",   d:"Composição e pose para aprovares. Nesta fase mudar é fácil." },
-        { n:"03", t:"Line art", d:"Linhas fechadas a tinta. É aqui que entram os primeiros 50%." },
-        { n:"04", t:"Cor",      d:"Render e iluminação. Ficheiros finais na entrega, com os restantes 50%." },
+        { n:"03", t:"Line art", d:"Linhas fechadas a tinta, prontas para entrar a cor." },
+        { n:"04", t:"Cor",      d:"Render e iluminação. Ficheiros finais enviados na entrega." },
       ],
       turnaround: "2 a 4 semanas · 2 rondas de revisão incluídas · termos completos no email de aceitação",
       commIntro: "Quatro formatos, quatro fases — esboço, lineart, cor, final — com a tua aprovação em cada uma. Prazo típico de 2 a 4 semanas. Os termos completos seguem no email de aceitação.",
@@ -897,14 +895,18 @@ function renderStrip(){
     meta.innerHTML = `<div class="n">${no(i)}</div><div class="t">${g.label}</div>`;
     fig.append(artEl(g), meta);
     fig.onclick = () => openLb(i);
-    fig.onkeydown = e => { if(e.key === 'Enter'){ e.preventDefault(); openLb(i); } };
+    fig.onkeydown = e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openLb(i); } };
     s.append(fig);
   });
   applyFilter();
 }
 function setFilter(c){
   activeCat = c;
-  $$('#filters .chip').forEach(b => b.classList.toggle('on', b.dataset.cat === c));
+  $$('#filters .chip').forEach(b => {
+    const on = b.dataset.cat === c;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on);
+  });
   applyFilter();
   $('#strip').scrollTo({left:0});
 }
@@ -940,7 +942,7 @@ function renderText(){
   /* filters */
   const cats = [...new Set(CONFIG.artworks.map(g => g.cat))];
   $('#filters').innerHTML = ['all', ...cats].map(c =>
-    `<button class="chip ${c === activeCat ? 'on' : ''}" data-cat="${c}">${t.filters[c] || c}</button>`).join('');
+    `<button class="chip ${c === activeCat ? 'on' : ''}" data-cat="${c}" aria-pressed="${c === activeCat}">${t.filters[c] || c}</button>`).join('');
   $$('#filters .chip').forEach(b => b.onclick = () => setFilter(b.dataset.cat));
   applyFilter();
 

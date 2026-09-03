@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Project — Guita_Ink</title>
 <meta name="robots" content="index,follow">
+<!-- ============ SEO — static defaults; overwritten per-project by the script below for JS crawlers ============ -->
+<meta name="description" content="Guita_Ink — illustration project page. Character design, covers and webtoon work by Frederico Guita.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Project — Guita_Ink">
+<meta property="og:description" content="Guita_Ink — illustration project page. Character design, covers and webtoon work by Frederico Guita.">
+<!-- ⏳ trocar por https://guitaink.com/ quando o domínio apontar ao Netlify -->
+<meta property="og:url" content="https://guita-ink.netlify.app/projeto.html">
+<meta property="og:image" content="https://guita-ink.netlify.app/images/oc.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://guita-ink.netlify.app/projeto.html">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232E45FF'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23F2F0EC' font-family='serif'%3E墨%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -90,8 +100,6 @@ const CONFIG = {
   ],
 
   /* 28 peças reais, exportadas a 1600px do pacote original (era 414 MB → 5,5 MB) */
-  /* the 3 small monochrome thumbs in the hero strip — indexes into artworks[] */
-  heroStrip: [10, 18, 21],   // Mira Starborn · The Witch · Geisha — indexes into artworks[]
 
   projects: [
     /* src ficou vazio de propósito: não há arte de SoK / Tokyo Revengers / PAMP
@@ -266,13 +274,7 @@ img{display:block;max-width:100%}
 a{color:inherit}
 ::selection{background:var(--royal);color:#fff}
 :focus-visible{outline:2px solid var(--royal-lift);outline-offset:3px}
-
-.skip{
-  position:absolute;left:-9999px;top:10px;z-index:200;background:var(--royal);color:#fff;
-  padding:10px 18px;border-radius:2px;font:500 .8rem var(--f-ui);text-decoration:none;
-}
-.skip:focus{left:10px}
-.wrap{max-width:1240px;margin:0 auto;padding:0 26px;position:relative;z-index:1}
+.wrap{max-width:900px;margin:0 auto;padding:0 26px;position:relative;z-index:1}
 /* film grain */
 body::after{
   content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
@@ -280,25 +282,6 @@ body::after{
 }
 header,main,footer{position:relative;z-index:1}
 
-/* ================= TYPE ================= */
-h1,h2,h3{font-family:var(--f-disp);font-weight:400;line-height:1.06;letter-spacing:-.01em}
-.kicker{font-family:var(--f-ui);
-  font-size:.66rem;font-weight:500;letter-spacing:.28em;text-transform:uppercase;
-  color:var(--bone-dim);display:flex;align-items:center;gap:12px;
-}
-.kicker::before{content:"";width:26px;height:1px;background:var(--royal-lift);flex:none}
-.sec-title{font-size:clamp(1.7rem,3.6vw,2.6rem);margin-top:16px;text-transform:uppercase;letter-spacing:.10em}
-.sec-title em{font-style:italic;color:var(--royal-lift)}
-.lede{color:var(--bone-dim);max-width:36rem;margin-top:16px;font-size:1rem}
-
-
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:var(--f-body);background:var(--void);color:var(--bone);line-height:1.65;font-weight:300}
-img{display:block;max-width:100%}
-a{color:inherit}
-::selection{background:var(--royal);color:#fff}
-:focus-visible{outline:2px solid var(--royal-lift);outline-offset:3px}
-.wrap{max-width:900px;margin:0 auto;padding:0 26px}
 .back{
   display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--f-ui);
   font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--bone-dim);
@@ -314,8 +297,6 @@ h1{font-family:var(--f-disp);font-weight:400;font-size:clamp(2rem,5vw,3.2rem);te
 }
 .plate::after{content:"";position:absolute;inset:0;background-image:radial-gradient(var(--royal) 1px,transparent 1.4px);background-size:16px 16px;opacity:.16}
 .plate span{font-family:var(--f-disp);font-size:clamp(3rem,9vw,5.5rem);color:var(--royal-lift);z-index:1}
-.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin:40px 0}
-.gal img{width:100%;height:100%;object-fit:cover;border:1px solid var(--hair)}
 .note{
   border-left:2px solid var(--royal);padding-left:16px;color:var(--bone-dim);font-size:.9rem;margin:40px 0;
 }
@@ -331,7 +312,6 @@ footer{border-top:1px solid var(--hair);margin-top:60px;padding:26px 0 50px;font
   <h1 id="title"></h1>
   <p class="lede" id="desc"></p>
   <div class="plate" id="plate" aria-hidden="true"><span></span></div>
-  <div class="gal" id="gal"></div>
   <p class="note" id="note"></p>
   <footer>
     <span id="footL"></span>
@@ -357,6 +337,7 @@ if(!tp){
     ? 'Este endereço não corresponde a nenhum projeto. Volta ao portefólio.'
     : 'This address does not match any project. Head back to the portfolio.';
   document.getElementById('plate').remove();
+  document.querySelector('meta[name="robots"]').setAttribute('content', 'noindex,follow');
 } else {
   document.title = `${tp.title} — Guita_Ink`;
   document.getElementById('kicker').textContent = tp.kicker;
@@ -373,6 +354,19 @@ if(!tp){
       ? 'As imagens deste projeto ainda não estão publicadas.'
       : 'Artwork for this project is not published yet.';
   }
+  /* SEO — overwrite the static per-page defaults with this project's own copy.
+     Only reaches crawlers/unfurlers that execute JS (Google, Bing); others still
+     get the generic fallback set in <head>, which beats no tags at all. */
+  const pageUrl = `https://guita-ink.netlify.app/projeto.html?p=${encodeURIComponent(proj.key)}`;
+  const shareImg = proj.src
+    ? `https://guita-ink.netlify.app/${proj.src}`
+    : 'https://guita-ink.netlify.app/images/oc.jpg';
+  document.querySelector('meta[name="description"]').setAttribute('content', tp.desc);
+  document.querySelector('meta[property="og:title"]').setAttribute('content', `${tp.title} — Guita_Ink`);
+  document.querySelector('meta[property="og:description"]').setAttribute('content', tp.desc);
+  document.querySelector('meta[property="og:url"]').setAttribute('content', pageUrl);
+  document.querySelector('meta[property="og:image"]').setAttribute('content', shareImg);
+  document.querySelector('link[rel="canonical"]').setAttribute('href', pageUrl);
 }
 document.getElementById('backLabel').textContent = LANG === 'pt' ? 'Todo o trabalho' : 'All work';
 document.getElementById('footBack').textContent  = LANG === 'pt' ? '← Voltar ao portefólio' : '← Back to portfolio';
