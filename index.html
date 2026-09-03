@@ -390,7 +390,12 @@ header{
 .btn{
   display:inline-flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;
   font:400 .86rem var(--f-ui);letter-spacing:.02em;padding:13px 26px;border-radius:2px;
-  border:1px solid var(--hair);color:var(--bone);background:transparent;transition:all .25s;
+  border:1px solid var(--hair);color:var(--bone);background:transparent;
+  /* `all` obriga o browser a vigiar todas as propriedades animaveis e apanha
+     qualquer uma que venha a mudar depois. So estas tres e que mudam no hover
+     (o .fill inverte o fundo, as duas variantes mexem no contorno e no texto).
+     Nomeia-las mantem o transform do ::after de fora e evita surpresas. */
+  transition:background .25s ease,border-color .25s ease,color .25s ease;
 }
 .btn:hover{border-color:var(--royal-lift);color:var(--bone)}
 .btn.fill{background:var(--royal);border-color:var(--royal);color:#fff}

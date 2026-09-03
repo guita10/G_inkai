@@ -108,8 +108,9 @@ artwork numbering. Worth doing on any new screen with figures in a column.
   transparent fill; the primary inverts to a Royal fill with white text and
   wipes back to transparent on hover. A diagonal light sweep crosses the filled
   button on hover (`left: -120% → 100%`, 650ms). No outer glow, ever.
-  *Gap:* the base transition is `all .25s` — new work should name the properties
-  it animates (`background`, `border-color`, `color`) rather than `all`.
+  Transitions name their properties: `background .25s ease, border-color .25s
+  ease, color .25s ease`. Never `transition: all` — it makes the browser watch
+  every animatable property and silently picks up any that is added later.
 - **Chips (filters).** `999px` radius, `Inter` 0.76rem, `0.04em` tracking, Bone
   Dim until active. Carry `aria-pressed`. The one place a pill is right, because
   they are toggles and read as tokens.
