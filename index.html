@@ -345,7 +345,8 @@ body::after{
 header,main,footer{position:relative;z-index:1}
 
 /* ================= TYPE ================= */
-h1,h2,h3{font-family:var(--f-disp);font-weight:400;line-height:1.06;letter-spacing:-.01em}
+h1,h2,h3{font-family:var(--f-disp);font-weight:400;line-height:1.06;letter-spacing:-.01em;text-wrap:balance}
+p{text-wrap:pretty}   /* evita uma palavra sozinha na ultima linha */
 .kicker{font-family:var(--f-ui);
   font-size:.66rem;font-weight:500;letter-spacing:.28em;text-transform:uppercase;
   color:var(--bone-dim);display:flex;align-items:center;gap:12px;
@@ -371,6 +372,10 @@ header{
 .links{font-family:var(--f-ui);display:flex;gap:26px;margin-left:auto;font-size:.8rem;letter-spacing:.02em}
 .links a{text-decoration:none;color:var(--bone-dim);transition:color .2s;position:relative}
 .links a:hover{color:var(--bone)}
+.links a[aria-current]{color:var(--bone)}
+.links a[aria-current]::after{
+  content:"";position:absolute;left:0;right:0;bottom:-6px;height:1px;background:var(--royal-lift);
+}
 .knobs{display:flex;gap:8px;margin-left:22px}
 .knob{
   height:34px;min-width:34px;padding:0 12px;border-radius:999px;cursor:pointer;
@@ -478,7 +483,12 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 .r-34{aspect-ratio:3/4}.r-12{aspect-ratio:1/2}.r-11{aspect-ratio:1/1}.r-43{aspect-ratio:4/3}
 
 /* ================= PROJECTS ================= */
-.projects{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+/* era repeat(3,1fr): tres cartoes iguais lado a lado, o padrao que as duas
+   skills apontam como o mais generico que ha. Larguras desiguais quebram a
+   fila e, como as placas tem aspect-ratio, dao tres alturas diferentes de
+   borda. Fez-se assim e nao com um cartao a ocupar duas linhas porque isso
+   punha a seccao com 2127px, mais do dobro de qualquer outra. */
+.projects{display:grid;grid-template-columns:1.35fr 1fr .85fr;gap:20px;align-items:start}
 .proj{
   text-decoration:none;color:inherit;background:var(--raise);border:1px solid var(--hair);
   display:flex;flex-direction:column;transition:border-color .3s,transform .3s;
@@ -593,6 +603,7 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 .c-links{display:flex;gap:26px;flex-wrap:wrap;margin-top:30px;font-size:.8rem}
 .c-links a{font-family:var(--f-ui);color:var(--bone-dim);text-decoration:none;transition:color .2s}
 .c-links a:hover{color:var(--bone)}
+.c-soon{font-family:var(--f-ui);color:var(--bone-dim);opacity:.55;cursor:default}
 footer{font-family:var(--f-ui);
   padding:26px 0 46px;border-top:1px solid var(--hair);display:flex;justify-content:space-between;
   gap:16px;flex-wrap:wrap;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-dim);
@@ -1117,7 +1128,11 @@ function renderText(){
   $('#mailLink').href = 'mailto:' + CONFIG.email;
   $('#cLinks').innerHTML =
     `<a href="${CONFIG.instagram}" target="_blank" rel="noopener">Instagram ↗</a>` +
-    CONFIG.otherLinks.map(l => `<a href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`).join('');
+    CONFIG.otherLinks.map(l => l.url && l.url !== '#'
+      ? `<a href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`
+      /* sem destino real: texto simples, nao um link que nao vai a lado nenhum.
+         Assim que puseres o url no CONFIG volta a ser link sozinho. */
+      : `<span class="c-soon">${l.label}</span>`).join('');
   $('#footL').textContent = `© ${new Date().getFullYear()} ${CONFIG.artistName} · ${CONFIG.realName}`;
 
   observeReveals();
@@ -1266,6 +1281,35 @@ function syncStructuredData(){
   g.textContent = JSON.stringify(gallery, null, 2);
 }
 
+/* ---------- seccao actual no menu ----------
+   Marca no menu a seccao que esta a ser vista. Com IntersectionObserver, nao
+   com um listener de scroll: a regra 5.D da tasteskill proibe-os, e um
+   observer nem sequer corre entre seccoes.
+   aria-current diz o mesmo a quem usa leitor de ecra; o sublinhado azul e so
+   a parte visivel.                                                          */
+function trackCurrentSection(){
+  const links = new Map();
+  $$('.links a[href^="#"]').forEach(a => links.set(a.getAttribute('href').slice(1), a));
+  const seen = new Set();
+  const mark = () => {
+    /* a que esta mais acima entre as visiveis ganha, senao duas seccoes
+       grandes ao mesmo tempo no ecra acendiam as duas */
+    /* quando duas seccoes cruzam a faixa ao mesmo tempo, a certa e a que comeca
+       mais abaixo: e essa que estamos a entrar. Ordenar ao contrario marcava
+       sempre a anterior. */
+    const top = [...seen].map(id => document.getElementById(id))
+      .filter(Boolean)
+      .sort((a,b) => b.getBoundingClientRect().top - a.getBoundingClientRect().top)[0];
+    links.forEach(a => a.removeAttribute('aria-current'));
+    if(top && links.has(top.id)) links.get(top.id).setAttribute('aria-current','true');
+  };
+  const io2 = new IntersectionObserver(es => {
+    es.forEach(e => e.isIntersecting ? seen.add(e.target.id) : seen.delete(e.target.id));
+    mark();
+  }, {rootMargin:'-45% 0px -45% 0px'});   /* faixa estreita a meio do ecra */
+  links.forEach((_,id) => { const el = document.getElementById(id); if(el) io2.observe(el); });
+}
+
 /* ---------- toggles ---------- */
 $('#langTgl').onclick = () => { LANG = LANG === 'en' ? 'pt' : 'en'; renderText(); };
 $('#themeTgl').onclick = () => {
@@ -1278,6 +1322,7 @@ renderHeroArt();
 renderStrip();
 renderText();
 syncStructuredData();
+trackCurrentSection();
 </script>
 </body>
 </html>
