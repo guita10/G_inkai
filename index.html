@@ -1183,7 +1183,10 @@ if(!REDUCED){
   }, {passive:true});
 }
 
-/* entrada escalonada: os elementos irmãos entram em cascata, não em bloco */
+/* entrada escalonada: os elementos irmãos entram em cascata, não em bloco.
+   Só funciona em elementos que tenham a classe .rv — é ela que os põe
+   invisíveis à espera do scroll. Num elemento sem .rv isto define um atraso
+   numa transição que nunca acontece, ou seja, não faz nada. */
 function stagger(sel, ms){
   document.querySelectorAll(sel).forEach((el,i) => {
     el.style.transitionDelay = REDUCED ? '0s' : (i % 8) * ms + 'ms';
@@ -1197,9 +1200,10 @@ function observeReveals(){
   io = new IntersectionObserver(es => es.forEach(e => {
     if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
   }), {threshold:.1});
-  stagger('.frame', 60);
-  stagger('.tier', 80);
-  stagger('.steps li', 90);
+  /* .frame, .tier e .steps li não levam .rv — só os contentores é que levam,
+     por isso estes três staggers estavam a atrasar transições inexistentes.
+     Ficam de fora. Se um dia quiseres a cascata peça a peça, junta 'rv' à
+     classe do elemento (como o .proj faz) e volta a chamar stagger para ele. */
   stagger('.proj', 100);
   $$('.rv').forEach(el => io.observe(el));
 }

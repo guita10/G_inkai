@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- ⏳ trocar guita-ink.netlify.app por guitaink.com quando o domínio apontar -->
+<!-- ⏳ trocar guita-ink.netlify.app por guitaink.com quando o domínio apontar.
+     lastmod: pôr a data em que MUDASTE o conteúdo da página (arte nova, textos
+     novos). É o único destes campos que o Google ainda usa a sério — se ficar
+     desactualizado é pior que não estar cá, por isso actualiza-o quando mexeres. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://guita-ink.netlify.app/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://guita-ink.netlify.app/projeto.html?p=sok</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://guita-ink.netlify.app/projeto.html?p=tr</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://guita-ink.netlify.app/projeto.html?p=pamp</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://guita-ink.netlify.app/</loc><lastmod>2026-09-03</lastmod><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://guita-ink.netlify.app/projeto.html?p=sok</loc><lastmod>2026-09-03</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://guita-ink.netlify.app/projeto.html?p=tr</loc><lastmod>2026-09-03</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://guita-ink.netlify.app/projeto.html?p=pamp</loc><lastmod>2026-09-03</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>
