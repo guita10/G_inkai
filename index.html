@@ -1219,6 +1219,49 @@ function syncStructuredData(){
       : "https://schema.org/OutOfStock",
   }));
   el.textContent = JSON.stringify(data, null, 2);
+
+  /* ---- a galeria, obra a obra ----
+     Ate agora o Google so sabia que existe um ilustrador; nao sabia que ha 28
+     desenhos nesta pagina. Isto descreve-os um a um, com o ficheiro grande, a
+     miniatura e as medidas reais, que e o que a Pesquisa de Imagens quer.
+     De proposito NAO leva precos nem ofertas: 10 destas pecas sao fan art e
+     nao estao a venda, e marcar arte como produto seria dizer o contrario. O
+     creator e o Frede porque o desenho e dele — a personagem, nos casos de fan
+     art, nao, e por isso tambem nao se reclama nada sobre ela.               */
+  const canonical = document.querySelector('link[rel="canonical"]');
+  const base = (canonical ? canonical.href : location.href).replace(/[^/]*$/, '');
+  const abs = p => /^https?:\/\//i.test(p) ? p : base + p.replace(/^\//, '');
+  const me = { "@type": "Person", name: CONFIG.realName, alternateName: CONFIG.artistName };
+
+  const gallery = {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    name: `${CONFIG.artistName} — ${CONFIG.i18n.en.galleryTitle}`,
+    url: canonical ? canonical.href : location.href,
+    author: me,
+    associatedMedia: CONFIG.artworks.map(a => {
+      const file = a.src.split('/').pop();
+      const d = DIMS[file] || {};
+      const item = {
+        "@type": "ImageObject",
+        name: a.label,
+        contentUrl: abs(a.src),
+        thumbnailUrl: abs(a.src.replace(/^images\//, 'images/thumb/')),
+        creator: me,
+      };
+      if(d.w && d.h){ item.width = d.w; item.height = d.h; }
+      return item;
+    }),
+  };
+
+  let g = $('#ldGallery');
+  if(!g){
+    g = document.createElement('script');
+    g.type = 'application/ld+json';
+    g.id = 'ldGallery';
+    document.head.append(g);
+  }
+  g.textContent = JSON.stringify(gallery, null, 2);
 }
 
 /* ---------- toggles ---------- */
