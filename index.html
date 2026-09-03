@@ -923,6 +923,19 @@ function artEl(item, full){
   const useWebp = WEBP_OK && webp !== jpg;
   const d = DIMS[file];
   if(d){ img.width = full ? d.w : d.tw; img.height = full ? d.h : d.th; }
+  /* Ecras retina precisam do dobro dos pixeis. A miniatura de 608px chega para
+     a grelha (as molduras sao pequenas), mas NAO chega para a obra do hero, que
+     aparece grande: num telemovel @2x sai a 0,90x e num @3x a 0,60x, ou seja,
+     desfocada. Com srcset o browser escolhe — ficheiro pequeno em ecras 1x,
+     original em retina. So o hero leva isto; por na grelha faria cada moldura
+     puxar a imagem grande, que e exactamente o que nao queremos.
+     O srcset TEM de ser definido antes do src: ao contrario, o browser ja
+     comecou a descarregar o src e acaba por puxar os dois ficheiros.          */
+  if(item.wide && !full && d){
+    const big = useWebp ? item.src.replace(/\.jpe?g$/i, '.webp') : item.src;
+    img.sizes = item.sizes || '100vw';
+    img.srcset = `${srcOf(useWebp ? webp : jpg)} ${d.tw}w, ${srcOf(big)} ${d.w}w`;
+  }
   img.src = srcOf(useWebp ? webp : jpg); img.alt = item.label;
   img.decoding = 'async';
   if(item.eager){ img.fetchPriority = 'high'; } else { img.loading = 'lazy'; }
@@ -985,7 +998,16 @@ $('#stripNext').onclick = () => $('#strip').scrollBy({left: step()});
 
 /* ---------- language-independent hero art ---------- */
 function renderHeroArt(){
-  const h = $('#heroShot'); h.innerHTML = ''; h.append(artEl({...CONFIG.hero, eager:true}));
+  const h = $('#heroShot'); h.innerHTML = '';
+  /* sizes tem de descrever a largura REAL da imagem no ecra, senao o browser
+     escolhe mal: ate 980px a coluna e .hero-art (max 400px), acima disso a
+     grelha do hero da-lhe cerca de 470px. */
+  h.append(artEl({
+    ...CONFIG.hero,
+    eager: true,
+    wide: true,
+    sizes: '(max-width: 980px) min(calc(100vw - 52px), 400px), 470px',
+  }));
   $('#heroCap').textContent = CONFIG.hero.label;
 }
 
