@@ -59,11 +59,11 @@
      o texto aparece logo em Georgia e troca para as fontes finais (display=swap
      já fazia essa troca de qualquer maneira).
      Só os pesos REALMENTE usados no CSS desta página:
-       Playfair 400 · 500 · 400 itálico   Inter 300 · 500   Lora 400 · 500
+       Playfair 400 · 500 · 400 itálico   Inter 300 · 400 · 500   Lora 400
      Se acrescentares um font-weight novo ao CSS, junta-o aqui também. -->
 <link rel="stylesheet" media="print" onload="this.media='all'"
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;500&family=Lora:wght@400;500&display=swap">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;500&family=Lora:wght@400;500&display=swap"></noscript>
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&family=Lora:wght@400&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&family=Lora:wght@400&display=swap"></noscript>
 
 <script>
 /* ================================================================
@@ -382,17 +382,19 @@ header{
 .links a{text-decoration:none;color:var(--bone-dim);transition:color .2s;position:relative}
 .links a:hover{color:var(--bone)}
 .knobs{display:flex;gap:8px;margin-left:22px}
-.knob{font-family:var(--f-ui);
+.knob{
   height:34px;min-width:34px;padding:0 12px;border-radius:999px;cursor:pointer;
   border:1px solid var(--hair);background:transparent;color:var(--bone-dim);
-  font:500 .68rem/1 var(--f-body);letter-spacing:.1em;transition:all .2s;
+  /* atencao: o atalho `font:` define TAMBEM a familia. Ter um font-family
+     antes dele nao serve de nada — e apagado por esta linha. */
+  font:500 .68rem/1 var(--f-ui);letter-spacing:.1em;transition:all .2s;
 }
 .knob:hover{border-color:var(--royal-lift);color:var(--bone)}
 
 /* ================= BUTTONS ================= */
-.btn{font-family:var(--f-ui);
+.btn{
   display:inline-flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;
-  font:400 .86rem var(--f-body);letter-spacing:.02em;padding:13px 26px;border-radius:2px;
+  font:400 .86rem var(--f-ui);letter-spacing:.02em;padding:13px 26px;border-radius:2px;
   border:1px solid var(--hair);color:var(--bone);background:transparent;transition:all .25s;
 }
 .btn:hover{border-color:var(--royal-lift);color:var(--bone)}
@@ -432,8 +434,8 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 
 /* ================= FILMSTRIP GALLERY ================= */
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px}
-.chip{font-family:var(--f-ui);
-  font:400 .76rem var(--f-body);letter-spacing:.04em;padding:8px 16px;border-radius:999px;
+.chip{
+  font:400 .76rem var(--f-ui);letter-spacing:.04em;padding:8px 16px;border-radius:999px;
   cursor:pointer;border:1px solid var(--hair);background:transparent;color:var(--bone-dim);transition:all .2s;
 }
 .chip:hover{color:var(--bone);border-color:var(--royal-lift)}
