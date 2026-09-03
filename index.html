@@ -12,11 +12,23 @@
 <meta property="og:type" content="website">
 <!-- ⏳ trocar por https://guitaink.com/ quando o domínio apontar ao Netlify -->
 <meta property="og:url" content="https://guita-ink.netlify.app/">
+<!-- ⚠️ Esta imagem e vertical (1280x1600). O Facebook, o LinkedIn e o WhatsApp
+     esperam uma imagem deitada (~1200x630) e cortam o que nao cabe — o corte
+     e ao centro, por isso perde-se a parte de cima e de baixo do desenho.
+     Declarar o tamanho ajuda-os a decidir, mas a solucao a serio e fazeres um
+     cartao deitado de 1200x630 e apontar aqui para ele. -->
 <meta property="og:image" content="https://guita-ink.netlify.app/images/oc.jpg">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="1600">
 <meta property="og:image:alt" content="Guita_Ink — original character illustration">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://guita-ink.netlify.app/">
-<script type="application/ld+json">
+<!-- Dados estruturados para o Google. Os precos aqui em baixo sao reescritos
+     a partir do CONFIG assim que a pagina abre (ver syncStructuredData), por
+     isso nao ficam desactualizados se mudares um preco la em cima. Estes
+     valores estaticos sao o que veem os robos que nao correm JavaScript —
+     vale a pena manter-los certos, mas o CONFIG e que manda. -->
+<script type="application/ld+json" id="ldPerson">
 {
   "@context":"https://schema.org",
   "@type":"Person",
@@ -326,6 +338,14 @@ a{color:inherit}
   padding:10px 18px;border-radius:2px;font:500 .8rem var(--f-ui);text-decoration:none;
 }
 .skip:focus{left:10px}
+/* so aparece quando o JavaScript nao corre — ver o <noscript> no <body> */
+.noscript-note{
+  max-width:1240px;margin:0 auto;padding:28px 26px;position:relative;z-index:1;
+  border-bottom:1px solid var(--hair);display:grid;gap:8px;
+}
+.noscript-note b{font-family:var(--f-disp);font-weight:500}
+.noscript-note p{color:var(--bone-dim);font-size:.9rem}
+.noscript-note a{color:var(--royal-lift)}
 .wrap{max-width:1240px;margin:0 auto;padding:0 26px;position:relative;z-index:1}
 /* film grain */
 body::after{
@@ -690,6 +710,19 @@ footer{font-family:var(--f-ui);
 <body>
 
 <a class="skip" href="#work">Skip to work</a>
+
+<!-- Todo o texto do site e escrito pelo JavaScript a partir do CONFIG. Sem JS
+     a pagina ficaria completamente vazia — isto garante que pelo menos o nome
+     e o contacto aparecem sempre. -->
+<noscript>
+  <div class="noscript-note">
+    <p><b>Guita_Ink</b> — Frederico Guita · Illustration &amp; character design</p>
+    <p>This portfolio needs JavaScript to show the artwork.
+       Esta galeria precisa de JavaScript para mostrar as ilustracoes.</p>
+    <p><a href="mailto:frederico@guitaink.com">frederico@guitaink.com</a>
+       · <a href="https://www.instagram.com/guita_ink" rel="noopener">Instagram</a></p>
+  </div>
+</noscript>
 
 <header>
   <div class="wrap bar">
@@ -1141,6 +1174,29 @@ function observeReveals(){
   $$('.rv').forEach(el => io.observe(el));
 }
 
+/* ---------- dados estruturados ----------
+   O preco vivia em quatro sitios: CONFIG, Shopify, os Termos no Notion e este
+   bloco JSON-LD. Agora o JSON-LD copia-se do CONFIG, por isso sao tres.
+   Diz tambem ao Google se as comissoes estao abertas ou fechadas, o que sai
+   directamente do commissionsOpen.                                          */
+function syncStructuredData(){
+  const el = $('#ldPerson');
+  if(!el) return;
+  let data;
+  try { data = JSON.parse(el.textContent); } catch(e){ return; }
+  const names = CONFIG.i18n.en.tiers;          // o schema fica sempre em EN
+  data.makesOffer = CONFIG.tiers.map(x => ({
+    "@type": "Offer",
+    name: `${names[x.key] ? names[x.key].name : x.key} commission`,
+    price: String(x.price),
+    priceCurrency: "EUR",
+    availability: CONFIG.commissionsOpen
+      ? "https://schema.org/InStock"
+      : "https://schema.org/OutOfStock",
+  }));
+  el.textContent = JSON.stringify(data, null, 2);
+}
+
 /* ---------- toggles ---------- */
 $('#langTgl').onclick = () => { LANG = LANG === 'en' ? 'pt' : 'en'; renderText(); };
 $('#themeTgl').onclick = () => {
@@ -1152,6 +1208,7 @@ $('#themeTgl').onclick = () => {
 renderHeroArt();
 renderStrip();
 renderText();
+syncStructuredData();
 </script>
 </body>
 </html>
