@@ -303,6 +303,11 @@ const CONFIG = {
   --raise-2:#1A1A1A;
   --royal:#2E45FF;        /* Queen of Jacks blue */
   --royal-lift:#5568FF;   /* for small text on near-black */
+  /* --raise (#121212) e mais claro que --void, por isso o --royal-lift so
+     chega a 4.29:1 la em cima — abaixo do minimo de 4.5:1 para texto pequeno.
+     Este azul, um tom acima, da 5.27:1 sobre --raise. Usa-o para texto miudo
+     que assente em cartoes, nao no fundo da pagina. */
+  --royal-raise:#6B7BFF;
   --bone:#F2F0EC;
   --bone-dim:#8C877F;
   --hair:rgba(242,240,236,.13);
@@ -316,6 +321,7 @@ const CONFIG = {
   --raise-2:#EDEAE3;
   --royal:#2436C9;
   --royal-lift:#2436C9;
+  --royal-raise:#2436C9;  /* no tema claro os cartoes sao brancos: 8.59:1, ja passa */
   --bone:#141310;
   --bone-dim:#6B655C;
   --hair:rgba(20,19,16,.13);
@@ -508,7 +514,7 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
   font-family:var(--f-disp);font-size:clamp(2.6rem,7vw,4rem);color:var(--royal-lift);
   letter-spacing:.04em;z-index:1;
 }
-.proj .k{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--royal-lift)}
+.proj .k{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--royal-raise)}
 .proj h3{font-size:1.4rem}
 .proj p{font-size:.86rem;color:var(--bone-dim)}
 .proj .go{margin-top:6px;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bone-dim)}
