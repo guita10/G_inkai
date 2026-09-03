@@ -171,14 +171,10 @@ const CONFIG = {
       tagline: "Anime and manga-influenced work. Characters, covers and the worlds they live in.",
       ctaWork: "View work", ctaComm: "Commissions",
       navWork: "Work", navProjects: "Projects", navAbout: "About", navComm: "Commissions", navContact: "Contact",
-      statLabel: "pieces in the gallery",
       featuredLabel: "Featured",
       galleryTitle: "Selected work",
-      galleryKicker: "Catalogue",
-      scrollHint: "Drag or scroll",
       filters: { all: "All", webtoon: "Webtoon", covers: "Covers", character: "Character design", fanart: "Fan art", sketches: "Sketches" },
       projectsTitle: "Featured projects",
-      projectsKicker: "Published",
       openProject: "Open project",
       projects: {
         sok:  { kicker: "Webtoon series", title: "Survival of Kings", desc: "Ongoing webtoon / graphic novel, co-created with writer Reeeborn. Ink-style panels and vertical-scroll storytelling." },
@@ -186,7 +182,6 @@ const CONFIG = {
         pamp: { kicker: "Visual identity", title: "PAMP: Prémios Anime Manga Portugal", desc: "Full visual identity for Portugal's anime & manga awards: key art, logo lock-ups and event graphics." },
       },
       tlTitle: "Timeline",
-      tlKicker: "Milestones & dates",
       tlUpcoming: "Upcoming", tlNext: "Next up",
       months: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
       timeline: {
@@ -197,11 +192,9 @@ const CONFIG = {
         workshop:  { title: "Character design & creative writing workshop", where: "Termas Romanas das Taipas", desc: "Co-facilitated with Reeeborn. Twelve people, ninety minutes, one character each." },
       },
       aboutTitle: "About",
-      aboutKicker: "Who's drawing",
       aboutBody: "Illustrator working as Guita_Ink. Trained as an architect, and it shows: perspective, space and environments carry the same weight as the characters living in them. Ink first, always.",
       aboutMeta: "Frederico Guita · Guita_Ink",
       commTitle: "Commissions",
-      commKicker: "Working together",
       commOpen: "Open", commClosed: "Closed",
       stepsTitle: "How it works",
       steps: [
@@ -222,7 +215,6 @@ const CONFIG = {
       commShop: "Order in the shop",
       commCta: "Ask by email",
       contactTitle: "Say hi",
-      contactKicker: "Contact",
       contactBody: "For commissions, collabs or publishing, email is fastest. For everything else, Instagram.",
       footerNote: "Drawn & built by hand.",
       lightboxHint: "Esc to close · ← → to browse",
@@ -234,14 +226,10 @@ const CONFIG = {
       tagline: "Trabalho de influência anime e manga. Personagens, capas e os mundos onde vivem.",
       ctaWork: "Ver trabalho", ctaComm: "Comissões",
       navWork: "Trabalho", navProjects: "Projetos", navAbout: "Sobre", navComm: "Comissões", navContact: "Contacto",
-      statLabel: "peças na galeria",
       featuredLabel: "Destaque",
       galleryTitle: "Trabalho selecionado",
-      galleryKicker: "Catálogo",
-      scrollHint: "Arrasta ou faz scroll",
       filters: { all: "Tudo", webtoon: "Webtoon", covers: "Capas", character: "Design de personagens", fanart: "Fan art", sketches: "Esboços" },
       projectsTitle: "Projetos em destaque",
-      projectsKicker: "Publicado",
       openProject: "Abrir projeto",
       projects: {
         sok:  { kicker: "Série webtoon", title: "Survival of Kings", desc: "Webtoon / graphic novel em curso, co-criado com o escritor Reeeborn. Painéis a tinta e narrativa em scroll vertical." },
@@ -249,7 +237,6 @@ const CONFIG = {
         pamp: { kicker: "Identidade visual", title: "PAMP: Prémios Anime Manga Portugal", desc: "Identidade visual completa para os prémios de anime e manga em Portugal: key art, logótipos e grafismo de evento." },
       },
       tlTitle: "Percurso",
-      tlKicker: "Marcos & datas",
       tlUpcoming: "Em breve", tlNext: "A seguir",
       months: ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
       timeline: {
@@ -260,11 +247,9 @@ const CONFIG = {
         workshop:  { title: "Workshop de character design & escrita criativa", where: "Termas Romanas das Taipas", desc: "Co-facilitado com o Reeeborn. Doze pessoas, noventa minutos, uma personagem cada." },
       },
       aboutTitle: "Sobre",
-      aboutKicker: "Quem desenha",
       aboutBody: "Ilustrador sob o nome Guita_Ink. Formado em arquitetura, nota-se: perspetiva, espaço e ambientes têm o mesmo peso que as personagens que os habitam. Tinta primeiro, sempre.",
       aboutMeta: "Frederico Guita · Guita_Ink",
       commTitle: "Comissões",
-      commKicker: "Trabalhar juntos",
       commOpen: "Abertas", commClosed: "Fechadas",
       stepsTitle: "Como funciona",
       steps: [
@@ -285,7 +270,6 @@ const CONFIG = {
       commShop: "Encomendar na loja",
       commCta: "Pedir por email",
       contactTitle: "Diz olá",
-      contactKicker: "Contacto",
       contactBody: "Para comissões, colaborações ou publicação, o email é o mais rápido. Para tudo o resto, Instagram.",
       footerNote: "Desenhado & construído à mão.",
       lightboxHint: "Esc para fechar · ← → para navegar",
@@ -428,18 +412,13 @@ header{
   display:flex;justify-content:space-between;gap:14px;margin-top:12px;
   font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bone-dim);
 }
-/* thin rule + running count under the hero */
-.hero-rule{
-  display:flex;align-items:center;gap:20px;margin-top:clamp(40px,6vw,70px);
-  padding-top:22px;border-top:1px solid var(--hair);
-  font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-dim);
-}
-.hero-rule b{font-family:var(--f-disp);font-weight:400;font-size:1.5rem;color:var(--bone);letter-spacing:0}
-.hero-rule .sp{flex:1}
 
 /* ================= SECTIONS ================= */
 section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
-.head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:38px}
+/* era flex com justify-content:space-between, ou seja titulo a esquerda e um
+   texto pequeno a direita: o padrao que a regra 14 (Split-Header Ban) proibe.
+   Agora empilha na vertical. */
+.head{display:flex;flex-direction:column;align-items:flex-start;gap:10px;margin-bottom:38px}
 .count{font-family:var(--f-disp);font-size:.95rem;color:var(--bone-dim);font-style:italic}
 
 /* ================= FILMSTRIP GALLERY ================= */
@@ -642,7 +621,13 @@ footer{font-family:var(--f-ui);
   clip-path:inset(0 100% 0 0);
   transition:clip-path 1.1s cubic-bezier(.16,.84,.36,1);
 }
-.sec-title.in{clip-path:inset(0 0 0 0)}
+/* BUG: o reveal dependia de .sec-title.in, mas o IntersectionObserver do
+   Chromium conta o clip-path ao calcular a interseccao. Com o titulo cortado a
+   zero de largura nunca "entra em cena", logo nunca recebia .in, logo o
+   clip-path nunca abria. As seis seccoes estavam sem titulo visivel. Agora quem
+   dispara e o .head (que e .rv, nao esta cortado, e recebe .in normalmente). */
+.sec-title.in,
+.head.in .sec-title{clip-path:inset(0 0 0 0)}
 
 /* 2. SCREENTONE SWEEP — trama manga que atravessa a obra ao passar o rato */
 .frame::after{
@@ -797,17 +782,12 @@ footer{font-family:var(--f-ui);
         </div>
       </div>
     </div>
-    <div class="hero-rule">
-      <b id="statNum"></b><span data-t="statLabel"></span>
-      <span class="sp"></span>
-    </div>
   </div>
 
   <!-- WORK -->
   <section id="work">
     <div class="head rv">
       <div>
-        <p class="kicker" data-t="galleryKicker"></p>
         <h2 class="sec-title rv" data-t="galleryTitle"></h2>
       </div>
       <span class="count" id="workCount" aria-live="polite" aria-atomic="true"></span>
@@ -819,7 +799,6 @@ footer{font-family:var(--f-ui);
     <div class="strip-nav">
       <button id="stripPrev" aria-label="Scroll left">‹</button>
       <button id="stripNext" aria-label="Scroll right">›</button>
-      <span class="hint" data-t="scrollHint"></span>
     </div>
   </section>
 
@@ -827,7 +806,6 @@ footer{font-family:var(--f-ui);
   <section id="projects">
     <div class="head rv">
       <div>
-        <p class="kicker" data-t="projectsKicker"></p>
         <h2 class="sec-title rv" data-t="projectsTitle"></h2>
       </div>
     </div>
@@ -838,7 +816,6 @@ footer{font-family:var(--f-ui);
   <section id="timeline">
     <div class="head rv">
       <div>
-        <p class="kicker" data-t="tlKicker"></p>
         <h2 class="sec-title rv" data-t="tlTitle"></h2>
       </div>
     </div>
@@ -849,7 +826,6 @@ footer{font-family:var(--f-ui);
   <section id="about">
     <div class="head rv">
       <div>
-        <p class="kicker" data-t="aboutKicker"></p>
         <h2 class="sec-title rv" data-t="aboutTitle"></h2>
       </div>
     </div>
@@ -866,7 +842,6 @@ footer{font-family:var(--f-ui);
   <section id="comm">
     <div class="head rv">
       <div>
-        <p class="kicker" data-t="commKicker"></p>
         <h2 class="sec-title rv" data-t="commTitle"></h2>
       </div>
       <span class="badge" id="commBadge"></span>
@@ -886,7 +861,6 @@ footer{font-family:var(--f-ui);
   <section id="contact">
     <div class="head rv">
       <div>
-        <p class="kicker" data-t="contactKicker"></p>
         <h2 class="sec-title rv" data-t="contactTitle"></h2>
       </div>
     </div>
@@ -1046,7 +1020,6 @@ function renderText(){
   document.documentElement.lang = LANG;
   $('#langTgl').textContent = LANG === 'en' ? 'PT' : 'EN';
   $('#brandName').textContent = CONFIG.artistName;
-  $('#statNum').textContent = CONFIG.artworks.length;
 
   /* filters */
   const cats = [...new Set(CONFIG.artworks.map(g => g.cat))];
