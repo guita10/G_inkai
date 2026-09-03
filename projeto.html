@@ -18,9 +18,11 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232E45FF'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23F2F0EC' font-family='serif'%3E墨%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<!-- FONTS — mesma estratégia do index.html: um pedido só, sem bloquear o desenho.
+     Esta página usa menos pesos que o index: Playfair 400 · Inter 300 · Lora 400. -->
+<link rel="stylesheet" media="print" onload="this.media='all'"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Inter:wght@300&family=Lora:wght@400&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Inter:wght@300&family=Lora:wght@400&display=swap"></noscript>
 
 <script>
 /* ================================================================

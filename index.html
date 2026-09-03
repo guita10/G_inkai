@@ -40,9 +40,18 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<!-- FONTS — one request, non-blocking.
+     Antes eram 3 <link> normais: a página ficava BRANCA até o Google responder
+     (CDN lento a 1,5 s = 1,6 s de ecrã vazio). Com media="print" o browser
+     descarrega sem bloquear o desenho, e o onload liga a folha quando chega —
+     o texto aparece logo em Georgia e troca para as fontes finais (display=swap
+     já fazia essa troca de qualquer maneira).
+     Só os pesos REALMENTE usados no CSS desta página:
+       Playfair 400 · 500 · 400 itálico   Inter 300 · 500   Lora 400 · 500
+     Se acrescentares um font-weight novo ao CSS, junta-o aqui também. -->
+<link rel="stylesheet" media="print" onload="this.media='all'"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;500&family=Lora:wght@400;500&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;500&family=Lora:wght@400;500&display=swap"></noscript>
 
 <script>
 /* ================================================================
@@ -863,17 +872,33 @@ const srcOf = s => /^https?:\/\//i.test(s) ? s : (CONFIG.imageBase || '') + s;
    full=false  → serve images/thumb/… (760px) — grelha, tira, cartões
    full=true   → serve o ficheiro grande (1600px) — só no lightbox            */
 const DIMS = {"aki.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"arkevil-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"clair.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"collab-mira-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"collab.jpg":{"w":1600,"h":1280,"tw":760,"th":608},"dante.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"estudo-luz.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"even-yeager.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"final-aot-season-4.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"geisha.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"ilustracao-sem-titulo-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"ilustracao-sem-titulo.jpg":{"w":1600,"h":1067,"tw":760,"th":507},"italy.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kon.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"lucy.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"makima.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"mira-starborn.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"nami-30x40.jpg":{"w":1200,"h":1600,"tw":570,"th":760},"oc-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"oc-2.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"oc.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"pochita.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"shocked.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"silen.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"spain.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"surpresa.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"the-witch.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"yuta-fanart.jpg":{"w":1280,"h":1600,"tw":608,"th":760}};
+/* O browser suporta WebP? Testamos uma vez. O WebP pesa menos ~39% com a mesma
+   qualidade — quem nao suportar recebe o .jpg de sempre, sem dar por nada.
+   Os .webp geram-se com:  python3 tools/make-webp.py                          */
+const WEBP_OK = (() => {
+  try { return document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') === 0; }
+  catch(e){ return false; }
+})();
+
 function artEl(item, full){
   const img = document.createElement('img');
   const file = item.src.split('/').pop();
-  const path = full ? item.src : item.src.replace(/^images\//,'images/thumb/');
+  const jpg = full ? item.src : item.src.replace(/^images\//,'images/thumb/');
+  const webp = jpg.replace(/\.jpe?g$/i, '.webp');
+  const useWebp = WEBP_OK && webp !== jpg;
   const d = DIMS[file];
   if(d){ img.width = full ? d.w : d.tw; img.height = full ? d.h : d.th; }
-  img.src = srcOf(path); img.alt = item.label;
+  img.src = srcOf(useWebp ? webp : jpg); img.alt = item.label;
   img.decoding = 'async';
   if(item.eager){ img.fetchPriority = 'high'; } else { img.loading = 'lazy'; }
   img.className = rc(item.ratio);
+  let jpgTried = !useWebp;
   img.onerror = () => {
+    if(!jpgTried){          // .webp em falta (arte nova sem converter?) → tenta o .jpg
+      jpgTried = true;
+      img.src = srcOf(jpg);
+      return;
+    }
     const ph = document.createElement('div');
     ph.className = 'ph ' + rc(item.ratio);
     ph.innerHTML = `<b>${item.label}</b><span data-ph>${T().placeholderNote}</span><span style="opacity:.5">${pretty(item.ratio)}</span>`;
