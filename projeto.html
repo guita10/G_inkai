@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project · Guita_Ink</title>
+<meta name="robots" content="index,follow">
+<!-- ============ SEO — static defaults; overwritten per-project by the script below for JS crawlers ============ -->
+<meta name="description" content="Guita_Ink · illustration project page. Character design, covers and webtoon work by Frederico Guita.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Project · Guita_Ink">
+<meta property="og:description" content="Guita_Ink · illustration project page. Character design, covers and webtoon work by Frederico Guita.">
+<!-- dominio proprio, activo. Se algum dia mudar, e aqui e no sitemap/robots. -->
+<meta property="og:url" content="https://guitaink.com/projeto.html">
+<meta property="og:image" content="https://guitaink.com/images/oc.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://guitaink.com/projeto.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232E45FF'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23F2F0EC' font-family='serif'%3E墨%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- FONTS — mesma estratégia do index.html: um pedido só, sem bloquear o desenho.
+     Esta página usa menos pesos que o index: Playfair 400 · Inter 300 · Lora 400. -->
+<link rel="stylesheet" media="print" onload="this.media='all'"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Inter:wght@300&family=Lora:wght@400&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Inter:wght@300&family=Lora:wght@400&display=swap"></noscript>
+
+<script>
+/* ================================================================
+   ████  CONFIG — partilhado com o index.html  ████
+   Cola aqui o mesmo bloco sempre que o actualizares no index.
+   ================================================================ */
+const CONFIG = {
+
+  /* ---------- IDENTITY ---------- */
+  artistName: "Guita_Ink",
+  realName: "Frederico Guita",
+  email: "frederico@guitaink.com",                      // Google Workspace (admin@ fica só para gestão da conta)
+  instagram: "https://www.instagram.com/guita_ink",
+  shop: "https://js1ssa-qu.myshopify.com",              // Shopify — checkout only
+  projectPage: "projeto.html",                          // per-project pages, opened in a new tab
+  otherLinks: [
+    { label: "Webtoon", url: "#" },                     // ← still "#" (Notion: Por fazer)
+    { label: "PAMP", url: "#" },                        // ← still "#"
+    { label: "Distrito Manga", url: "#" },              // ← still "#"
+  ],
+
+  /* ---------- COMMISSIONS ----------
+     ⚠️ SYNC: a price lives in THREE places (Notion → Painel de manutenção).
+        1. here   2. the Shopify product   3. Notion → Termos & Condições
+     Closing commissions is TWO gestures: open:false here AND set the
+     Shopify products to draft, or the shop keeps taking orders.
+     Full terms are deliberately NOT on the site — they go in the acceptance email. */
+  commissionsOpen: true,
+  tiers: [                                              // synced with Shopify, 26 Jul 2026
+    { key: "headshot", price: "65",  unit: "€", from: false, handle: "commission-headshot-bust" },
+    { key: "half",     price: "120", unit: "€", from: false, handle: "commission-half-body" },
+    { key: "full",     price: "180", unit: "€", from: false, handle: "commission-full-body" },
+    { key: "sheet",    price: "280", unit: "€", from: true,  handle: "commission-character-sheet" },
+  ],
+
+  /* ---------- IMAGES ----------
+     Same convention as the live site's CONFIG, so lines can be pasted straight
+     across from index.html on Netlify without editing anything:
+        { src:"images/nome.jpg", label:"Título", cat:"webtoon", ratio:"34" }
+     ratio: "34" portrait · "12" webtoon vertical · "11" square
+     cat:   webtoon · covers · character · fanart · sketches
+     Export ~1600px on the long side, .jpg, under ~400 KB.
+     imageBase is prepended only to paths that aren't already absolute — leave it
+     empty to use the local /images/ folder, or set it to
+     "https://guitaink.com/" to pull straight from the live deploy.     */
+  imageBase: "",
+  hero: { src: "images/oc.jpg", label: "OC — 01", ratio: "34" },
+  artworks: [
+    { src: "images/aki.jpg",                   label: "Aki — Chainsaw Man",        ratio: "34", cat: "fanart" },
+    { src: "images/makima.jpg",                label: "Makima — Chainsaw Man",     ratio: "34", cat: "fanart" },
+    { src: "images/pochita.jpg",               label: "Pochita — Chainsaw Man",    ratio: "11", cat: "fanart" },
+    { src: "images/even-yeager.jpg",           label: "Eren Yeager — AoT",         ratio: "34", cat: "fanart" },
+    { src: "images/final-aot-season-4.jpg",    label: "Attack on Titan — S4",      ratio: "34", cat: "fanart" },
+    { src: "images/yuta-fanart.jpg",           label: "Yuta — Jujutsu Kaisen",     ratio: "34", cat: "fanart" },
+    { src: "images/nami-30x40.jpg",            label: "Nami — One Piece",          ratio: "34", cat: "fanart" },
+    { src: "images/ilustracao-sem-titulo.jpg", label: "Tony Tony Chopper — card",  ratio: "43", cat: "fanart" },
+    { src: "images/dante.jpg",                 label: "Dante",                     ratio: "11", cat: "fanart" },
+    { src: "images/lucy.jpg",                  label: "Lucy",                      ratio: "11", cat: "fanart" },
+    { src: "images/mira-starborn.jpg",         label: "Mira Starborn",             ratio: "11", cat: "character" },
+    { src: "images/collab-mira-final.jpg",     label: "Mira — collab",             ratio: "34", cat: "character" },
+    { src: "images/collab.jpg",                label: "Duelo — collab",            ratio: "43", cat: "character" },
+    { src: "images/arkevil-final.jpg",         label: "ArkEvil",                   ratio: "34", cat: "character" },
+    { src: "images/oc.jpg",                    label: "OC — 01",                   ratio: "34", cat: "character" },
+    { src: "images/oc-1.jpg",                  label: "OC — 02",                   ratio: "11", cat: "character" },
+    { src: "images/oc-2.jpg",                  label: "OC — 03",                   ratio: "34", cat: "character" },
+    { src: "images/silen.jpg",                 label: "Silen",                     ratio: "34", cat: "character" },
+    { src: "images/the-witch.jpg",             label: "The Witch",                 ratio: "34", cat: "character" },
+    { src: "images/kon.jpg",                   label: "Kon",                       ratio: "11", cat: "character" },
+    { src: "images/ilustracao-sem-titulo-1.jpg", label: "Espírito",                  ratio: "11", cat: "character" },
+    { src: "images/geisha.jpg",                label: "Geisha",                    ratio: "34", cat: "character" },
+    { src: "images/clair.jpg",                 label: "Clair",                     ratio: "11", cat: "character" },
+    { src: "images/italy.jpg",                 label: "Italy",                     ratio: "34", cat: "character" },
+    { src: "images/spain.jpg",                 label: "Spain",                     ratio: "34", cat: "character" },
+    { src: "images/estudo-luz.jpg",            label: "Estudo de luz",             ratio: "34", cat: "sketches" },
+    { src: "images/shocked.jpg",               label: "Shocked",                   ratio: "34", cat: "sketches" },
+    { src: "images/surpresa.jpg",              label: "Surpresa",                  ratio: "11", cat: "sketches" },
+  ],
+
+  /* 28 peças reais, exportadas a 1600px do pacote original (era 414 MB → 5,5 MB) */
+
+  projects: [
+    /* src ficou vazio de propósito: não há arte de SoK / Tokyo Revengers / PAMP
+       no pacote. Enquanto estiver "", o cartão mostra uma placa tipográfica.
+       Assim que tiveres a imagem, preenche o src (ex: images/proj-sok.jpg) e volta a aparecer. */
+    { src: "", label: "Survival of Kings", ratio: "34", key: "sok",  plate: "SOK" },
+    { src: "", label: "Tokyo Revengers",   ratio: "34", key: "tr",   plate: "TR"  },
+    { src: "", label: "PAMP",              ratio: "34", key: "pamp", plate: "P"   },
+  ],
+
+  /* ---------- TIMELINE ----------
+     month: 1-12, or null to show the year only.
+     status: "past" | "next"  (next = upcoming; the first one gets the "Next up" flag) */
+  timeline: [
+    { key: "iberanime", year: 2023, month: null, status: "past" },
+    { key: "sok",       year: 2025, month: null, status: "past" },
+    { key: "comicon",   year: 2026, month: 4,    status: "past" },
+    { key: "coimbrabd", year: 2026, month: 4,    status: "past" },
+    { key: "workshop",  year: 2026, month: 7,    status: "past" },
+  ],
+
+  /* ---------- ALL WRITTEN COPY (EN / PT) ---------- */
+  i18n: {
+    en: {
+      heroLine1: "Ink", heroLine2: "first",
+      heroSub: "Illustration · Character design",
+      tagline: "Anime and manga-influenced work. Characters, covers and the worlds they live in.",
+      ctaWork: "View work", ctaComm: "Commissions",
+      navWork: "Work", navProjects: "Projects", navAbout: "About", navComm: "Commissions", navContact: "Contact",
+      featuredLabel: "Featured",
+      galleryTitle: "Selected work",
+      filters: { all: "All", webtoon: "Webtoon", covers: "Covers", character: "Character design", fanart: "Fan art", sketches: "Sketches" },
+      projectsTitle: "Featured projects",
+      openProject: "Open project",
+      projects: {
+        sok:  { kicker: "Webtoon series", title: "Survival of Kings", desc: "Ongoing webtoon / graphic novel, co-created with writer Reeeborn. Ink-style panels and vertical-scroll storytelling." },
+        tr:   { kicker: "Published covers", title: "Tokyo Revengers promo covers", desc: "Promotional cover illustrations approved by Distrito Manga. Character-first compositions with strong ink linework." },
+        pamp: { kicker: "Visual identity", title: "PAMP: Prémios Anime Manga Portugal", desc: "Full visual identity for Portugal's anime & manga awards: key art, logo lock-ups and event graphics." },
+      },
+      tlTitle: "Timeline",
+      tlUpcoming: "Upcoming", tlNext: "Next up",
+      months: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+      timeline: {
+        iberanime: { title: "Iberanime manga contest, 1st place", where: "Iberanime · Lisbon", desc: "Won the manga contest. The push that turned a handle into a body of work." },
+        sok:       { title: "Survival of Kings, Chapter 01", where: "Webtoon · with Reeeborn", desc: "First chapter published. Written by Reeeborn, drawn by me." },
+        comicon:   { title: "Panel talk", where: "COMICON · Portugal", desc: "On building comic worlds: perspective, space and structure." },
+        coimbrabd: { title: "Artist Alley", where: "Coimbra BD", desc: "A table of prints, originals and live commissions. Readers met face to face." },
+        workshop:  { title: "Character design & creative writing workshop", where: "Termas Romanas das Taipas", desc: "Co-facilitated with Reeeborn. Twelve people, ninety minutes, one character each." },
+      },
+      aboutTitle: "About",
+      aboutBody: "Illustrator working as Guita_Ink. Trained as an architect, and it shows: perspective, space and environments carry the same weight as the characters living in them. Ink first, always.",
+      aboutMeta: "Frederico Guita · Guita_Ink",
+      commTitle: "Commissions",
+      commOpen: "Open", commClosed: "Closed",
+      commIntro: "Four formats and four stages (sketch, lineart, color, final), with your approval at each one. Typical turnaround is 2-4 weeks. Full terms come with the acceptance email.",
+      fromPrefix: "from",
+      tiers: {
+        headshot: { name: "Headshot / Bust", desc: "Head and shoulders, fully rendered." },
+        half:     { name: "Half body",       desc: "Waist-up illustration, fully rendered." },
+        full:     { name: "Full body",       desc: "Complete character, fully rendered." },
+        sheet:    { name: "Character sheet", desc: "Turnarounds, expressions and detail callouts. Final quote depends on the number of views." },
+      },
+      commShop: "Order in the shop",
+      commCta: "Ask by email",
+      contactTitle: "Say hi",
+      contactBody: "For commissions, collabs or publishing, email is fastest. For everything else, Instagram.",
+      footerNote: "Drawn & built by hand.",
+      lightboxHint: "Esc to close · ← → to browse",
+      placeholderNote: "placeholder, swap in /images",
+    },
+    pt: {
+      heroLine1: "Tinta", heroLine2: "primeiro",
+      heroSub: "Ilustração · Design de personagens",
+      tagline: "Trabalho de influência anime e manga. Personagens, capas e os mundos onde vivem.",
+      ctaWork: "Ver trabalho", ctaComm: "Comissões",
+      navWork: "Trabalho", navProjects: "Projetos", navAbout: "Sobre", navComm: "Comissões", navContact: "Contacto",
+      featuredLabel: "Destaque",
+      galleryTitle: "Trabalho selecionado",
+      filters: { all: "Tudo", webtoon: "Webtoon", covers: "Capas", character: "Design de personagens", fanart: "Fan art", sketches: "Esboços" },
+      projectsTitle: "Projetos em destaque",
+      openProject: "Abrir projeto",
+      projects: {
+        sok:  { kicker: "Série webtoon", title: "Survival of Kings", desc: "Webtoon / graphic novel em curso, co-criado com o escritor Reeeborn. Painéis a tinta e narrativa em scroll vertical." },
+        tr:   { kicker: "Capas publicadas", title: "Tokyo Revengers, capas promocionais", desc: "Ilustrações de capa promocionais aprovadas pela Distrito Manga. Composições centradas nas personagens, com linework forte a tinta." },
+        pamp: { kicker: "Identidade visual", title: "PAMP: Prémios Anime Manga Portugal", desc: "Identidade visual completa para os prémios de anime e manga em Portugal: key art, logótipos e grafismo de evento." },
+      },
+      tlTitle: "Percurso",
+      tlUpcoming: "Em breve", tlNext: "A seguir",
+      months: ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
+      timeline: {
+        iberanime: { title: "Concurso de manga Iberanime, 1.º lugar", where: "Iberanime · Lisboa", desc: "Vitória no concurso de manga. O empurrão que transformou um nome num corpo de trabalho." },
+        sok:       { title: "Survival of Kings, Capítulo 01", where: "Webtoon · com Reeeborn", desc: "Primeiro capítulo publicado. Escrito pelo Reeeborn, desenhado por mim." },
+        comicon:   { title: "Painel / conversa", where: "COMICON · Portugal", desc: "Sobre construir mundos de banda desenhada: perspetiva, espaço e estrutura." },
+        coimbrabd: { title: "Artist Alley", where: "Coimbra BD", desc: "Mesa com prints, originais e comissões ao vivo. Leitores conhecidos em pessoa." },
+        workshop:  { title: "Workshop de character design & escrita criativa", where: "Termas Romanas das Taipas", desc: "Co-facilitado com o Reeeborn. Doze pessoas, noventa minutos, uma personagem cada." },
+      },
+      aboutTitle: "Sobre",
+      aboutBody: "Ilustrador sob o nome Guita_Ink. Formado em arquitetura, nota-se: perspetiva, espaço e ambientes têm o mesmo peso que as personagens que os habitam. Tinta primeiro, sempre.",
+      aboutMeta: "Frederico Guita · Guita_Ink",
+      commTitle: "Comissões",
+      commOpen: "Abertas", commClosed: "Fechadas",
+      commIntro: "Quatro formatos e quatro fases (esboço, lineart, cor, final), com a tua aprovação em cada uma. Prazo típico de 2 a 4 semanas. Os termos completos seguem no email de aceitação.",
+      fromPrefix: "desde",
+      tiers: {
+        headshot: { name: "Headshot / Busto",   desc: "Cabeça e ombros, totalmente renderizado." },
+        half:     { name: "Meio corpo",         desc: "Ilustração da cintura para cima, totalmente renderizada." },
+        full:     { name: "Corpo inteiro",      desc: "Personagem completa, totalmente renderizada." },
+        sheet:    { name: "Character sheet",    desc: "Turnarounds, expressões e detalhes. Orçamento final depende do número de vistas." },
+      },
+      commShop: "Encomendar na loja",
+      commCta: "Pedir por email",
+      contactTitle: "Diz olá",
+      contactBody: "Para comissões, colaborações ou publicação, o email é o mais rápido. Para tudo o resto, Instagram.",
+      footerNote: "Desenhado & construído à mão.",
+      lightboxHint: "Esc para fechar · ← → para navegar",
+      placeholderNote: "placeholder, substituir em /images",
+    }
+  }
+};
+/* ==================  fim do CONFIG  ================== */
+</script>
+
+<style>
+:root{
+  --void:#0A0A0A;         /* the field */
+  --raise:#121212;        /* raised surface */
+  --raise-2:#1A1A1A;
+  --royal:#2E45FF;        /* Queen of Jacks blue */
+  --royal-lift:#5568FF;   /* for small text on near-black */
+  --bone:#F2F0EC;
+  --bone-dim:#8C877F;
+  --hair:rgba(242,240,236,.13);
+  --f-disp:'Playfair Display',Georgia,serif;
+  --f-body:'LT Museum','Lora',Georgia,serif;      /* corpo — LT Museum se estiver instalada */
+  --f-ui:'Inter',system-ui,-apple-system,sans-serif;
+}
+[data-theme="light"]{
+  --void:#F4F2ED;
+  --raise:#FFFFFF;
+  --raise-2:#EDEAE3;
+  --royal:#2436C9;
+  --royal-lift:#2436C9;
+  --bone:#141310;
+  --bone-dim:#6B655C;
+  --hair:rgba(20,19,16,.13);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--f-body);background:var(--void);color:var(--bone);
+  line-height:1.65;font-weight:300;-webkit-font-smoothing:antialiased;
+  transition:background .4s ease,color .4s ease;overflow-x:hidden;
+}
+img{display:block;max-width:100%;height:auto}  /* par obrigatorio: sem height:auto a imagem esmaga */
+a{color:inherit}
+::selection{background:var(--royal);color:#fff}
+:focus-visible{outline:2px solid var(--royal-lift);outline-offset:3px}
+.wrap{max-width:900px;margin:0 auto;padding:0 26px;position:relative;z-index:1}
+/* film grain */
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/><feColorMatrix type='saturate' values='0'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='.16'/></svg>");
+}
+header,main,footer{position:relative;z-index:1}
+
+.back{
+  display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--f-ui);
+  font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--bone-dim);
+  padding:30px 0;transition:color .2s;
+}
+.back:hover{color:var(--bone)}
+.k{font-family:var(--f-ui);font-size:.66rem;letter-spacing:.28em;text-transform:uppercase;color:var(--royal-lift)}
+h1{font-family:var(--f-disp);font-weight:400;font-size:clamp(2rem,5vw,3.2rem);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 20px;line-height:1.1}
+.lede{color:var(--bone-dim);font-size:1.05rem;max-width:44rem}
+.plate{
+  aspect-ratio:16/9;display:grid;place-items:center;background:var(--raise-2);
+  margin:40px 0;position:relative;overflow:hidden;border:1px solid var(--hair);
+}
+.plate::after{content:"";position:absolute;inset:0;background-image:radial-gradient(var(--royal) 1px,transparent 1.4px);background-size:16px 16px;opacity:.16}
+.plate span{font-family:var(--f-disp);font-size:clamp(3rem,9vw,5.5rem);color:var(--royal-lift);z-index:1}
+.note{
+  border-left:2px solid var(--royal);padding-left:16px;color:var(--bone-dim);font-size:.9rem;margin:40px 0;
+}
+footer{border-top:1px solid var(--hair);margin-top:60px;padding:26px 0 50px;font-family:var(--f-ui);
+  font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-dim);
+  display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← <span id="backLabel">All work</span></a>
+  <p class="k" id="kicker"></p>
+  <h1 id="title"></h1>
+  <p class="lede" id="desc"></p>
+  <div class="plate" id="plate" aria-hidden="true"><span></span></div>
+  <p class="note" id="note"></p>
+  <footer>
+    <span id="footL"></span>
+    <a href="index.html" id="footBack"></a>
+  </footer>
+</div>
+
+<script>
+/* Lê ?p=chave, mostra o projeto correspondente. As chaves e os textos vêm do
+   CONFIG acima — os mesmos que alimentam os cartões do index.html.          */
+const q = new URLSearchParams(location.search);
+const key = q.get('p');
+const LANG = (navigator.language || 'en').toLowerCase().startsWith('pt') ? 'pt' : 'en';
+const t = CONFIG.i18n[LANG];
+document.documentElement.lang = LANG;
+
+const proj = CONFIG.projects.find(p => p.key === key);
+const tp = proj ? t.projects[proj.key] : null;
+
+if(!tp){
+  document.getElementById('title').textContent = LANG === 'pt' ? 'Projeto não encontrado' : 'Project not found';
+  document.getElementById('desc').textContent  = LANG === 'pt'
+    ? 'Este endereço não corresponde a nenhum projeto. Volta ao portefólio.'
+    : 'This address does not match any project. Head back to the portfolio.';
+  document.getElementById('plate').remove();
+  document.querySelector('meta[name="robots"]').setAttribute('content', 'noindex,follow');
+} else {
+  document.title = `${tp.title} · Guita_Ink`;
+  document.getElementById('kicker').textContent = tp.kicker;
+  document.getElementById('title').textContent  = tp.title;
+  document.getElementById('desc').textContent   = tp.desc;
+  const plate = document.getElementById('plate');
+  if(proj.src){
+    const img = document.createElement('img');
+    img.src = proj.src; img.alt = tp.title;
+    plate.replaceWith(img);
+  } else {
+    plate.querySelector('span').textContent = proj.plate || '';
+    document.getElementById('note').textContent = LANG === 'pt'
+      ? 'As imagens deste projeto ainda não estão publicadas.'
+      : 'Artwork for this project is not published yet.';
+  }
+  /* SEO — overwrite the static per-page defaults with this project's own copy.
+     Only reaches crawlers/unfurlers that execute JS (Google, Bing); others still
+     get the generic fallback set in <head>, which beats no tags at all. */
+  const pageUrl = `https://guitaink.com/projeto.html?p=${encodeURIComponent(proj.key)}`;
+  const shareImg = proj.src
+    ? `https://guitaink.com/${proj.src}`
+    : 'https://guitaink.com/images/oc.jpg';
+  document.querySelector('meta[name="description"]').setAttribute('content', tp.desc);
+  document.querySelector('meta[property="og:title"]').setAttribute('content', `${tp.title} · Guita_Ink`);
+  document.querySelector('meta[property="og:description"]').setAttribute('content', tp.desc);
+  document.querySelector('meta[property="og:url"]').setAttribute('content', pageUrl);
+  document.querySelector('meta[property="og:image"]').setAttribute('content', shareImg);
+  document.querySelector('link[rel="canonical"]').setAttribute('href', pageUrl);
+}
+document.getElementById('backLabel').textContent = LANG === 'pt' ? 'Todo o trabalho' : 'All work';
+document.getElementById('footBack').textContent  = LANG === 'pt' ? '← Voltar ao portefólio' : '← Back to portfolio';
+document.getElementById('footL').textContent = `© ${new Date().getFullYear()} ${CONFIG.artistName} · ${CONFIG.realName}`;
+</script>
+</body>
+</html>
