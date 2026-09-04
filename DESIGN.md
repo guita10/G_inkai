@@ -113,6 +113,11 @@ artwork numbering. Worth doing on any new screen with figures in a column.
   Dim until active. Carry `aria-pressed`. The one place a pill is right, because
   they are toggles and read as tokens.
 - **Frames (artwork tiles).** Raise fill, 1px Hair border, no radius, no shadow.
+  **Artwork is never cropped.** Every tile shares one height and takes its width
+  from the file's true pixel ratio (`aspect-ratio: var(--ar)`, set from the DIMS
+  map). Do not force artwork into a fixed frame ratio, and do not rely on
+  `object-fit: cover` to make it fit — a portfolio that crops the work defeats
+  itself. The shared height is what makes the strip read as a gallery hang.
   Border warms to the accent on hover; a mask-position wipe reveals the caption.
   `scroll-snap-align: start`. Keyboard-operable: `role="button"`, Enter **and**
   Space.
@@ -179,7 +184,9 @@ artwork numbering. Worth doing on any new screen with figures in a column.
   knobs, filter chips, filmstrip arrows, lightbox controls. Colour-only fades
   count: if one control is silenced they all are. Anything added must extend
   those two media blocks. This is a hard requirement, not a nicety.
-- **CLS is 0.** Every image carries explicit `width` and `height`. Keep them.
+- **CLS is 0.** Every image carries explicit `width` and `height`, and the global
+  image rule pairs `max-width: 100%` with `height: auto` so a constrained column
+  scales both axes instead of squashing one. Keep all three.
 - **Grain veil.** Fixed pseudo-element, inline SVG turbulence, `opacity: .5`,
   `pointer-events: none`. Measured at no frame-time cost under 4× CPU throttle.
 

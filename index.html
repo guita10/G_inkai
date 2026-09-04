@@ -318,7 +318,12 @@ body{
   line-height:1.65;font-weight:300;-webkit-font-smoothing:antialiased;
   transition:background .4s ease,color .4s ease;overflow-x:hidden;
 }
-img{display:block;max-width:100%}
+/* height:auto e o par obrigatorio do max-width:100%. Sem ele, quando a coluna
+   aperta a largura da imagem o atributo height fica agarrado ao valor original
+   e a imagem sai esmagada — era o que acontecia a obra do hero (0,80 real
+   desenhada a 0,62). Com os dois, o browser deriva a proporcao dos atributos
+   width/height, escala a altura junto com a largura e o CLS continua a zero. */
+img{display:block;max-width:100%;height:auto}
 a{color:inherit}
 ::selection{background:var(--royal);color:#fff}
 :focus-visible{outline:2px solid var(--royal-lift);outline-offset:3px}
@@ -443,23 +448,30 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 .chip.on{background:var(--bone);border-color:var(--bone);color:var(--void)}
 .strip-wrap{position:relative;margin:0 -26px;padding:0 26px}
 .strip{
-  display:flex;gap:16px;overflow-x:auto;overflow-y:hidden;
+  display:flex;align-items:flex-start;gap:16px;overflow-x:auto;overflow-y:hidden;
   scroll-snap-type:x mandatory;scroll-behavior:smooth;
   padding:4px 0 24px;scrollbar-width:thin;scrollbar-color:var(--hair) transparent;
 }
 .strip::-webkit-scrollbar{height:3px}
 .strip::-webkit-scrollbar-track{background:var(--hair)}
 .strip::-webkit-scrollbar-thumb{background:var(--royal)}
+/* Antes: cada obra levava um de quatro moldes (3:4, 1:1, 4:3, 1:2) e a largura
+   vinha do molde. So que a tira e flex e o align-items:stretch, que e o valor
+   por omissao, esticava todas as molduras a altura da mais alta (385px) e
+   anulava o aspect-ratio. Resultado medido: as caixas ficavam a 0,7481 /
+   0,8519 / 1,0338, proporcoes que nao correspondiam nem aos ficheiros nem as
+   classes CSS, e o object-fit:cover cortava a diferenca em 27 das 28 pecas —
+   6,5% nas verticais, 14,8% nas quadradas, 31% na horizontal do Chopper.
+   Agora a altura e comum de proposito (o alinhamento e o que faz a tira ler
+   como uma parede de galeria) e a largura sai da proporcao verdadeira do
+   ficheiro, via --ar, que o JS le do mapa DIMS. Nada e cortado. */
 .frame{
   flex:none;scroll-snap-align:start;cursor:zoom-in;position:relative;
   background:var(--raise);border:1px solid var(--hair);overflow:hidden;
   transition:border-color .3s;
+  height:clamp(280px,30vw,360px);width:auto;aspect-ratio:var(--ar,3/4);
 }
 .frame:hover{border-color:var(--royal-lift)}
-.frame.r-34{width:clamp(210px,25vw,290px)}
-.frame.r-11{width:clamp(240px,28vw,330px)}
-.frame.r-12{width:clamp(170px,20vw,230px)}
-.frame.r-43{width:clamp(280px,34vw,400px)}
 .frame img,.frame .ph{width:100%;height:100%;object-fit:cover}
 .lb-stage img{width:auto;height:auto}
 .frame .meta{
@@ -469,7 +481,11 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 }
 .frame:hover .meta{opacity:1}
 .frame .meta .t{font-family:var(--f-disp);font-size:.92rem;color:#fff}
-.frame .meta .n{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--royal-lift)}
+/* O numero da peca estava em var(--royal-lift), que muda com o tema, mas o veu
+   por cima da arte (rgba(6,6,6,.88)) NAO muda: e escuro nos dois temas. No tema
+   claro dava azul escuro sobre preto, 2,36:1, abaixo do minimo de 4,5. O .t ao
+   lado ja estava fixo em #fff pela mesma razao. Fixo aqui tambem: 4,64:1. */
+.frame .meta .n{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#5568FF}
 .frame.hidden{display:none}
 .strip-nav{display:flex;gap:8px;margin-top:6px}
 .strip-nav button{
@@ -933,6 +949,14 @@ const srcOf = s => /^https?:\/\//i.test(s) ? s : (CONFIG.imageBase || '') + s;
    full=false  → serve images/thumb/… (760px) — grelha, tira, cartões
    full=true   → serve o ficheiro grande (1600px) — só no lightbox            */
 const DIMS = {"aki.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"arkevil-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"clair.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"collab-mira-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"collab.jpg":{"w":1600,"h":1280,"tw":760,"th":608},"dante.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"estudo-luz.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"even-yeager.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"final-aot-season-4.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"geisha.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"ilustracao-sem-titulo-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"ilustracao-sem-titulo.jpg":{"w":1600,"h":1067,"tw":760,"th":507},"italy.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kon.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"lucy.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"makima.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"mira-starborn.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"nami-30x40.jpg":{"w":1200,"h":1600,"tw":570,"th":760},"oc-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"oc-2.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"oc.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"pochita.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"shocked.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"silen.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"spain.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"surpresa.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"the-witch.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"yuta-fanart.jpg":{"w":1280,"h":1600,"tw":608,"th":760}};
+/* Proporcao a usar na moldura. Sai do mapa DIMS, ou seja dos pixeis reais do
+   ficheiro. O campo `ratio` do CONFIG fica so como rede: arte nova que ainda
+   nao passou pelo tools/dims.py nao tem entrada em DIMS e cai no molde antigo. */
+const AR = {'34':'3/4','12':'1/2','11':'1/1','43':'4/3'};
+const arOf = item => {
+  const d = DIMS[item.src.split('/').pop()];
+  return d ? d.w + '/' + d.h : (AR[String(item.ratio)] || '3/4');
+};
 /* O browser suporta WebP? Testamos uma vez. O WebP pesa menos ~39% com a mesma
    qualidade — quem nao suportar recebe o .jpg de sempre, sem dar por nada.
    Os .webp geram-se com:  python3 tools/make-webp.py                          */
@@ -965,7 +989,10 @@ function artEl(item, full){
   img.src = srcOf(useWebp ? webp : jpg); img.alt = item.label;
   img.decoding = 'async';
   if(item.eager){ img.fetchPriority = 'high'; } else { img.loading = 'lazy'; }
-  img.className = rc(item.ratio);
+  /* a imagem NAO leva molde. Dentro da moldura enche-a (width/height 100%), e
+     no hero e na lightbox e a proporcao natural do ficheiro que manda. Os
+     atributos width/height acima vem de DIMS, por isso o browser ja reserva o
+     espaco certo antes de descarregar e o CLS continua a zero. */
   let jpgTried = !useWebp;
   img.onerror = () => {
     if(!jpgTried){          // .webp em falta (arte nova sem converter?) → tenta o .jpg
@@ -986,7 +1013,8 @@ function renderStrip(){
   const s = $('#strip'); s.innerHTML = '';
   CONFIG.artworks.forEach((g,i) => {
     const fig = document.createElement('figure');
-    fig.className = 'frame ' + rc(g.ratio);
+    fig.className = 'frame';
+    fig.style.setProperty('--ar', arOf(g));
     fig.dataset.cat = g.cat;
     fig.tabIndex = 0; fig.setAttribute('role','button'); fig.setAttribute('aria-label', g.label);
     const meta = document.createElement('figcaption');
