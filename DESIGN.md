@@ -108,9 +108,7 @@ artwork numbering. Worth doing on any new screen with figures in a column.
   transparent fill; the primary inverts to a Royal fill with white text and
   wipes back to transparent on hover. A diagonal light sweep crosses the filled
   button on hover (`left: -120% → 100%`, 650ms). No outer glow, ever.
-  Transitions name their properties: `background .25s ease, border-color .25s
-  ease, color .25s ease`. Never `transition: all` — it makes the browser watch
-  every animatable property and silently picks up any that is added later.
+  Transition: `background .25s ease, border-color .25s ease, color .25s ease`.
 - **Chips (filters).** `999px` radius, `Inter` 0.76rem, `0.04em` tracking, Bone
   Dim until active. Carry `aria-pressed`. The one place a pill is right, because
   they are toggles and read as tokens.
@@ -172,10 +170,15 @@ artwork numbering. Worth doing on any new screen with figures in a column.
 - **Staggered entry.** Siblings cascade with a `(i % 8) * ms` transition delay,
   never mounting as a block.
 - **Transform and opacity only.** Never `top`, `left`, `width`, `height`.
+- **Transitions name their properties.** `transition: all` is banned anywhere in
+  the system: it makes the browser watch every animatable property and silently
+  picks up any that is added to the rule later. List what actually changes.
 - **`prefers-reduced-motion` disables everything.** The clip-path reveal, the
-  seal stamp, the button sweep, the timeline dot pulse, smooth scrolling, and
-  every staggered delay. Anything added must extend those two media blocks —
-  this is a hard requirement, not a nicety.
+  seal stamp, the button sweep, the timeline dot pulse, smooth scrolling, every
+  staggered delay, and every interactive control — buttons, theme and language
+  knobs, filter chips, filmstrip arrows, lightbox controls. Colour-only fades
+  count: if one control is silenced they all are. Anything added must extend
+  those two media blocks. This is a hard requirement, not a nicety.
 - **CLS is 0.** Every image carries explicit `width` and `height`. Keep them.
 - **Grain veil.** Fixed pseudo-element, inline SVG turbulence, `opacity: .5`,
   `pointer-events: none`. Measured at no frame-time cost under 4× CPU throttle.
