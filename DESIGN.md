@@ -113,6 +113,15 @@ artwork numbering. Worth doing on any new screen with figures in a column.
   Buttons, chips, knobs, filmstrip arrows and lightbox controls. Artwork tiles
   are the deliberate exception: on a phone, dragging the filmstrip begins as a
   press on a tile, and the work would shrink mid-drag.
+- **Header controls.** Language, theme and the mobile menu toggle share one
+  44px circular control, hairline border, `Inter`. 44px is the touch-target
+  floor, not a style choice.
+- **Mobile menu.** Below 621px the bar links give way to a toggle that opens a
+  full-screen panel; the panel sits *under* the header so the toggle stays
+  visible and doubles as the close control. Its links are cloned from the bar
+  nav at boot, so there is one list, not two. `aria-expanded`, focus trapped,
+  Escape closes and returns focus, and it closes itself if the viewport grows
+  past the breakpoint.
 - **Chips (filters).** `999px` radius, `Inter` 0.76rem, `0.04em` tracking, Bone
   Dim until active. Carry `aria-pressed`. The one place a pill is right, because
   they are toggles and read as tokens.
@@ -133,6 +142,8 @@ artwork numbering. Worth doing on any new screen with figures in a column.
 - **Cards.** Only where elevation carries hierarchy. Default to a `1px` Hair
   top rule and whitespace instead. Radius stays at `2px`; `999px` is for chips
   and dots only.
+- **Touch targets.** Every interactive element clears 44px. Nav links carry
+  vertical padding rather than relying on the line box.
 - **Sections.** Separated by a single `1px` Hair top border. No shadows anywhere
   in the system.
 - **Loading / empty.** A project with no artwork renders a typographic plate —
