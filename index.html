@@ -778,6 +778,19 @@ footer{font-family:var(--f-ui);
   .tl-year:first-child{padding-top:0}
   .strip-nav{display:none}
 }
+/* Faixa dos tablets. Os links do menu reaparecem aos 621px, mas a barra
+   completa (marca 115 + links 451 + botoes 86, mais as folgas) pede 744px
+   de largura. Entre um valor e o outro nao cabia e o botao do tema saia
+   cortado: 10px aos 700px, 89px aos 621px. O body tem overflow-x:hidden,
+   por isso ninguem conseguia sequer chegar la para o carregar.
+   Os links apertam em vez de desaparecerem. Perder a navegacao inteira
+   num tablet era pior do que a ter mais junta, e os rotulos ficam
+   intactos — mudar rotulos de navegacao e coisa que se pergunta. */
+@media (min-width:621px) and (max-width:780px){
+  .bar{gap:12px}
+  .links{gap:14px;font-size:.72rem}
+  .knobs{margin-left:12px}
+}
 </style>
 </head>
 <body>
