@@ -388,7 +388,7 @@ header{
   /* atencao: o atalho `font:` define TAMBEM a familia. Ter um font-family
      antes dele nao serve de nada — e apagado por esta linha. */
   font:500 .68rem/1 var(--f-ui);letter-spacing:.1em;
-  transition:border-color .2s ease,color .2s ease;
+  transition:border-color .2s ease,color .2s ease,transform .12s ease-out;
 }
 .knob:hover{border-color:var(--royal-lift);color:var(--bone)}
 
@@ -401,7 +401,7 @@ header{
      qualquer uma que venha a mudar depois. So estas tres e que mudam no hover
      (o .fill inverte o fundo, as duas variantes mexem no contorno e no texto).
      Nomeia-las mantem o transform do ::after de fora e evita surpresas. */
-  transition:background .25s ease,border-color .25s ease,color .25s ease;
+  transition:background .25s ease,border-color .25s ease,color .25s ease,transform .12s ease-out;
 }
 .btn:hover{border-color:var(--royal-lift);color:var(--bone)}
 .btn.fill{background:var(--royal);border-color:var(--royal);color:#fff}
@@ -442,7 +442,7 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 .chip{
   font:400 .76rem var(--f-ui);letter-spacing:.04em;padding:8px 16px;border-radius:999px;
   cursor:pointer;border:1px solid var(--hair);background:transparent;color:var(--bone-dim);
-  transition:background .2s ease,border-color .2s ease,color .2s ease;
+  transition:background .2s ease,border-color .2s ease,color .2s ease,transform .12s ease-out;
 }
 .chip:hover{color:var(--bone);border-color:var(--royal-lift)}
 .chip.on{background:var(--bone);border-color:var(--bone);color:var(--void)}
@@ -490,8 +490,10 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 .strip-nav{display:flex;gap:8px;margin-top:6px}
 .strip-nav button{
   width:38px;height:38px;border-radius:999px;cursor:pointer;background:transparent;
-  border:1px solid var(--hair);color:var(--bone-dim);font-size:1rem;
-  transition:border-color .2s ease,color .2s ease;
+  border:1px solid var(--hair);color:var(--bone-dim);
+  /* sem font-family isto caia no default do browser (Arial), fora da pilha. */
+  font:400 1rem var(--f-ui);
+  transition:border-color .2s ease,color .2s ease,transform .12s ease-out;
 }
 .strip-nav button:hover{border-color:var(--royal-lift);color:var(--bone)}
 .hint{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-dim);align-self:center;margin-left:10px}
@@ -644,9 +646,21 @@ footer{font-family:var(--f-ui);
 .lb-cap{color:var(--bone);font-size:.8rem;margin-top:16px;text-align:center;font-family:var(--f-disp)}
 .lb-hint{color:var(--bone-dim);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;margin-top:8px;text-align:center}
 .lb-btn{position:fixed;border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;cursor:pointer;width:44px;height:44px;border-radius:999px;
-  transition:background .2s ease,border-color .2s ease}
+  font:400 1.2rem var(--f-ui);   /* idem: sem isto era Arial */
+  transition:background .2s ease,border-color .2s ease,transform .12s ease-out}
 .lb-btn:hover{background:var(--royal);border-color:var(--royal)}
 .lb-close{top:22px;right:22px}
+
+/* Resposta ao carregar. Duas skills pedem o mesmo: o controlo tem de acusar o
+   toque. 0,97 e subtil e 120ms e a duracao de um clique.
+   A .frame (moldura da tira) fica DE FORA de proposito: no telemovel arrastar
+   a tira comeca com um toque na moldura, o :active dispararia e as obras
+   encolhiam durante o arrasto.
+   As setas .lb-prev/.lb-next ja usam transform:translateY(-50%) para se
+   centrarem, por isso tem de repetir esse translate — senao o scale sozinho
+   apagava-o e o botao saltava para fora do centro. */
+.btn:active,.chip:active,.knob:active,.strip-nav button:active,.lb-close:active{transform:scale(.97)}
+.lb-prev:active,.lb-next:active{transform:translateY(-50%) scale(.97)}
 .lb-prev{left:18px;top:50%;transform:translateY(-50%)}
 .lb-next{right:18px;top:50%;transform:translateY(-50%)}
 
@@ -742,6 +756,8 @@ footer{font-family:var(--f-ui);
      ao lado tambem so muda cores e ja estava desligado — ou vale para todos
      ou nao vale para nenhum. */
   .knob,.chip,.strip-nav button,.lb-btn{transition:none}
+  .btn:active,.chip:active,.knob:active,.strip-nav button:active,.lb-close:active{transform:none}
+  .lb-prev:active,.lb-next:active{transform:translateY(-50%)}
 }
 
 /* ================= RESPONSIVE ================= */

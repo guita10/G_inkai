@@ -109,6 +109,10 @@ artwork numbering. Worth doing on any new screen with figures in a column.
   wipes back to transparent on hover. A diagonal light sweep crosses the filled
   button on hover (`left: -120% → 100%`, 650ms). No outer glow, ever.
   Transition: `background .25s ease, border-color .25s ease, color .25s ease`.
+  **Every control answers a press** with `transform: scale(.97)` over 120ms.
+  Buttons, chips, knobs, filmstrip arrows and lightbox controls. Artwork tiles
+  are the deliberate exception: on a phone, dragging the filmstrip begins as a
+  press on a tile, and the work would shrink mid-drag.
 - **Chips (filters).** `999px` radius, `Inter` 0.76rem, `0.04em` tracking, Bone
   Dim until active. Carry `aria-pressed`. The one place a pill is right, because
   they are toggles and read as tokens.
@@ -180,7 +184,7 @@ artwork numbering. Worth doing on any new screen with figures in a column.
   picks up any that is added to the rule later. List what actually changes.
 - **`prefers-reduced-motion` disables everything.** The clip-path reveal, the
   seal stamp, the button sweep, the timeline dot pulse, smooth scrolling, every
-  staggered delay, and every interactive control — buttons, theme and language
+  staggered delay, every press-scale, and every interactive control — buttons, theme and language
   knobs, filter chips, filmstrip arrows, lightbox controls. Colour-only fades
   count: if one control is silenced they all are. Anything added must extend
   those two media blocks. This is a hard requirement, not a nicety.
