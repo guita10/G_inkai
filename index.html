@@ -109,15 +109,15 @@ const CONFIG = {
      empty to use the local /images/ folder, or set it to
      "https://guitaink.com/" to pull straight from the live deploy.     */
   imageBase: "",
-  hero: { src: "images/oc.jpg", label: "OC — 01", ratio: "34" },
+  hero: { src: "images/oc.jpg", label: "OC 01", ratio: "34" },
   artworks: [
     { src: "images/mira-starborn.jpg",         label: "Mira Starborn",             ratio: "11", cat: "character" },
-    { src: "images/collab-mira-final.jpg",     label: "Mira — collab",             ratio: "34", cat: "character" },
-    { src: "images/collab.jpg",                label: "Duelo — collab",            ratio: "43", cat: "character" },
+    { src: "images/collab-mira-final.jpg",     label: "Mira, collab",             ratio: "34", cat: "character" },
+    { src: "images/collab.jpg",                label: "Duelo, collab",            ratio: "43", cat: "character" },
     { src: "images/arkevil-final.jpg",         label: "ArkEvil",                   ratio: "34", cat: "character" },
-    { src: "images/oc.jpg",                    label: "OC — 01",                   ratio: "34", cat: "character" },
-    { src: "images/oc-1.jpg",                  label: "OC — 02",                   ratio: "11", cat: "character" },
-    { src: "images/oc-2.jpg",                  label: "OC — 03",                   ratio: "34", cat: "character" },
+    { src: "images/oc.jpg",                    label: "OC 01",                   ratio: "34", cat: "character" },
+    { src: "images/oc-1.jpg",                  label: "OC 02",                   ratio: "11", cat: "character" },
+    { src: "images/oc-2.jpg",                  label: "OC 03",                   ratio: "34", cat: "character" },
     { src: "images/silen.jpg",                 label: "Silen",                     ratio: "34", cat: "character" },
     { src: "images/the-witch.jpg",             label: "The Witch",                 ratio: "34", cat: "character" },
     { src: "images/kon.jpg",                   label: "Kon",                       ratio: "11", cat: "character" },
@@ -129,14 +129,14 @@ const CONFIG = {
     { src: "images/estudo-luz.jpg",            label: "Estudo de luz",             ratio: "34", cat: "sketches" },
     { src: "images/shocked.jpg",               label: "Shocked",                   ratio: "34", cat: "sketches" },
     { src: "images/surpresa.jpg",              label: "Surpresa",                  ratio: "11", cat: "sketches" },
-    { src: "images/aki.jpg",                   label: "Aki — Chainsaw Man",        ratio: "34", cat: "fanart" },
-    { src: "images/makima.jpg",                label: "Makima — Chainsaw Man",     ratio: "34", cat: "fanart" },
-    { src: "images/pochita.jpg",               label: "Pochita — Chainsaw Man",    ratio: "11", cat: "fanart" },
-    { src: "images/even-yeager.jpg",           label: "Eren Yeager — AoT",         ratio: "34", cat: "fanart" },
-    { src: "images/final-aot-season-4.jpg",    label: "Attack on Titan — S4",      ratio: "34", cat: "fanart" },
-    { src: "images/yuta-fanart.jpg",           label: "Yuta — Jujutsu Kaisen",     ratio: "34", cat: "fanart" },
-    { src: "images/nami-30x40.jpg",            label: "Nami — One Piece",          ratio: "34", cat: "fanart" },
-    { src: "images/ilustracao-sem-titulo.jpg", label: "Tony Tony Chopper — card",  ratio: "43", cat: "fanart" },
+    { src: "images/aki.jpg",                   label: "Aki, Chainsaw Man",        ratio: "34", cat: "fanart" },
+    { src: "images/makima.jpg",                label: "Makima, Chainsaw Man",     ratio: "34", cat: "fanart" },
+    { src: "images/pochita.jpg",               label: "Pochita, Chainsaw Man",    ratio: "11", cat: "fanart" },
+    { src: "images/even-yeager.jpg",           label: "Eren Yeager, AoT",         ratio: "34", cat: "fanart" },
+    { src: "images/final-aot-season-4.jpg",    label: "Attack on Titan S4",      ratio: "34", cat: "fanart" },
+    { src: "images/yuta-fanart.jpg",           label: "Yuta, Jujutsu Kaisen",     ratio: "34", cat: "fanart" },
+    { src: "images/nami-30x40.jpg",            label: "Nami, One Piece",          ratio: "34", cat: "fanart" },
+    { src: "images/ilustracao-sem-titulo.jpg", label: "Tony Tony Chopper, card",  ratio: "43", cat: "fanart" },
     { src: "images/dante.jpg",                 label: "Dante",                     ratio: "11", cat: "fanart" },
     { src: "images/lucy.jpg",                  label: "Lucy",                      ratio: "11", cat: "fanart" },
   ],
@@ -198,12 +198,12 @@ const CONFIG = {
       commOpen: "Open", commClosed: "Closed",
       stepsTitle: "How it works",
       steps: [
-        { n:"01", t:"Brief",    d:"You tell me the character, the mood, the references. I confirm scope and price." },
-        { n:"02", t:"Sketch",   d:"Composition and pose for your approval. Changes are easy at this stage." },
-        { n:"03", t:"Line art", d:"Inked lines, locked in before colour begins." },
-        { n:"04", t:"Colour",   d:"Rendering and lighting. Final files sent on delivery." },
+        { t:"Brief",    d:"You tell me the character, the mood, the references. I confirm scope and price." },
+        { t:"Sketch",   d:"Composition and pose for your approval. Changes are easy at this stage." },
+        { t:"Line art", d:"Inked lines, locked in before colour begins." },
+        { t:"Colour",   d:"Rendering and lighting. Final files sent on delivery." },
       ],
-      turnaround: "2-4 weeks · 2 revision rounds included · full terms come with the acceptance email",
+      turnaround: "2-4 weeks · 2 revision rounds included. Full terms come with the acceptance email",
       commIntro: "Four formats and four stages (sketch, lineart, color, final), with your approval at each one. Typical turnaround is 2-4 weeks. Full terms come with the acceptance email.",
       fromPrefix: "from",
       tiers: {
@@ -253,12 +253,12 @@ const CONFIG = {
       commOpen: "Abertas", commClosed: "Fechadas",
       stepsTitle: "Como funciona",
       steps: [
-        { n:"01", t:"Briefing", d:"Dizes-me a personagem, o ambiente, as referências. Confirmo âmbito e preço." },
-        { n:"02", t:"Esboço",   d:"Composição e pose para aprovares. Nesta fase mudar é fácil." },
-        { n:"03", t:"Line art", d:"Linhas fechadas a tinta, prontas para entrar a cor." },
-        { n:"04", t:"Cor",      d:"Render e iluminação. Ficheiros finais enviados na entrega." },
+        { t:"Briefing", d:"Dizes-me a personagem, o ambiente, as referências. Confirmo âmbito e preço." },
+        { t:"Esboço",   d:"Composição e pose para aprovares. Nesta fase mudar é fácil." },
+        { t:"Line art", d:"Linhas fechadas a tinta, prontas para entrar a cor." },
+        { t:"Cor",      d:"Render e iluminação. Ficheiros finais enviados na entrega." },
       ],
-      turnaround: "2 a 4 semanas · 2 rondas de revisão incluídas · termos completos no email de aceitação",
+      turnaround: "2 a 4 semanas · 2 rondas de revisão incluídas. Termos completos no email de aceitação",
       commIntro: "Quatro formatos e quatro fases (esboço, lineart, cor, final), com a tua aprovação em cada uma. Prazo típico de 2 a 4 semanas. Os termos completos seguem no email de aceitação.",
       fromPrefix: "desde",
       tiers: {
@@ -585,12 +585,14 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 .steps-title{font-size:1.3rem;margin-bottom:22px}
 /* quatro colunas iguais outra vez. Como sao passos numerados, um degrau
    progressivo le-se como sequencia e quebra a linha reta. */
-.steps{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:22px;counter-reset:s;align-items:start}
+/* Os numeros 01-04 sairam: a regra 9.F diz que o passo e o rotulo, e o <ol>
+   ja da a ordem a quem usa leitor de ecra. A escada (os margin-top abaixo)
+   mostra a sequencia visualmente. As colunas tambem deixaram de ser iguais. */
+.steps{list-style:none;display:grid;grid-template-columns:1.18fr 1fr 1fr .92fr;gap:22px;align-items:start}
 .steps li:nth-child(2){margin-top:18px}
 .steps li:nth-child(3){margin-top:36px}
 .steps li:nth-child(4){margin-top:54px}
 .steps li{border-top:1px solid var(--royal);padding-top:16px}
-.steps .n{font-family:var(--f-ui);font-size:.66rem;letter-spacing:.2em;color:var(--royal-lift)}
 .steps h4{font-family:var(--f-disp);font-weight:400;font-size:1.1rem;margin:8px 0 6px}
 .steps p{font-size:.84rem;color:var(--bone-dim)}
 /* MOBILE OVERRIDE (skill 7): o degrau e uma decisao de desktop. Abaixo de 980px
@@ -771,7 +773,7 @@ footer{font-family:var(--f-ui);
      e o contacto aparecem sempre. -->
 <noscript>
   <div class="noscript-note">
-    <p><b>Guita_Ink</b> — Frederico Guita · Illustration &amp; character design</p>
+    <p><b>Guita_Ink</b>, Frederico Guita · Illustration &amp; character design</p>
     <p>This portfolio needs JavaScript to show the artwork.
        Esta galeria precisa de JavaScript para mostrar as ilustracoes.</p>
     <p><a href="mailto:frederico@guitaink.com">frederico@guitaink.com</a>
@@ -1163,7 +1165,7 @@ function renderText(){
 
   /* processo de comissão */
   $('#steps').innerHTML = t.steps.map(x =>
-    `<li><span class="n">${x.n}</span><h4>${x.t}</h4><p>${x.d}</p></li>`).join('');
+    `<li><h4>${x.t}</h4><p>${x.d}</p></li>`).join('');
 
   /* contact */
   $('#mailLink').textContent = CONFIG.email;
