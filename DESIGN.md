@@ -122,6 +122,11 @@ artwork numbering. Worth doing on any new screen with figures in a column.
   nav at boot, so there is one list, not two. `aria-expanded`, focus trapped,
   Escape closes and returns focus, and it closes itself if the viewport grows
   past the breakpoint.
+- **Commission steps.** Four stages in an ordered list, each with a Royal top
+  rule, staggered down a staircase (`margin-top` 0 / 18 / 36 / 54px) over
+  unequal columns (`1.18fr 1fr 1fr .92fr`). **No step numbers.** The stage name
+  is the label; the list order and the staircase carry the sequence. Numbering
+  a step "01 Brief" is the pattern to avoid.
 - **Chips (filters).** `999px` radius, `Inter` 0.76rem, `0.04em` tracking, Bone
   Dim until active. Carry `aria-pressed`. The one place a pill is right, because
   they are toggles and read as tokens.
@@ -171,8 +176,10 @@ artwork numbering. Worth doing on any new screen with figures in a column.
 - Full-height sections use `100dvh`, never `100vh`.
 - Nothing overlaps. No absolutely-positioned content stacking. The only fixed
   layer is the grain veil, which is `pointer-events: none`.
-- **Responsive:** every multi-column block collapses to one column under 768px
-  (breakpoints in use: 980px, 620px). Headlines scale via `clamp()`. No
+- **Responsive:** every multi-column block collapses to one column under 768px.
+  Breakpoints in use: **980px** (grids go to one or two columns), **780px down
+  to 621px** (the nav condenses so the header still fits: the full bar needs
+  744px), and **620px** (bar links give way to the mobile menu). Headlines scale via `clamp()`. No
   horizontal overflow — `overflow-x: hidden` on body is a backstop, not a
   licence. Interactive targets stay at 44px or more.
 
