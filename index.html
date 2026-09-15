@@ -667,7 +667,11 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
    O primeiro formato (o mais acessivel) leva a celula maior para haver um ponto
    de entrada visual. Sem selo, sem copy nova. */
 .tiers{display:grid;grid-template-columns:1.55fr 1fr 1fr 1fr;gap:1px;background:var(--hair);border:1px solid var(--hair);margin-bottom:30px}
-.tier:first-child{padding:34px 26px}
+/* O padding vertical volta a ser 28px, igual aos outros: com 34px o titulo do
+   primeiro cartao assentava 6px mais abaixo que os tres ao lado, e cartoes
+   lado a lado com as linhas desalinhadas leem-se como erro, nao como enfase.
+   A enfase fica no horizontal (26px contra 22px) e no tamanho do preco. */
+.tier:first-child{padding:28px 26px}
 .tier:first-child h3{font-size:1.32rem}
 .tier:first-child .price .n{font-size:3.1rem}
 .tier{background:var(--void);padding:28px 22px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;transition:background .3s}
