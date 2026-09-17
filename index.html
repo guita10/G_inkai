@@ -542,7 +542,15 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
    por cima da arte (rgba(6,6,6,.88)) NAO muda: e escuro nos dois temas. No tema
    claro dava azul escuro sobre preto, 2,36:1, abaixo do minimo de 4,5. O .t ao
    lado ja estava fixo em #fff pela mesma razao. Fixo aqui tambem: 4,64:1. */
-.frame .meta .n{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#5568FF}
+/* Os numeros das obras (001..028) sao uma coluna que se le de relance ao
+   arrastar a tira. As figuras da Lora sao proporcionais por omissao: medido a
+   200px, o '1' tem 73px e o '0' tem 124px, 51px de diferenca. Com tabular-nums
+   passam todos a 130px e a coluna deixa de bailar.
+   NOTA: isto so funciona aqui porque este texto cai na Lora. Os precos e os
+   anos usam Playfair Display, cujo subconjunto latino do Google nao traz a
+   feature 'tnum' — la a declaracao seria letra morta, por isso nao esta la. */
+.frame .meta .n{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#5568FF;
+  font-variant-numeric:tabular-nums}
 .frame.hidden{display:none}
 .strip-nav{display:flex;gap:8px;margin-top:6px}
 .strip-nav button{

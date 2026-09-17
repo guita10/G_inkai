@@ -97,8 +97,13 @@ audit this project is held to.
 **Georgia** appears only as a fallback in both serif stacks, never as a chosen
 face. Leave it there; a fallback is a safety net, not a type decision.
 
-**Not yet applied:** `font-variant-numeric: tabular-nums` on prices and the
-artwork numbering. Worth doing on any new screen with figures in a column.
+**Figures.** All three faces ship *proportional* numerals. Measured at 200px:
+Inter spreads 48px between its narrowest and widest digit, Lora 51px, Playfair
+46px. `font-variant-numeric: tabular-nums` closes Inter and Lora to zero, and
+does **nothing** to Playfair, whose Google latin subset carries no `tnum`
+feature. So the artwork numbers (Lora) are set tabular; the prices and the
+timeline years (Playfair) are not, because there the declaration would be
+inert. Do not add it to Playfair and assume it took.
 
 ---
 
@@ -220,7 +225,11 @@ artwork numbering. Worth doing on any new screen with figures in a column.
 
 - No emojis. The 墨 glyph is a typeset character, not an emoji, and is the only
   non-Latin mark in the system.
-- No pure `#000000` or pure `#FFFFFF` for text or the field.
+- No pure `#000000` anywhere, and no pure `#FFFFFF` as the field or as body text.
+  `#fff` is allowed on the eight elements that sit on a saturated Royal fill or
+  on the artwork scrim: the skip link, the seal, the tile title, the filled
+  button, the lightbox controls. Those grounds do not follow the theme, so the
+  text on them must not either.
 - No second accent hue. The three Royal tints are one colour.
 - No neon, glow, or outer-shadow treatments on the accent.
 - No gradient text on headlines.
