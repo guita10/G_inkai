@@ -12,7 +12,7 @@
 <meta property="og:description" content="Guita_Ink · illustration project page. Character design, covers and webtoon work by Frederico Guita.">
 <!-- dominio proprio, activo. Se algum dia mudar, e aqui e no sitemap/robots. -->
 <meta property="og:url" content="https://guitaink.com/projeto.html">
-<meta property="og:image" content="https://guitaink.com/images/oc.jpg">
+<meta property="og:image" content="https://guitaink.com/images/og-card.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://guitaink.com/projeto.html">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232E45FF'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23F2F0EC' font-family='serif'%3E墨%3C/text%3E%3C/svg%3E">
@@ -316,6 +316,21 @@ const LANG = (navigator.language || 'en').toLowerCase().startsWith('pt') ? 'pt' 
 const t = CONFIG.i18n[LANG];
 document.documentElement.lang = LANG;
 
+/* Mesma deteccao do index.html: uma vez por pagina, sem pedidos de rede. */
+const WEBP_OK = (() => {
+  try { return document.createElement('canvas')
+    .toDataURL('image/webp').indexOf('data:image/webp') === 0; }
+  catch(e){ return false; }
+})();
+/* Medidas reais das artes dos projectos. O index tem o mapa DIMS completo;
+   aqui so fazem falta estas tres. Se trocares a arte de um projecto, corre o
+   tools/dims.py (que trata do index) e actualiza estes numeros a mao. */
+const PROJ_DIMS = {
+  "proj-sok.jpg":  {w:1280, h:1600},
+  "proj-tr.jpg":   {w:1066, h:1600},
+  "proj-pamp.jpg": {w:1553, h:1600},
+};
+
 const proj = CONFIG.projects.find(p => p.key === key);
 const tp = proj ? t.projects[proj.key] : null;
 
@@ -334,7 +349,20 @@ if(!tp){
   const plate = document.getElementById('plate');
   if(proj.src){
     const img = document.createElement('img');
-    img.src = proj.src; img.alt = tp.title;
+    /* Tal como no index: serve-se .webp a quem o suporta e cai-se no .jpg pelo
+       onerror. Antes esta pagina puxava sempre o JPEG grande — o do Tokyo
+       Revengers sao 316K contra 216K em WebP.
+       As medidas reais vao nos atributos width/height para o browser reservar
+       o espaco antes de a imagem chegar. Sem elas a caixa tinha altura zero e
+       tudo o que vem por baixo (a nota e o rodape) saltava ao carregar. */
+    const file = proj.src.split('/').pop();
+    const d = PROJ_DIMS[file];
+    if(d){ img.width = d.w; img.height = d.h; }
+    const webp = proj.src.replace(/\.jpe?g$/i, '.webp');
+    let jpgTried = !WEBP_OK;
+    img.onerror = () => { if(!jpgTried){ jpgTried = true; img.src = proj.src; } };
+    img.src = WEBP_OK ? webp : proj.src;
+    img.alt = tp.title;
     plate.replaceWith(img);
   } else {
     plate.querySelector('span').textContent = proj.plate || '';
@@ -346,9 +374,11 @@ if(!tp){
      Only reaches crawlers/unfurlers that execute JS (Google, Bing); others still
      get the generic fallback set in <head>, which beats no tags at all. */
   const pageUrl = `https://guitaink.com/projeto.html?p=${encodeURIComponent(proj.key)}`;
+  /* com arte, partilha-se a arte do projecto; sem ela, o cartao geral em vez
+     de uma ilustracao que nao e deste projecto. */
   const shareImg = proj.src
     ? `https://guitaink.com/${proj.src}`
-    : 'https://guitaink.com/images/oc.jpg';
+    : 'https://guitaink.com/images/og-card.jpg';
   document.querySelector('meta[name="description"]').setAttribute('content', tp.desc);
   document.querySelector('meta[property="og:title"]').setAttribute('content', `${tp.title} · Guita_Ink`);
   document.querySelector('meta[property="og:description"]').setAttribute('content', tp.desc);

@@ -162,6 +162,10 @@ def main():
             continue
         print(f"\n{folder}/")
         for name in sorted(os.listdir(folder)):
+            # o cartao de partilha nao e arte do site: quem o le sao os
+            # desunfurlers do Facebook e do WhatsApp, que querem JPEG.
+            if name == "og-card.jpg":
+                continue
             if not name.lower().endswith(".jpg"):
                 continue
             jpg = os.path.join(folder, name)

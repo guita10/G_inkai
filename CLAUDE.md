@@ -14,7 +14,7 @@ neglect.
 
 There is no framework, no npm, no build step, no component library, no icon
 library, and no CSS methodology. The entire site is four hand-written HTML files
-plus an images folder. `index.html` is 1,519 lines and contains a `CONFIG`
+plus an images folder. `index.html` is 1,682 lines and contains a `CONFIG`
 object, one `<style>` block, the markup, and the render JavaScript. It must keep
 working when opened directly from disk over `file://`. Content lives in `CONFIG`
 and is rendered by plain DOM functions. Anything that reads like "add a
@@ -123,6 +123,7 @@ nothing.
 | `add-artwork.py` | the whole ingest: original → 1600px JPEG + 760px thumb, then calls the two below |
 | `make-webp.py` | regenerates the WebP derivatives |
 | `dims.py` | rewrites the `DIMS` map in `index.html` from the real pixels |
+| `make-og-card.py` | redraws `images/og-card.jpg`, the 1200x630 social card |
 
 `add-artwork.py` is the one to reach for. Adding art by hand means four steps and
 the fourth, `DIMS`, fails silently: a wrong number throws no error, it just puts
@@ -183,6 +184,12 @@ margins. Aim **1-5% under** the real height. Under-reserving settles by a few
 pixels; over-reserving opens a gap that closes again, which counts just the
 same. **If you change the number of artworks, update the 31.8 and the 28.**
 Result after all of it: 0.006 throttled, 0 unthrottled.
+
+**`images/og-card.jpg` is not artwork.** It is the 1200x630 card unfurlers show
+when the link is shared, drawn in `tools/og-card.html` and screenshotted by
+`tools/make-og-card.py`. It has no thumbnail and no WebP on purpose, and both
+`dims.py` and `make-webp.py` skip it by name. Never add it to `CONFIG.artworks`
+or it lands in the gallery and the ImageGallery JSON-LD.
 
 No CDN. No image service. Netlify serves the files as they are.
 
@@ -264,6 +271,8 @@ tools/          all run by hand, none part of the deploy
   add-artwork.py  original → full + thumb + webp + DIMS, in one command
   make-webp.py    regenerates the WebP derivatives
   dims.py         rewrites the DIMS map from the real pixels
+  make-og-card.py redraws images/og-card.jpg from og-card.html
+  og-card.html    the social card's layout; not served, just the mould
 DESIGN.md       the design system in semantic form
 CLAUDE.md       this file
 ```

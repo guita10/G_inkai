@@ -47,12 +47,18 @@ PAGE = os.path.join(ROOT, "index.html")
 # A linha do mapa no index.html. O ; final faz parte para nao apanhar de mais.
 PATTERN = re.compile(r"const DIMS = (\{.*?\});")
 
+# Ficheiros que vivem em images/ sem serem obras da galeria: nao tem
+# miniatura, nao entram no mapa e nao ha nada de errado com isso.
+NOT_ARTWORK = {"og-card.jpg"}
+
 
 def build():
     """Le images/ e images/thumb/ e devolve o mapa {ficheiro: {w,h,tw,th}}."""
     out, missing = {}, []
     for name in sorted(os.listdir(FULL)):
         if not name.lower().endswith((".jpg", ".jpeg")):
+            continue
+        if name in NOT_ARTWORK:
             continue
         thumb = os.path.join(THUMB, name)
         if not os.path.exists(thumb):

@@ -12,15 +12,17 @@
 <meta property="og:type" content="website">
 <!-- dominio proprio, activo. Se algum dia mudar, e aqui e no sitemap/robots. -->
 <meta property="og:url" content="https://guitaink.com/">
-<!-- ⚠️ Esta imagem e vertical (1280x1600). O Facebook, o LinkedIn e o WhatsApp
-     esperam uma imagem deitada (~1200x630) e cortam o que nao cabe — o corte
-     e ao centro, por isso perde-se a parte de cima e de baixo do desenho.
-     Declarar o tamanho ajuda-os a decidir, mas a solucao a serio e fazeres um
-     cartao deitado de 1200x630 e apontar aqui para ele. -->
-<meta property="og:image" content="https://guitaink.com/images/oc.jpg">
-<meta property="og:image:width" content="1280">
-<meta property="og:image:height" content="1600">
-<meta property="og:image:alt" content="Guita_Ink · original character illustration">
+<!-- O cartao de partilha, 1200x630 — a medida que o Facebook, o LinkedIn e o
+     WhatsApp esperam. Antes apontava para uma ilustracao vertical (1280x1600)
+     que eles cortavam ao centro, perdendo a cabeca e os pes do desenho.
+     Foi desenhado em HTML e fotografado com o Chromium; o ficheiro de origem
+     esta em tools/og-card.html. Para o refazer (arte nova, texto novo):
+       python3 tools/make-og-card.py
+     Nao e uma obra da galeria: nao entra no CONFIG.artworks nem no JSON-LD. -->
+<meta property="og:image" content="https://guitaink.com/images/og-card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Guita_Ink · illustration and character design">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://guitaink.com/">
 <!-- Dados estruturados para o Google. Os precos aqui em baixo sao reescritos
