@@ -42,10 +42,10 @@
   "sameAs":["https://www.instagram.com/guita_ink"],
   "knowsAbout":["Illustration","Character design","Manga","Anime","Webtoon"],
   "makesOffer":[
-    {"@type":"Offer","name":"Headshot / Bust commission","price":"65","priceCurrency":"EUR"},
-    {"@type":"Offer","name":"Half body commission","price":"120","priceCurrency":"EUR"},
-    {"@type":"Offer","name":"Full body commission","price":"180","priceCurrency":"EUR"},
-    {"@type":"Offer","name":"Character sheet commission","price":"280","priceCurrency":"EUR"}
+    {"@type":"Offer","name":"Headshot / Bust commission"},
+    {"@type":"Offer","name":"Half body commission"},
+    {"@type":"Offer","name":"Full body commission"},
+    {"@type":"Offer","name":"Character sheet commission"}
   ]
 }
 </script>
@@ -87,17 +87,23 @@ const CONFIG = {
   ],
 
   /* ---------- COMMISSIONS ----------
-     ⚠️ SYNC: a price lives in THREE places (Notion → Painel de manutenção).
-        1. here   2. the Shopify product   3. Notion → Termos & Condições
-     Closing commissions is TWO gestures: open:false here AND set the
-     Shopify products to draft, or the shop keeps taking orders.
-     Full terms are deliberately NOT on the site — they go in the acceptance email. */
+     OS PRECOS NAO VIVEM AQUI, DE PROPOSITO.
+     O site mostra os quatro formatos e mais nada. O valor, o processo, as
+     fases, o prazo e os termos seguem no email de resposta, junto com o PDF
+     de onboarding. Quem chega ao site fala primeiro; o numero vem depois.
+     Isso tira o preco de tres sitios de uma vez: da pagina, do JSON-LD que o
+     Google le, e do codigo-fonte.
+     Os precos verdadeiros vivem em dois sitios, e so dois:
+        1. o produto no Shopify        2. Guita_Ink_Comissoes_PT.pdf (Drive)
+     O `handle` fica porque e ele que da o link da loja no email de aceitacao.
+     Fechar comissoes continua a ser DOIS gestos: open:false aqui E por os
+     produtos do Shopify em rascunho, senao a loja continua a aceitar pedidos. */
   commissionsOpen: true,
-  tiers: [                                              // synced with Shopify, 26 Jul 2026
-    { key: "headshot", price: "65",  unit: "€", from: false, handle: "commission-headshot-bust" },
-    { key: "half",     price: "120", unit: "€", from: false, handle: "commission-half-body" },
-    { key: "full",     price: "180", unit: "€", from: false, handle: "commission-full-body" },
-    { key: "sheet",    price: "280", unit: "€", from: true,  handle: "commission-character-sheet" },
+  tiers: [
+    { key: "headshot", handle: "commission-headshot-bust" },
+    { key: "half",     handle: "commission-half-body" },
+    { key: "full",     handle: "commission-full-body" },
+    { key: "sheet",    handle: "commission-character-sheet" },
   ],
 
   /* ---------- IMAGES ----------
@@ -201,24 +207,25 @@ const CONFIG = {
       aboutMeta: "Frederico Guita · Guita_Ink",
       commTitle: "Commissions",
       commOpen: "Open", commClosed: "Closed",
-      stepsTitle: "How it works",
-      steps: [
-        { t:"Brief",    d:"You tell me the character, the mood, the references. I confirm scope and price." },
-        { t:"Sketch",   d:"Composition and pose for your approval. Changes are easy at this stage." },
-        { t:"Line art", d:"Inked lines, locked in before colour begins." },
-        { t:"Colour",   d:"Rendering and lighting. Final files sent on delivery." },
-      ],
-      turnaround: "2-4 weeks · 2 revision rounds included. Full terms come with the acceptance email",
-      commIntro: "Four formats and four stages (sketch, lineart, color, final), with your approval at each one. Typical turnaround is 2-4 weeks. Full terms come with the acceptance email.",
-      fromPrefix: "from",
+      commIntro: "Four formats, from a bust to a full character sheet. Tell me what you have in mind and I reply with the format, the price and the timeline.",
+      commNote: "Prices and the full process go by email, with a short guide of how we work together.",
       tiers: {
         headshot: { name: "Headshot / Bust", desc: "Head and shoulders, fully rendered." },
         half:     { name: "Half body",       desc: "Waist-up illustration, fully rendered." },
         full:     { name: "Full body",       desc: "Complete character, fully rendered." },
         sheet:    { name: "Character sheet", desc: "Turnarounds, expressions and detail callouts. Final quote depends on the number of views." },
       },
-      commShop: "Order in the shop",
-      commCta: "Ask by email",
+      commCta: "Ask about a commission",
+      mailSubject: "Commission request",
+      mailBody: "Hi Frede,\n\n"
+        + "Format (bust / half body / full body / character sheet): \n"
+        + "Character: \n"
+        + "Reference links: \n"
+        + "Pose or framing you have in mind: \n"
+        + "Colours or mood: \n"
+        + "Any date you need it by: \n"
+        + "Commercial use (yes / no): \n\n"
+        + "Thanks,\n",
       contactTitle: "Say hi",
       contactBody: "For commissions, collabs or publishing, email is fastest. For everything else, Instagram.",
       footerNote: "Drawn & built by hand.",
@@ -268,24 +275,25 @@ const CONFIG = {
       aboutMeta: "Frederico Guita · Guita_Ink",
       commTitle: "Comissões",
       commOpen: "Abertas", commClosed: "Fechadas",
-      stepsTitle: "Como funciona",
-      steps: [
-        { t:"Briefing", d:"Dizes-me a personagem, o ambiente, as referências. Confirmo âmbito e preço." },
-        { t:"Esboço",   d:"Composição e pose para aprovares. Nesta fase mudar é fácil." },
-        { t:"Line art", d:"Linhas fechadas a tinta, prontas para entrar a cor." },
-        { t:"Cor",      d:"Render e iluminação. Ficheiros finais enviados na entrega." },
-      ],
-      turnaround: "2 a 4 semanas · 2 rondas de revisão incluídas. Termos completos no email de aceitação",
-      commIntro: "Quatro formatos e quatro fases (esboço, lineart, cor, final), com a tua aprovação em cada uma. Prazo típico de 2 a 4 semanas. Os termos completos seguem no email de aceitação.",
-      fromPrefix: "desde",
+      commIntro: "Quatro formatos, do busto à character sheet completa. Diz-me o que tens em mente e respondo com o formato, o valor e o prazo.",
+      commNote: "Os valores e o processo completo seguem por email, com um guia curto de como vamos trabalhar.",
       tiers: {
         headshot: { name: "Headshot / Busto",   desc: "Cabeça e ombros, totalmente renderizado." },
         half:     { name: "Meio corpo",         desc: "Ilustração da cintura para cima, totalmente renderizada." },
         full:     { name: "Corpo inteiro",      desc: "Personagem completa, totalmente renderizada." },
         sheet:    { name: "Character sheet",    desc: "Turnarounds, expressões e detalhes. Orçamento final depende do número de vistas." },
       },
-      commShop: "Encomendar na loja",
-      commCta: "Pedir por email",
+      commCta: "Pedir uma comissão",
+      mailSubject: "Pedido de comissão",
+      mailBody: "Olá Frede,\n\n"
+        + "Formato (busto / meio corpo / corpo inteiro / character sheet): \n"
+        + "Personagem: \n"
+        + "Links de referência: \n"
+        + "Pose ou enquadramento que imaginas: \n"
+        + "Cores ou ambiente: \n"
+        + "Alguma data a cumprir: \n"
+        + "Uso comercial (sim / não): \n\n"
+        + "Obrigado,\n",
       contactTitle: "Diz olá",
       contactBody: "Para comissões, colaborações ou publicação, o email é o mais rápido. Para tudo o resto, Instagram.",
       footerNote: "Desenhado & construído à mão.",
@@ -723,31 +731,16 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 .badge{font-family:var(--f-ui);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;padding:8px 16px;border-radius:999px}
 .badge.open{background:var(--royal);color:#fff}
 .badge.closed{border:1px solid var(--hair);color:var(--bone-dim)}
-.turnaround{
+/* A nota por baixo dos formatos. Diz onde estao os valores, sem os dizer. */
+.comm-note{
   font-family:var(--f-ui);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--bone-dim);margin:-14px 0 46px;
+  color:var(--bone-dim);margin:-14px 0 40px;
 }
-.steps-title{font-size:1.3rem;margin-bottom:22px}
-/* quatro colunas iguais outra vez. Como sao passos numerados, um degrau
-   progressivo le-se como sequencia e quebra a linha reta. */
-/* Os numeros 01-04 sairam: a regra 9.F diz que o passo e o rotulo, e o <ol>
-   ja da a ordem a quem usa leitor de ecra. A escada (os margin-top abaixo)
-   mostra a sequencia visualmente. As colunas tambem deixaram de ser iguais. */
-.steps{list-style:none;display:grid;grid-template-columns:1.18fr 1fr 1fr .92fr;gap:22px;align-items:start}
-.steps li:nth-child(2){margin-top:18px}
-.steps li:nth-child(3){margin-top:36px}
-.steps li:nth-child(4){margin-top:54px}
-.steps li{border-top:1px solid var(--royal);padding-top:16px}
-.steps h4{font-family:var(--f-disp);font-weight:400;font-size:1.1rem;margin:8px 0 6px}
-.steps p{font-size:.84rem;color:var(--bone-dim)}
 /* MOBILE OVERRIDE (skill 7): o degrau e uma decisao de desktop. Abaixo de 980px
    as colunas reduzem e as margens do degrau tem de ser anuladas, senao ficam
    buracos no meio da coluna. */
 @media (max-width:980px){
-  .steps{grid-template-columns:repeat(2,1fr)}
-  .steps li:nth-child(2),.steps li:nth-child(3),.steps li:nth-child(4){margin-top:0}
 }
-@media (max-width:620px){.steps{grid-template-columns:1fr}}
 /* era repeat(4,1fr): quatro cartoes iguais lado a lado, exactamente o padrao
    que a regra 9.C proibe, e a razao pela qual isto se lia como tabela de precos.
    O primeiro formato (o mais acessivel) leva a celula maior para haver um ponto
@@ -759,19 +752,12 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
    A enfase fica no horizontal (26px contra 22px) e no tamanho do preco. */
 .tier:first-child{padding:28px 26px}
 .tier:first-child h3{font-size:1.32rem}
-.tier:first-child .price .n{font-size:3.1rem}
-.tier{background:var(--void);padding:28px 22px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;transition:background .3s}
-.tier:hover{background:var(--raise)}
+/* Sem preco, o cartao deixou de ser um link para a loja e passou a ser so
+   informacao: <div> e nao <a>, por isso saiu o hover, o text-decoration e o
+   bloco todo do .price. */
+.tier{background:var(--void);padding:28px 22px;display:flex;flex-direction:column;gap:10px;color:inherit}
 .tier h3{font-size:1.15rem}
-.tier .price{font-family:var(--f-disp);color:var(--royal-lift);display:flex;align-items:baseline;gap:3px}
-.tier .price .from{font-family:var(--f-body);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-dim);margin-right:5px}
-.tier .price .n{font-size:2.4rem;line-height:.9}
-.tier .price .u{font-size:1.05rem}
 .tier p{font-size:.8rem;color:var(--bone-dim)}
-/* O preco desce para o fim do cartao. As descricoes tem comprimentos
-   diferentes e, encostados ao topo, os quatro precos ficavam a alturas
-   diferentes — que e precisamente o numero que se quer comparar de relance. */
-.tier .price{margin-top:auto;padding-top:14px}
 
 /* ================= CONTACT ================= */
 .mail{
@@ -1091,12 +1077,9 @@ footer{font-family:var(--f-ui);
     </div>
     <p class="lede rv" data-t="commIntro" style="margin-bottom:34px"></p>
     <div class="tiers rv" id="tiers"></div>
-    <p class="turnaround rv" data-t="turnaround"></p>
-    <h3 class="steps-title rv" data-t="stepsTitle"></h3>
-    <ol class="steps rv" id="steps"></ol>
+    <p class="comm-note rv" data-t="commNote"></p>
     <div class="row rv">
-      <a class="btn fill" id="commShop" href="#" target="_blank" rel="noopener"><span data-t="commShop"></span> →</a>
-      <a class="btn" id="commCta" href="#"><span data-t="commCta"></span></a>
+      <a class="btn fill" id="commCta" href="#"><span data-t="commCta"></span> →</a>
     </div>
   </section>
 
@@ -1364,21 +1347,20 @@ function renderText(){
   const badge = $('#commBadge');
   badge.textContent = open ? t.commOpen : t.commClosed;
   badge.className = 'badge ' + (open ? 'open' : 'closed');
-  $('#commCta').href = `mailto:${CONFIG.email}?subject=${encodeURIComponent('Commission request: ' + CONFIG.artistName)}`;
-  $('#commShop').href = `${CONFIG.shop}/collections/all`;
+  /* O email ja vai com as perguntas cujas respostas eu preciso de ter antes de
+     dar um valor. Sao as mesmas do PDF de onboarding: referencias, pose, cores,
+     data e uso comercial. Chegar tudo a primeira faz a diferenca entre uma
+     resposta e quatro emails a perguntar o basico. */
+  $('#commCta').href = `mailto:${CONFIG.email}`
+    + `?subject=${encodeURIComponent(t.mailSubject)}`
+    + `&body=${encodeURIComponent(t.mailBody)}`;
+  /* Os cartoes deixam de ser links para a loja: sem preco na pagina, mandar
+     alguem para o produto era mostrar-lhe o preco na mesma. Agora sao so os
+     quatro formatos, e a conversa comeca no email. */
   $('#tiers').innerHTML = CONFIG.tiers.map(x => {
     const tt = t.tiers[x.key];
-    const from = x.from ? `<span class="from">${t.fromPrefix}</span>` : '';
-    const link = x.handle ? `${CONFIG.shop}/products/${x.handle}` : `${CONFIG.shop}/collections/all`;
-    return `<a class="tier" href="${link}" target="_blank" rel="noopener">
-      <h3>${tt.name}</h3>
-      <span class="price">${from}<span class="n">${x.price}</span><span class="u">${x.unit || ''}</span></span>
-      <p>${tt.desc}</p></a>`;
+    return `<div class="tier"><h3>${tt.name}</h3><p>${tt.desc}</p></div>`;
   }).join('');
-
-  /* processo de comissão */
-  $('#steps').innerHTML = t.steps.map(x =>
-    `<li><h4>${x.t}</h4><p>${x.d}</p></li>`).join('');
 
   /* contact */
   $('#mailLink').textContent = CONFIG.email;
@@ -1495,7 +1477,7 @@ function observeReveals(){
   io = new IntersectionObserver(es => es.forEach(e => {
     if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
   }), {threshold:.1});
-  /* .frame, .tier e .steps li não levam .rv — só os contentores é que levam,
+  /* .frame e .tier não levam .rv — só os contentores é que levam,
      por isso estes três staggers estavam a atrasar transições inexistentes.
      Ficam de fora. Se um dia quiseres a cascata peça a peça, junta 'rv' à
      classe do elemento (como o .proj faz) e volta a chamar stagger para ele. */
@@ -1514,11 +1496,12 @@ function syncStructuredData(){
   let data;
   try { data = JSON.parse(el.textContent); } catch(e){ return; }
   const names = CONFIG.i18n.en.tiers;          // o schema fica sempre em EN
+  /* Sem price nem priceCurrency: se o preco nao esta na pagina, tambem nao
+     pode estar aqui — este bloco e o que o Google le e mostra nos resultados.
+     O que fica dito e que os quatro formatos existem e se estao abertos. */
   data.makesOffer = CONFIG.tiers.map(x => ({
     "@type": "Offer",
     name: `${names[x.key] ? names[x.key].name : x.key} commission`,
-    price: String(x.price),
-    priceCurrency: "EUR",
     availability: CONFIG.commissionsOpen
       ? "https://schema.org/InStock"
       : "https://schema.org/OutOfStock",

@@ -14,7 +14,7 @@ neglect.
 
 There is no framework, no npm, no build step, no component library, no icon
 library, and no CSS methodology. The entire site is four hand-written HTML files
-plus an images folder. `index.html` is 1,682 lines and contains a `CONFIG`
+plus an images folder. `index.html` is 1,665 lines and contains a `CONFIG`
 object, one `<style>` block, the markup, and the render JavaScript. It must keep
 working when opened directly from disk over `file://`. Content lives in `CONFIG`
 and is rendered by plain DOM functions. Anything that reads like "add a
@@ -267,6 +267,9 @@ projeto.html    per-project detail page, reads ?p=sok|tr|pamp
 robots.txt
 sitemap.xml     four URLs; update lastmod when content changes
 images/         + images/thumb/
+comissoes/      the commission system; nothing here is served
+  README.md       how site, Notion and email fit together
+  email-onboarding.md  the acceptance email, PT and EN
 tools/          all run by hand, none part of the deploy
   add-artwork.py  original → full + thumb + webp + DIMS, in one command
   make-webp.py    regenerates the WebP derivatives
@@ -328,8 +331,14 @@ and every suggestion in this document.
    about those events.
 3. **Illustrator first.** Architecture training appears exactly once, in About, as
    background. Never in a tagline, meta description or schema.
-4. **No commission terms on the site.** Four stages and the turnaround, nothing
-   more. No payment split, no percentages, no deposit language, in any wording.
+4. **No commission terms and no prices on the site.** The section shows the four
+   formats and nothing else: no prices, no stages, no turnaround, no shop links,
+   no payment split, no percentages, no deposit language, in any wording. The
+   price is not in the markup, not in `CONFIG`, and not in the JSON-LD, because
+   that block is what Google prints in the results. Prices live in exactly two
+   places: the Shopify product and `Guita_Ink_Comissoes_PT.pdf`. The visitor
+   writes first and the number comes back by email, with the PDF. See
+   `comissoes/README.md`.
 5. **Nothing invented.** Projects with no artwork render a typographic plate on
    purpose. Never substitute an unrelated illustration, never write copy
    asserting anything unverifiable from `CONFIG`.
