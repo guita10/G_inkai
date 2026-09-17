@@ -104,12 +104,14 @@ const CONFIG = {
   /* 28 peças reais, exportadas a 1600px do pacote original (era 414 MB → 5,5 MB) */
 
   projects: [
-    /* src ficou vazio de propósito: não há arte de SoK / Tokyo Revengers / PAMP
-       no pacote. Enquanto estiver "", o cartão mostra uma placa tipográfica.
-       Assim que tiveres a imagem, preenche o src (ex: images/proj-sok.jpg) e volta a aparecer. */
+    /* Falta so a arte do Survival of Kings. Enquanto o src estiver "", o cartao
+       mostra uma placa tipografica de proposito — nunca uma ilustracao que nao
+       seja do projecto. Para a meter:
+         python3 tools/add-artwork.py <ficheiro> --slug proj-sok
+       e depois poe aqui  src: "images/proj-sok.jpg"  (e o mesmo no projeto.html). */
     { src: "", label: "Survival of Kings", ratio: "34", key: "sok",  plate: "SOK" },
-    { src: "", label: "Tokyo Revengers",   ratio: "34", key: "tr",   plate: "TR"  },
-    { src: "", label: "PAMP",              ratio: "34", key: "pamp", plate: "P"   },
+    { src: "images/proj-tr.jpg",   label: "Tokyo Revengers", ratio: "34", key: "tr",   plate: "TR"  },
+    { src: "images/proj-pamp.jpg", label: "PAMP",            ratio: "34", key: "pamp", plate: "P"   },
   ],
 
   /* ---------- TIMELINE ----------
