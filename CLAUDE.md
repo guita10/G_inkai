@@ -114,8 +114,19 @@ stylesheet, loaded non-blocking:
 Only the weights actually rendered are requested. If you change typography,
 re-audit computed styles and update the request in both directions.
 
-The one build-adjacent script is `tools/make-webp.py`, run by hand, never part of
-a deploy. It regenerates the WebP derivatives.
+The build-adjacent scripts live in `tools/`, are run by hand, and are never part
+of a deploy. They need `Pillow` and `numpy` locally; the site itself still ships
+nothing.
+
+| Script | Does |
+| --- | --- |
+| `add-artwork.py` | the whole ingest: original → 1600px JPEG + 760px thumb, then calls the two below |
+| `make-webp.py` | regenerates the WebP derivatives |
+| `dims.py` | rewrites the `DIMS` map in `index.html` from the real pixels |
+
+`add-artwork.py` is the one to reach for. Adding art by hand means four steps and
+the fourth, `DIMS`, fails silently: a wrong number throws no error, it just puts
+the layout shift back.
 
 **Do not add a dependency.** If a task seems to need one, the task is wrong for
 this repo or the answer is a dozen lines of vanilla code.
@@ -226,8 +237,10 @@ projeto.html    per-project detail page, reads ?p=sok|tr|pamp
 robots.txt
 sitemap.xml     four URLs; update lastmod when content changes
 images/         + images/thumb/
-tools/
-  make-webp.py  run by hand, not part of the deploy
+tools/          all run by hand, none part of the deploy
+  add-artwork.py  original → full + thumb + webp + DIMS, in one command
+  make-webp.py    regenerates the WebP derivatives
+  dims.py         rewrites the DIMS map from the real pixels
 DESIGN.md       the design system in semantic form
 CLAUDE.md       this file
 ```
@@ -260,8 +273,9 @@ What actually works:
    `CONFIG`, never hardcoded into markup.
 4. **Reject, out of hand:** Tailwind classes, React/JSX output, a `tokens.json`,
    an icon package, `styled-components`, or a `package.json`.
-5. **Download assets** (`download_assets`) into `images/`, then run
-   `tools/make-webp.py` and regenerate `DIMS`.
+5. **Download assets** (`download_assets`) anywhere, then run
+   `python3 tools/add-artwork.py <ficheiro>` — it does the resize, the WebP and
+   the `DIMS` entry. Filling the `src` in `CONFIG` stays manual, on purpose.
 
 A Figma file will not know about the constraints in §9. Those outrank it.
 
