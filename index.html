@@ -144,12 +144,12 @@ const CONFIG = {
   /* 28 peças reais, exportadas a 1600px do pacote original (era 414 MB → 5,5 MB) */
 
   projects: [
-    /* Falta so a arte do Survival of Kings. Enquanto o src estiver "", o cartao
-       mostra uma placa tipografica de proposito — nunca uma ilustracao que nao
-       seja do projecto. Para a meter:
-         python3 tools/add-artwork.py <ficheiro> --slug proj-sok
-       e depois poe aqui  src: "images/proj-sok.jpg"  (e o mesmo no projeto.html). */
-    { src: "", label: "Survival of Kings", ratio: "34", key: "sok",  plate: "SOK" },
+    /* Os tres projectos ja tem arte. Se algum dia um src ficar "", o cartao volta
+       a mostrar a placa tipografica de proposito — nunca uma ilustracao que nao
+       seja do projecto. Para meter arte nova:
+         python3 tools/add-artwork.py <ficheiro> --slug proj-xxx
+       e depois poe o caminho no src aqui (e o mesmo no outro ficheiro). */
+    { src: "images/proj-sok.jpg",  label: "Survival of Kings", ratio: "34", key: "sok",  plate: "SOK" },
     { src: "images/proj-tr.jpg",   label: "Tokyo Revengers", ratio: "34", key: "tr",   plate: "TR"  },
     { src: "images/proj-pamp.jpg", label: "PAMP",            ratio: "34", key: "pamp", plate: "P"   },
   ],
@@ -1066,7 +1066,7 @@ const srcOf = s => /^https?:\/\//i.test(s) ? s : (CONFIG.imageBase || '') + s;
 /* image that degrades to a labelled placeholder when the file is missing.
    full=false  → serve images/thumb/… (760px) — grelha, tira, cartões
    full=true   → serve o ficheiro grande (1600px) — só no lightbox            */
-const DIMS = {"aki.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"arkevil-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"clair.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"collab-mira-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"collab.jpg":{"w":1600,"h":1280,"tw":760,"th":608},"dante.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"estudo-luz.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"even-yeager.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"final-aot-season-4.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"geisha.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"ilustracao-sem-titulo-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"ilustracao-sem-titulo.jpg":{"w":1600,"h":1067,"tw":760,"th":507},"italy.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kon.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"lucy.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"makima.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"mira-starborn.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"nami-30x40.jpg":{"w":1200,"h":1600,"tw":570,"th":760},"oc-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"oc-2.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"oc.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"pochita.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"proj-pamp.jpg":{"w":1553,"h":1600,"tw":738,"th":760},"proj-tr.jpg":{"w":1066,"h":1600,"tw":507,"th":760},"shocked.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"silen.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"spain.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"surpresa.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"the-witch.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"yuta-fanart.jpg":{"w":1280,"h":1600,"tw":608,"th":760}};
+const DIMS = {"aki.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"arkevil-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"clair.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"collab-mira-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"collab.jpg":{"w":1600,"h":1280,"tw":760,"th":608},"dante.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"estudo-luz.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"even-yeager.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"final-aot-season-4.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"geisha.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"ilustracao-sem-titulo-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"ilustracao-sem-titulo.jpg":{"w":1600,"h":1067,"tw":760,"th":507},"italy.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kon.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"lucy.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"makima.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"mira-starborn.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"nami-30x40.jpg":{"w":1200,"h":1600,"tw":570,"th":760},"oc-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"oc-2.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"oc.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"pochita.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"proj-pamp.jpg":{"w":1553,"h":1600,"tw":738,"th":760},"proj-sok.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"proj-tr.jpg":{"w":1066,"h":1600,"tw":507,"th":760},"shocked.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"silen.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"spain.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"surpresa.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"the-witch.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"yuta-fanart.jpg":{"w":1280,"h":1600,"tw":608,"th":760}};
 /* Proporcao a usar na moldura. Sai do mapa DIMS, ou seja dos pixeis reais do
    ficheiro. O campo `ratio` do CONFIG fica so como rede: arte nova que ainda
    nao passou pelo tools/dims.py nao tem entrada em DIMS e cai no molde antigo. */
