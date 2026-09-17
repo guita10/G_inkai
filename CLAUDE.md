@@ -73,7 +73,7 @@ render `<script>` of `index.html` that build DOM nodes from `CONFIG`:
 | Function | Builds |
 | --- | --- |
 | `artEl(item, full)` | an `<img>` with WebP/JPEG fallback, dimensions, srcset on the hero |
-| `renderStrip()` | the 28-tile filmstrip |
+| `renderWall()` | the 28-tile gallery wall |
 | `renderHeroArt()` | the hero artwork |
 | `renderText()` | everything language-dependent: `[data-t]` text, filters, projects, tiers, timeline |
 | `openLb` / `drawLb` / `closeLb` / `stepLb` | the lightbox |
@@ -86,7 +86,7 @@ Boot is five calls at the bottom of the file, in order:
 
 ```js
 renderHeroArt();
-renderStrip();
+renderWall();
 renderText();
 syncStructuredData();
 trackCurrentSection();
@@ -161,6 +161,29 @@ thumb. It drives three things: the `width`/`height` attributes that keep CLS at
 
 `srcset` must be assigned **before** `src`, or the browser fetches twice.
 
+**Reserved height is load-bearing.** Every string on the page is written by JS
+from `CONFIG`, and that script sits at the end of a large file. On a slow line
+the browser paints the skeleton with every text box at zero height, then the
+script inflates them and shoves the page down. Measured on a 400 kbps line this
+was **CLS 0.96**. The fix is reserving the space in CSS up front:
+
+| Element | Reserve | Why that number |
+| --- | --- | --- |
+| `.hero h1` | `2.12em` | two lines; measured constant across every `clamp()` value |
+| `.sec-title` | `1.06em` | one line, same trick |
+| `.bar` | `73 / 71 / 64px` | per breakpoint; empty it is 54px |
+| `.btn` | `44px` | also the minimum touch target |
+| `.hero-art .shot` | `aspect-ratio` | was 14px empty, 605px full: the single biggest shift |
+| `.wall` | a `calc()` | see below |
+
+The wall's reserve is a formula, not a constant, because the right height
+changes with viewport width: the sum of every piece's height-over-width ratio
+(**31.8** for these 28) times one column's width, over the column count, plus
+margins. Aim **1-5% under** the real height. Under-reserving settles by a few
+pixels; over-reserving opens a gap that closes again, which counts just the
+same. **If you change the number of artworks, update the 31.8 and the 28.**
+Result after all of it: 0.006 throttled, 0 unthrottled.
+
 No CDN. No image service. Netlify serves the files as they are.
 
 ---
@@ -171,9 +194,9 @@ No CDN. No image service. Netlify serves the files as they are.
 
 Icons are four things, in order of preference:
 
-1. **Text glyphs in markup** — `‹` `›` `×` for the lightbox and filmstrip
-   controls, `◐` for the theme toggle, `↗` on outbound links. Each carries an
-   `aria-label`.
+1. **Text glyphs in markup** — `‹` `›` `×` for the lightbox controls, `◐` for
+   the theme toggle, `↗` on outbound links, `→` on internal ones. Each carries
+   an `aria-label`.
 2. **The 墨 seal** — a CJK character set in Playfair on a Royal square. It is the
    logo. Never restyle, recolour, or re-animate it.
 3. **CSS-drawn geometry** — the mobile menu hamburger is two pseudo-elements that

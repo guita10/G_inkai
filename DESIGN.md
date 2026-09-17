@@ -115,9 +115,9 @@ inert. Do not add it to Playfair and assume it took.
   button on hover (`left: -120% → 100%`, 650ms). No outer glow, ever.
   Transition: `background .25s ease, border-color .25s ease, color .25s ease`.
   **Every control answers a press** with `transform: scale(.97)` over 120ms.
-  Buttons, chips, knobs, filmstrip arrows and lightbox controls. Artwork tiles
-  are the deliberate exception: on a phone, dragging the filmstrip begins as a
-  press on a tile, and the work would shrink mid-drag.
+  Buttons, chips, knobs and lightbox controls. Artwork tiles are the deliberate
+  exception: a tile is a target for the eye, not a control, and a wall of 28
+  pieces flinching under the cursor would be noise.
 - **Header controls.** Language, theme and the mobile menu toggle share one
   44px circular control, hairline border, `Inter`. 44px is the touch-target
   floor, not a style choice.
@@ -140,7 +140,8 @@ inert. Do not add it to Playfair and assume it took.
   from the file's true pixel ratio (`aspect-ratio: var(--ar)`, set from the DIMS
   map). Do not force artwork into a fixed frame ratio, and do not rely on
   `object-fit: cover` to make it fit — a portfolio that crops the work defeats
-  itself. The shared height is what makes the strip read as a gallery hang.
+  itself. In the wall the column width is shared and the height follows the
+  file, which is what makes it read as a gallery hang rather than a grid.
   Border warms to the accent on hover; a mask-position wipe reveals the caption.
   `scroll-snap-align: start`. Keyboard-operable: `role="button"`, Enter **and**
   Space.
@@ -174,9 +175,17 @@ inert. Do not add it to Playfair and assume it took.
   `1.35fr 1fr .85fr`; commission tiers run `1.55fr 1fr 1fr 1fr` with the first
   tier given more padding and a larger price. Equal columns are the banned
   pattern; extra height alone is not how a tier gets highlighted here.
-- **The filmstrip is the signature.** The gallery scrolls horizontally with snap
-  points. It is the reason the site does not read as another portfolio grid.
-  Keep it on any screen that lists work.
+- **The wall is the signature.** The gallery is a masonry of columns
+  (`column-count`, 4 / 3 / 2) in which every piece keeps its own proportion, so
+  the ragged bottom edge and the mixed heights do the work a uniform grid
+  cannot. All 28 pieces are visible at once.
+
+  *This replaced a horizontal filmstrip, which earlier versions of this file
+  called the signature. The filmstrip showed four pieces at a time out of 28,
+  the filters could not pay off inside it (28 down to 10 still showed four),
+  and it was the largest single source of layout shift. For an illustrator the
+  work is the product, so the thing that hid the work had to go. Distinctive
+  is not worth more than legible.*
 - CSS Grid throughout. No flexbox percentage math, no `calc()` hacks.
 - Full-height sections use `100dvh`, never `100vh`.
 - Nothing overlaps. No absolutely-positioned content stacking. The only fixed
@@ -208,7 +217,7 @@ inert. Do not add it to Playfair and assume it took.
 - **`prefers-reduced-motion` disables everything.** The clip-path reveal, the
   seal stamp, the button sweep, the timeline dot pulse, smooth scrolling, every
   staggered delay, every press-scale, and every interactive control — buttons, theme and language
-  knobs, filter chips, filmstrip arrows, lightbox controls. Colour-only fades
+  knobs, filter chips, lightbox controls. Colour-only fades
   count: if one control is silenced they all are. Anything added must extend
   those two media blocks. This is a hard requirement, not a nicety.
 - **CLS is 0.** Every image carries explicit `width` and `height`, and the global

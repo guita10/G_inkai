@@ -221,7 +221,18 @@ const CONFIG = {
       contactBody: "For commissions, collabs or publishing, email is fastest. For everything else, Instagram.",
       footerNote: "Drawn & built by hand.",
       lightboxHint: "Esc to close · ← → to browse",
+      lbOf: "of",
       placeholderNote: "placeholder, swap in /images",
+      wallEmpty: "Nothing in this category yet.",
+      copyEmail: "Copy address", copied: "Copied",
+      /* Tres factos que ja estao no site, repetidos ao pe do nome: e a
+         primeira coisa que um director de arte precisa de ver. Nada aqui e
+         novo — saem do timeline.iberanime e dos projects.tr / projects.sok. */
+      heroProof: [
+        "1st place, Iberanime manga contest",
+        "Published covers, Distrito Manga",
+        "Webtoon in progress with Reeeborn",
+      ],
     },
     pt: {
       heroLine1: "Tinta", heroLine2: "primeiro",
@@ -277,7 +288,15 @@ const CONFIG = {
       contactBody: "Para comissões, colaborações ou publicação, o email é o mais rápido. Para tudo o resto, Instagram.",
       footerNote: "Desenhado & construído à mão.",
       lightboxHint: "Esc para fechar · ← → para navegar",
+      lbOf: "de",
       placeholderNote: "placeholder, substituir em /images",
+      wallEmpty: "Ainda não há nada nesta categoria.",
+      copyEmail: "Copiar endereço", copied: "Copiado",
+      heroProof: [
+        "1.º lugar, concurso de manga Iberanime",
+        "Capas publicadas, Distrito Manga",
+        "Webtoon em curso com o Reeeborn",
+      ],
     }
   }
 };
@@ -346,6 +365,8 @@ a{color:inherit}
 .noscript-note p{color:var(--bone-dim);font-size:.9rem}
 .noscript-note a{color:var(--royal-lift)}
 .wrap{max-width:1240px;margin:0 auto;padding:0 26px;position:relative;z-index:1}
+/* a barra vazia tem 54px (so os botoes); com os rotulos la dentro tem 73. */
+.bar{min-height:73px}
 /* film grain */
 body::after{
   content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
@@ -362,6 +383,17 @@ p{text-wrap:pretty}   /* evita uma palavra sozinha na ultima linha */
 }
 .kicker::before{content:"";width:26px;height:1px;background:var(--royal-lift);flex:none}
 .sec-title{font-size:clamp(1.7rem,3.6vw,2.6rem);margin-top:16px;text-transform:uppercase;letter-spacing:.10em}
+/* ---- ALTURA RESERVADA PARA O TEXTO QUE VEM DO JAVASCRIPT ----
+   Todo o texto desta pagina e escrito pelo JS a partir do CONFIG, e esse
+   script esta no fim de um ficheiro grande. Numa ligacao lenta o browser ja
+   pintou a pagina — com todas as caixas de texto vazias, ou seja com zero de
+   altura — quando o script chega. Ao encher, cada uma cresce e empurra tudo o
+   que vem a seguir: era isto, e nao so a galeria, que dava o CLS alto.
+   Estas alturas foram medidas no browser e sao proporcionais ao tipo de letra,
+   por isso acompanham o clamp() em qualquer largura:
+     h1  2,12em (duas linhas)   ·   titulo de seccao  1,06em (uma linha)
+   Reservar a medida certa (ou um pouco mais) e o que leva o salto a zero. */
+.sec-title{min-height:1.06em}
 .sec-title em{font-style:italic;color:var(--royal-lift)}
 .lede{color:var(--bone-dim);max-width:36rem;margin-top:16px;font-size:1rem}
 
@@ -386,7 +418,7 @@ header{
    toque ficava muito abaixo dos 44px recomendados. O texto nao muda de sitio,
    so cresce a area clicavel. */
 .links a{text-decoration:none;color:var(--bone-dim);transition:color .2s;position:relative;
-  display:inline-block;padding:16px 0}
+  display:inline-block;padding:16px 0;min-height:51px}
 .links a:hover{color:var(--bone)}
 .links a[aria-current]{color:var(--bone)}
 .links a[aria-current]::after{
@@ -455,6 +487,10 @@ header{
 .btn{
   display:inline-flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;
   font:400 .86rem var(--f-ui);letter-spacing:.02em;padding:13px 26px;border-radius:2px;
+  /* 44px e a altura do botao com o rotulo la dentro. Vazio tinha 28 e crescia
+     quando o JS escrevia o texto, empurrando a pagina. Tambem e o alvo tactil
+     minimo recomendado, por isso serve duas vezes. */
+  min-height:44px;
   border:1px solid var(--hair);color:var(--bone);background:transparent;
   /* `all` obriga o browser a vigiar todas as propriedades animaveis e apanha
      qualquer uma que venha a mudar depois. So estas tres e que mudam no hover
@@ -468,21 +504,43 @@ header{
 .row{display:flex;gap:12px;flex-wrap:wrap}
 
 /* ================= HERO ================= */
-.hero{padding:clamp(40px,5vw,88px) 0 clamp(50px,7vw,90px);position:relative}
+/* O hero encolheu. Dizia o nome e mostrava uma peca, mas empurrava a galeria
+   toda para fora do primeiro ecra — e a galeria e o que as pessoas vem ver. */
+.hero{padding:clamp(28px,3.4vw,56px) 0 clamp(38px,5vw,66px);position:relative}
+/* Os tres factos por baixo dos botoes. Linhas, nao caixas, como o resto. */
+.proof{list-style:none;margin:30px 0 0;padding:20px 0 0;border-top:1px solid var(--hair);
+  display:flex;flex-direction:column;gap:9px;max-width:30rem;min-height:101px}
+.proof li{font-family:var(--f-ui);font-size:.78rem;letter-spacing:.02em;color:var(--bone-dim);
+  display:flex;gap:11px;align-items:baseline}
+.proof li::before{content:"";flex:none;width:5px;height:5px;border-radius:999px;
+  background:var(--royal);transform:translateY(-2px)}
+/* O mailto so serve a quem tem um cliente de email configurado. Num portatil
+   de agencia, que costuma viver no webmail, carregar no endereco nao faz
+   nada. O botao ao lado copia o endereco e resolve esse caso. */
+.mail-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.btn-sm{padding:9px 15px;font-size:.66rem}
 /* align-items era 'end': as duas colunas alinhavam em baixo, e como a obra e
    359px mais alta que o texto, o titulo era empurrado 480px para baixo e a
    primeira coisa que se via era vazio. 'start' poe o titulo no topo e deixa a
    obra descair, o que alem de resolver o buraco aumenta a assimetria. */
 .hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.72fr);gap:60px;align-items:start}
-.hero h1{font-size:clamp(3.2rem,9vw,7rem);letter-spacing:-.025em}
+.hero h1{font-size:clamp(3.2rem,9vw,7rem);letter-spacing:-.025em;min-height:2.12em}
 .hero h1 em{font-style:italic;color:var(--royal-lift);display:block}
 .hero .sub{font-family:var(--f-ui);
   font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--bone-dim);
-  margin:26px 0 18px;
+  margin:26px 0 18px;min-height:1.65em;
 }
-.hero .tag{color:var(--bone-dim);max-width:30rem;margin-bottom:34px;font-size:1.02rem}
+.hero .tag{color:var(--bone-dim);max-width:30rem;margin-bottom:34px;font-size:1.02rem;min-height:3.3em}
 .hero-art{position:relative}
-.hero-art .shot{overflow:hidden;border:1px solid var(--hair);background:var(--raise)}
+/* A moldura da obra do hero guarda o seu espaco antes de a imagem existir.
+   Sem isto ficava com 14px ate o JS correr e depois saltava para ~600px,
+   empurrando a pagina inteira — era a maior fatia do CLS que sobrava.
+   O valor por omissao (4/5) e a proporcao real do ficheiro em CONFIG.hero
+   (oc.jpg, 1280x1600). O renderHeroArt ajusta a variavel a partir do mapa
+   DIMS, para o dia em que trocares a peca do hero por uma de outra forma. */
+.hero-art .shot{overflow:hidden;border:1px solid var(--hair);background:var(--raise);
+  aspect-ratio:var(--hero-ar,4/5)}
+.hero-art .cap{min-height:17px}
 .hero-art .cap{
   display:flex;justify-content:space-between;gap:14px;margin-top:12px;
   font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bone-dim);
@@ -505,32 +563,47 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 }
 .chip:hover{color:var(--bone);border-color:var(--royal-lift)}
 .chip.on{background:var(--bone);border-color:var(--bone);color:var(--void)}
-.strip-wrap{position:relative;margin:0 -26px;padding:0 26px}
-.strip{
-  display:flex;align-items:flex-start;gap:16px;overflow-x:auto;overflow-y:hidden;
-  scroll-snap-type:x mandatory;scroll-behavior:smooth;
-  padding:4px 0 24px;scrollbar-width:thin;scrollbar-color:var(--hair) transparent;
+/* ================= A PAREDE (galeria) =================
+   Antes isto era uma tira horizontal: 28 pecas das quais se viam quatro de
+   cada vez, com dois botoes para arrastar. A obra e o produto e estava a ser
+   o mais escondido da pagina — e os filtros nao compensavam, porque filtrar
+   28 para 10 continuava a mostrar quatro.
+   Agora e uma parede. As colunas reorganizam-se sozinhas com `columns`, sem
+   JavaScript e sem matematica de grelha, e cada moldura recebe a proporcao
+   verdadeira do ficheiro pelo --ar (do mapa DIMS). Nada e cortado, tal como
+   antes, mas ve-se tudo de uma vez. */
+/* column-count e nao a abreviatura `columns`: com `columns:4 240px` o browser
+   faz min(contagem, quantas cabem a 240px) e num telemovel de 390px isso dava
+   UMA coluna de 338px — 11 mil pixeis de scroll e cada peca do tamanho do
+   ecra. A contagem sozinha e sempre respeitada. Os dois degraus vivem nas
+   media queries que a folha ja tinha, para nao abrir uma terceira. */
+.wall{column-count:4;column-gap:14px}
+/* A altura reservada antes de o JS correr.
+   O documento e grande e, numa ligacao lenta, o browser ja pintou o cabecalho
+   e o hero quando o script la no fundo chega. Se a parede nascesse do nada
+   nesse momento, empurrava para baixo tudo o que vem a seguir — era isto que
+   dava 0,96 de CLS na tira antiga.
+   Nao e um numero fixo, porque a altura certa muda com a largura do ecra. E a
+   conta: a altura de uma parede em n colunas e a soma das proporcoes de todas
+   as pecas (altura a dividir pela largura, 31,8 para estas 28) vezes a largura
+   de uma coluna, tudo a dividir pelo numero de colunas, mais as margens.
+   Da 1 a 5% ABAIXO do real, de proposito: reservar a menos deixa a pagina
+   assentar uns pixeis: reservar a mais abria um buraco que depois fechava, o
+   que conta como salto na mesma.
+   Se mudares o numero de obras, actualiza o 31,8 e o 28. */
+.wall{
+  --wall-w:calc(min(1240px,100vw) - 52px);
+  min-height:calc(7.95 * (var(--wall-w) - 42px) / 4 + 98px);
 }
-.strip::-webkit-scrollbar{height:3px}
-.strip::-webkit-scrollbar-track{background:var(--hair)}
-.strip::-webkit-scrollbar-thumb{background:var(--royal)}
-/* Antes: cada obra levava um de quatro moldes (3:4, 1:1, 4:3, 1:2) e a largura
-   vinha do molde. So que a tira e flex e o align-items:stretch, que e o valor
-   por omissao, esticava todas as molduras a altura da mais alta (385px) e
-   anulava o aspect-ratio. Resultado medido: as caixas ficavam a 0,7481 /
-   0,8519 / 1,0338, proporcoes que nao correspondiam nem aos ficheiros nem as
-   classes CSS, e o object-fit:cover cortava a diferenca em 27 das 28 pecas —
-   6,5% nas verticais, 14,8% nas quadradas, 31% na horizontal do Chopper.
-   Agora a altura e comum de proposito (o alinhamento e o que faz a tira ler
-   como uma parede de galeria) e a largura sai da proporcao verdadeira do
-   ficheiro, via --ar, que o JS le do mapa DIMS. Nada e cortado. */
 .frame{
-  flex:none;scroll-snap-align:start;cursor:zoom-in;position:relative;
+  break-inside:avoid;margin:0 0 14px;display:block;width:100%;
+  cursor:zoom-in;position:relative;
   background:var(--raise);border:1px solid var(--hair);overflow:hidden;
-  transition:border-color .3s;
-  height:clamp(280px,30vw,360px);width:auto;aspect-ratio:var(--ar,3/4);
+  aspect-ratio:var(--ar,3/4);
+  transition:border-color .3s,transform .3s;
 }
 .frame:hover{border-color:var(--royal-lift)}
+.frame:focus-visible{outline:2px solid var(--royal-lift);outline-offset:3px}
 .frame img,.frame .ph{width:100%;height:100%;object-fit:cover}
 .lb-stage img{width:auto;height:auto}
 .frame .meta{
@@ -538,31 +611,28 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
   background:linear-gradient(transparent,rgba(6,6,6,.88));
   opacity:0;transition:opacity .3s;
 }
-.frame:hover .meta{opacity:1}
+.frame:hover .meta,.frame:focus-visible .meta{opacity:1}
+/* Num telemovel nao ha rato, por isso o hover nunca acontece e a legenda
+   nunca aparecia. Em ecras sem ponteiro fino fica sempre visivel. */
+@media (hover:none){ .frame .meta{opacity:1} }
 .frame .meta .t{font-family:var(--f-disp);font-size:.92rem;color:#fff}
 /* O numero da peca estava em var(--royal-lift), que muda com o tema, mas o veu
    por cima da arte (rgba(6,6,6,.88)) NAO muda: e escuro nos dois temas. No tema
    claro dava azul escuro sobre preto, 2,36:1, abaixo do minimo de 4,5. O .t ao
    lado ja estava fixo em #fff pela mesma razao. Fixo aqui tambem: 4,64:1. */
-/* Os numeros das obras (001..028) sao uma coluna que se le de relance ao
-   arrastar a tira. As figuras da Lora sao proporcionais por omissao: medido a
-   200px, o '1' tem 73px e o '0' tem 124px, 51px de diferenca. Com tabular-nums
-   passam todos a 130px e a coluna deixa de bailar.
+/* Os numeros das obras (001..028) leem-se em coluna ao percorrer a parede. As
+   figuras da Lora sao proporcionais por omissao: medido a 200px, o '1' tem
+   73px e o '0' tem 124px, 51px de diferenca. Com tabular-nums passam todos a
+   130px e a coluna deixa de bailar.
    NOTA: isto so funciona aqui porque este texto cai na Lora. Os precos e os
    anos usam Playfair Display, cujo subconjunto latino do Google nao traz a
    feature 'tnum' — la a declaracao seria letra morta, por isso nao esta la. */
 .frame .meta .n{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#5568FF;
   font-variant-numeric:tabular-nums}
 .frame.hidden{display:none}
-.strip-nav{display:flex;gap:8px;margin-top:6px}
-.strip-nav button{
-  width:38px;height:38px;border-radius:999px;cursor:pointer;background:transparent;
-  border:1px solid var(--hair);color:var(--bone-dim);
-  /* sem font-family isto caia no default do browser (Arial), fora da pilha. */
-  font:400 1rem var(--f-ui);
-  transition:border-color .2s ease,color .2s ease,transform .12s ease-out;
-}
-.strip-nav button:hover{border-color:var(--royal-lift);color:var(--bone)}
+/* Nada encontrado com este filtro. Antes a parede ficava simplesmente vazia. */
+.wall-empty{display:none;padding:40px 0;color:var(--bone-dim);font-size:.95rem}
+.wall-empty.on{display:block}
 .hint{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-dim);align-self:center;margin-left:10px}
 
 /* placeholder */
@@ -581,7 +651,11 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
    fila e, como as placas tem aspect-ratio, dao tres alturas diferentes de
    borda. Fez-se assim e nao com um cartao a ocupar duas linhas porque isso
    punha a seccao com 2127px, mais do dobro de qualquer outra. */
-.projects{display:grid;grid-template-columns:1.35fr 1fr .85fr;gap:20px;align-items:start}
+/* stretch, nao start: as tres artes tem proporcoes diferentes (e nenhuma pode
+   ser cortada), por isso o corpo de cada cartao comeca a alturas diferentes.
+   O que se pode alinhar e o fim — os cartoes acabam ao mesmo nivel e os tres
+   "Open project" ficam na mesma linha, que e o que se le como ordem. */
+.projects{display:grid;grid-template-columns:1.35fr 1fr .85fr;gap:20px;align-items:stretch}
 .proj{
   text-decoration:none;color:inherit;background:var(--raise);border:1px solid var(--hair);
   display:flex;flex-direction:column;transition:border-color .3s,transform .3s;
@@ -603,7 +677,7 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 .proj .k{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--royal-raise)}
 .proj h3{font-size:1.4rem}
 .proj p{font-size:.86rem;color:var(--bone-dim)}
-.proj .go{margin-top:6px;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bone-dim)}
+.proj .go{margin-top:auto;padding-top:14px;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bone-dim)}
 .proj:hover .go{color:var(--bone)}
 
 /* ================= TIMELINE ================= */
@@ -691,7 +765,11 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 .tier .price .from{font-family:var(--f-body);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-dim);margin-right:5px}
 .tier .price .n{font-size:2.4rem;line-height:.9}
 .tier .price .u{font-size:1.05rem}
-.tier p{font-size:.8rem;color:var(--bone-dim);flex:1}
+.tier p{font-size:.8rem;color:var(--bone-dim)}
+/* O preco desce para o fim do cartao. As descricoes tem comprimentos
+   diferentes e, encostados ao topo, os quatro precos ficavam a alturas
+   diferentes — que e precisamente o numero que se quer comparar de relance. */
+.tier .price{margin-top:auto;padding-top:14px}
 
 /* ================= CONTACT ================= */
 .mail{
@@ -714,8 +792,16 @@ footer{font-family:var(--f-ui);
 .lb-stage{max-width:min(92vw,860px);max-height:78vh;display:grid;place-items:center}
 .lb-stage img,.lb-stage .ph{max-height:74vh}
 .lb-stage .ph{width:min(70vw,440px)}
-.lb-cap{color:var(--bone);font-size:.8rem;margin-top:16px;text-align:center;font-family:var(--f-disp)}
-.lb-hint{color:var(--bone-dim);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;margin-top:8px;text-align:center}
+/* O fundo da lightbox e rgba(5,5,5,.95): escuro nos DOIS temas, porque por
+   baixo esta a obra e nao a pagina. Estes tres textos usavam var(--bone) e
+   var(--bone-dim), que viram escuros no tema claro — dava texto quase preto
+   sobre preto (1,07:1 na legenda, 3,53:1 na dica). Sao cores fixas pela mesma
+   razao que o .frame .meta .t ja era #fff: medidos sobre #050505, dao 18,1:1
+   e 5,72:1. */
+.lb-cap{color:#F2F0EC;font-size:.8rem;margin-top:16px;text-align:center;font-family:var(--f-disp)}
+.lb-pos{font-family:var(--f-ui);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
+  color:#8C877F;text-align:center;margin-top:7px;font-variant-numeric:tabular-nums}
+.lb-hint{color:#8C877F;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;margin-top:8px;text-align:center}
 .lb-btn{position:fixed;border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;cursor:pointer;width:44px;height:44px;border-radius:999px;
   font:400 1.2rem var(--f-ui);   /* idem: sem isto era Arial */
   transition:background .2s ease,border-color .2s ease,transform .12s ease-out}
@@ -730,7 +816,7 @@ footer{font-family:var(--f-ui);
    As setas .lb-prev/.lb-next ja usam transform:translateY(-50%) para se
    centrarem, por isso tem de repetir esse translate — senao o scale sozinho
    apagava-o e o botao saltava para fora do centro. */
-.btn:active,.chip:active,.knob:active,.strip-nav button:active,.lb-close:active{transform:scale(.97)}
+.btn:active,.chip:active,.knob:active,.lb-close:active{transform:scale(.97)}
 .lb-prev:active,.lb-next:active{transform:translateY(-50%) scale(.97)}
 .lb-prev{left:18px;top:50%;transform:translateY(-50%)}
 .lb-next{right:18px;top:50%;transform:translateY(-50%)}
@@ -819,25 +905,24 @@ footer{font-family:var(--f-ui);
 .rv.in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  .strip{scroll-behavior:auto}
   .rv{opacity:1;transform:none;transition:none}
   .proj,.frame,.btn,.tier,.mail{transition:none}
-  /* faltavam os controlos: knob (tema/idioma), chips de filtro, setas da
-     filmstrip e botoes da lightbox. Todos eram transicoes de cor, mas o .btn
-     ao lado tambem so muda cores e ja estava desligado — ou vale para todos
-     ou nao vale para nenhum. */
-  .knob,.chip,.strip-nav button,.lb-btn{transition:none}
+  /* faltavam os controlos: knob (tema/idioma), chips de filtro e botoes da
+     lightbox. Todos eram transicoes de cor, mas o .btn ao lado tambem so muda
+     cores e ja estava desligado — ou vale para todos ou nao vale para nenhum. */
+  .knob,.chip,.lb-btn{transition:none}
   .nav-panel a{transition:none;opacity:1;transform:none}
   /* :nth-child(n) para igualar a especificidade das regras da cascata acima —
      sem isto esta linha perdia e o transition-delay continuava la. */
   .nav-panel.open a:nth-child(n){transition-delay:0s}
   .nav-toggle .bars::before,.nav-toggle .bars::after{transition:none}
-  .btn:active,.chip:active,.knob:active,.strip-nav button:active,.lb-close:active{transform:none}
+  .btn:active,.chip:active,.knob:active,.lb-close:active{transform:none}
   .lb-prev:active,.lb-next:active{transform:translateY(-50%)}
 }
 
 /* ================= RESPONSIVE ================= */
 @media (max-width:980px){
+  .wall{column-count:3;min-height:calc(10.6 * (var(--wall-w) - 28px) / 3 + 131px)}
   .hero-grid{grid-template-columns:1fr;gap:44px;align-items:start}
   .hero-art{max-width:400px}
   .projects{grid-template-columns:1fr}
@@ -846,6 +931,8 @@ footer{font-family:var(--f-ui);
   .tiers{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:620px){
+  .bar{min-height:64px}
+  .wall{column-count:2;min-height:calc(15.9 * (var(--wall-w) - 14px) / 2 + 196px)}
   .links{display:none}
   .knobs{margin-left:auto}
   .nav-toggle{display:block}
@@ -853,7 +940,6 @@ footer{font-family:var(--f-ui);
   .tl{grid-template-columns:1fr}
   .tl-year{text-align:left;padding:20px 0 10px;font-size:1.6rem}
   .tl-year:first-child{padding-top:0}
-  .strip-nav{display:none}
 }
 /* Faixa dos tablets. Os links do menu reaparecem aos 621px, mas a barra
    completa (marca 115 + links 451 + botoes 86, mais as folgas) pede 744px
@@ -864,7 +950,7 @@ footer{font-family:var(--f-ui);
    num tablet era pior do que a ter mais junta, e os rotulos ficam
    intactos — mudar rotulos de navegacao e coisa que se pergunta. */
 @media (min-width:621px) and (max-width:780px){
-  .bar{gap:12px}
+  .bar{gap:12px;min-height:71px}
   .links{gap:14px;font-size:.72rem}
   .knobs{margin-left:12px}
 }
@@ -932,6 +1018,7 @@ footer{font-family:var(--f-ui);
           <a class="btn fill" href="#work"><span data-t="ctaWork"></span> →</a>
           <a class="btn" href="#comm"><span data-t="ctaComm"></span></a>
         </div>
+        <ul class="proof" id="heroProof"></ul>
       </div>
       <div class="hero-art rv">
         <div class="shot" id="heroShot"></div>
@@ -952,13 +1039,8 @@ footer{font-family:var(--f-ui);
       <span class="count" id="workCount" aria-live="polite" aria-atomic="true"></span>
     </div>
     <div class="filters rv" id="filters" role="group" aria-label="Filter gallery"></div>
-    <div class="strip-wrap">
-      <div class="strip" id="strip"></div>
-    </div>
-    <div class="strip-nav">
-      <button id="stripPrev" aria-label="Scroll left">‹</button>
-      <button id="stripNext" aria-label="Scroll right">›</button>
-    </div>
+    <div class="wall" id="wall"></div>
+    <p class="wall-empty" id="wallEmpty" data-t="wallEmpty"></p>
   </section>
 
   <!-- PROJECTS -->
@@ -1025,7 +1107,10 @@ footer{font-family:var(--f-ui);
     </div>
     <div class="rv">
       <p class="lede" style="margin-bottom:26px" data-t="contactBody"></p>
-      <a class="mail" id="mailLink" href="#"></a>
+      <div class="mail-row">
+        <a class="mail" id="mailLink" href="#"></a>
+        <button class="btn btn-sm" id="copyMail" type="button" data-t="copyEmail"></button>
+      </div>
       <div class="c-links" id="cLinks"></div>
     </div>
   </section>
@@ -1046,6 +1131,7 @@ footer{font-family:var(--f-ui);
   <div>
     <div class="lb-stage" id="lbStage"></div>
     <p class="lb-cap" id="lbCap"></p>
+    <p class="lb-pos" id="lbPos"></p>
     <p class="lb-hint" data-t="lightboxHint"></p>
   </div>
 </div>
@@ -1126,9 +1212,9 @@ function artEl(item, full){
   return img;
 }
 
-/* ---------- filmstrip ---------- */
-function renderStrip(){
-  const s = $('#strip'); s.innerHTML = '';
+/* ---------- a parede ---------- */
+function renderWall(){
+  const s = $('#wall'); s.innerHTML = '';
   CONFIG.artworks.forEach((g,i) => {
     const fig = document.createElement('figure');
     fig.className = 'frame';
@@ -1153,20 +1239,21 @@ function setFilter(c){
     b.setAttribute('aria-pressed', on);
   });
   applyFilter();
-  $('#strip').scrollTo({left:0});
 }
 function applyFilter(){
   let shown = 0;
-  $$('#strip .frame').forEach(f => {
+  $$('#wall .frame').forEach(f => {
     const hide = activeCat !== 'all' && f.dataset.cat !== activeCat;
     f.classList.toggle('hidden', hide);
     if(!hide) shown++;
   });
   $('#workCount').textContent = `${shown} / ${CONFIG.artworks.length}`;
+  $('#wallEmpty').classList.toggle('on', shown === 0);
+  /* Com um filtro activo sobram menos pecas e a altura reservada no CSS
+     deixaria um buraco por baixo. Filtrar e um gesto do utilizador, por isso
+     encolher aqui nao conta como salto de pagina. */
+  $('#wall').style.minHeight = activeCat === 'all' ? '' : '0px';
 }
-const step = () => Math.max(240, $('#strip').clientWidth * .7);
-$('#stripPrev').onclick = () => $('#strip').scrollBy({left:-step()});
-$('#stripNext').onclick = () => $('#strip').scrollBy({left: step()});
 
 /* ---------- language-independent hero art ---------- */
 function renderHeroArt(){
@@ -1181,6 +1268,9 @@ function renderHeroArt(){
     sizes: '(max-width: 980px) min(calc(100vw - 52px), 400px), 470px',
   }));
   $('#heroCap').textContent = CONFIG.hero.label;
+  /* mantem a proporcao reservada no CSS em sintonia com o ficheiro real */
+  const hd = DIMS[CONFIG.hero.src.split('/').pop()];
+  if(hd) h.style.setProperty('--hero-ar', hd.w + '/' + hd.h);
 }
 
 /* ---------- everything language-dependent ---------- */
@@ -1191,6 +1281,9 @@ function renderText(){
   document.documentElement.lang = LANG;
   $('#langTgl').textContent = LANG === 'en' ? 'PT' : 'EN';
   $('#brandName').textContent = CONFIG.artistName;
+
+  /* os tres factos do hero */
+  $('#heroProof').innerHTML = (t.heroProof || []).map(x => `<li>${x}</li>`).join('');
 
   /* filters */
   const cats = [...new Set(CONFIG.artworks.map(g => g.cat))];
@@ -1206,11 +1299,13 @@ function renderText(){
     const card = document.createElement('a');
     card.className = 'proj rv';
     card.href = `${CONFIG.projectPage}?p=${encodeURIComponent(p.key)}`;
-    card.target = '_blank'; card.rel = 'noopener';
+    /* sem target=_blank: e uma pagina do proprio site e ela ja traz o link de
+       voltar. Abrir separadores por cima dos separadores de alguem e das
+       coisas que so incomodam. */
     const body = document.createElement('div');
     body.className = 'body';
     body.innerHTML = `<span class="k">${tp.kicker}</span><h3>${tp.title}</h3><p>${tp.desc}</p>
-      <span class="go">${t.openProject} ↗</span>`;
+      <span class="go">${t.openProject} →</span>`;
     if(p.src){
       card.append(artEl(p), body);
     } else {
@@ -1312,7 +1407,25 @@ function openLb(i){
 function drawLb(){
   const g = CONFIG.artworks[lbIdx];
   const st = $('#lbStage'); st.innerHTML = ''; st.append(artEl(g, true));
+  /* Onde estou na sequencia. Sem isto nao se percebia se faltavam duas pecas
+     ou vinte, e o filtro activo muda o total — por isso conta-se sobre as
+     visiveis, nao sobre as 28. */
+  const v = visibleIdxs();
+  const pos = v.indexOf(lbIdx) + 1;
   $('#lbCap').textContent = `${no(lbIdx)} · ${g.label}`;
+  $('#lbPos').textContent = pos ? `${pos} ${T().lbOf} ${v.length}` : '';
+  preloadNeighbours();
+}
+/* A peca seguinte e a anterior ficam em cache antes de alguem carregar na
+   seta. E so pedir o ficheiro: o browser guarda-o e o passo fica instantaneo.
+   Sem isto, cada seta era um carregamento a branco. */
+function preloadNeighbours(){
+  const v = visibleIdxs(); if(v.length < 2) return;
+  const pos = Math.max(0, v.indexOf(lbIdx));
+  [1, -1].forEach(d => {
+    const g = CONFIG.artworks[v[(pos + d + v.length) % v.length]];
+    if(g) artEl(g, true);
+  });
 }
 function closeLb(){ $('#lb').classList.remove('open'); document.body.style.overflow = '';
   if(lbOpener && lbOpener.focus) lbOpener.focus(); }
@@ -1326,6 +1439,19 @@ $('#lbClose').onclick = closeLb;
 $('#lbPrev').onclick  = () => stepLb(-1);
 $('#lbNext').onclick  = () => stepLb(1);
 $('#lb').onclick = e => { if(e.target === $('#lb')) closeLb(); };
+/* Arrastar para o lado, no telemovel. As setas sao pequenas num ecra de mao e
+   o gesto e o que toda a gente ja tenta. 45px de limiar para nao disparar num
+   toque torto; se o movimento for mais vertical do que horizontal e scroll e
+   nao conta. */
+let swX = 0, swY = 0;
+$('#lb').addEventListener('touchstart', e => {
+  swX = e.changedTouches[0].clientX; swY = e.changedTouches[0].clientY;
+}, {passive:true});
+$('#lb').addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - swX;
+  const dy = e.changedTouches[0].clientY - swY;
+  if(Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) stepLb(dx < 0 ? 1 : -1);
+}, {passive:true});
 addEventListener('keydown', e => {
   if(!$('#lb').classList.contains('open')) return;
   if(e.key === 'Escape') closeLb();
@@ -1478,6 +1604,27 @@ function trackCurrentSection(){
 
 /* ---------- toggles ---------- */
 $('#langTgl').onclick = () => { LANG = LANG === 'en' ? 'pt' : 'en'; renderText(); };
+
+/* copiar o endereco. O clipboard so existe em https (ou file://), por isso ha
+   sempre a rede de seguranca do execCommand para o resto. */
+$('#copyMail').onclick = async () => {
+  const btn = $('#copyMail');
+  const done = () => {
+    btn.textContent = T().copied;
+    setTimeout(() => { btn.textContent = T().copyEmail; }, 1600);
+  };
+  try {
+    await navigator.clipboard.writeText(CONFIG.email);
+    done();
+  } catch(e) {
+    const ta = document.createElement('textarea');
+    ta.value = CONFIG.email; ta.setAttribute('readonly','');
+    ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.append(ta); ta.select();
+    try { document.execCommand('copy'); done(); } catch(_){}
+    ta.remove();
+  }
+};
 $('#themeTgl').onclick = () => {
   const h = document.documentElement;
   h.dataset.theme = h.dataset.theme === 'dark' ? 'light' : 'dark';
@@ -1524,7 +1671,7 @@ navMq.addEventListener('change', e => { if(e.matches && navPanel.classList.conta
 
 /* ---------- boot ---------- */
 renderHeroArt();
-renderStrip();
+renderWall();
 renderText();
 syncStructuredData();
 trackCurrentSection();
