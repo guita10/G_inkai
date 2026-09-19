@@ -26,212 +26,57 @@
 
 <script>
 /* ================================================================
-   ████  CONFIG — partilhado com o index.html  ████
-   Cola aqui o mesmo bloco sempre que o actualizares no index.
+   ████  CONFIG — so o pedaco que esta pagina usa  ████
+   O CONFIG inteiro vive no index.html. Aqui fica so o que esta
+   pagina le: os projectos e os textos deles.
+   Ja foi uma copia completa do outro e a copia derivou: ficaram ca
+   precos, fases e prazos de comissoes que o site nao mostra em lado
+   nenhum e que o CLAUDE.md §9.4 proibe explicitamente de ter no
+   CONFIG. Nao renderizavam nada, mas iam no codigo-fonte que o
+   Netlify serve, e bastava abrir "ver origem" para os ler.
+   O que nao esta aqui nao pode ficar desactualizado. Se mexeres num
+   projecto, mexe nos dois ficheiros — e so nestes campos.
    ================================================================ */
 const CONFIG = {
 
-  /* ---------- IDENTITY ---------- */
+  /* ---------- IDENTITY ----------
+     So os dois nomes do rodape. O email, o Instagram e a loja vivem
+     no index.html: esta pagina nao liga para nenhum deles. */
   artistName: "Guita_Ink",
   realName: "Frederico Guita",
-  email: "frederico@guitaink.com",                      // Google Workspace (admin@ fica só para gestão da conta)
-  instagram: "https://www.instagram.com/guita_ink",
-  shop: "https://js1ssa-qu.myshopify.com",              // Shopify — checkout only
-  projectPage: "projeto.html",                          // per-project pages, opened in a new tab
-  /* O link do PAMP veio com um ?stkn=... colado: e um token de partilha do
-     Instagram, ligado a sessao de quem copiou o endereco. Num site publico nao
-     tem nada que fazer, por isso ficou so o endereco limpo.
-     O Webtoon veio em m.webtoons.com (a versao de telemovel). Aqui fica o
-     endereco canonico, que serve bem os dois. */
-  otherLinks: [
-    { label: "Webtoon", url: "https://www.webtoons.com/en/canvas/survival-of-kings/list?title_no=1055635" },
-    { label: "PAMP",    url: "https://www.instagram.com/premiosanimemangaportugal/" },
-  ],
 
-  /* ---------- COMMISSIONS ----------
-     ⚠️ SYNC: a price lives in THREE places (Notion → Painel de manutenção).
-        1. here   2. the Shopify product   3. Notion → Termos & Condições
-     Closing commissions is TWO gestures: open:false here AND set the
-     Shopify products to draft, or the shop keeps taking orders.
-     Full terms are deliberately NOT on the site — they go in the acceptance email. */
-  commissionsOpen: true,
-  tiers: [                                              // synced with Shopify, 26 Jul 2026
-    { key: "headshot", price: "65",  unit: "€", from: false, handle: "commission-headshot-bust" },
-    { key: "half",     price: "120", unit: "€", from: false, handle: "commission-half-body" },
-    { key: "full",     price: "180", unit: "€", from: false, handle: "commission-full-body" },
-    { key: "sheet",    price: "280", unit: "€", from: true,  handle: "commission-character-sheet" },
-  ],
-
-  /* ---------- IMAGES ----------
-     Same convention as the live site's CONFIG, so lines can be pasted straight
-     across from index.html on Netlify without editing anything:
-        { src:"images/nome.jpg", label:"Título", cat:"webtoon", ratio:"34" }
-     ratio: "34" portrait · "12" webtoon vertical · "11" square
-     cat:   webtoon · covers · character · fanart · sketches
-     Export ~1600px on the long side, .jpg, under ~400 KB.
-     imageBase is prepended only to paths that aren't already absolute — leave it
-     empty to use the local /images/ folder, or set it to
-     "https://guitaink.com/" to pull straight from the live deploy.     */
-  imageBase: "",
-  hero: { src: "images/oc.jpg", label: "OC 01", ratio: "34" },
-  artworks: [
-    { src: "images/aki.jpg",                   label: "Aki, Chainsaw Man",        ratio: "34", cat: "fanart" },
-    { src: "images/makima.jpg",                label: "Makima, Chainsaw Man",     ratio: "34", cat: "fanart" },
-    { src: "images/pochita.jpg",               label: "Pochita, Chainsaw Man",    ratio: "11", cat: "fanart" },
-    { src: "images/even-yeager.jpg",           label: "Eren Yeager, AoT",         ratio: "34", cat: "fanart" },
-    { src: "images/final-aot-season-4.jpg",    label: "Attack on Titan S4",      ratio: "34", cat: "fanart" },
-    { src: "images/yuta-fanart.jpg",           label: "Yuta, Jujutsu Kaisen",     ratio: "34", cat: "fanart" },
-    { src: "images/nami-30x40.jpg",            label: "Nami, One Piece",          ratio: "34", cat: "fanart" },
-    { src: "images/ilustracao-sem-titulo.jpg", label: "Tony Tony Chopper, card",  ratio: "43", cat: "fanart" },
-    { src: "images/dante.jpg",                 label: "Dante",                     ratio: "11", cat: "fanart" },
-    { src: "images/lucy.jpg",                  label: "Lucy",                      ratio: "11", cat: "fanart" },
-    { src: "images/mira-starborn.jpg",         label: "Mira Starborn",             ratio: "11", cat: "character" },
-    { src: "images/collab-mira-final.jpg",     label: "Mira, collab",             ratio: "34", cat: "character" },
-    { src: "images/collab.jpg",                label: "Duelo, collab",            ratio: "43", cat: "character" },
-    { src: "images/arkevil-final.jpg",         label: "ArkEvil",                   ratio: "34", cat: "character" },
-    { src: "images/oc.jpg",                    label: "OC 01",                   ratio: "34", cat: "character" },
-    { src: "images/oc-1.jpg",                  label: "OC 02",                   ratio: "11", cat: "character" },
-    { src: "images/oc-2.jpg",                  label: "OC 03",                   ratio: "34", cat: "character" },
-    { src: "images/silen.jpg",                 label: "Silen",                     ratio: "34", cat: "character" },
-    { src: "images/the-witch.jpg",             label: "The Witch",                 ratio: "34", cat: "character" },
-    { src: "images/kon.jpg",                   label: "Kon",                       ratio: "11", cat: "character" },
-    { src: "images/ilustracao-sem-titulo-1.jpg", label: "Espírito",                  ratio: "11", cat: "character" },
-    { src: "images/geisha.jpg",                label: "Geisha",                    ratio: "34", cat: "character" },
-    { src: "images/clair.jpg",                 label: "Clair",                     ratio: "11", cat: "character" },
-    { src: "images/italy.jpg",                 label: "Italy",                     ratio: "34", cat: "character" },
-    { src: "images/spain.jpg",                 label: "Spain",                     ratio: "34", cat: "character" },
-    { src: "images/estudo-luz.jpg",            label: "Estudo de luz",             ratio: "34", cat: "sketches" },
-    { src: "images/shocked.jpg",               label: "Shocked",                   ratio: "34", cat: "sketches" },
-    { src: "images/surpresa.jpg",              label: "Surpresa",                  ratio: "11", cat: "sketches" },
-  ],
-
-  /* 28 peças reais, exportadas a 1600px do pacote original (era 414 MB → 5,5 MB) */
-
+  /* ---------- PROJECTS ----------
+     Os tres ja tem arte. Se algum dia um src ficar "", a pagina volta
+     a mostrar a placa tipografica de proposito — nunca uma ilustracao
+     que nao seja do projecto. Para meter arte nova:
+       python3 tools/add-artwork.py <ficheiro> --slug proj-xxx
+     e depois poe o caminho no src aqui e no index.html. */
   projects: [
-    /* Os tres projectos ja tem arte. Se algum dia um src ficar "", o cartao volta
-       a mostrar a placa tipografica de proposito — nunca uma ilustracao que nao
-       seja do projecto. Para meter arte nova:
-         python3 tools/add-artwork.py <ficheiro> --slug proj-xxx
-       e depois poe o caminho no src aqui (e o mesmo no outro ficheiro). */
-    { src: "images/proj-sok.jpg",  label: "Survival of Kings", ratio: "34", key: "sok",  plate: "SOK" },
-    { src: "images/proj-tr.jpg",   label: "Tokyo Revengers", ratio: "34", key: "tr",   plate: "TR"  },
-    { src: "images/proj-pamp.jpg", label: "PAMP",            ratio: "34", key: "pamp", plate: "P"   },
+    { src: "images/proj-sok.jpg", label: "Survival of Kings", ratio: "34", key: "sok", plate: "SOK" },
+    { src: "images/proj-tr.jpg", label: "Tokyo Revengers", ratio: "34", key: "tr", plate: "TR" },
+    { src: "images/proj-pamp.jpg", label: "PAMP", ratio: "34", key: "pamp", plate: "P" },
   ],
 
-  /* ---------- TIMELINE ----------
-     month: 1-12, or null to show the year only.
-     status: "past" | "next"  (next = upcoming; the first one gets the "Next up" flag) */
-  timeline: [
-    { key: "iberanime", year: 2023, month: null, status: "past" },
-    { key: "sok",       year: 2025, month: null, status: "past" },
-    { key: "comicon",   year: 2026, month: 4,    status: "past" },
-    { key: "coimbrabd", year: 2026, month: 4,    status: "past" },
-    { key: "workshop",  year: 2026, month: 7,    status: "past" },
-  ],
-
-  /* ---------- ALL WRITTEN COPY (EN / PT) ---------- */
+  /* ---------- COPY DOS PROJECTOS (EN / PT) ----------
+     So os projectos. Todo o resto do texto do site vive no index.html
+     e esta pagina nunca lhe toca. */
   i18n: {
     en: {
-      heroTitle: "Illustration and character design",
-      tagline: "Anime and manga-influenced work. Characters, covers and the worlds they live in.",
-      ctaWork: "View work", ctaComm: "Commissions",
-      navWork: "Work", navProjects: "Projects", navAbout: "About", navComm: "Commissions", navContact: "Contact",
-      featuredLabel: "Featured",
-      galleryTitle: "Selected work",
-      filters: { all: "All", webtoon: "Webtoon", covers: "Covers", character: "Character design", fanart: "Fan art", sketches: "Sketches" },
-      projectsTitle: "Featured projects",
-      openProject: "Open project",
       projects: {
-        sok:  { kicker: "Webtoon series", title: "Survival of Kings", desc: "Ongoing webtoon / graphic novel, co-created with writer Reeeborn. Ink-style panels and vertical-scroll storytelling." },
-        tr:   { kicker: "Monthly, with Distrito Manga", title: "Tokyo Revengers, covers reimagined", desc: "Each volume cover redrawn in the original format, with faces from the anime and manga community standing in for the characters. A new one goes out every month, alongside the publisher's releases." },
+        sok: { kicker: "Webtoon series", title: "Survival of Kings", desc: "Ongoing webtoon / graphic novel, co-created with writer Reeeborn. Ink-style panels and vertical-scroll storytelling." },
+        tr: { kicker: "Monthly, with Distrito Manga", title: "Tokyo Revengers, covers reimagined", desc: "Each volume cover redrawn in the original format, with faces from the anime and manga community standing in for the characters. A new one goes out every month, alongside the publisher's releases." },
         pamp: { kicker: "Visual identity", title: "PAMP: Prémios Anime Manga Portugal", desc: "Full visual identity: key art, logo lock-ups and event graphics." },
       },
-      tlTitle: "Timeline",
-      tlUpcoming: "Upcoming", tlNext: "Next up",
-      months: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
-      timeline: {
-        iberanime: { title: "Iberanime manga contest, 1st place", where: "Iberanime · Lisbon", desc: "Won the manga contest. The push that turned a handle into a body of work." },
-        sok:       { title: "Survival of Kings, Chapter 01", where: "Webtoon · with Reeeborn", desc: "First chapter published. Written by Reeeborn, drawn by me." },
-        comicon:   { title: "Panel talk", where: "COMICON · Portugal", desc: "On building comic worlds: perspective, space and structure." },
-        coimbrabd: { title: "Artist Alley", where: "Coimbra BD", desc: "A table of prints, originals and live commissions. Readers met face to face." },
-        workshop:  { title: "Character design & creative writing workshop", where: "Termas Romanas das Taipas", desc: "Co-facilitated with Reeeborn. Twelve people, ninety minutes, one character each." },
-      },
-      aboutTitle: "About",
-      aboutBody: [
-        "I'm an illustrator, and I sign my work Guita_Ink. I draw characters and the worlds they live in, with anime and manga never far away.",
-        "Winning the Iberanime manga contest in 2023 was the push that turned a name into a body of work. I have not stopped since: a cover a month with Distrito Manga, Survival of Kings growing with Reeeborn, and commissions in between.",
-        "I studied architecture, and what stayed with me is the habit of treating the space around a figure as part of the drawing, not as backdrop. I always start with the line, and it is the most important part of my process: that is where the drawing is decided, long before any colour goes in.",
-        "If you made it this far, thank you. It matters more than you would think.",
-      ],
-      aboutMeta: "Frederico Guita · Guita_Ink",
-      commTitle: "Commissions",
-      commOpen: "Open", commClosed: "Closed",
-      commIntro: "Four formats and four stages (sketch, lineart, color, final), with your approval at each one. Typical turnaround is 2-4 weeks. Full terms come with the acceptance email.",
-      tiers: {
-        headshot: { name: "Headshot / Bust", desc: "Head and shoulders, fully rendered." },
-        half:     { name: "Half body",       desc: "Waist-up illustration, fully rendered." },
-        full:     { name: "Full body",       desc: "Complete character, fully rendered." },
-        sheet:    { name: "Character sheet", desc: "Turnarounds, expressions and detail callouts. Final quote depends on the number of views." },
-      },
-      commCta: "Ask by email",
-      contactTitle: "Say hi",
-      contactBody: "For commissions, collabs or publishing, email is fastest. For everything else, Instagram.",
-      footerNote: "Drawn & built by hand.",
-      lightboxHint: "Esc to close · ← → to browse",
-      placeholderNote: "placeholder, swap in /images",
     },
     pt: {
-      heroTitle: "Ilustração e design de personagens",
-      tagline: "Trabalho de influência anime e manga. Personagens, capas e os mundos onde vivem.",
-      ctaWork: "Ver trabalho", ctaComm: "Comissões",
-      navWork: "Trabalho", navProjects: "Projetos", navAbout: "Sobre", navComm: "Comissões", navContact: "Contacto",
-      featuredLabel: "Destaque",
-      galleryTitle: "Trabalho selecionado",
-      filters: { all: "Tudo", webtoon: "Webtoon", covers: "Capas", character: "Design de personagens", fanart: "Fan art", sketches: "Esboços" },
-      projectsTitle: "Projetos em destaque",
-      openProject: "Abrir projeto",
       projects: {
-        sok:  { kicker: "Série webtoon", title: "Survival of Kings", desc: "Webtoon / graphic novel em curso, co-criado com o escritor Reeeborn. Painéis a tinta e narrativa em scroll vertical." },
-        tr:   { kicker: "Mensal, com a Distrito Manga", title: "Tokyo Revengers, capas reinterpretadas", desc: "Cada capa de volume refeita no formato original, com figuras da comunidade anime e manga no lugar das personagens. Sai uma por mês, a acompanhar os lançamentos da editora." },
+        sok: { kicker: "Série webtoon", title: "Survival of Kings", desc: "Webtoon / graphic novel em curso, co-criado com o escritor Reeeborn. Painéis a tinta e narrativa em scroll vertical." },
+        tr: { kicker: "Mensal, com a Distrito Manga", title: "Tokyo Revengers, capas reinterpretadas", desc: "Cada capa de volume refeita no formato original, com figuras da comunidade anime e manga no lugar das personagens. Sai uma por mês, a acompanhar os lançamentos da editora." },
         pamp: { kicker: "Identidade visual", title: "PAMP: Prémios Anime Manga Portugal", desc: "Identidade visual completa: key art, logótipos e grafismo de evento." },
       },
-      tlTitle: "Percurso",
-      tlUpcoming: "Em breve", tlNext: "A seguir",
-      months: ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
-      timeline: {
-        iberanime: { title: "Concurso de manga Iberanime, 1.º lugar", where: "Iberanime · Lisboa", desc: "Vitória no concurso de manga. O empurrão que transformou um nome num corpo de trabalho." },
-        sok:       { title: "Survival of Kings, Capítulo 01", where: "Webtoon · com Reeeborn", desc: "Primeiro capítulo publicado. Escrito pelo Reeeborn, desenhado por mim." },
-        comicon:   { title: "Painel / conversa", where: "COMICON · Portugal", desc: "Sobre construir mundos de banda desenhada: perspetiva, espaço e estrutura." },
-        coimbrabd: { title: "Artist Alley", where: "Coimbra BD", desc: "Mesa com prints, originais e comissões ao vivo. Leitores conhecidos em pessoa." },
-        workshop:  { title: "Workshop de character design & escrita criativa", where: "Termas Romanas das Taipas", desc: "Co-facilitado com o Reeeborn. Doze pessoas, noventa minutos, uma personagem cada." },
-      },
-      aboutTitle: "Sobre",
-      aboutBody: [
-        "Sou ilustrador e assino Guita_Ink. Desenho personagens e os mundos onde elas vivem, com o anime e a manga sempre por perto.",
-        "Ganhar o concurso de manga da Iberanime, em 2023, foi o empurrão que transformou um nome num corpo de trabalho. Desde aí não voltei a parar: uma capa por mês com a Distrito Manga, o Survival of Kings a crescer com o Reeeborn, e comissões pelo meio.",
-        "Estudei arquitetura e ficou-me o hábito de olhar para o espaço à volta de uma figura como parte do desenho, não como fundo. Começo sempre pela linha, e é a parte mais importante do meu processo: é aí que o desenho se decide, muito antes de entrar a cor.",
-        "Se chegaste até aqui, obrigado. Faz mais diferença do que parece.",
-      ],
-      aboutMeta: "Frederico Guita · Guita_Ink",
-      commTitle: "Comissões",
-      commOpen: "Abertas", commClosed: "Fechadas",
-      commIntro: "Quatro formatos e quatro fases (esboço, lineart, cor, final), com a tua aprovação em cada uma. Prazo típico de 2 a 4 semanas. Os termos completos seguem no email de aceitação.",
-      tiers: {
-        headshot: { name: "Headshot / Busto",   desc: "Cabeça e ombros, totalmente renderizado." },
-        half:     { name: "Meio corpo",         desc: "Ilustração da cintura para cima, totalmente renderizada." },
-        full:     { name: "Corpo inteiro",      desc: "Personagem completa, totalmente renderizada." },
-        sheet:    { name: "Character sheet",    desc: "Turnarounds, expressões e detalhes. Orçamento final depende do número de vistas." },
-      },
-      commCta: "Pedir por email",
-      contactTitle: "Diz olá",
-      contactBody: "Para comissões, colaborações ou publicação, o email é o mais rápido. Para tudo o resto, Instagram.",
-      footerNote: "Desenhado & construído à mão.",
-      lightboxHint: "Esc para fechar · ← → para navegar",
-      placeholderNote: "placeholder, substituir em /images",
-    }
-  }
+    },
+  },
 };
-/* ==================  fim do CONFIG  ================== */
 </script>
 
 <style>
@@ -285,6 +130,15 @@ header,main,footer{position:relative;z-index:1}
 }
 .back:hover{color:var(--bone)}
 .k{font-family:var(--f-ui);font-size:.66rem;letter-spacing:.28em;text-transform:uppercase;color:var(--royal-lift)}
+/* Esta pagina nao tinha bloco nenhum de prefers-reduced-motion, e o §9.8 diz
+   que ele desliga todos os efeitos. Sao poucos: o scroll suave, a transicao de
+   cor do corpo e a do link de voltar. O grao do body::after fica — e uma
+   textura parada, nao e movimento. */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  body,.back{transition:none}
+}
+
 h1{font-family:var(--f-disp);font-weight:400;font-size:clamp(2rem,5vw,3.2rem);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 20px;line-height:1.1}
 .lede{color:var(--bone-dim);font-size:1.05rem;max-width:44rem}
 .plate{
@@ -331,8 +185,9 @@ const WEBP_OK = (() => {
   catch(e){ return false; }
 })();
 /* Medidas reais das artes dos projectos. O index tem o mapa DIMS completo;
-   aqui so fazem falta estas tres. Se trocares a arte de um projecto, corre o
-   tools/dims.py (que trata do index) e actualiza estes numeros a mao. */
+   aqui so fazem falta estas tres. GERADO: sai do tools/dims.py, que le os
+   pixeis verdadeiros. Troca a arte de um projecto e corre o script — nao
+   escrevas estes numeros a mao. */
 const PROJ_DIMS = {
   "proj-sok.jpg":  {w:1280, h:1600},
   "proj-tr.jpg":   {w:1066, h:1600},

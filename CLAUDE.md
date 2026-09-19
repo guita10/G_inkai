@@ -303,9 +303,13 @@ CLAUDE.md       this file
 No feature folders, no `src/`, no routing. `index.html` is organised top to
 bottom as: meta and JSON-LD → `CONFIG` → `<style>` → markup → render `<script>`.
 
-**`projeto.html` holds a second copy of `CONFIG`.** The `artworks` array and the
-shared values must stay in sync with `index.html`. Ordering may differ; content
-may not.
+**`projeto.html` holds a slice of `CONFIG`, not a copy.** It used to hold the
+whole thing, and the copy drifted: commission prices, the four stages and the
+2-4 week turnaround were still sitting in it long after §9.4 took them off the
+site. They rendered nothing, but they shipped in the source Netlify serves.
+It now carries only what that page reads: `artistName`, `realName`, `projects`,
+and `i18n.{en,pt}.projects`. Those four still have to match `index.html`.
+Nothing else belongs there, so nothing else can go stale.
 
 ---
 
@@ -399,7 +403,11 @@ any visual change, all of which have caught real bugs here:
 - **EN/PT parity** across every `data-t` key.
 - **No horizontal overflow** — sweep widths, don't spot-check. The 621–743px
   band was broken for months and 390/768/1440 all looked fine.
-- **Reduced motion** — assert `transition-property` resolves to `none`.
+- **Reduced motion** — assert `transitionDuration` is `0s` and no `@keyframes`
+  is running, on **every** element including `<body>`, in all three pages.
+  Do not test `transition-property`: `all` is its initial value, so an element
+  with no transition at all reports `all` and a naive check flags the whole
+  document. Four real leaks hid behind that false positive for months.
 - **`file://` still works**, not just HTTP.
 
 When a measurement contradicts your expectation, suspect the harness before the

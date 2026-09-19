@@ -50,6 +50,7 @@ variants, never as a three-colour palette.
 - **Raise 2** (`#1A1A1A`) — second-level surface, inset panels.
 - **Royal** (`#2E45FF`) — the single accent. Fills, seal, selection, focus.
 - **Royal Lift** (`#5568FF`) — same accent, lifted for small text **on Void** (4.54:1, just over the 4.5 AA floor). Also the italic in the hero headline.
+  Not enough over the gallery scrim, though: measured against the real pixels of all 28 tiles it tops out at 3.78:1, because its luminance (0.19) cannot reach 4.5 against a dark backdrop however opaque the scrim. The tile number uses **Royal Raise** (`#6B7BFF`) there instead, measured at 4.63:1.
 - **Royal Raise** (`#6B7BFF`) — same accent, lifted again for small text **on Raise** (5.27:1). Royal Lift only reaches 4.29:1 there and fails AA.
 - **Bone** (`#F2F0EC`) — primary text. Warm off-white, never `#FFFFFF`.
 - **Bone Dim** (`#8C877F`) — secondary text, captions, metadata.

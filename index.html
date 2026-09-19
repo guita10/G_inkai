@@ -675,7 +675,15 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 .lb-stage img{width:auto;height:auto}
 .frame .meta{
   position:absolute;inset:auto 0 0 0;padding:40px 14px 12px;
-  background:linear-gradient(transparent,rgba(6,6,6,.88));
+  /* O veu ia de transparente no topo ate .88 so na aresta de baixo — ou seja,
+     a parte mais escura ficava POR BAIXO do texto. Medido nos pixeis reais:
+     o numero apanhava 39-53% de veu e o titulo 53-75%, nunca os 88%. Sobre uma
+     zona clara da arte o numero chegava a 1,01:1. Agora o degrade fecha antes
+     de o texto comecar (o padding-top sao 40px, ~43% da caixa), que era o que
+     ele sempre quis fazer.
+     rgba(6,6,6,0) e nao `transparent`: sao a mesma cor, mas `transparent` e
+     preto transparente e alguns motores interpolam por cinzento. */
+  background:linear-gradient(rgba(6,6,6,0),rgba(6,6,6,.9) 42%,rgba(6,6,6,.94));
   opacity:0;transition:opacity .3s;
 }
 .frame:hover .meta,.frame:focus-visible .meta{opacity:1}
@@ -684,9 +692,15 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 @media (hover:none){ .frame .meta{opacity:1} }
 .frame .meta .t{font-family:var(--f-disp);font-size:.92rem;color:#fff}
 /* O numero da peca estava em var(--royal-lift), que muda com o tema, mas o veu
-   por cima da arte (rgba(6,6,6,.88)) NAO muda: e escuro nos dois temas. No tema
-   claro dava azul escuro sobre preto, 2,36:1, abaixo do minimo de 4,5. O .t ao
-   lado ja estava fixo em #fff pela mesma razao. Fixo aqui tambem: 4,64:1. */
+   por cima da arte NAO muda: e escuro nos dois temas. No tema claro dava azul
+   escuro sobre preto, 2,36:1. O .t ao lado ja estava fixo em #fff pela mesma
+   razao, e por isso este esta em hexadecimal e nao num var().
+   O valor que aqui estava, #5568FF, foi escolhido a contar com os .88 do veu.
+   Medido nos pixeis reais das 28 molduras, com o degrade ja corrigido, da
+   3,78:1 no pior caso — a luminancia daquele azul (0,19) nao chega a 4,5 sobre
+   fundo escuro, por mais veu que se ponha. Este, #6B7BFF, e o --royal-raise:
+   o mesmo azul um tom acima, que o sistema ja tem por esta mesma razao.
+   Medido: 4,63:1 no pior pixel das 28. */
 /* Os numeros das obras (001..028) leem-se em coluna ao percorrer a parede. As
    figuras da Lora sao proporcionais por omissao: medido a 200px, o '1' tem
    73px e o '0' tem 124px, 51px de diferenca. Com tabular-nums passam todos a
@@ -694,7 +708,7 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
    NOTA: isto so funciona aqui porque este texto cai na Lora. Os precos e os
    anos usam Playfair Display, cujo subconjunto latino do Google nao traz a
    feature 'tnum' — la a declaracao seria letra morta, por isso nao esta la. */
-.frame .meta .n{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#5568FF;
+.frame .meta .n{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#6B7BFF;
   font-variant-numeric:tabular-nums}
 .frame.hidden{display:none}
 /* Nada encontrado com este filtro. Antes a parede ficava simplesmente vazia. */
@@ -939,9 +953,12 @@ footer{font-family:var(--f-ui);
   100%{box-shadow:0 0 0 12px transparent}
 }
 
-/* 7. PREÇOS — sobem ao entrar, escalonados */
-.tier{transition:transform .3s ease,background .3s ease}
-.tier:hover{transform:translateY(-4px)}
+/* 7. FORMATOS — sem movimento nenhum, de proposito.
+   Havia aqui um .tier:hover que subia 4px. Fazia sentido quando o cartao era
+   um link para a loja; deixou de ser um <a> quando os precos sairam da pagina
+   (ver o comentario no .tier, la em cima, que ja dizia que o hover tinha
+   saido — nao tinha). Um bloco de texto que se levanta ao passar o rato promete
+   um clique que nao existe. Com ele saiu a transition, que so o servia. */
 
 /* Respeitar quem pediu menos movimento — desliga tudo isto */
 @media (prefers-reduced-motion:reduce){
@@ -963,6 +980,15 @@ footer{font-family:var(--f-ui);
      lightbox. Todos eram transicoes de cor, mas o .btn ao lado tambem so muda
      cores e ja estava desligado — ou vale para todos ou nao vale para nenhum. */
   .knob,.chip,.lb-btn{transition:none}
+  /* E faltavam ainda estas quatro, apanhadas a medir a transition-DURATION e
+     nao a transition-property (o `all` que se le na property e so o valor
+     inicial: quem nao declara transicao nenhuma tambem o mostra).
+     Duas sao de cor e duas de opacidade, mas a regra ja escrita aqui em cima
+     vale para as duas coisas: ou vale para todos ou nao vale para nenhum. */
+  .links a,.c-links a{transition:none}
+  .tl-year,.frame .meta{transition:none}
+  /* E o proprio body, que esbate a cor ao trocar de tema. */
+  body{transition:none}
   .nav-panel a{transition:none;opacity:1;transform:none}
   /* :nth-child(n) para igualar a especificidade das regras da cascata acima —
      sem isto esta linha perdia e o transition-delay continuava la. */

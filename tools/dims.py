@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-dims.py — reescreve do index.html tudo o que sai dos pixeis reais.
+dims.py — reescreve tudo o que sai dos pixeis reais das imagens.
 
 PARA QUE SERVE
-  Duas coisas no index.html sao numeros calculados a partir dos ficheiros que
+  Tres coisas nas paginas sao numeros calculados a partir dos ficheiros que
   estao em images/. Escrever qualquer uma delas a mao e onde as coisas partem
   em silencio: um numero trocado nao da erro nenhum, so volta a por a pagina
   a saltar enquanto carrega. Por isso existe este script.
@@ -23,6 +23,10 @@ PARA QUE SERVE
      duas coisas que mudam sempre que mexes na galeria: quantas obras ha e
      qual a soma das proporcoes delas. Era isto que ate agora tinhas de
      actualizar a mao sempre que juntavas arte.
+
+  3. O PROJ_DIMS DA projeto.html — o mesmo que o ponto 1, mas so para as tres
+     artes dos projectos, que e do que aquela pagina precisa. Sem ele a caixa
+     da imagem tinha altura zero e a nota e o rodape saltavam ao carregar.
 
 QUANDO CORRER
   Sempre que adicionares, substituires ou apagares arte em images/, ou sempre
@@ -50,6 +54,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FULL = os.path.join(ROOT, "images")
 THUMB = os.path.join(FULL, "thumb")
 PAGE = os.path.join(ROOT, "index.html")
+PROJ = os.path.join(ROOT, "projeto.html")
 
 # A linha do mapa no index.html. O ; final faz parte para nao apanhar de mais.
 PATTERN = re.compile(r"const DIMS = (\{.*?\});")
@@ -61,6 +66,13 @@ ARTWORKS = re.compile(r"\n  artworks:\s*\[(.*?)\n  \],", re.S)
 # proprio min-height, por isso um so padrao chega para os tres.
 RESERVE = re.compile(
     r"min-height:calc\([\d.]+ \* \(var\(--wall-w\) - \d+px\) / (\d+) \+ \d+px\)")
+
+# O mapa pequeno da pagina de projecto. So as artes dos projectos, so w e h:
+# aquela pagina nao usa miniaturas. Era o ultimo mapa de pixeis escrito a mao.
+PROJ_DIMS = re.compile(r"const PROJ_DIMS = \{.*?\n\};", re.S)
+
+# Os projectos, para saber que ficheiros entram no PROJ_DIMS.
+PROJECTS = re.compile(r"\n  projects:\s*\[(.*?)\n  \],", re.S)
 
 # O espaco entre colunas e por baixo de cada moldura: column-gap e margin-bottom
 # do .frame, os dois a 14px. Se mexeres num, mexe aqui.
@@ -141,6 +153,27 @@ def reserve_value(cols, count, total):
     return f"min-height:calc({coef} * (var(--wall-w) - {gutters}px) / {cols} + {margins}px)"
 
 
+def proj_block(src, dims):
+    """O PROJ_DIMS da projeto.html, a partir das artes dos projectos.
+
+    Aquela pagina tem um mapa so dela porque nao precisa do resto. Estava a ser
+    escrito a mao, com o mesmo problema de sempre: um numero trocado nao da
+    erro, so poe a nota e o rodape a saltar quando a imagem chega.
+    """
+    found = PROJECTS.search(src)
+    if not found:
+        sys.exit("Nao encontrei a lista 'projects: [...]' no index.html.")
+    files = [f for f in re.findall(r'src:\s*"images/([^"]+)"', found.group(1))]
+    rows, orphans = [], []
+    pad = max((len(f) for f in files), default=0) + 3
+    for f in files:
+        if f not in dims:
+            orphans.append(f)
+            continue
+        rows.append('  %-*s {w:%d, h:%d},' % (pad, '"%s":' % f, dims[f]["w"], dims[f]["h"]))
+    return "const PROJ_DIMS = {\n" + "\n".join(rows) + "\n};", orphans
+
+
 def main():
     check = "--check" in sys.argv
     force = "--force" in sys.argv
@@ -200,14 +233,32 @@ def main():
     if not wall_dirty:
         print(f"Parede ja certa: {count} obras, proporcoes somam {total:.2f}.")
 
-    # ---- 3. escrever -----------------------------------------------------
-    if not (map_dirty or wall_dirty or force):
+    # ---- 3. o mapa da pagina de projecto ----------------------------------
+    psrc = open(PROJ, encoding="utf-8").read()
+    block, porphans = proj_block(src, dims)
+    for n in porphans:
+        print(f"  ! {n}: e a arte de um projecto mas nao esta em images/ — fora do PROJ_DIMS")
+    pfound = PROJ_DIMS.search(psrc)
+    if not pfound:
+        sys.exit("Nao encontrei o 'const PROJ_DIMS = {...};' no projeto.html.")
+    proj_dirty = pfound.group(0) != block
+    if proj_dirty:
+        print("  ~ projeto.html: PROJ_DIMS actualizado")
+    else:
+        print(f"PROJ_DIMS ja certo: {len(block.splitlines()) - 2} artes de projecto.")
+    psrc = psrc[:pfound.start()] + block + psrc[pfound.end():]
+
+    # ---- 4. escrever -----------------------------------------------------
+    if not (map_dirty or wall_dirty or proj_dirty or force):
         return
     if check:
         print("\n(--check: nao foi escrito nenhum ficheiro)")
         return
 
-    open(PAGE, "w", encoding="utf-8").write(src)
+    if map_dirty or wall_dirty or force:
+        open(PAGE, "w", encoding="utf-8").write(src)
+    if proj_dirty or force:
+        open(PROJ, "w", encoding="utf-8").write(psrc)
     print(f"\nFeito: {len(dims)} imagens no mapa, parede reservada para {count} obras.")
 
 
