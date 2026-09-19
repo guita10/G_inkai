@@ -14,7 +14,7 @@ neglect.
 
 There is no framework, no npm, no build step, no component library, no icon
 library, and no CSS methodology. The entire site is four hand-written HTML files
-plus an images folder. `index.html` is 1,665 lines and contains a `CONFIG`
+plus an images folder. `index.html` is 1,719 lines and contains a `CONFIG`
 object, one `<style>` block, the markup, and the render JavaScript. It must keep
 working when opened directly from disk over `file://`. Content lives in `CONFIG`
 and is rendered by plain DOM functions. Anything that reads like "add a
@@ -175,6 +175,7 @@ was **CLS 0.96**. The fix is reserving the space in CSS up front:
 | `.bar` | `73 / 71 / 64px` | per breakpoint; empty it is 54px |
 | `.btn` | `44px` | also the minimum touch target |
 | `.hero-art .shot` | `aspect-ratio` | was 14px empty, 605px full: the single biggest shift |
+| `.hero h1` | `max-width:10.5em` | forces two lines at every size, so the 2.24em reserve is always exact |
 | `.wall` | a `calc()` | see below |
 
 The wall's reserve is a formula, not a constant, because the right height
@@ -184,6 +185,17 @@ margins. Aim **1-5% under** the real height. Under-reserving settles by a few
 pixels; over-reserving opens a gap that closes again, which counts just the
 same. **If you change the number of artworks, update the 31.8 and the 28.**
 Result after all of it: 0.006 throttled, 0 unthrottled.
+
+**Source order is part of the reserve.** The hero artwork is written *before*
+the copy in the markup, and `order` swaps them back on desktop. It used to be
+the other way round, with `order:-1` lifting the art above the text on phones.
+On a slow line that shifted 0.33: the browser painted the copy at the top while
+still streaming, then the parser reached the art, `order` put it above, and the
+copy dropped 452px. It only reproduced in roughly one load in three, depending
+on when the first paint landed, so **measure a shift like this several times
+before believing it is gone.** Nothing you reserve in CSS helps against an
+element the parser has not created yet; the fix is to put it earlier in the
+file.
 
 **`images/og-card.jpg` is not artwork.** It is the 1200x630 card unfurlers show
 when the link is shared, drawn in `tools/og-card.html` and screenshotted by

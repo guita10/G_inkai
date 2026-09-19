@@ -180,8 +180,10 @@ const CONFIG = {
   /* ---------- ALL WRITTEN COPY (EN / PT) ---------- */
   i18n: {
     en: {
-      heroLine1: "Ink", heroLine2: "first",
-      heroSub: "Illustration · Character design",
+      /* O "Ink first" saiu por decisao do Frede. O h1 passa a ser o que ele faz,
+         que ja era o texto da linha pequena por baixo — promovido, nao
+         inventado. Uma coisa a menos a competir com a obra. */
+      heroTitle: "Illustration and character design",
       tagline: "Anime and manga-influenced work. Characters, covers and the worlds they live in.",
       ctaWork: "View work", ctaComm: "Commissions",
       navWork: "Work", navProjects: "Projects", navAbout: "About", navComm: "Commissions", navContact: "Contact",
@@ -248,8 +250,7 @@ const CONFIG = {
       ],
     },
     pt: {
-      heroLine1: "Tinta", heroLine2: "primeiro",
-      heroSub: "Ilustração · Design de personagens",
+      heroTitle: "Ilustração e design de personagens",
       tagline: "Trabalho de influência anime e manga. Personagens, capas e os mundos onde vivem.",
       ctaWork: "Ver trabalho", ctaComm: "Comissões",
       navWork: "Trabalho", navProjects: "Projetos", navAbout: "Sobre", navComm: "Comissões", navContact: "Contacto",
@@ -533,19 +534,48 @@ header{
    nada. O botao ao lado copia o endereco e resolve esse caso. */
 .mail-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .btn-sm{padding:9px 15px;font-size:.66rem}
-/* align-items era 'end': as duas colunas alinhavam em baixo, e como a obra e
-   359px mais alta que o texto, o titulo era empurrado 480px para baixo e a
-   primeira coisa que se via era vazio. 'start' poe o titulo no topo e deixa a
-   obra descair, o que alem de resolver o buraco aumenta a assimetria. */
-.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.72fr);gap:60px;align-items:start}
-.hero h1{font-size:clamp(3.2rem,9vw,7rem);letter-spacing:-.025em;min-height:2.12em}
-.hero h1 em{font-style:italic;color:var(--royal-lift);display:block}
-.hero .sub{font-family:var(--f-ui);
-  font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--bone-dim);
-  margin:26px 0 18px;min-height:1.65em;
+/* O alinhamento ja foi 'end' (as colunas encostadas em baixo): como a obra era
+   359px mais alta que o texto, o titulo caia 480px e a primeira coisa a ver era
+   vazio. Passou a 'start', e agora a 'center'.
+   Com a obra a mandar no hero, 'start' deixava 291px de vazio por baixo do
+   texto e a coluna da esquerda parecia cortada a meio. 'center' reparte esse
+   vazio pelos dois lados (145 em cima, 145 em baixo) e o texto passa a ler-se
+   ao lado da peca, como legenda, em vez de competir com ela.
+   Medido a 1440x900: texto 379px, obra 669px. */
+/* A obra passa a ser a coluna maior. Era ao contrario: o texto levava 1fr e a
+   arte .72fr, ou seja, a peca que devia ser a primeira coisa a ver ocupava
+   menos de metade do hero. Agora a proporcao esta invertida e o texto fica
+   como legenda do que se ve, nao como concorrente. */
+.hero-grid{display:grid;grid-template-columns:minmax(0,.66fr) minmax(0,1fr);gap:clamp(30px,4vw,56px);align-items:center}
+/* No HTML a obra vem primeiro (ver o comentario no markup). Aqui troca-se a
+   ordem das colunas para o texto ficar a esquerda e a obra a direita. */
+.hero-copy{order:1}
+.hero-art{order:2}
+/* O h1 encolheu de clamp(3.2rem,9vw,7rem) para isto. Com o "Ink first" fora,
+   o titulo deixou de ser o cartaz e passou a ser informacao: diz o que ele
+   faz, e deixa a obra levar o peso visual. */
+/* max-width em em (nao em px) para a medida acompanhar o tamanho da letra:
+   assim o titulo parte sempre em duas linhas, em qualquer largura de ecra.
+   Sem isto, entre os 430 e os 980px o h1 apanhava a largura toda, cabia numa
+   linha so — uma linha de 928px le-se mal — e a altura reservada deixava 33px
+   de vazio por baixo. Com a medida fixa, as duas linhas sao sempre duas e a
+   reserva de 2,24em esta sempre certa.
+   O balance reparte as palavras pelas duas linhas em vez de deixar uma orfa. */
+.hero h1{font-size:clamp(1.8rem,3.1vw,2.85rem);letter-spacing:-.015em;line-height:1.12;
+  max-width:10.5em;text-wrap:balance;min-height:2.24em}
+.hero .tag{color:var(--bone-dim);max-width:30rem;margin:20px 0 30px;font-size:1.02rem;min-height:3.3em}
+.hero-art{
+  position:relative;
+  /* A obra e tao grande quanto o ecra permite, sem nunca ser cortada.
+     A altura e a largura vezes 1,25 (a proporcao 4/5 do ficheiro), por isso
+     limitar a largura a (altura disponivel / 1,25) garante que a peca inteira
+     cabe no primeiro ecra. Sem isto, a 1440 a moldura ficava com 852px de alto
+     e num portatil era preciso fazer scroll so para ver a imagem toda.
+     svh e a altura real do ecra no telemovel, com as barras do browser
+     contadas; a linha vh acima fica como reserva para quem nao a suporta. */
+  max-width:min(100%, calc((100vh - 260px) / 1.25));
+  max-width:min(100%, calc((100svh - 260px) / 1.25));
 }
-.hero .tag{color:var(--bone-dim);max-width:30rem;margin-bottom:34px;font-size:1.02rem;min-height:3.3em}
-.hero-art{position:relative}
 /* A moldura da obra do hero guarda o seu espaco antes de a imagem existir.
    Sem isto ficava com 14px ate o JS correr e depois saltava para ~600px,
    empurrando a pagina inteira — era a maior fatia do CLS que sobrava.
@@ -915,8 +945,17 @@ footer{font-family:var(--f-ui);
 /* ================= RESPONSIVE ================= */
 @media (max-width:980px){
   .wall{column-count:3;min-height:calc(10.6 * (var(--wall-w) - 28px) / 3 + 131px)}
-  .hero-grid{grid-template-columns:1fr;gap:44px;align-items:start}
-  .hero-art{max-width:400px}
+  .hero-grid{grid-template-columns:1fr;gap:34px;align-items:start}
+  /* Numa coluna so nao ha nada a trocar: a ordem do HTML (obra, depois texto)
+     e exactamente a que se quer ver. Antes a obra vinha por baixo do titulo,
+     da tagline, dos botoes e dos tres factos, uns 700px de scroll antes de se
+     ver um desenho numa pagina que existe para os mostrar. */
+  .hero-copy,.hero-art{order:0}
+  /* Com a grelha a cair para uma coluna, a obra fica por baixo do texto. 400px
+     era acanhado para a peca que deve levar o olho; 560 da-lhe presenca sem a
+     fazer ocupar um ecra inteiro de altura (a 4/5, 560 de largura sao 700 de
+     alto). */
+  .hero-art{max-width:560px}
   .projects{grid-template-columns:1fr}
   .about{grid-template-columns:1fr;gap:38px}
   .about-mark{max-width:300px}
@@ -1001,23 +1040,30 @@ footer{font-family:var(--f-ui);
 
   <!-- HERO -->
   <div class="hero">
+    <!-- A obra vem primeiro no HTML de proposito. Quando estava depois do
+         texto, o browser pintava o texto no topo enquanto ainda estava a
+         receber o resto do ficheiro e, mal o parser chegasse a moldura, o
+         order:-1 punha-a acima e empurrava o texto 452px para baixo. Dava
+         0,33 de CLS numa ligacao lenta, e so em algumas vezes, consoante o
+         momento em que o browser pintava. Com a obra primeiro no HTML nao ha
+         nada que salte, e em telemovel a ordem que se ve e a mesma do codigo.
+         No desktop o order manda-a para a coluna da direita. -->
     <div class="hero-grid">
-      <div>
-        <h1><span data-t="heroLine1"></span><em data-t="heroLine2"></em></h1>
-        <p class="sub" data-t="heroSub"></p>
-        <p class="tag" data-t="tagline"></p>
-        <div class="row">
-          <a class="btn fill" href="#work"><span data-t="ctaWork"></span> →</a>
-          <a class="btn" href="#comm"><span data-t="ctaComm"></span></a>
-        </div>
-        <ul class="proof" id="heroProof"></ul>
-      </div>
       <div class="hero-art rv">
         <div class="shot" id="heroShot"></div>
         <div class="cap">
           <span data-t="featuredLabel"></span>
           <span id="heroCap"></span>
         </div>
+      </div>
+      <div class="hero-copy">
+        <h1 data-t="heroTitle"></h1>
+        <p class="tag" data-t="tagline"></p>
+        <div class="row">
+          <a class="btn fill" href="#work"><span data-t="ctaWork"></span> →</a>
+          <a class="btn" href="#comm"><span data-t="ctaComm"></span></a>
+        </div>
+        <ul class="proof" id="heroProof"></ul>
       </div>
     </div>
   </div>
@@ -1254,7 +1300,11 @@ function renderHeroArt(){
     ...CONFIG.hero,
     eager: true,
     wide: true,
-    sizes: '(max-width: 980px) min(calc(100vw - 52px), 400px), 470px',
+    /* O sizes tem de descrever a largura REAL da imagem no ecra, senao o
+       browser escolhe mal o ficheiro. Ate 980px a coluna e a largura toda
+       (a grelha passa a uma coluna); acima disso a arte leva 1fr de
+       .66fr+1fr com a folga pelo meio, ou seja ~57% da largura util. */
+    sizes: '(max-width: 980px) min(calc(100vw - 52px), 560px), min(57vw, 690px)',
   }));
   $('#heroCap').textContent = CONFIG.hero.label;
   /* mantem a proporcao reservada no CSS em sintonia com o ficheiro real */
