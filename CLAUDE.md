@@ -341,7 +341,10 @@ and every suggestion in this document.
    `comissoes/README.md`.
 5. **Nothing invented.** Projects with no artwork render a typographic plate on
    purpose. Never substitute an unrelated illustration, never write copy
-   asserting anything unverifiable from `CONFIG`.
+   asserting anything unverifiable from `CONFIG`. Project copy comes from what
+   Frede says about the job, not from what the artwork looks like: the Tokyo
+   Revengers card said "promotional cover illustrations" until he explained it
+   is a monthly series that recasts each cover with people from the community.
 6. **`CONFIG` is the contract.** Copy, prices, image list, timeline and links live
    there. New content goes in `CONFIG`.
 7. **Full EN/PT parity.** Every `data-t` key resolves in both languages. Verify by

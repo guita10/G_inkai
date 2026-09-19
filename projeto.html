@@ -38,10 +38,14 @@ const CONFIG = {
   instagram: "https://www.instagram.com/guita_ink",
   shop: "https://js1ssa-qu.myshopify.com",              // Shopify — checkout only
   projectPage: "projeto.html",                          // per-project pages, opened in a new tab
+  /* O link do PAMP veio com um ?stkn=... colado: e um token de partilha do
+     Instagram, ligado a sessao de quem copiou o endereco. Num site publico nao
+     tem nada que fazer, por isso ficou so o endereco limpo.
+     O Webtoon veio em m.webtoons.com (a versao de telemovel). Aqui fica o
+     endereco canonico, que serve bem os dois. */
   otherLinks: [
-    { label: "Webtoon", url: "#" },                     // ← still "#" (Notion: Por fazer)
-    { label: "PAMP", url: "#" },                        // ← still "#"
-    { label: "Distrito Manga", url: "#" },              // ← still "#"
+    { label: "Webtoon", url: "https://www.webtoons.com/en/canvas/survival-of-kings/list?title_no=1055635" },
+    { label: "PAMP",    url: "https://www.instagram.com/premiosanimemangaportugal/" },
   ],
 
   /* ---------- COMMISSIONS ----------
@@ -140,7 +144,7 @@ const CONFIG = {
       openProject: "Open project",
       projects: {
         sok:  { kicker: "Webtoon series", title: "Survival of Kings", desc: "Ongoing webtoon / graphic novel, co-created with writer Reeeborn. Ink-style panels and vertical-scroll storytelling." },
-        tr:   { kicker: "Published covers", title: "Tokyo Revengers promo covers", desc: "Promotional cover illustrations approved by Distrito Manga. Character-first compositions with strong ink linework." },
+        tr:   { kicker: "Monthly, with Distrito Manga", title: "Tokyo Revengers, covers reimagined", desc: "Each volume cover redrawn in the original format, with faces from the anime and manga community standing in for the characters. A new one goes out every month, alongside the publisher's releases." },
         pamp: { kicker: "Visual identity", title: "PAMP: Prémios Anime Manga Portugal", desc: "Full visual identity: key art, logo lock-ups and event graphics." },
       },
       tlTitle: "Timeline",
@@ -187,7 +191,7 @@ const CONFIG = {
       openProject: "Abrir projeto",
       projects: {
         sok:  { kicker: "Série webtoon", title: "Survival of Kings", desc: "Webtoon / graphic novel em curso, co-criado com o escritor Reeeborn. Painéis a tinta e narrativa em scroll vertical." },
-        tr:   { kicker: "Capas publicadas", title: "Tokyo Revengers, capas promocionais", desc: "Ilustrações de capa promocionais aprovadas pela Distrito Manga. Composições centradas nas personagens, com linework forte a tinta." },
+        tr:   { kicker: "Mensal, com a Distrito Manga", title: "Tokyo Revengers, capas reinterpretadas", desc: "Cada capa de volume refeita no formato original, com figuras da comunidade anime e manga no lugar das personagens. Sai uma por mês, a acompanhar os lançamentos da editora." },
         pamp: { kicker: "Identidade visual", title: "PAMP: Prémios Anime Manga Portugal", desc: "Identidade visual completa: key art, logótipos e grafismo de evento." },
       },
       tlTitle: "Percurso",
