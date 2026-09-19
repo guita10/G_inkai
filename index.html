@@ -650,12 +650,14 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
    dava 0,96 de CLS na tira antiga.
    Nao e um numero fixo, porque a altura certa muda com a largura do ecra. E a
    conta: a altura de uma parede em n colunas e a soma das proporcoes de todas
-   as pecas (altura a dividir pela largura, 31,8 para estas 28) vezes a largura
-   de uma coluna, tudo a dividir pelo numero de colunas, mais as margens.
+   as pecas (altura a dividir pela largura) vezes a largura de uma coluna,
+   tudo a dividir pelo numero de colunas, mais as margens.
    Da 1 a 5% ABAIXO do real, de proposito: reservar a menos deixa a pagina
    assentar uns pixeis: reservar a mais abria um buraco que depois fechava, o
    que conta como salto na mesma.
-   Se mudares o numero de obras, actualiza o 31,8 e o 28. */
+   Os tres numeros aqui em baixo sao GERADOS: saem do tools/dims.py, que le as
+   proporcoes verdadeiras dos ficheiros e conta as obras do artworks. Nao os
+   escrevas a mao — junta a arte e corre o script. */
 .wall{
   --wall-w:calc(min(1240px,100vw) - 52px);
   min-height:calc(7.95 * (var(--wall-w) - 42px) / 4 + 98px);

@@ -120,14 +120,17 @@ nothing.
 
 | Script | Does |
 | --- | --- |
-| `add-artwork.py` | the whole ingest: original → 1600px JPEG + 760px thumb, then calls the two below |
+| `add-artwork.py` | the whole ingest: originals (or a whole folder) → 1600px JPEG + 760px thumb, then calls the two below |
 | `make-webp.py` | regenerates the WebP derivatives |
-| `dims.py` | rewrites the `DIMS` map in `index.html` from the real pixels |
+| `dims.py` | rewrites the `DIMS` map **and the wall's reserved height** in `index.html`, both from the real pixels |
 | `make-og-card.py` | redraws `images/og-card.jpg`, the 1200x630 social card |
 
 `add-artwork.py` is the one to reach for. Adding art by hand means four steps and
-the fourth, `DIMS`, fails silently: a wrong number throws no error, it just puts
-the layout shift back.
+the last two, `DIMS` and the wall reserve, fail silently: a wrong number throws
+no error, it just puts the layout shift back. It takes a folder, skips files
+that are byte-identical to one already in the batch, and **refuses** a batch
+where two different files slugify to the same name rather than let one
+overwrite the other. `--dry-run` shows the plan without writing.
 
 **Do not add a dependency.** If a task seems to need one, the task is wrong for
 this repo or the answer is a dozen lines of vanilla code.
@@ -183,8 +186,13 @@ changes with viewport width: the sum of every piece's height-over-width ratio
 (**31.8** for these 28) times one column's width, over the column count, plus
 margins. Aim **1-5% under** the real height. Under-reserving settles by a few
 pixels; over-reserving opens a gap that closes again, which counts just the
-same. **If you change the number of artworks, update the 31.8 and the 28.**
-Result after all of it: 0.006 throttled, 0 unthrottled.
+same. Result after all of it: 0.006 throttled, 0 unthrottled.
+
+**The three coefficients are generated — never hand-edit them.** They used to
+be the repo's sharpest footgun: change the gallery, forget the 31.8 and the 28,
+and the CLS quietly comes back. `dims.py` now derives all three from the thumb
+ratios in `DIMS` and the length of `CONFIG.artworks`, and rewrites the CSS. Run
+it after any change to the gallery, not just after adding files.
 
 **Source order is part of the reserve.** The hero artwork is written *before*
 the copy in the markup, and `order` swaps them back on desktop. It used to be
@@ -283,9 +291,9 @@ comissoes/      the commission system; nothing here is served
   README.md       how site, Notion and email fit together
   email-onboarding.md  the acceptance email, PT and EN
 tools/          all run by hand, none part of the deploy
-  add-artwork.py  original → full + thumb + webp + DIMS, in one command
+  add-artwork.py  originals or a folder → full + thumb + webp + DIMS, in one command
   make-webp.py    regenerates the WebP derivatives
-  dims.py         rewrites the DIMS map from the real pixels
+  dims.py         rewrites the DIMS map and the wall reserve from the real pixels
   make-og-card.py redraws images/og-card.jpg from og-card.html
   og-card.html    the social card's layout; not served, just the mould
 DESIGN.md       the design system in semantic form
@@ -321,8 +329,10 @@ What actually works:
 4. **Reject, out of hand:** Tailwind classes, React/JSX output, a `tokens.json`,
    an icon package, `styled-components`, or a `package.json`.
 5. **Download assets** (`download_assets`) anywhere, then run
-   `python3 tools/add-artwork.py <ficheiro>` — it does the resize, the WebP and
-   the `DIMS` entry. Filling the `src` in `CONFIG` stays manual, on purpose.
+   `python3 tools/add-artwork.py <ficheiro|pasta>` — it does the resize, the
+   WebP, the `DIMS` entry and the wall reserve. Filling `CONFIG` stays manual,
+   on purpose: the script prints the lines with `label` and `cat` left blank,
+   because it cannot see what is in the picture and must not guess (§9.5).
 
 A Figma file will not know about the constraints in §9. Those outrank it.
 
