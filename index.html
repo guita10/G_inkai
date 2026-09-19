@@ -1,0 +1,1779 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ============ SEO ============ -->
+<title>Guita_Ink · Illustration Portfolio</title>
+<meta name="description" content="Guita_Ink · anime and manga-influenced illustration: original characters, fan art, covers and studies. Commissions open.">
+<meta property="og:title" content="Guita_Ink · Illustration Portfolio">
+<meta property="og:description" content="Characters, covers and the worlds they live in.">
+<meta property="og:type" content="website">
+<!-- dominio proprio, activo. Se algum dia mudar, e aqui e no sitemap/robots. -->
+<meta property="og:url" content="https://guitaink.com/">
+<!-- O cartao de partilha, 1200x630 — a medida que o Facebook, o LinkedIn e o
+     WhatsApp esperam. Antes apontava para uma ilustracao vertical (1280x1600)
+     que eles cortavam ao centro, perdendo a cabeca e os pes do desenho.
+     Foi desenhado em HTML e fotografado com o Chromium; o ficheiro de origem
+     esta em tools/og-card.html. Para o refazer (arte nova, texto novo):
+       python3 tools/make-og-card.py
+     Nao e uma obra da galeria: nao entra no CONFIG.artworks nem no JSON-LD. -->
+<meta property="og:image" content="https://guitaink.com/images/og-card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Guita_Ink · illustration and character design">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://guitaink.com/">
+<!-- Dados estruturados para o Google. Os precos aqui em baixo sao reescritos
+     a partir do CONFIG assim que a pagina abre (ver syncStructuredData), por
+     isso nao ficam desactualizados se mudares um preco la em cima. Estes
+     valores estaticos sao o que veem os robos que nao correm JavaScript —
+     vale a pena manter-los certos, mas o CONFIG e que manda. -->
+<script type="application/ld+json" id="ldPerson">
+{
+  "@context":"https://schema.org",
+  "@type":"Person",
+  "name":"Frederico Guita",
+  "alternateName":"Guita_Ink",
+  "jobTitle":"Illustrator",
+  "url":"https://guitaink.com/",
+  "email":"mailto:frederico@guitaink.com",
+  "sameAs":["https://www.instagram.com/guita_ink"],
+  "knowsAbout":["Illustration","Character design","Manga","Anime","Webtoon"],
+  "makesOffer":[
+    {"@type":"Offer","name":"Headshot / Bust commission"},
+    {"@type":"Offer","name":"Half body commission"},
+    {"@type":"Offer","name":"Full body commission"},
+    {"@type":"Offer","name":"Character sheet commission"}
+  ]
+}
+</script>
+<meta name="theme-color" content="#0A0A0A">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232E45FF'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23F2F0EC' font-family='serif'%3E墨%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- FONTS — one request, non-blocking.
+     Antes eram 3 <link> normais: a página ficava BRANCA até o Google responder
+     (CDN lento a 1,5 s = 1,6 s de ecrã vazio). Com media="print" o browser
+     descarrega sem bloquear o desenho, e o onload liga a folha quando chega —
+     o texto aparece logo em Georgia e troca para as fontes finais (display=swap
+     já fazia essa troca de qualquer maneira).
+     Só os pesos REALMENTE usados no CSS desta página:
+       Playfair 400 · 500 · 400 itálico   Inter 300 · 400 · 500   Lora 400
+     Se acrescentares um font-weight novo ao CSS, junta-o aqui também. -->
+<link rel="stylesheet" media="print" onload="this.media='all'"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&family=Lora:wght@400&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&family=Lora:wght@400&display=swap"></noscript>
+
+<script>
+/* ================================================================
+   ████  CONFIG — EDIT EVERYTHING HERE  ████
+   ================================================================ */
+const CONFIG = {
+
+  /* ---------- IDENTITY ---------- */
+  artistName: "Guita_Ink",
+  realName: "Frederico Guita",
+  email: "frederico@guitaink.com",                      // Google Workspace (admin@ fica só para gestão da conta)
+  instagram: "https://www.instagram.com/guita_ink",
+  shop: "https://js1ssa-qu.myshopify.com",              // Shopify — checkout only
+  projectPage: "projeto.html",                          // per-project pages, opened in a new tab
+  /* O link do PAMP veio com um ?stkn=... colado: e um token de partilha do
+     Instagram, ligado a sessao de quem copiou o endereco. Num site publico nao
+     tem nada que fazer, por isso ficou so o endereco limpo.
+     O Webtoon veio em m.webtoons.com (a versao de telemovel). Aqui fica o
+     endereco canonico, que serve bem os dois. */
+  otherLinks: [
+    { label: "Webtoon", url: "https://www.webtoons.com/en/canvas/survival-of-kings/list?title_no=1055635" },
+    { label: "PAMP",    url: "https://www.instagram.com/premiosanimemangaportugal/" },
+  ],
+
+  /* ---------- COMMISSIONS ----------
+     OS PRECOS NAO VIVEM AQUI, DE PROPOSITO.
+     O site mostra os quatro formatos e mais nada. O valor, o processo, as
+     fases, o prazo e os termos seguem no email de resposta, junto com o PDF
+     de onboarding. Quem chega ao site fala primeiro; o numero vem depois.
+     Isso tira o preco de tres sitios de uma vez: da pagina, do JSON-LD que o
+     Google le, e do codigo-fonte.
+     Os precos verdadeiros vivem em dois sitios, e so dois:
+        1. o produto no Shopify        2. Guita_Ink_Comissoes_PT.pdf (Drive)
+     O `handle` fica porque e ele que da o link da loja no email de aceitacao.
+     Fechar comissoes continua a ser DOIS gestos: open:false aqui E por os
+     produtos do Shopify em rascunho, senao a loja continua a aceitar pedidos. */
+  commissionsOpen: true,
+  tiers: [
+    { key: "headshot", handle: "commission-headshot-bust" },
+    { key: "half",     handle: "commission-half-body" },
+    { key: "full",     handle: "commission-full-body" },
+    { key: "sheet",    handle: "commission-character-sheet" },
+  ],
+
+  /* ---------- IMAGES ----------
+     Same convention as the live site's CONFIG, so lines can be pasted straight
+     across from index.html on Netlify without editing anything:
+        { src:"images/nome.jpg", label:"Título", cat:"webtoon", ratio:"34" }
+     ratio: "34" portrait · "12" webtoon vertical · "11" square
+     cat:   webtoon · covers · character · fanart · sketches
+     Export ~1600px on the long side, .jpg, under ~400 KB.
+     imageBase is prepended only to paths that aren't already absolute — leave it
+     empty to use the local /images/ folder, or set it to
+     "https://guitaink.com/" to pull straight from the live deploy.     */
+  imageBase: "",
+  hero: { src: "images/oc.jpg", label: "OC 01", ratio: "34" },
+  artworks: [
+    { src: "images/mira-starborn.jpg",         label: "Mira Starborn",             ratio: "11", cat: "character" },
+    { src: "images/collab-mira-final.jpg",     label: "Mira, collab",             ratio: "34", cat: "character" },
+    { src: "images/collab.jpg",                label: "Duelo, collab",            ratio: "43", cat: "character" },
+    { src: "images/arkevil-final.jpg",         label: "ArkEvil",                   ratio: "34", cat: "character" },
+    { src: "images/oc.jpg",                    label: "OC 01",                   ratio: "34", cat: "character" },
+    { src: "images/oc-1.jpg",                  label: "OC 02",                   ratio: "11", cat: "character" },
+    { src: "images/oc-2.jpg",                  label: "OC 03",                   ratio: "34", cat: "character" },
+    { src: "images/silen.jpg",                 label: "Silen",                     ratio: "34", cat: "character" },
+    { src: "images/the-witch.jpg",             label: "The Witch",                 ratio: "34", cat: "character" },
+    { src: "images/kon.jpg",                   label: "Kon",                       ratio: "11", cat: "character" },
+    { src: "images/ilustracao-sem-titulo-1.jpg", label: "Espírito",                  ratio: "11", cat: "character" },
+    { src: "images/geisha.jpg",                label: "Geisha",                    ratio: "34", cat: "character" },
+    { src: "images/clair.jpg",                 label: "Clair",                     ratio: "11", cat: "character" },
+    { src: "images/italy.jpg",                 label: "Italy",                     ratio: "34", cat: "character" },
+    { src: "images/spain.jpg",                 label: "Spain",                     ratio: "34", cat: "character" },
+    { src: "images/estudo-luz.jpg",            label: "Estudo de luz",             ratio: "34", cat: "sketches" },
+    { src: "images/shocked.jpg",               label: "Shocked",                   ratio: "34", cat: "sketches" },
+    { src: "images/surpresa.jpg",              label: "Surpresa",                  ratio: "11", cat: "sketches" },
+    { src: "images/aki.jpg",                   label: "Aki, Chainsaw Man",        ratio: "34", cat: "fanart" },
+    { src: "images/makima.jpg",                label: "Makima, Chainsaw Man",     ratio: "34", cat: "fanart" },
+    { src: "images/pochita.jpg",               label: "Pochita, Chainsaw Man",    ratio: "11", cat: "fanart" },
+    { src: "images/even-yeager.jpg",           label: "Eren Yeager, AoT",         ratio: "34", cat: "fanart" },
+    { src: "images/final-aot-season-4.jpg",    label: "Attack on Titan S4",      ratio: "34", cat: "fanart" },
+    { src: "images/yuta-fanart.jpg",           label: "Yuta, Jujutsu Kaisen",     ratio: "34", cat: "fanart" },
+    { src: "images/nami-30x40.jpg",            label: "Nami, One Piece",          ratio: "34", cat: "fanart" },
+    { src: "images/ilustracao-sem-titulo.jpg", label: "Tony Tony Chopper, card",  ratio: "43", cat: "fanart" },
+    { src: "images/dante.jpg",                 label: "Dante",                     ratio: "11", cat: "fanart" },
+    { src: "images/lucy.jpg",                  label: "Lucy",                      ratio: "11", cat: "fanart" },
+  ],
+
+  /* 28 peças reais, exportadas a 1600px do pacote original (era 414 MB → 5,5 MB) */
+
+  projects: [
+    /* Os tres projectos ja tem arte. Se algum dia um src ficar "", o cartao volta
+       a mostrar a placa tipografica de proposito — nunca uma ilustracao que nao
+       seja do projecto. Para meter arte nova:
+         python3 tools/add-artwork.py <ficheiro> --slug proj-xxx
+       e depois poe o caminho no src aqui (e o mesmo no outro ficheiro). */
+    { src: "images/proj-sok.jpg",  label: "Survival of Kings", ratio: "34", key: "sok",  plate: "SOK" },
+    { src: "images/proj-tr.jpg",   label: "Tokyo Revengers", ratio: "34", key: "tr",   plate: "TR"  },
+    { src: "images/proj-pamp.jpg", label: "PAMP",            ratio: "34", key: "pamp", plate: "P"   },
+  ],
+
+  /* ---------- TIMELINE ----------
+     month: 1-12, or null to show the year only.
+     status: "past" | "next"  (next = upcoming; the first one gets the "Next up" flag) */
+  timeline: [
+    { key: "iberanime", year: 2023, month: null, status: "past" },
+    { key: "sok",       year: 2025, month: null, status: "past" },
+    { key: "comicon",   year: 2026, month: 4,    status: "past" },
+    { key: "coimbrabd", year: 2026, month: 4,    status: "past" },
+    { key: "workshop",  year: 2026, month: 7,    status: "past" },
+  ],
+
+  /* ---------- ALL WRITTEN COPY (EN / PT) ---------- */
+  i18n: {
+    en: {
+      /* O "Ink first" saiu por decisao do Frede. O h1 passa a ser o que ele faz,
+         que ja era o texto da linha pequena por baixo — promovido, nao
+         inventado. Uma coisa a menos a competir com a obra. */
+      heroTitle: "Illustration and character design",
+      tagline: "Anime and manga-influenced work. Characters, covers and the worlds they live in.",
+      ctaWork: "View work", ctaComm: "Commissions",
+      navWork: "Work", navProjects: "Projects", navAbout: "About", navComm: "Commissions", navContact: "Contact",
+      navMenu: "Menu",
+      featuredLabel: "Featured",
+      galleryTitle: "Selected work",
+      filters: { all: "All", webtoon: "Webtoon", covers: "Covers", character: "Character design", fanart: "Fan art", sketches: "Sketches" },
+      projectsTitle: "Featured projects",
+      openProject: "Open project",
+      projects: {
+        sok:  { kicker: "Webtoon series", title: "Survival of Kings", desc: "Ongoing webtoon / graphic novel, co-created with writer Reeeborn. Ink-style panels and vertical-scroll storytelling." },
+        tr:   { kicker: "Monthly, with Distrito Manga", title: "Tokyo Revengers, covers reimagined", desc: "Each volume cover redrawn in the original format, with faces from the anime and manga community standing in for the characters. A new one goes out every month, alongside the publisher's releases." },
+        pamp: { kicker: "Visual identity", title: "PAMP: Prémios Anime Manga Portugal", desc: "Full visual identity: key art, logo lock-ups and event graphics." },
+      },
+      tlTitle: "Timeline",
+      tlUpcoming: "Upcoming", tlNext: "Next up",
+      months: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+      timeline: {
+        iberanime: { title: "Iberanime manga contest, 1st place", where: "Iberanime · Lisbon", desc: "Won the manga contest. The push that turned a handle into a body of work." },
+        sok:       { title: "Survival of Kings, Chapter 01", where: "Webtoon · with Reeeborn", desc: "First chapter published. Written by Reeeborn, drawn by me." },
+        comicon:   { title: "Panel talk", where: "COMICON · Portugal", desc: "On building comic worlds: perspective, space and structure." },
+        coimbrabd: { title: "Artist Alley", where: "Coimbra BD", desc: "A table of prints, originals and live commissions. Readers met face to face." },
+        workshop:  { title: "Character design & creative writing workshop", where: "Termas Romanas das Taipas", desc: "Co-facilitated with Reeeborn. Twelve people, ninety minutes, one character each." },
+      },
+      aboutTitle: "About",
+      /* Primeira pessoa, e a arquitectura reduzida a uma frase subordinada: era
+         metade da bio e passou a ser um detalhe do metodo. Tudo o que esta
+         aqui e verificavel — as capas sao o Tokyo Revengers, o webtoon e o
+         Survival of Kings, e a ordem tinta-antes-de-cor e a mesma do PDF de
+         onboarding (Draft 1 lineart, Draft 2 cor). */
+      /* Tom pedido pelo Frede: primeira pessoa, quente, a falar com quem le, e
+         um obrigado no fim. A viragem do segundo paragrafo nao foi inventada —
+         e a mesma frase que ja estava no timeline.iberanime, "o empurrao que
+         transformou um nome num corpo de trabalho". O resto sao factos que
+         estao no CONFIG: a capa mensal, o webtoon com o Reeeborn, as
+         comissoes abertas, e a linha antes da cor, que e a ordem do PDF. */
+      aboutBody: [
+        "I'm an illustrator, and I sign my work Guita_Ink. I draw characters and the worlds they live in, with anime and manga never far away.",
+        "Winning the Iberanime manga contest in 2023 was the push that turned a name into a body of work. I have not stopped since: a cover a month with Distrito Manga, Survival of Kings growing with Reeeborn, and commissions in between.",
+        "I studied architecture, and what stayed with me is the habit of treating the space around a figure as part of the drawing, not as backdrop. I always start with the line, and it is the most important part of my process: that is where the drawing is decided, long before any colour goes in.",
+        "If you made it this far, thank you. It matters more than you would think.",
+      ],
+      aboutMeta: "Frederico Guita · Guita_Ink",
+      commTitle: "Commissions",
+      commOpen: "Open", commClosed: "Closed",
+      commIntro: "Four formats, from a bust to a full character sheet. Tell me what you have in mind and I reply with the format, the price and the timeline.",
+      commNote: "Prices and the full process go by email, with a short guide of how we work together.",
+      tiers: {
+        headshot: { name: "Headshot / Bust", desc: "Head and shoulders, fully rendered." },
+        half:     { name: "Half body",       desc: "Waist-up illustration, fully rendered." },
+        full:     { name: "Full body",       desc: "Complete character, fully rendered." },
+        sheet:    { name: "Character sheet", desc: "Turnarounds, expressions and detail callouts. Final quote depends on the number of views." },
+      },
+      commCta: "Ask about a commission",
+      mailSubject: "Commission request",
+      mailBody: "Hi Frede,\n\n"
+        + "Format (bust / half body / full body / character sheet): \n"
+        + "Character: \n"
+        + "Reference links: \n"
+        + "Pose or framing you have in mind: \n"
+        + "Colours or mood: \n"
+        + "Any date you need it by: \n"
+        + "Commercial use (yes / no): \n\n"
+        + "Thanks,\n",
+      contactTitle: "Say hi",
+      contactBody: "For commissions, collabs or publishing, email is fastest. For everything else, Instagram.",
+      footerNote: "Drawn & built by hand.",
+      lightboxHint: "Esc to close · ← → to browse",
+      lbOf: "of",
+      placeholderNote: "placeholder, swap in /images",
+      wallEmpty: "Nothing in this category yet.",
+      copyEmail: "Copy address", copied: "Copied",
+      /* Tres factos que ja estao no site, repetidos ao pe do nome: e a
+         primeira coisa que um director de arte precisa de ver. Nada aqui e
+         novo — saem do timeline.iberanime e dos projects.tr / projects.sok. */
+      heroProof: [
+        "1st place, Iberanime manga contest",
+        "Published covers, Distrito Manga",
+        "Webtoon in progress with Reeeborn",
+      ],
+    },
+    pt: {
+      heroTitle: "Ilustração e design de personagens",
+      tagline: "Trabalho de influência anime e manga. Personagens, capas e os mundos onde vivem.",
+      ctaWork: "Ver trabalho", ctaComm: "Comissões",
+      navWork: "Trabalho", navProjects: "Projetos", navAbout: "Sobre", navComm: "Comissões", navContact: "Contacto",
+      navMenu: "Menu",
+      featuredLabel: "Destaque",
+      galleryTitle: "Trabalho selecionado",
+      filters: { all: "Tudo", webtoon: "Webtoon", covers: "Capas", character: "Design de personagens", fanart: "Fan art", sketches: "Esboços" },
+      projectsTitle: "Projetos em destaque",
+      openProject: "Abrir projeto",
+      projects: {
+        sok:  { kicker: "Série webtoon", title: "Survival of Kings", desc: "Webtoon / graphic novel em curso, co-criado com o escritor Reeeborn. Painéis a tinta e narrativa em scroll vertical." },
+        tr:   { kicker: "Mensal, com a Distrito Manga", title: "Tokyo Revengers, capas reinterpretadas", desc: "Cada capa de volume refeita no formato original, com figuras da comunidade anime e manga no lugar das personagens. Sai uma por mês, a acompanhar os lançamentos da editora." },
+        pamp: { kicker: "Identidade visual", title: "PAMP: Prémios Anime Manga Portugal", desc: "Identidade visual completa: key art, logótipos e grafismo de evento." },
+      },
+      tlTitle: "Percurso",
+      tlUpcoming: "Em breve", tlNext: "A seguir",
+      months: ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
+      timeline: {
+        iberanime: { title: "Concurso de manga Iberanime, 1.º lugar", where: "Iberanime · Lisboa", desc: "Vitória no concurso de manga. O empurrão que transformou um nome num corpo de trabalho." },
+        sok:       { title: "Survival of Kings, Capítulo 01", where: "Webtoon · com Reeeborn", desc: "Primeiro capítulo publicado. Escrito pelo Reeeborn, desenhado por mim." },
+        comicon:   { title: "Painel / conversa", where: "COMICON · Portugal", desc: "Sobre construir mundos de banda desenhada: perspetiva, espaço e estrutura." },
+        coimbrabd: { title: "Artist Alley", where: "Coimbra BD", desc: "Mesa com prints, originais e comissões ao vivo. Leitores conhecidos em pessoa." },
+        workshop:  { title: "Workshop de character design & escrita criativa", where: "Termas Romanas das Taipas", desc: "Co-facilitado com o Reeeborn. Doze pessoas, noventa minutos, uma personagem cada." },
+      },
+      aboutTitle: "Sobre",
+      aboutBody: [
+        "Sou ilustrador e assino Guita_Ink. Desenho personagens e os mundos onde elas vivem, com o anime e a manga sempre por perto.",
+        "Ganhar o concurso de manga da Iberanime, em 2023, foi o empurrão que transformou um nome num corpo de trabalho. Desde aí não voltei a parar: uma capa por mês com a Distrito Manga, o Survival of Kings a crescer com o Reeeborn, e comissões pelo meio.",
+        "Estudei arquitetura e ficou-me o hábito de olhar para o espaço à volta de uma figura como parte do desenho, não como fundo. Começo sempre pela linha, e é a parte mais importante do meu processo: é aí que o desenho se decide, muito antes de entrar a cor.",
+        "Se chegaste até aqui, obrigado. Faz mais diferença do que parece.",
+      ],
+      aboutMeta: "Frederico Guita · Guita_Ink",
+      commTitle: "Comissões",
+      commOpen: "Abertas", commClosed: "Fechadas",
+      commIntro: "Quatro formatos, do busto à character sheet completa. Diz-me o que tens em mente e respondo com o formato, o valor e o prazo.",
+      commNote: "Os valores e o processo completo seguem por email, com um guia curto de como vamos trabalhar.",
+      tiers: {
+        headshot: { name: "Headshot / Busto",   desc: "Cabeça e ombros, totalmente renderizado." },
+        half:     { name: "Meio corpo",         desc: "Ilustração da cintura para cima, totalmente renderizada." },
+        full:     { name: "Corpo inteiro",      desc: "Personagem completa, totalmente renderizada." },
+        sheet:    { name: "Character sheet",    desc: "Turnarounds, expressões e detalhes. Orçamento final depende do número de vistas." },
+      },
+      commCta: "Pedir uma comissão",
+      mailSubject: "Pedido de comissão",
+      mailBody: "Olá Frede,\n\n"
+        + "Formato (busto / meio corpo / corpo inteiro / character sheet): \n"
+        + "Personagem: \n"
+        + "Links de referência: \n"
+        + "Pose ou enquadramento que imaginas: \n"
+        + "Cores ou ambiente: \n"
+        + "Alguma data a cumprir: \n"
+        + "Uso comercial (sim / não): \n\n"
+        + "Obrigado,\n",
+      contactTitle: "Diz olá",
+      contactBody: "Para comissões, colaborações ou publicação, o email é o mais rápido. Para tudo o resto, Instagram.",
+      footerNote: "Desenhado & construído à mão.",
+      lightboxHint: "Esc para fechar · ← → para navegar",
+      lbOf: "de",
+      placeholderNote: "placeholder, substituir em /images",
+      wallEmpty: "Ainda não há nada nesta categoria.",
+      copyEmail: "Copiar endereço", copied: "Copiado",
+      heroProof: [
+        "1.º lugar, concurso de manga Iberanime",
+        "Capas publicadas, Distrito Manga",
+        "Webtoon em curso com o Reeeborn",
+      ],
+    }
+  }
+};
+/* ================  END OF CONFIG — layout code below  ================ */
+</script>
+<style>
+/* ================= TOKENS ================= */
+:root{
+  --void:#0A0A0A;         /* the field */
+  --raise:#121212;        /* raised surface */
+  --raise-2:#1A1A1A;
+  --royal:#2E45FF;        /* Queen of Jacks blue */
+  --royal-lift:#5568FF;   /* for small text on near-black */
+  /* --raise (#121212) e mais claro que --void, por isso o --royal-lift so
+     chega a 4.29:1 la em cima — abaixo do minimo de 4.5:1 para texto pequeno.
+     Este azul, um tom acima, da 5.27:1 sobre --raise. Usa-o para texto miudo
+     que assente em cartoes, nao no fundo da pagina. */
+  --royal-raise:#6B7BFF;
+  --bone:#F2F0EC;
+  --bone-dim:#8C877F;
+  --hair:rgba(242,240,236,.13);
+  --f-disp:'Playfair Display',Georgia,serif;
+  --f-body:'LT Museum','Lora',Georgia,serif;      /* corpo — LT Museum se estiver instalada */
+  --f-ui:'Inter',system-ui,-apple-system,sans-serif;
+}
+[data-theme="light"]{
+  --void:#F4F2ED;
+  --raise:#FFFFFF;
+  --raise-2:#EDEAE3;
+  --royal:#2436C9;
+  --royal-lift:#2436C9;
+  --royal-raise:#2436C9;  /* no tema claro os cartoes sao brancos: 8.59:1, ja passa */
+  --bone:#141310;
+  --bone-dim:#6B655C;
+  --hair:rgba(20,19,16,.13);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--f-body);background:var(--void);color:var(--bone);
+  line-height:1.65;font-weight:300;-webkit-font-smoothing:antialiased;
+  transition:background .4s ease,color .4s ease;overflow-x:hidden;
+}
+/* height:auto e o par obrigatorio do max-width:100%. Sem ele, quando a coluna
+   aperta a largura da imagem o atributo height fica agarrado ao valor original
+   e a imagem sai esmagada — era o que acontecia a obra do hero (0,80 real
+   desenhada a 0,62). Com os dois, o browser deriva a proporcao dos atributos
+   width/height, escala a altura junto com a largura e o CLS continua a zero. */
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+::selection{background:var(--royal);color:#fff}
+:focus-visible{outline:2px solid var(--royal-lift);outline-offset:3px}
+
+.skip{
+  position:absolute;left:-9999px;top:10px;z-index:200;background:var(--royal);color:#fff;
+  padding:10px 18px;border-radius:2px;font:500 .8rem var(--f-ui);text-decoration:none;
+}
+.skip:focus{left:10px}
+/* so aparece quando o JavaScript nao corre — ver o <noscript> no <body> */
+.noscript-note{
+  max-width:1240px;margin:0 auto;padding:28px 26px;position:relative;z-index:1;
+  border-bottom:1px solid var(--hair);display:grid;gap:8px;
+}
+.noscript-note b{font-family:var(--f-disp);font-weight:500}
+.noscript-note p{color:var(--bone-dim);font-size:.9rem}
+.noscript-note a{color:var(--royal-lift)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px;position:relative;z-index:1}
+/* a barra vazia tem 54px (so os botoes); com os rotulos la dentro tem 73. */
+.bar{min-height:73px}
+/* film grain */
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/><feColorMatrix type='saturate' values='0'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='.16'/></svg>");
+}
+header,main,footer{position:relative;z-index:1}
+
+/* ================= TYPE ================= */
+h1,h2,h3{font-family:var(--f-disp);font-weight:400;line-height:1.06;letter-spacing:-.01em;text-wrap:balance}
+p{text-wrap:pretty}   /* evita uma palavra sozinha na ultima linha */
+.kicker{font-family:var(--f-ui);
+  font-size:.66rem;font-weight:500;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--bone-dim);display:flex;align-items:center;gap:12px;
+}
+.kicker::before{content:"";width:26px;height:1px;background:var(--royal-lift);flex:none}
+.sec-title{font-size:clamp(1.7rem,3.6vw,2.6rem);margin-top:16px;text-transform:uppercase;letter-spacing:.10em}
+/* ---- ALTURA RESERVADA PARA O TEXTO QUE VEM DO JAVASCRIPT ----
+   Todo o texto desta pagina e escrito pelo JS a partir do CONFIG, e esse
+   script esta no fim de um ficheiro grande. Numa ligacao lenta o browser ja
+   pintou a pagina — com todas as caixas de texto vazias, ou seja com zero de
+   altura — quando o script chega. Ao encher, cada uma cresce e empurra tudo o
+   que vem a seguir: era isto, e nao so a galeria, que dava o CLS alto.
+   Estas alturas foram medidas no browser e sao proporcionais ao tipo de letra,
+   por isso acompanham o clamp() em qualquer largura:
+     h1  2,12em (duas linhas)   ·   titulo de seccao  1,06em (uma linha)
+   Reservar a medida certa (ou um pouco mais) e o que leva o salto a zero. */
+.sec-title{min-height:1.06em}
+.sec-title em{font-style:italic;color:var(--royal-lift)}
+.lede{color:var(--bone-dim);max-width:36rem;margin-top:16px;font-size:1rem}
+
+/* ================= HEADER ================= */
+header{
+  position:sticky;top:0;z-index:60;
+  background:color-mix(in srgb,var(--void) 82%,transparent);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--hair);
+}
+/* O padding desceu de 16 para 10: a altura que falta passou para dentro dos
+   proprios links (ver .links a), para que a area de toque seja deles e nao da
+   barra. A barra fica praticamente com a mesma altura. */
+.bar{display:flex;align-items:center;gap:18px;padding:10px 0}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.seal{
+  width:30px;height:30px;flex:none;border-radius:8px;background:var(--royal);
+  display:grid;place-items:center;font-family:var(--f-disp);font-size:.95rem;color:#fff;
+}
+.brand b{font-family:var(--f-disp);font-weight:500;font-size:1.1rem;letter-spacing:.01em}
+.links{font-family:var(--f-ui);display:flex;gap:26px;margin-left:auto;font-size:.8rem;letter-spacing:.02em}
+/* padding vertical: sem ele a caixa do link tinha ~13px de altura e o alvo de
+   toque ficava muito abaixo dos 44px recomendados. O texto nao muda de sitio,
+   so cresce a area clicavel. */
+.links a{text-decoration:none;color:var(--bone-dim);transition:color .2s;position:relative;
+  display:inline-block;padding:16px 0;min-height:51px}
+.links a:hover{color:var(--bone)}
+.links a[aria-current]{color:var(--bone)}
+.links a[aria-current]::after{
+  /* bottom acompanha o padding novo: 16 de padding menos 6 = 10, para o traco
+     continuar a 6px do texto e nao a 6px do fundo da caixa. */
+  content:"";position:absolute;left:0;right:0;bottom:10px;height:1px;background:var(--royal-lift);
+}
+.knobs{display:flex;gap:8px;margin-left:22px}
+
+/* ---------- MENU MOVEL ----------
+   Abaixo dos 621px os links da barra desaparecem e ate agora nao havia nada no
+   lugar deles: num telemovel nao existia forma de saltar para uma seccao, so
+   rolar. O botao vive dentro dos .knobs para herdar a forma redonda deles.
+   O painel fica em z-index 55, por baixo do cabecalho (60), de proposito: assim
+   o proprio botao continua visivel e serve de fechar, sem precisar de um X. */
+.nav-toggle{display:none;padding:0;width:44px}
+.nav-toggle .bars{position:relative;display:block;width:16px;height:11px;margin:0 auto}
+.nav-toggle .bars::before,.nav-toggle .bars::after{
+  content:"";position:absolute;left:0;width:16px;height:1px;background:currentColor;
+  transition:transform .3s cubic-bezier(.2,.7,.3,1);
+}
+.nav-toggle .bars::before{top:3px}
+.nav-toggle .bars::after{top:8px}
+/* as duas barras juntam-se no mesmo y e cruzam-se: so transform, nada de top */
+.nav-toggle[aria-expanded="true"] .bars::before{transform:translateY(2.5px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] .bars::after{transform:translateY(-2.5px) rotate(-45deg)}
+
+.nav-panel{display:none;position:fixed;inset:0;z-index:55;background:var(--void);
+  padding:84px 26px 40px;overflow-y:auto}
+.nav-panel.open{display:block}
+.nav-panel nav{display:flex;flex-direction:column}
+.nav-panel a{
+  font-family:var(--f-disp);font-weight:400;font-size:clamp(1.7rem,8vw,2.4rem);
+  color:var(--bone-dim);text-decoration:none;padding:14px 0;
+  border-bottom:1px solid var(--hair);
+  opacity:0;transform:translateY(14px);
+  transition:opacity .5s cubic-bezier(.2,.7,.3,1),transform .5s cubic-bezier(.2,.7,.3,1),color .2s ease;
+}
+.nav-panel.open a{opacity:1;transform:none}
+/* cascata: os links entram em sequencia, nao em bloco */
+.nav-panel.open a:nth-child(1){transition-delay:.04s}
+.nav-panel.open a:nth-child(2){transition-delay:.08s}
+.nav-panel.open a:nth-child(3){transition-delay:.12s}
+.nav-panel.open a:nth-child(4){transition-delay:.16s}
+.nav-panel.open a:nth-child(5){transition-delay:.20s}
+.nav-panel.open a:nth-child(6){transition-delay:.24s}
+.nav-panel a:hover,.nav-panel a[aria-current]{color:var(--bone)}
+.nav-panel a[aria-current]{color:var(--royal-lift)}
+
+/* texto so para leitores de ecra */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.knob{
+  /* 44px e o minimo recomendado para um alvo de toque; estavam a 34. Como os
+     links da barra ja tem 45px de altura, o cabecalho nao cresce no desktop. */
+  height:44px;min-width:44px;padding:0 14px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--hair);background:transparent;color:var(--bone-dim);
+  /* atencao: o atalho `font:` define TAMBEM a familia. Ter um font-family
+     antes dele nao serve de nada — e apagado por esta linha. */
+  font:500 .68rem/1 var(--f-ui);letter-spacing:.1em;
+  transition:border-color .2s ease,color .2s ease,transform .12s ease-out;
+}
+.knob:hover{border-color:var(--royal-lift);color:var(--bone)}
+
+/* ================= BUTTONS ================= */
+.btn{
+  display:inline-flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;
+  font:400 .86rem var(--f-ui);letter-spacing:.02em;padding:13px 26px;border-radius:2px;
+  /* 44px e a altura do botao com o rotulo la dentro. Vazio tinha 28 e crescia
+     quando o JS escrevia o texto, empurrando a pagina. Tambem e o alvo tactil
+     minimo recomendado, por isso serve duas vezes. */
+  min-height:44px;
+  border:1px solid var(--hair);color:var(--bone);background:transparent;
+  /* `all` obriga o browser a vigiar todas as propriedades animaveis e apanha
+     qualquer uma que venha a mudar depois. So estas tres e que mudam no hover
+     (o .fill inverte o fundo, as duas variantes mexem no contorno e no texto).
+     Nomeia-las mantem o transform do ::after de fora e evita surpresas. */
+  transition:background .25s ease,border-color .25s ease,color .25s ease,transform .12s ease-out;
+}
+.btn:hover{border-color:var(--royal-lift);color:var(--bone)}
+.btn.fill{background:var(--royal);border-color:var(--royal);color:#fff}
+.btn.fill:hover{background:transparent;color:var(--bone);border-color:var(--royal-lift)}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+
+/* ================= HERO ================= */
+/* O hero encolheu. Dizia o nome e mostrava uma peca, mas empurrava a galeria
+   toda para fora do primeiro ecra — e a galeria e o que as pessoas vem ver. */
+.hero{padding:clamp(28px,3.4vw,56px) 0 clamp(38px,5vw,66px);position:relative}
+/* Os tres factos por baixo dos botoes. Linhas, nao caixas, como o resto. */
+.proof{list-style:none;margin:30px 0 0;padding:20px 0 0;border-top:1px solid var(--hair);
+  display:flex;flex-direction:column;gap:9px;max-width:30rem;min-height:101px}
+.proof li{font-family:var(--f-ui);font-size:.78rem;letter-spacing:.02em;color:var(--bone-dim);
+  display:flex;gap:11px;align-items:baseline}
+.proof li::before{content:"";flex:none;width:5px;height:5px;border-radius:999px;
+  background:var(--royal);transform:translateY(-2px)}
+/* O mailto so serve a quem tem um cliente de email configurado. Num portatil
+   de agencia, que costuma viver no webmail, carregar no endereco nao faz
+   nada. O botao ao lado copia o endereco e resolve esse caso. */
+.mail-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.btn-sm{padding:9px 15px;font-size:.66rem}
+/* O alinhamento ja foi 'end' (as colunas encostadas em baixo): como a obra era
+   359px mais alta que o texto, o titulo caia 480px e a primeira coisa a ver era
+   vazio. Passou a 'start', e agora a 'center'.
+   Com a obra a mandar no hero, 'start' deixava 291px de vazio por baixo do
+   texto e a coluna da esquerda parecia cortada a meio. 'center' reparte esse
+   vazio pelos dois lados (145 em cima, 145 em baixo) e o texto passa a ler-se
+   ao lado da peca, como legenda, em vez de competir com ela.
+   Medido a 1440x900: texto 379px, obra 669px. */
+/* A obra passa a ser a coluna maior. Era ao contrario: o texto levava 1fr e a
+   arte .72fr, ou seja, a peca que devia ser a primeira coisa a ver ocupava
+   menos de metade do hero. Agora a proporcao esta invertida e o texto fica
+   como legenda do que se ve, nao como concorrente. */
+.hero-grid{display:grid;grid-template-columns:minmax(0,.66fr) minmax(0,1fr);gap:clamp(30px,4vw,56px);align-items:center}
+/* No HTML a obra vem primeiro (ver o comentario no markup). Aqui troca-se a
+   ordem das colunas para o texto ficar a esquerda e a obra a direita. */
+.hero-copy{order:1}
+.hero-art{order:2}
+/* O h1 encolheu de clamp(3.2rem,9vw,7rem) para isto. Com o "Ink first" fora,
+   o titulo deixou de ser o cartaz e passou a ser informacao: diz o que ele
+   faz, e deixa a obra levar o peso visual. */
+/* max-width em em (nao em px) para a medida acompanhar o tamanho da letra:
+   assim o titulo parte sempre em duas linhas, em qualquer largura de ecra.
+   Sem isto, entre os 430 e os 980px o h1 apanhava a largura toda, cabia numa
+   linha so — uma linha de 928px le-se mal — e a altura reservada deixava 33px
+   de vazio por baixo. Com a medida fixa, as duas linhas sao sempre duas e a
+   reserva de 2,24em esta sempre certa.
+   O balance reparte as palavras pelas duas linhas em vez de deixar uma orfa. */
+.hero h1{font-size:clamp(1.8rem,3.1vw,2.85rem);letter-spacing:-.015em;line-height:1.12;
+  max-width:10.5em;text-wrap:balance;min-height:2.24em}
+.hero .tag{color:var(--bone-dim);max-width:30rem;margin:20px 0 30px;font-size:1.02rem;min-height:3.3em}
+.hero-art{
+  position:relative;
+  /* A obra e tao grande quanto o ecra permite, sem nunca ser cortada.
+     A altura e a largura vezes 1,25 (a proporcao 4/5 do ficheiro), por isso
+     limitar a largura a (altura disponivel / 1,25) garante que a peca inteira
+     cabe no primeiro ecra. Sem isto, a 1440 a moldura ficava com 852px de alto
+     e num portatil era preciso fazer scroll so para ver a imagem toda.
+     svh e a altura real do ecra no telemovel, com as barras do browser
+     contadas; a linha vh acima fica como reserva para quem nao a suporta. */
+  max-width:min(100%, calc((100vh - 260px) / 1.25));
+  max-width:min(100%, calc((100svh - 260px) / 1.25));
+}
+/* A moldura da obra do hero guarda o seu espaco antes de a imagem existir.
+   Sem isto ficava com 14px ate o JS correr e depois saltava para ~600px,
+   empurrando a pagina inteira — era a maior fatia do CLS que sobrava.
+   O valor por omissao (4/5) e a proporcao real do ficheiro em CONFIG.hero
+   (oc.jpg, 1280x1600). O renderHeroArt ajusta a variavel a partir do mapa
+   DIMS, para o dia em que trocares a peca do hero por uma de outra forma. */
+.hero-art .shot{overflow:hidden;border:1px solid var(--hair);background:var(--raise);
+  aspect-ratio:var(--hero-ar,4/5)}
+.hero-art .cap{min-height:17px}
+.hero-art .cap{
+  display:flex;justify-content:space-between;gap:14px;margin-top:12px;
+  font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bone-dim);
+}
+
+/* ================= SECTIONS ================= */
+section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
+/* era flex com justify-content:space-between, ou seja titulo a esquerda e um
+   texto pequeno a direita: o padrao que a regra 14 (Split-Header Ban) proibe.
+   Agora empilha na vertical. */
+.head{display:flex;flex-direction:column;align-items:flex-start;gap:10px;margin-bottom:38px}
+.count{font-family:var(--f-disp);font-size:.95rem;color:var(--bone-dim);font-style:italic}
+
+/* ================= FILMSTRIP GALLERY ================= */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px}
+.chip{
+  font:400 .76rem var(--f-ui);letter-spacing:.04em;padding:8px 16px;border-radius:999px;
+  cursor:pointer;border:1px solid var(--hair);background:transparent;color:var(--bone-dim);
+  transition:background .2s ease,border-color .2s ease,color .2s ease,transform .12s ease-out;
+}
+.chip:hover{color:var(--bone);border-color:var(--royal-lift)}
+.chip.on{background:var(--bone);border-color:var(--bone);color:var(--void)}
+/* ================= A PAREDE (galeria) =================
+   Antes isto era uma tira horizontal: 28 pecas das quais se viam quatro de
+   cada vez, com dois botoes para arrastar. A obra e o produto e estava a ser
+   o mais escondido da pagina — e os filtros nao compensavam, porque filtrar
+   28 para 10 continuava a mostrar quatro.
+   Agora e uma parede. As colunas reorganizam-se sozinhas com `columns`, sem
+   JavaScript e sem matematica de grelha, e cada moldura recebe a proporcao
+   verdadeira do ficheiro pelo --ar (do mapa DIMS). Nada e cortado, tal como
+   antes, mas ve-se tudo de uma vez. */
+/* column-count e nao a abreviatura `columns`: com `columns:4 240px` o browser
+   faz min(contagem, quantas cabem a 240px) e num telemovel de 390px isso dava
+   UMA coluna de 338px — 11 mil pixeis de scroll e cada peca do tamanho do
+   ecra. A contagem sozinha e sempre respeitada. Os dois degraus vivem nas
+   media queries que a folha ja tinha, para nao abrir uma terceira. */
+.wall{column-count:4;column-gap:14px}
+/* A altura reservada antes de o JS correr.
+   O documento e grande e, numa ligacao lenta, o browser ja pintou o cabecalho
+   e o hero quando o script la no fundo chega. Se a parede nascesse do nada
+   nesse momento, empurrava para baixo tudo o que vem a seguir — era isto que
+   dava 0,96 de CLS na tira antiga.
+   Nao e um numero fixo, porque a altura certa muda com a largura do ecra. E a
+   conta: a altura de uma parede em n colunas e a soma das proporcoes de todas
+   as pecas (altura a dividir pela largura) vezes a largura de uma coluna,
+   tudo a dividir pelo numero de colunas, mais as margens.
+   Da 1 a 5% ABAIXO do real, de proposito: reservar a menos deixa a pagina
+   assentar uns pixeis: reservar a mais abria um buraco que depois fechava, o
+   que conta como salto na mesma.
+   Os tres numeros aqui em baixo sao GERADOS: saem do tools/dims.py, que le as
+   proporcoes verdadeiras dos ficheiros e conta as obras do artworks. Nao os
+   escrevas a mao — junta a arte e corre o script. */
+.wall{
+  --wall-w:calc(min(1240px,100vw) - 52px);
+  min-height:calc(7.95 * (var(--wall-w) - 42px) / 4 + 98px);
+}
+.frame{
+  break-inside:avoid;margin:0 0 14px;display:block;width:100%;
+  cursor:zoom-in;position:relative;
+  background:var(--raise);border:1px solid var(--hair);overflow:hidden;
+  aspect-ratio:var(--ar,3/4);
+  transition:border-color .3s,transform .3s;
+}
+.frame:hover{border-color:var(--royal-lift)}
+.frame:focus-visible{outline:2px solid var(--royal-lift);outline-offset:3px}
+.frame img,.frame .ph{width:100%;height:100%;object-fit:cover}
+.lb-stage img{width:auto;height:auto}
+.frame .meta{
+  position:absolute;inset:auto 0 0 0;padding:40px 14px 12px;
+  /* O veu ia de transparente no topo ate .88 so na aresta de baixo — ou seja,
+     a parte mais escura ficava POR BAIXO do texto. Medido nos pixeis reais:
+     o numero apanhava 39-53% de veu e o titulo 53-75%, nunca os 88%. Sobre uma
+     zona clara da arte o numero chegava a 1,01:1. Agora o degrade fecha antes
+     de o texto comecar (o padding-top sao 40px, ~43% da caixa), que era o que
+     ele sempre quis fazer.
+     rgba(6,6,6,0) e nao `transparent`: sao a mesma cor, mas `transparent` e
+     preto transparente e alguns motores interpolam por cinzento. */
+  background:linear-gradient(rgba(6,6,6,0),rgba(6,6,6,.9) 42%,rgba(6,6,6,.94));
+  opacity:0;transition:opacity .3s;
+}
+.frame:hover .meta,.frame:focus-visible .meta{opacity:1}
+/* Num telemovel nao ha rato, por isso o hover nunca acontece e a legenda
+   nunca aparecia. Em ecras sem ponteiro fino fica sempre visivel. */
+@media (hover:none){ .frame .meta{opacity:1} }
+.frame .meta .t{font-family:var(--f-disp);font-size:.92rem;color:#fff}
+/* O numero da peca estava em var(--royal-lift), que muda com o tema, mas o veu
+   por cima da arte NAO muda: e escuro nos dois temas. No tema claro dava azul
+   escuro sobre preto, 2,36:1. O .t ao lado ja estava fixo em #fff pela mesma
+   razao, e por isso este esta em hexadecimal e nao num var().
+   O valor que aqui estava, #5568FF, foi escolhido a contar com os .88 do veu.
+   Medido nos pixeis reais das 28 molduras, com o degrade ja corrigido, da
+   3,78:1 no pior caso — a luminancia daquele azul (0,19) nao chega a 4,5 sobre
+   fundo escuro, por mais veu que se ponha. Este, #6B7BFF, e o --royal-raise:
+   o mesmo azul um tom acima, que o sistema ja tem por esta mesma razao.
+   Medido: 4,63:1 no pior pixel das 28. */
+/* Os numeros das obras (001..028) leem-se em coluna ao percorrer a parede. As
+   figuras da Lora sao proporcionais por omissao: medido a 200px, o '1' tem
+   73px e o '0' tem 124px, 51px de diferenca. Com tabular-nums passam todos a
+   130px e a coluna deixa de bailar.
+   NOTA: isto so funciona aqui porque este texto cai na Lora. Os precos e os
+   anos usam Playfair Display, cujo subconjunto latino do Google nao traz a
+   feature 'tnum' — la a declaracao seria letra morta, por isso nao esta la. */
+.frame .meta .n{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#6B7BFF;
+  font-variant-numeric:tabular-nums}
+.frame.hidden{display:none}
+/* Nada encontrado com este filtro. Antes a parede ficava simplesmente vazia. */
+.wall-empty{display:none;padding:40px 0;color:var(--bone-dim);font-size:.95rem}
+.wall-empty.on{display:block}
+.hint{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-dim);align-self:center;margin-left:10px}
+
+/* placeholder */
+.ph{
+  display:grid;place-content:center;text-align:center;gap:6px;padding:18px;
+  background:repeating-linear-gradient(-45deg,transparent 0 12px,rgba(46,69,255,.10) 12px 13px),var(--raise-2);
+  color:var(--bone-dim);
+}
+.ph b{font-family:var(--f-disp);font-weight:400;font-size:1rem;color:var(--bone);line-height:1.1}
+.ph span{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase}
+.r-34{aspect-ratio:3/4}.r-12{aspect-ratio:1/2}.r-11{aspect-ratio:1/1}.r-43{aspect-ratio:4/3}
+
+/* ================= PROJECTS ================= */
+/* era repeat(3,1fr): tres cartoes iguais lado a lado, o padrao que as duas
+   skills apontam como o mais generico que ha. Larguras desiguais quebram a
+   fila e, como as placas tem aspect-ratio, dao tres alturas diferentes de
+   borda. Fez-se assim e nao com um cartao a ocupar duas linhas porque isso
+   punha a seccao com 2127px, mais do dobro de qualquer outra. */
+/* stretch, nao start: as tres artes tem proporcoes diferentes (e nenhuma pode
+   ser cortada), por isso o corpo de cada cartao comeca a alturas diferentes.
+   O que se pode alinhar e o fim — os cartoes acabam ao mesmo nivel e os tres
+   "Open project" ficam na mesma linha, que e o que se le como ordem. */
+.projects{display:grid;grid-template-columns:1.35fr 1fr .85fr;gap:20px;align-items:stretch}
+.proj{
+  text-decoration:none;color:inherit;background:var(--raise);border:1px solid var(--hair);
+  display:flex;flex-direction:column;transition:border-color .3s,transform .3s;
+}
+.proj:hover{border-color:var(--royal-lift);transform:translateY(-4px)}
+.proj .body{padding:24px;display:flex;flex-direction:column;gap:9px;flex:1}
+.plate{
+  display:grid;place-items:center;background:var(--raise-2);position:relative;overflow:hidden;
+  border-bottom:1px solid var(--hair);
+}
+.plate::after{
+  content:"";position:absolute;inset:0;
+  background-image:radial-gradient(var(--royal) 1px,transparent 1.4px);background-size:14px 14px;opacity:.16;
+}
+.plate span{
+  font-family:var(--f-disp);font-size:clamp(2.6rem,7vw,4rem);color:var(--royal-lift);
+  letter-spacing:.04em;z-index:1;
+}
+.proj .k{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--royal-raise)}
+.proj h3{font-size:1.4rem}
+.proj p{font-size:.86rem;color:var(--bone-dim)}
+.proj .go{margin-top:auto;padding-top:14px;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bone-dim)}
+.proj:hover .go{color:var(--bone)}
+
+/* ================= TIMELINE ================= */
+/* coluna do ano fluida em vez de 104px fixos: mais variancia e da espaco ao
+   numero para crescer */
+.tl{display:grid;grid-template-columns:clamp(92px,11vw,160px) 1fr}
+.tl-year{
+  font-family:var(--f-disp);font-size:clamp(2.1rem,3.4vw,3.2rem);text-align:right;
+  padding:18px 22px 0 0;color:var(--bone);opacity:.4;transition:opacity .3s;
+  line-height:1;letter-spacing:-.02em;
+}
+.tl-year:first-child{padding-top:0}
+.tl-year.has-next{opacity:1;color:var(--royal-lift)}
+.tl-item{position:relative;padding:0 0 34px 28px;border-left:1px solid var(--hair)}
+.tl-item:last-child{border-left-color:transparent}
+.tl-item:last-child::after{content:"";position:absolute;left:-1px;top:0;height:28px;width:1px;background:var(--hair)}
+.tl-dot{position:absolute;left:-4px;top:6px;width:7px;height:7px;border-radius:999px;background:var(--bone-dim)}
+.tl-item.next .tl-dot{background:var(--royal)}
+.tl-item.next{border-left-style:dashed;border-left-color:var(--royal)}
+.tl-when{font-family:var(--f-ui);font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-dim);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tl-flag{font-family:var(--f-ui);font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:#fff;background:var(--royal);padding:3px 9px;border-radius:999px}
+.tl-item h3{font-size:clamp(1.35rem,1.9vw,1.72rem);margin:10px 0 4px}
+.tl-where{font-size:.74rem;letter-spacing:.06em;color:var(--royal-lift);margin-bottom:7px}
+.tl-desc{font-size:.88rem;color:var(--bone-dim);max-width:42rem}
+
+/* ================= ABOUT ================= */
+.about{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:56px;align-items:center}
+.about .body{font-family:var(--f-disp);font-size:1.28rem;line-height:1.6}
+.about .body p + p{margin-top:.85em}
+/* Esta e a unica caixa de texto da pagina SEM altura reservada, e e de
+   proposito. A bio muda muito de altura com a largura da coluna: medida, vai
+   de 8,1em a 980px ate 19,3em a 320px. Uma reserva unica ou sobrava nove ems
+   num sitio ou faltava noutro, e sobrar num bloco de texto e tao feio como o
+   salto que evita. A seccao fica bem abaixo da dobra, onde o JS ja correu
+   muito antes de alguem la chegar: medido, nao acrescenta CLS nenhum. */
+.about .meta{margin-top:22px;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--bone-dim)}
+.about-mark{
+  aspect-ratio:1/1;display:grid;place-items:center;position:relative;overflow:hidden;
+  border:1px solid var(--hair);background:var(--raise);
+}
+.about-mark .glyph{font-family:var(--f-disp);font-size:clamp(4rem,11vw,7rem);color:var(--royal-lift);z-index:1}
+.about-mark::after{
+  content:"";position:absolute;inset:0;
+  background-image:radial-gradient(var(--royal) 1px,transparent 1.4px);background-size:13px 13px;opacity:.22;
+}
+
+/* ================= COMMISSIONS ================= */
+.badge{font-family:var(--f-ui);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;padding:8px 16px;border-radius:999px}
+.badge.open{background:var(--royal);color:#fff}
+.badge.closed{border:1px solid var(--hair);color:var(--bone-dim)}
+/* A nota por baixo dos formatos. Diz onde estao os valores, sem os dizer. */
+.comm-note{
+  font-family:var(--f-ui);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--bone-dim);margin:-14px 0 40px;
+}
+/* MOBILE OVERRIDE (skill 7): o degrau e uma decisao de desktop. Abaixo de 980px
+   as colunas reduzem e as margens do degrau tem de ser anuladas, senao ficam
+   buracos no meio da coluna. */
+@media (max-width:980px){
+}
+/* era repeat(4,1fr): quatro cartoes iguais lado a lado, exactamente o padrao
+   que a regra 9.C proibe, e a razao pela qual isto se lia como tabela de precos.
+   O primeiro formato (o mais acessivel) leva a celula maior para haver um ponto
+   de entrada visual. Sem selo, sem copy nova. */
+.tiers{display:grid;grid-template-columns:1.55fr 1fr 1fr 1fr;gap:1px;background:var(--hair);border:1px solid var(--hair);margin-bottom:30px}
+/* O padding vertical volta a ser 28px, igual aos outros: com 34px o titulo do
+   primeiro cartao assentava 6px mais abaixo que os tres ao lado, e cartoes
+   lado a lado com as linhas desalinhadas leem-se como erro, nao como enfase.
+   A enfase fica no horizontal (26px contra 22px) e no tamanho do preco. */
+.tier:first-child{padding:28px 26px}
+.tier:first-child h3{font-size:1.32rem}
+/* Sem preco, o cartao deixou de ser um link para a loja e passou a ser so
+   informacao: <div> e nao <a>, por isso saiu o hover, o text-decoration e o
+   bloco todo do .price. */
+.tier{background:var(--void);padding:28px 22px;display:flex;flex-direction:column;gap:10px;color:inherit}
+.tier h3{font-size:1.15rem}
+.tier p{font-size:.8rem;color:var(--bone-dim)}
+
+/* ================= CONTACT ================= */
+.mail{
+  font-family:var(--f-disp);font-size:clamp(1.6rem,5vw,3.2rem);text-decoration:none;
+  color:var(--bone);display:inline-block;transition:color .25s;line-height:1.1;
+}
+.mail:hover{color:var(--royal-lift)}
+.c-links{display:flex;gap:26px;flex-wrap:wrap;margin-top:30px;font-size:.8rem}
+.c-links a{font-family:var(--f-ui);color:var(--bone-dim);text-decoration:none;transition:color .2s}
+.c-links a:hover{color:var(--bone)}
+.c-soon{font-family:var(--f-ui);color:var(--bone-dim);opacity:.55;cursor:default}
+footer{font-family:var(--f-ui);
+  padding:26px 0 46px;border-top:1px solid var(--hair);display:flex;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-dim);
+}
+
+/* ================= LIGHTBOX ================= */
+.lb{position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:5vh 5vw;background:rgba(5,5,5,.95);backdrop-filter:blur(8px)}
+.lb.open{display:grid}
+.lb-stage{max-width:min(92vw,860px);max-height:78vh;display:grid;place-items:center}
+.lb-stage img,.lb-stage .ph{max-height:74vh}
+.lb-stage .ph{width:min(70vw,440px)}
+/* O fundo da lightbox e rgba(5,5,5,.95): escuro nos DOIS temas, porque por
+   baixo esta a obra e nao a pagina. Estes tres textos usavam var(--bone) e
+   var(--bone-dim), que viram escuros no tema claro — dava texto quase preto
+   sobre preto (1,07:1 na legenda, 3,53:1 na dica). Sao cores fixas pela mesma
+   razao que o .frame .meta .t ja era #fff: medidos sobre #050505, dao 18,1:1
+   e 5,72:1. */
+.lb-cap{color:#F2F0EC;font-size:.8rem;margin-top:16px;text-align:center;font-family:var(--f-disp)}
+.lb-pos{font-family:var(--f-ui);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
+  color:#8C877F;text-align:center;margin-top:7px;font-variant-numeric:tabular-nums}
+.lb-hint{color:#8C877F;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;margin-top:8px;text-align:center}
+.lb-btn{position:fixed;border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;cursor:pointer;width:44px;height:44px;border-radius:999px;
+  font:400 1.2rem var(--f-ui);   /* idem: sem isto era Arial */
+  transition:background .2s ease,border-color .2s ease,transform .12s ease-out}
+.lb-btn:hover{background:var(--royal);border-color:var(--royal)}
+.lb-close{top:22px;right:22px}
+
+/* Resposta ao carregar. Duas skills pedem o mesmo: o controlo tem de acusar o
+   toque. 0,97 e subtil e 120ms e a duracao de um clique.
+   A .frame (moldura da tira) fica DE FORA de proposito: no telemovel arrastar
+   a tira comeca com um toque na moldura, o :active dispararia e as obras
+   encolhiam durante o arrasto.
+   As setas .lb-prev/.lb-next ja usam transform:translateY(-50%) para se
+   centrarem, por isso tem de repetir esse translate — senao o scale sozinho
+   apagava-o e o botao saltava para fora do centro. */
+.btn:active,.chip:active,.knob:active,.lb-close:active{transform:scale(.97)}
+.lb-prev:active,.lb-next:active{transform:translateY(-50%) scale(.97)}
+.lb-prev{left:18px;top:50%;transform:translateY(-50%)}
+.lb-next{right:18px;top:50%;transform:translateY(-50%)}
+
+
+/* ================= VFX ================= */
+
+/* 1. INK BLEED — títulos revelam-se como tinta a espalhar-se no papel */
+.sec-title.rv{opacity:1;transform:none}   /* o reveal do título é o clip-path, não o fade */
+.sec-title{
+  clip-path:inset(0 100% 0 0);
+  transition:clip-path 1.1s cubic-bezier(.16,.84,.36,1);
+}
+/* BUG: o reveal dependia de .sec-title.in, mas o IntersectionObserver do
+   Chromium conta o clip-path ao calcular a interseccao. Com o titulo cortado a
+   zero de largura nunca "entra em cena", logo nunca recebia .in, logo o
+   clip-path nunca abria. As seis seccoes estavam sem titulo visivel. Agora quem
+   dispara e o .head (que e .rv, nao esta cortado, e recebe .in normalmente). */
+.sec-title.in,
+.head.in .sec-title{clip-path:inset(0 0 0 0)}
+
+/* 2. SCREENTONE SWEEP — trama manga que atravessa a obra ao passar o rato */
+.frame::after{
+  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;
+  background-image:radial-gradient(var(--royal) 1.2px,transparent 1.4px);
+  background-size:7px 7px;
+  -webkit-mask-image:linear-gradient(115deg,transparent 35%,#000 50%,transparent 65%);
+  mask-image:linear-gradient(115deg,transparent 35%,#000 50%,transparent 65%);
+  -webkit-mask-size:280% 100%;mask-size:280% 100%;
+  -webkit-mask-position:120% 0;mask-position:120% 0;
+  transition:opacity .35s ease,-webkit-mask-position .85s ease,mask-position .85s ease;
+}
+.frame:hover::after{opacity:.5;-webkit-mask-position:-40% 0;mask-position:-40% 0}
+
+/* 3. SPEED LINES — linhas de velocidade que entram sob o título do hero */
+.hero h1{position:relative}
+.hero h1::before{
+  content:"";position:absolute;left:-6%;top:50%;width:0;height:62%;transform:translateY(-50%);
+  z-index:-1;opacity:0;
+  background:repeating-linear-gradient(90deg,
+    var(--royal) 0 1px, transparent 1px 7px);
+  -webkit-mask-image:linear-gradient(90deg,#000,transparent);
+  mask-image:linear-gradient(90deg,#000,transparent);
+  animation:speed 1.1s .5s cubic-bezier(.16,.84,.36,1) forwards;
+}
+@keyframes speed{to{width:38%;opacity:.32}}
+
+/* 4. GLINT — brilho que atravessa os botões cheios */
+.btn.fill{position:relative;overflow:hidden}
+.btn.fill::after{
+  content:"";position:absolute;top:0;left:-120%;width:60%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);
+  transition:left .65s ease;
+}
+.btn.fill:hover::after{left:130%}
+
+/* 5. SEAL — o selo 墨 assenta ao carregar, como um carimbo */
+.seal{animation:stamp .55s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes stamp{
+  from{transform:scale(1.5) rotate(-14deg);opacity:0}
+  to{transform:scale(1) rotate(0);opacity:1}
+}
+
+/* 6. DOT — o marcador do percurso pulsa quando entra em cena */
+.tl-item.in .tl-dot{animation:ping .9s ease-out}
+@keyframes ping{
+  0%{box-shadow:0 0 0 0 var(--royal)}
+  100%{box-shadow:0 0 0 12px transparent}
+}
+
+/* 7. FORMATOS — sem movimento nenhum, de proposito.
+   Havia aqui um .tier:hover que subia 4px. Fazia sentido quando o cartao era
+   um link para a loja; deixou de ser um <a> quando os precos sairam da pagina
+   (ver o comentario no .tier, la em cima, que ja dizia que o hover tinha
+   saido — nao tinha). Um bloco de texto que se levanta ao passar o rato promete
+   um clique que nao existe. Com ele saiu a transition, que so o servia. */
+
+/* Respeitar quem pediu menos movimento — desliga tudo isto */
+@media (prefers-reduced-motion:reduce){
+  .sec-title{clip-path:none;transition:none}
+  .frame::after,.btn.fill::after{display:none}
+  .hero h1::before,.seal{animation:none}
+  .seal{opacity:1;transform:none}
+  .tl-item.in .tl-dot{animation:none}
+}
+
+/* ================= MOTION ================= */
+.rv{opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.2,.7,.3,1),transform .8s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rv{opacity:1;transform:none;transition:none}
+  .proj,.frame,.btn,.tier,.mail{transition:none}
+  /* faltavam os controlos: knob (tema/idioma), chips de filtro e botoes da
+     lightbox. Todos eram transicoes de cor, mas o .btn ao lado tambem so muda
+     cores e ja estava desligado — ou vale para todos ou nao vale para nenhum. */
+  .knob,.chip,.lb-btn{transition:none}
+  /* E faltavam ainda estas quatro, apanhadas a medir a transition-DURATION e
+     nao a transition-property (o `all` que se le na property e so o valor
+     inicial: quem nao declara transicao nenhuma tambem o mostra).
+     Duas sao de cor e duas de opacidade, mas a regra ja escrita aqui em cima
+     vale para as duas coisas: ou vale para todos ou nao vale para nenhum. */
+  .links a,.c-links a{transition:none}
+  .tl-year,.frame .meta{transition:none}
+  /* E o proprio body, que esbate a cor ao trocar de tema. */
+  body{transition:none}
+  .nav-panel a{transition:none;opacity:1;transform:none}
+  /* :nth-child(n) para igualar a especificidade das regras da cascata acima —
+     sem isto esta linha perdia e o transition-delay continuava la. */
+  .nav-panel.open a:nth-child(n){transition-delay:0s}
+  .nav-toggle .bars::before,.nav-toggle .bars::after{transition:none}
+  .btn:active,.chip:active,.knob:active,.lb-close:active{transform:none}
+  .lb-prev:active,.lb-next:active{transform:translateY(-50%)}
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width:980px){
+  .wall{column-count:3;min-height:calc(10.6 * (var(--wall-w) - 28px) / 3 + 131px)}
+  .hero-grid{grid-template-columns:1fr;gap:34px;align-items:start}
+  /* Numa coluna so nao ha nada a trocar: a ordem do HTML (obra, depois texto)
+     e exactamente a que se quer ver. Antes a obra vinha por baixo do titulo,
+     da tagline, dos botoes e dos tres factos, uns 700px de scroll antes de se
+     ver um desenho numa pagina que existe para os mostrar. */
+  .hero-copy,.hero-art{order:0}
+  /* Com a grelha a cair para uma coluna, a obra fica por baixo do texto. 400px
+     era acanhado para a peca que deve levar o olho; 560 da-lhe presenca sem a
+     fazer ocupar um ecra inteiro de altura (a 4/5, 560 de largura sao 700 de
+     alto). */
+  .hero-art{max-width:560px}
+  .projects{grid-template-columns:1fr}
+  .about{grid-template-columns:1fr;gap:38px}
+  .about-mark{max-width:300px}
+  .tiers{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:620px){
+  .bar{min-height:64px}
+  .wall{column-count:2;min-height:calc(15.9 * (var(--wall-w) - 14px) / 2 + 196px)}
+  .links{display:none}
+  .knobs{margin-left:auto}
+  .nav-toggle{display:block}
+  .tiers{grid-template-columns:1fr}
+  .tl{grid-template-columns:1fr}
+  .tl-year{text-align:left;padding:20px 0 10px;font-size:1.6rem}
+  .tl-year:first-child{padding-top:0}
+}
+/* Faixa dos tablets. Os links do menu reaparecem aos 621px, mas a barra
+   completa (marca 115 + links 451 + botoes 86, mais as folgas) pede 744px
+   de largura. Entre um valor e o outro nao cabia e o botao do tema saia
+   cortado: 10px aos 700px, 89px aos 621px. O body tem overflow-x:hidden,
+   por isso ninguem conseguia sequer chegar la para o carregar.
+   Os links apertam em vez de desaparecerem. Perder a navegacao inteira
+   num tablet era pior do que a ter mais junta, e os rotulos ficam
+   intactos — mudar rotulos de navegacao e coisa que se pergunta. */
+@media (min-width:621px) and (max-width:780px){
+  .bar{gap:12px;min-height:71px}
+  .links{gap:14px;font-size:.72rem}
+  .knobs{margin-left:12px}
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#work">Skip to work</a>
+
+<!-- Todo o texto do site e escrito pelo JavaScript a partir do CONFIG. Sem JS
+     a pagina ficaria completamente vazia — isto garante que pelo menos o nome
+     e o contacto aparecem sempre. -->
+<noscript>
+  <div class="noscript-note">
+    <p><b>Guita_Ink</b>, Frederico Guita · Illustration &amp; character design</p>
+    <p>This portfolio needs JavaScript to show the artwork.
+       Esta galeria precisa de JavaScript para mostrar as ilustracoes.</p>
+    <p><a href="mailto:frederico@guitaink.com">frederico@guitaink.com</a>
+       · <a href="https://www.instagram.com/guita_ink" rel="noopener">Instagram</a></p>
+  </div>
+</noscript>
+
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="#top">
+      <span class="seal" aria-hidden="true">墨</span>
+      <b id="brandName"></b>
+    </a>
+    <nav class="links" aria-label="Main">
+      <a href="#work"     data-t="navWork"></a>
+      <a href="#projects" data-t="navProjects"></a>
+      <a href="#timeline" data-t="tlTitle"></a>
+      <a href="#about"    data-t="navAbout"></a>
+      <a href="#comm"     data-t="navComm"></a>
+      <a href="#contact"  data-t="navContact"></a>
+    </nav>
+    <div class="knobs">
+      <button class="knob" id="langTgl" aria-label="Switch language">PT</button>
+      <button class="knob" id="themeTgl" aria-label="Switch theme">◐</button>
+      <button class="knob nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navPanel">
+        <span class="bars" aria-hidden="true"></span>
+        <span class="sr-only" data-t="navMenu"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Painel do menu movel. Os links sao clonados do <nav class="links"> pelo JS,
+     para nao haver duas listas para manter em sincronia. -->
+<div class="nav-panel" id="navPanel">
+  <nav id="navPanelLinks"></nav>
+</div>
+
+<main id="top">
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <!-- A obra vem primeiro no HTML de proposito. Quando estava depois do
+         texto, o browser pintava o texto no topo enquanto ainda estava a
+         receber o resto do ficheiro e, mal o parser chegasse a moldura, o
+         order:-1 punha-a acima e empurrava o texto 452px para baixo. Dava
+         0,33 de CLS numa ligacao lenta, e so em algumas vezes, consoante o
+         momento em que o browser pintava. Com a obra primeiro no HTML nao ha
+         nada que salte, e em telemovel a ordem que se ve e a mesma do codigo.
+         No desktop o order manda-a para a coluna da direita. -->
+    <div class="hero-grid">
+      <div class="hero-art rv">
+        <div class="shot" id="heroShot"></div>
+        <div class="cap">
+          <span data-t="featuredLabel"></span>
+          <span id="heroCap"></span>
+        </div>
+      </div>
+      <div class="hero-copy">
+        <h1 data-t="heroTitle"></h1>
+        <p class="tag" data-t="tagline"></p>
+        <div class="row">
+          <a class="btn fill" href="#work"><span data-t="ctaWork"></span> →</a>
+          <a class="btn" href="#comm"><span data-t="ctaComm"></span></a>
+        </div>
+        <ul class="proof" id="heroProof"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="head rv">
+      <div>
+        <h2 class="sec-title rv" data-t="galleryTitle"></h2>
+      </div>
+      <span class="count" id="workCount" aria-live="polite" aria-atomic="true"></span>
+    </div>
+    <div class="filters rv" id="filters" role="group" aria-label="Filter gallery"></div>
+    <div class="wall" id="wall"></div>
+    <p class="wall-empty" id="wallEmpty" data-t="wallEmpty"></p>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="head rv">
+      <div>
+        <h2 class="sec-title rv" data-t="projectsTitle"></h2>
+      </div>
+    </div>
+    <div class="projects" id="projGrid"></div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section id="timeline">
+    <div class="head rv">
+      <div>
+        <h2 class="sec-title rv" data-t="tlTitle"></h2>
+      </div>
+    </div>
+    <div class="tl" id="tl"></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="head rv">
+      <div>
+        <h2 class="sec-title rv" data-t="aboutTitle"></h2>
+      </div>
+    </div>
+    <div class="about">
+      <div class="rv">
+        <div class="body" id="aboutBody"></div>
+        <p class="meta" data-t="aboutMeta"></p>
+      </div>
+      <div class="about-mark rv" aria-hidden="true"><span class="glyph">墨</span></div>
+    </div>
+  </section>
+
+  <!-- COMMISSIONS -->
+  <section id="comm">
+    <div class="head rv">
+      <div>
+        <h2 class="sec-title rv" data-t="commTitle"></h2>
+      </div>
+      <span class="badge" id="commBadge"></span>
+    </div>
+    <p class="lede rv" data-t="commIntro" style="margin-bottom:34px"></p>
+    <div class="tiers rv" id="tiers"></div>
+    <p class="comm-note rv" data-t="commNote"></p>
+    <div class="row rv">
+      <a class="btn fill" id="commCta" href="#"><span data-t="commCta"></span> →</a>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="head rv">
+      <div>
+        <h2 class="sec-title rv" data-t="contactTitle"></h2>
+      </div>
+    </div>
+    <div class="rv">
+      <p class="lede" style="margin-bottom:26px" data-t="contactBody"></p>
+      <div class="mail-row">
+        <a class="mail" id="mailLink" href="#"></a>
+        <button class="btn btn-sm" id="copyMail" type="button" data-t="copyEmail"></button>
+      </div>
+      <div class="c-links" id="cLinks"></div>
+    </div>
+  </section>
+
+  <footer>
+    <span id="footL"></span>
+    <span data-t="footerNote"></span>
+  </footer>
+
+</div>
+</main>
+
+<!-- LIGHTBOX -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Artwork viewer">
+  <button class="lb-btn lb-close" id="lbClose" aria-label="Close">×</button>
+  <button class="lb-btn lb-prev"  id="lbPrev"  aria-label="Previous">‹</button>
+  <button class="lb-btn lb-next"  id="lbNext"  aria-label="Next">›</button>
+  <div>
+    <div class="lb-stage" id="lbStage"></div>
+    <p class="lb-cap" id="lbCap"></p>
+    <p class="lb-pos" id="lbPos"></p>
+    <p class="lb-hint" data-t="lightboxHint"></p>
+  </div>
+</div>
+<script>
+/* ================  RENDER — no need to edit below  ================ */
+const $  = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+let LANG = (navigator.language || 'en').toLowerCase().startsWith('pt') ? 'pt' : 'en';
+let activeCat = 'all';
+/* o tema segue a preferência do sistema; o botão continua a mandar por cima */
+if(matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.dataset.theme = 'light';
+const T  = () => CONFIG.i18n[LANG];
+const rc = r => ({'34':'r-34','12':'r-12','11':'r-11','43':'r-43'})[String(r)] || 'r-34';
+const pretty = r => ({'34':'3:4','12':'1:2','11':'1:1','43':'4:3'})[String(r)] || r;
+const no = i => String(i + 1).padStart(3, '0');
+const srcOf = s => /^https?:\/\//i.test(s) ? s : (CONFIG.imageBase || '') + s;
+
+/* image that degrades to a labelled placeholder when the file is missing.
+   full=false  → serve images/thumb/… (760px) — grelha, tira, cartões
+   full=true   → serve o ficheiro grande (1600px) — só no lightbox            */
+const DIMS = {"aki.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"arkevil-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"clair.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"collab-mira-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"collab.jpg":{"w":1600,"h":1280,"tw":760,"th":608},"dante.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"estudo-luz.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"even-yeager.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"final-aot-season-4.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"geisha.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"ilustracao-sem-titulo-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"ilustracao-sem-titulo.jpg":{"w":1600,"h":1067,"tw":760,"th":507},"italy.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kon.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"lucy.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"makima.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"mira-starborn.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"nami-30x40.jpg":{"w":1200,"h":1600,"tw":570,"th":760},"oc-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"oc-2.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"oc.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"pochita.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"proj-pamp.jpg":{"w":1553,"h":1600,"tw":738,"th":760},"proj-sok.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"proj-tr.jpg":{"w":1066,"h":1600,"tw":507,"th":760},"shocked.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"silen.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"spain.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"surpresa.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"the-witch.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"yuta-fanart.jpg":{"w":1280,"h":1600,"tw":608,"th":760}};
+/* Proporcao a usar na moldura. Sai do mapa DIMS, ou seja dos pixeis reais do
+   ficheiro. O campo `ratio` do CONFIG fica so como rede: arte nova que ainda
+   nao passou pelo tools/dims.py nao tem entrada em DIMS e cai no molde antigo. */
+const AR = {'34':'3/4','12':'1/2','11':'1/1','43':'4/3'};
+const arOf = item => {
+  const d = DIMS[item.src.split('/').pop()];
+  return d ? d.w + '/' + d.h : (AR[String(item.ratio)] || '3/4');
+};
+/* O browser suporta WebP? Testamos uma vez. O WebP pesa menos ~39% com a mesma
+   qualidade — quem nao suportar recebe o .jpg de sempre, sem dar por nada.
+   Os .webp geram-se com:  python3 tools/make-webp.py                          */
+const WEBP_OK = (() => {
+  try { return document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') === 0; }
+  catch(e){ return false; }
+})();
+
+function artEl(item, full){
+  const img = document.createElement('img');
+  const file = item.src.split('/').pop();
+  const jpg = full ? item.src : item.src.replace(/^images\//,'images/thumb/');
+  const webp = jpg.replace(/\.jpe?g$/i, '.webp');
+  const useWebp = WEBP_OK && webp !== jpg;
+  const d = DIMS[file];
+  if(d){ img.width = full ? d.w : d.tw; img.height = full ? d.h : d.th; }
+  /* Ecras retina precisam do dobro dos pixeis. A miniatura de 608px chega para
+     a grelha (as molduras sao pequenas), mas NAO chega para a obra do hero, que
+     aparece grande: num telemovel @2x sai a 0,90x e num @3x a 0,60x, ou seja,
+     desfocada. Com srcset o browser escolhe — ficheiro pequeno em ecras 1x,
+     original em retina. So o hero leva isto; por na grelha faria cada moldura
+     puxar a imagem grande, que e exactamente o que nao queremos.
+     O srcset TEM de ser definido antes do src: ao contrario, o browser ja
+     comecou a descarregar o src e acaba por puxar os dois ficheiros.          */
+  if(item.wide && !full && d){
+    const big = useWebp ? item.src.replace(/\.jpe?g$/i, '.webp') : item.src;
+    img.sizes = item.sizes || '100vw';
+    img.srcset = `${srcOf(useWebp ? webp : jpg)} ${d.tw}w, ${srcOf(big)} ${d.w}w`;
+  }
+  img.src = srcOf(useWebp ? webp : jpg); img.alt = item.label;
+  img.decoding = 'async';
+  if(item.eager){ img.fetchPriority = 'high'; } else { img.loading = 'lazy'; }
+  /* a imagem NAO leva molde. Dentro da moldura enche-a (width/height 100%), e
+     no hero e na lightbox e a proporcao natural do ficheiro que manda. Os
+     atributos width/height acima vem de DIMS, por isso o browser ja reserva o
+     espaco certo antes de descarregar e o CLS continua a zero. */
+  let jpgTried = !useWebp;
+  img.onerror = () => {
+    if(!jpgTried){          // .webp em falta (arte nova sem converter?) → tenta o .jpg
+      jpgTried = true;
+      img.src = srcOf(jpg);
+      return;
+    }
+    const ph = document.createElement('div');
+    ph.className = 'ph ' + rc(item.ratio);
+    ph.innerHTML = `<b>${item.label}</b><span data-ph>${T().placeholderNote}</span><span style="opacity:.5">${pretty(item.ratio)}</span>`;
+    if(img.parentNode) img.replaceWith(ph);
+  };
+  return img;
+}
+
+/* ---------- a parede ---------- */
+function renderWall(){
+  const s = $('#wall'); s.innerHTML = '';
+  CONFIG.artworks.forEach((g,i) => {
+    const fig = document.createElement('figure');
+    fig.className = 'frame';
+    fig.style.setProperty('--ar', arOf(g));
+    fig.dataset.cat = g.cat;
+    fig.tabIndex = 0; fig.setAttribute('role','button'); fig.setAttribute('aria-label', g.label);
+    const meta = document.createElement('figcaption');
+    meta.className = 'meta';
+    meta.innerHTML = `<div class="n">${no(i)}</div><div class="t">${g.label}</div>`;
+    fig.append(artEl(g), meta);
+    fig.onclick = () => openLb(i);
+    fig.onkeydown = e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openLb(i); } };
+    s.append(fig);
+  });
+  applyFilter();
+}
+function setFilter(c){
+  activeCat = c;
+  $$('#filters .chip').forEach(b => {
+    const on = b.dataset.cat === c;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on);
+  });
+  applyFilter();
+}
+function applyFilter(){
+  let shown = 0;
+  $$('#wall .frame').forEach(f => {
+    const hide = activeCat !== 'all' && f.dataset.cat !== activeCat;
+    f.classList.toggle('hidden', hide);
+    if(!hide) shown++;
+  });
+  $('#workCount').textContent = `${shown} / ${CONFIG.artworks.length}`;
+  $('#wallEmpty').classList.toggle('on', shown === 0);
+  /* Com um filtro activo sobram menos pecas e a altura reservada no CSS
+     deixaria um buraco por baixo. Filtrar e um gesto do utilizador, por isso
+     encolher aqui nao conta como salto de pagina. */
+  $('#wall').style.minHeight = activeCat === 'all' ? '' : '0px';
+}
+
+/* ---------- language-independent hero art ---------- */
+function renderHeroArt(){
+  const h = $('#heroShot'); h.innerHTML = '';
+  /* sizes tem de descrever a largura REAL da imagem no ecra, senao o browser
+     escolhe mal: ate 980px a coluna e .hero-art (max 400px), acima disso a
+     grelha do hero da-lhe cerca de 470px. */
+  h.append(artEl({
+    ...CONFIG.hero,
+    eager: true,
+    wide: true,
+    /* O sizes tem de descrever a largura REAL da imagem no ecra, senao o
+       browser escolhe mal o ficheiro. Ate 980px a coluna e a largura toda
+       (a grelha passa a uma coluna); acima disso a arte leva 1fr de
+       .66fr+1fr com a folga pelo meio, ou seja ~57% da largura util. */
+    sizes: '(max-width: 980px) min(calc(100vw - 52px), 560px), min(57vw, 690px)',
+  }));
+  $('#heroCap').textContent = CONFIG.hero.label;
+  /* mantem a proporcao reservada no CSS em sintonia com o ficheiro real */
+  const hd = DIMS[CONFIG.hero.src.split('/').pop()];
+  if(hd) h.style.setProperty('--hero-ar', hd.w + '/' + hd.h);
+}
+
+/* ---------- everything language-dependent ---------- */
+function renderText(){
+  const t = T();
+  $$('[data-t]').forEach(el => el.textContent = t[el.dataset.t] || '');
+  $$('[data-ph]').forEach(el => el.textContent = t.placeholderNote);
+  document.documentElement.lang = LANG;
+  $('#langTgl').textContent = LANG === 'en' ? 'PT' : 'EN';
+  $('#brandName').textContent = CONFIG.artistName;
+
+  /* os tres factos do hero */
+  $('#heroProof').innerHTML = (t.heroProof || []).map(x => `<li>${x}</li>`).join('');
+
+  /* a bio, em paragrafos. Era um texto corrido so; em tres blocos le-se melhor
+     e cada ideia fica com o seu espaco. */
+  $('#aboutBody').innerHTML = (t.aboutBody || []).map(x => `<p>${x}</p>`).join('');
+
+  /* filters */
+  const cats = [...new Set(CONFIG.artworks.map(g => g.cat))];
+  $('#filters').innerHTML = ['all', ...cats].map(c =>
+    `<button class="chip ${c === activeCat ? 'on' : ''}" data-cat="${c}" aria-pressed="${c === activeCat}">${t.filters[c] || c}</button>`).join('');
+  $$('#filters .chip').forEach(b => b.onclick = () => setFilter(b.dataset.cat));
+  applyFilter();
+
+  /* projects */
+  const grid = $('#projGrid'); grid.innerHTML = '';
+  CONFIG.projects.forEach(p => {
+    const tp = t.projects[p.key];
+    const card = document.createElement('a');
+    card.className = 'proj rv';
+    card.href = `${CONFIG.projectPage}?p=${encodeURIComponent(p.key)}`;
+    /* sem target=_blank: e uma pagina do proprio site e ela ja traz o link de
+       voltar. Abrir separadores por cima dos separadores de alguem e das
+       coisas que so incomodam. */
+    const body = document.createElement('div');
+    body.className = 'body';
+    body.innerHTML = `<span class="k">${tp.kicker}</span><h3>${tp.title}</h3><p>${tp.desc}</p>
+      <span class="go">${t.openProject} →</span>`;
+    if(p.src){
+      card.append(artEl(p), body);
+    } else {
+      const plate = document.createElement('div');
+      plate.className = 'plate ' + rc(p.ratio);
+      plate.setAttribute('aria-hidden','true');
+      plate.innerHTML = `<span>${p.plate || ''}</span>`;
+      card.append(plate, body);
+    }
+    grid.append(card);
+  });
+
+  /* timeline — grouped by year, oldest first */
+  const tl = $('#tl'); tl.innerHTML = '';
+  const evts = [...CONFIG.timeline].sort((a,b) =>
+    (a.year - b.year)
+    || (a.status === b.status ? 0 : (a.status === 'past' ? -1 : 1))
+    || ((a.month || 13) - (b.month || 13)));
+  const firstNext = evts.find(e => e.status === 'next');
+  let lastYear = null;
+  evts.forEach(e => {
+    const te = t.timeline[e.key];
+    const cell = document.createElement('div');
+    cell.className = 'tl-year';
+    if(e.year !== lastYear){
+      lastYear = e.year;
+      cell.classList.add('rv');
+      if(evts.some(x => x.year === e.year && x.status === 'next')) cell.classList.add('has-next');
+      cell.textContent = e.year;
+    }
+    tl.append(cell);
+    /* o ano ja aparece em grande na coluna da esquerda no primeiro item de cada
+       grupo, por isso aqui so se repete quando NAO aparece la. Sem isso ficava
+       "2023" duas vezes lado a lado. */
+    const showsBigYear = cell.textContent !== '';
+    const when = e.month
+      ? (showsBigYear ? t.months[e.month-1] : `${t.months[e.month-1]} ${e.year}`)
+      : (showsBigYear ? '' : `${e.year}`);
+    const flag = e.status === 'next'
+      ? `<span class="tl-flag">${e === firstNext ? t.tlNext : t.tlUpcoming}</span>` : '';
+    const item = document.createElement('article');
+    item.className = `tl-item rv ${e.status}`;
+    item.innerHTML =
+      `<span class="tl-dot" aria-hidden="true"></span>
+       <p class="tl-when">${when}${flag}</p>
+       <h3>${te.title}</h3>
+       <p class="tl-where">${te.where}</p>
+       <p class="tl-desc">${te.desc}</p>`;
+    tl.append(item);
+  });
+
+  /* commissions */
+  const open = CONFIG.commissionsOpen;
+  const badge = $('#commBadge');
+  badge.textContent = open ? t.commOpen : t.commClosed;
+  badge.className = 'badge ' + (open ? 'open' : 'closed');
+  /* O email ja vai com as perguntas cujas respostas eu preciso de ter antes de
+     dar um valor. Sao as mesmas do PDF de onboarding: referencias, pose, cores,
+     data e uso comercial. Chegar tudo a primeira faz a diferenca entre uma
+     resposta e quatro emails a perguntar o basico. */
+  $('#commCta').href = `mailto:${CONFIG.email}`
+    + `?subject=${encodeURIComponent(t.mailSubject)}`
+    + `&body=${encodeURIComponent(t.mailBody)}`;
+  /* Os cartoes deixam de ser links para a loja: sem preco na pagina, mandar
+     alguem para o produto era mostrar-lhe o preco na mesma. Agora sao so os
+     quatro formatos, e a conversa comeca no email. */
+  $('#tiers').innerHTML = CONFIG.tiers.map(x => {
+    const tt = t.tiers[x.key];
+    return `<div class="tier"><h3>${tt.name}</h3><p>${tt.desc}</p></div>`;
+  }).join('');
+
+  /* contact */
+  $('#mailLink').textContent = CONFIG.email;
+  $('#mailLink').href = 'mailto:' + CONFIG.email;
+  $('#cLinks').innerHTML =
+    `<a href="${CONFIG.instagram}" target="_blank" rel="noopener">Instagram ↗</a>` +
+    CONFIG.otherLinks.map(l => l.url && l.url !== '#'
+      ? `<a href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`
+      /* sem destino real: texto simples, nao um link que nao vai a lado nenhum.
+         Assim que puseres o url no CONFIG volta a ser link sozinho. */
+      : `<span class="c-soon">${l.label}</span>`).join('');
+  $('#footL').textContent = `© ${new Date().getFullYear()} ${CONFIG.artistName} · ${CONFIG.realName}`;
+
+  observeReveals();
+}
+
+/* ---------- lightbox ---------- */
+let lbIdx = 0;
+const visibleIdxs = () => CONFIG.artworks.map((g,i) => i)
+  .filter(i => activeCat === 'all' || CONFIG.artworks[i].cat === activeCat);
+let lbOpener = null;
+function openLb(i){
+  lbOpener = document.activeElement;
+  lbIdx = i; $('#lb').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  $('#lbClose').focus(); drawLb();
+}
+function drawLb(){
+  const g = CONFIG.artworks[lbIdx];
+  const st = $('#lbStage'); st.innerHTML = ''; st.append(artEl(g, true));
+  /* Onde estou na sequencia. Sem isto nao se percebia se faltavam duas pecas
+     ou vinte, e o filtro activo muda o total — por isso conta-se sobre as
+     visiveis, nao sobre as 28. */
+  const v = visibleIdxs();
+  const pos = v.indexOf(lbIdx) + 1;
+  $('#lbCap').textContent = `${no(lbIdx)} · ${g.label}`;
+  $('#lbPos').textContent = pos ? `${pos} ${T().lbOf} ${v.length}` : '';
+  preloadNeighbours();
+}
+/* A peca seguinte e a anterior ficam em cache antes de alguem carregar na
+   seta. E so pedir o ficheiro: o browser guarda-o e o passo fica instantaneo.
+   Sem isto, cada seta era um carregamento a branco. */
+function preloadNeighbours(){
+  const v = visibleIdxs(); if(v.length < 2) return;
+  const pos = Math.max(0, v.indexOf(lbIdx));
+  [1, -1].forEach(d => {
+    const g = CONFIG.artworks[v[(pos + d + v.length) % v.length]];
+    if(g) artEl(g, true);
+  });
+}
+function closeLb(){ $('#lb').classList.remove('open'); document.body.style.overflow = '';
+  if(lbOpener && lbOpener.focus) lbOpener.focus(); }
+function stepLb(d){
+  const v = visibleIdxs(); if(!v.length) return;
+  const pos = Math.max(0, v.indexOf(lbIdx));
+  lbIdx = v[(pos + d + v.length) % v.length];
+  drawLb();
+}
+$('#lbClose').onclick = closeLb;
+$('#lbPrev').onclick  = () => stepLb(-1);
+$('#lbNext').onclick  = () => stepLb(1);
+$('#lb').onclick = e => { if(e.target === $('#lb')) closeLb(); };
+/* Arrastar para o lado, no telemovel. As setas sao pequenas num ecra de mao e
+   o gesto e o que toda a gente ja tenta. 45px de limiar para nao disparar num
+   toque torto; se o movimento for mais vertical do que horizontal e scroll e
+   nao conta. */
+let swX = 0, swY = 0;
+$('#lb').addEventListener('touchstart', e => {
+  swX = e.changedTouches[0].clientX; swY = e.changedTouches[0].clientY;
+}, {passive:true});
+$('#lb').addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - swX;
+  const dy = e.changedTouches[0].clientY - swY;
+  if(Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) stepLb(dx < 0 ? 1 : -1);
+}, {passive:true});
+addEventListener('keydown', e => {
+  if(!$('#lb').classList.contains('open')) return;
+  if(e.key === 'Escape') closeLb();
+  if(e.key === 'Tab'){                                  // o foco não escapa do lightbox
+    const f = [...$('#lb').querySelectorAll('button')];
+    const i = f.indexOf(document.activeElement);
+    e.preventDefault();
+    f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
+  }
+  if(e.key === 'ArrowLeft') stepLb(-1);
+  if(e.key === 'ArrowRight') stepLb(1);
+});
+
+
+/* ---------- VFX ---------- */
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* O parallax do hero foi removido. Corria dentro de um listener de scroll na
+   window, o que a regra 5.D da tasteskill proíbe de forma dura (dispara a cada
+   frame de scroll, sem batching). Estava atenuado com rAF e passive, mas a
+   regra e binaria. A leitura dos diais tambem diz que este site ja tinha
+   movimento a mais (8) para um portefolio (preset 7), por isso a decisao foi
+   apagar em vez de reescrever com animation-timeline.                        */
+
+/* entrada escalonada: os elementos irmãos entram em cascata, não em bloco.
+   Só funciona em elementos que tenham a classe .rv — é ela que os põe
+   invisíveis à espera do scroll. Num elemento sem .rv isto define um atraso
+   numa transição que nunca acontece, ou seja, não faz nada. */
+function stagger(sel, ms){
+  document.querySelectorAll(sel).forEach((el,i) => {
+    el.style.transitionDelay = REDUCED ? '0s' : (i % 8) * ms + 'ms';
+  });
+}
+
+/* ---------- reveal on scroll ---------- */
+let io;
+function observeReveals(){
+  if(io) io.disconnect();
+  io = new IntersectionObserver(es => es.forEach(e => {
+    if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+  }), {threshold:.1});
+  /* .frame e .tier não levam .rv — só os contentores é que levam,
+     por isso estes três staggers estavam a atrasar transições inexistentes.
+     Ficam de fora. Se um dia quiseres a cascata peça a peça, junta 'rv' à
+     classe do elemento (como o .proj faz) e volta a chamar stagger para ele. */
+  stagger('.proj', 100);
+  $$('.rv').forEach(el => io.observe(el));
+}
+
+/* ---------- dados estruturados ----------
+   O preco vivia em quatro sitios: CONFIG, Shopify, os Termos no Notion e este
+   bloco JSON-LD. Agora o JSON-LD copia-se do CONFIG, por isso sao tres.
+   Diz tambem ao Google se as comissoes estao abertas ou fechadas, o que sai
+   directamente do commissionsOpen.                                          */
+function syncStructuredData(){
+  const el = $('#ldPerson');
+  if(!el) return;
+  let data;
+  try { data = JSON.parse(el.textContent); } catch(e){ return; }
+  const names = CONFIG.i18n.en.tiers;          // o schema fica sempre em EN
+  /* Sem price nem priceCurrency: se o preco nao esta na pagina, tambem nao
+     pode estar aqui — este bloco e o que o Google le e mostra nos resultados.
+     O que fica dito e que os quatro formatos existem e se estao abertos. */
+  data.makesOffer = CONFIG.tiers.map(x => ({
+    "@type": "Offer",
+    name: `${names[x.key] ? names[x.key].name : x.key} commission`,
+    availability: CONFIG.commissionsOpen
+      ? "https://schema.org/InStock"
+      : "https://schema.org/OutOfStock",
+  }));
+  el.textContent = JSON.stringify(data, null, 2);
+
+  /* ---- a galeria, obra a obra ----
+     Ate agora o Google so sabia que existe um ilustrador; nao sabia que ha 28
+     desenhos nesta pagina. Isto descreve-os um a um, com o ficheiro grande, a
+     miniatura e as medidas reais, que e o que a Pesquisa de Imagens quer.
+     De proposito NAO leva precos nem ofertas: 10 destas pecas sao fan art e
+     nao estao a venda, e marcar arte como produto seria dizer o contrario. O
+     creator e o Frede porque o desenho e dele — a personagem, nos casos de fan
+     art, nao, e por isso tambem nao se reclama nada sobre ela.               */
+  const canonical = document.querySelector('link[rel="canonical"]');
+  const base = (canonical ? canonical.href : location.href).replace(/[^/]*$/, '');
+  const abs = p => /^https?:\/\//i.test(p) ? p : base + p.replace(/^\//, '');
+  const me = { "@type": "Person", name: CONFIG.realName, alternateName: CONFIG.artistName };
+
+  const gallery = {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    name: `${CONFIG.artistName} — ${CONFIG.i18n.en.galleryTitle}`,
+    url: canonical ? canonical.href : location.href,
+    author: me,
+    associatedMedia: CONFIG.artworks.map(a => {
+      const file = a.src.split('/').pop();
+      const d = DIMS[file] || {};
+      const item = {
+        "@type": "ImageObject",
+        name: a.label,
+        contentUrl: abs(a.src),
+        thumbnailUrl: abs(a.src.replace(/^images\//, 'images/thumb/')),
+        creator: me,
+      };
+      if(d.w && d.h){ item.width = d.w; item.height = d.h; }
+      return item;
+    }),
+  };
+
+  let g = $('#ldGallery');
+  if(!g){
+    g = document.createElement('script');
+    g.type = 'application/ld+json';
+    g.id = 'ldGallery';
+    document.head.append(g);
+  }
+  g.textContent = JSON.stringify(gallery, null, 2);
+}
+
+/* ---------- seccao actual no menu ----------
+   Marca no menu a seccao que esta a ser vista. Com IntersectionObserver, nao
+   com um listener de scroll: a regra 5.D da tasteskill proibe-os, e um
+   observer nem sequer corre entre seccoes.
+   aria-current diz o mesmo a quem usa leitor de ecra; o sublinhado azul e so
+   a parte visivel.                                                          */
+function trackCurrentSection(){
+  /* duas copias de cada link agora: a da barra e a do painel movel. O mapa
+     guarda as duas, para o aria-current valer nas duas. */
+  const links = new Map();
+  $$('.links a[href^="#"], #navPanelLinks a[href^="#"]').forEach(a => {
+    const id = a.getAttribute('href').slice(1);
+    if(!links.has(id)) links.set(id, []);
+    links.get(id).push(a);
+  });
+  const seen = new Set();
+  const mark = () => {
+    /* a que esta mais acima entre as visiveis ganha, senao duas seccoes
+       grandes ao mesmo tempo no ecra acendiam as duas */
+    /* quando duas seccoes cruzam a faixa ao mesmo tempo, a certa e a que comeca
+       mais abaixo: e essa que estamos a entrar. Ordenar ao contrario marcava
+       sempre a anterior. */
+    const top = [...seen].map(id => document.getElementById(id))
+      .filter(Boolean)
+      .sort((a,b) => b.getBoundingClientRect().top - a.getBoundingClientRect().top)[0];
+    links.forEach(as => as.forEach(a => a.removeAttribute('aria-current')));
+    if(top && links.has(top.id)) links.get(top.id).forEach(a => a.setAttribute('aria-current','true'));
+  };
+  const io2 = new IntersectionObserver(es => {
+    es.forEach(e => e.isIntersecting ? seen.add(e.target.id) : seen.delete(e.target.id));
+    mark();
+  }, {rootMargin:'-45% 0px -45% 0px'});   /* faixa estreita a meio do ecra */
+  links.forEach((_,id) => { const el = document.getElementById(id); if(el) io2.observe(el); });
+}
+
+/* ---------- toggles ---------- */
+$('#langTgl').onclick = () => { LANG = LANG === 'en' ? 'pt' : 'en'; renderText(); };
+
+/* copiar o endereco. O clipboard so existe em https (ou file://), por isso ha
+   sempre a rede de seguranca do execCommand para o resto. */
+$('#copyMail').onclick = async () => {
+  const btn = $('#copyMail');
+  const done = () => {
+    btn.textContent = T().copied;
+    setTimeout(() => { btn.textContent = T().copyEmail; }, 1600);
+  };
+  try {
+    await navigator.clipboard.writeText(CONFIG.email);
+    done();
+  } catch(e) {
+    const ta = document.createElement('textarea');
+    ta.value = CONFIG.email; ta.setAttribute('readonly','');
+    ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.append(ta); ta.select();
+    try { document.execCommand('copy'); done(); } catch(_){}
+    ta.remove();
+  }
+};
+$('#themeTgl').onclick = () => {
+  const h = document.documentElement;
+  h.dataset.theme = h.dataset.theme === 'dark' ? 'light' : 'dark';
+};
+
+/* ---------- menu movel ----------
+   Os links do painel sao clonados do <nav class="links">: uma lista so, uma
+   fonte so. O clone acontece antes do renderText(), por isso as duas copias
+   apanham a traducao na mesma passagem.
+   O painel fica por baixo do cabecalho (z-index 55 contra 60), de modo que o
+   botao continua visivel por cima e fecha o que abriu. */
+const navToggle = $('#navToggle'), navPanel = $('#navPanel');
+$('#navPanelLinks').append(...[...$$('.links a')].map(a => a.cloneNode(true)));
+
+function setNav(open, refocus){
+  navPanel.classList.toggle('open', open);
+  navToggle.setAttribute('aria-expanded', String(open));
+  document.body.style.overflow = open ? 'hidden' : '';
+  if(open){ const first = navPanel.querySelector('a'); if(first) first.focus(); }
+  /* so devolvemos o foco ao botao quando foi ele (ou o Escape) a fechar. Se o
+     utilizador carregou num link, o foco tem de seguir para a seccao. */
+  else if(refocus) navToggle.focus();
+}
+navToggle.onclick = () => setNav(navToggle.getAttribute('aria-expanded') !== 'true', true);
+/* clicar num link salta para a seccao: o painel nao tem de ficar aberto */
+$$('#navPanelLinks a').forEach(a => a.addEventListener('click', () => setNav(false, false)));
+
+addEventListener('keydown', e => {
+  if(!navPanel.classList.contains('open')) return;
+  if(e.key === 'Escape'){ setNav(false, true); return; }
+  if(e.key === 'Tab'){                     /* o foco nao sai do painel */
+    const f = [...navPanel.querySelectorAll('a'), navToggle];
+    const i = f.indexOf(document.activeElement);
+    e.preventDefault();
+    f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
+  }
+});
+
+/* Se o ecra crescer para la dos 620px os links da barra voltam e o painel deixa
+   de fazer sentido: fechamos, senao ficava aberto e a bloquear o scroll.
+   matchMedia em vez de um listener de resize — so dispara na travessia. */
+const navMq = matchMedia('(min-width:621px)');
+navMq.addEventListener('change', e => { if(e.matches && navPanel.classList.contains('open')) setNav(false, false); });
+
+/* ---------- boot ---------- */
+renderHeroArt();
+renderWall();
+renderText();
+syncStructuredData();
+trackCurrentSection();
+</script>
+</body>
+</html>
