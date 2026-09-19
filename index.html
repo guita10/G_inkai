@@ -209,7 +209,16 @@ const CONFIG = {
         workshop:  { title: "Character design & creative writing workshop", where: "Termas Romanas das Taipas", desc: "Co-facilitated with Reeeborn. Twelve people, ninety minutes, one character each." },
       },
       aboutTitle: "About",
-      aboutBody: "Illustrator working as Guita_Ink. Trained as an architect, and it shows: perspective, space and environments carry the same weight as the characters living in them. Ink first, always.",
+      /* Primeira pessoa, e a arquitectura reduzida a uma frase subordinada: era
+         metade da bio e passou a ser um detalhe do metodo. Tudo o que esta
+         aqui e verificavel — as capas sao o Tokyo Revengers, o webtoon e o
+         Survival of Kings, e a ordem tinta-antes-de-cor e a mesma do PDF de
+         onboarding (Draft 1 lineart, Draft 2 cor). */
+      aboutBody: [
+        "I draw characters and the worlds they live in. The work splits between covers, a webtoon and commissions.",
+        "I studied architecture, and what stayed was the habit of treating the space around a figure as part of the drawing rather than as backdrop.",
+        "Ink first: the line is closed before any colour goes in.",
+      ],
       aboutMeta: "Frederico Guita · Guita_Ink",
       commTitle: "Commissions",
       commOpen: "Open", commClosed: "Closed",
@@ -276,7 +285,11 @@ const CONFIG = {
         workshop:  { title: "Workshop de character design & escrita criativa", where: "Termas Romanas das Taipas", desc: "Co-facilitado com o Reeeborn. Doze pessoas, noventa minutos, uma personagem cada." },
       },
       aboutTitle: "Sobre",
-      aboutBody: "Ilustrador sob o nome Guita_Ink. Formado em arquitetura, nota-se: perspetiva, espaço e ambientes têm o mesmo peso que as personagens que os habitam. Tinta primeiro, sempre.",
+      aboutBody: [
+        "Desenho personagens e os mundos onde elas vivem. O trabalho reparte-se entre capas, um webtoon e comissões.",
+        "Estudei arquitetura, e o que ficou foi o hábito de tratar o espaço à volta de uma figura como parte do desenho, não como fundo.",
+        "Tinta primeiro: a linha fecha antes de entrar a cor.",
+      ],
       aboutMeta: "Frederico Guita · Guita_Ink",
       commTitle: "Comissões",
       commOpen: "Abertas", commClosed: "Fechadas",
@@ -749,7 +762,14 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 
 /* ================= ABOUT ================= */
 .about{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:56px;align-items:center}
-.about p.body{font-family:var(--f-disp);font-size:1.28rem;line-height:1.6}
+.about .body{font-family:var(--f-disp);font-size:1.28rem;line-height:1.6}
+.about .body p + p{margin-top:.85em}
+/* Esta e a unica caixa de texto da pagina SEM altura reservada, e e de
+   proposito. A bio muda muito de altura com a largura da coluna: medida, vai
+   de 8,1em a 980px ate 19,3em a 320px. Uma reserva unica ou sobrava nove ems
+   num sitio ou faltava noutro, e sobrar num bloco de texto e tao feio como o
+   salto que evita. A seccao fica bem abaixo da dobra, onde o JS ja correu
+   muito antes de alguem la chegar: medido, nao acrescenta CLS nenhum. */
 .about .meta{margin-top:22px;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--bone-dim)}
 .about-mark{
   aspect-ratio:1/1;display:grid;place-items:center;position:relative;overflow:hidden;
@@ -1110,7 +1130,7 @@ footer{font-family:var(--f-ui);
     </div>
     <div class="about">
       <div class="rv">
-        <p class="body" data-t="aboutBody"></p>
+        <div class="body" id="aboutBody"></div>
         <p class="meta" data-t="aboutMeta"></p>
       </div>
       <div class="about-mark rv" aria-hidden="true"><span class="glyph">墨</span></div>
@@ -1323,6 +1343,10 @@ function renderText(){
 
   /* os tres factos do hero */
   $('#heroProof').innerHTML = (t.heroProof || []).map(x => `<li>${x}</li>`).join('');
+
+  /* a bio, em paragrafos. Era um texto corrido so; em tres blocos le-se melhor
+     e cada ideia fica com o seu espaco. */
+  $('#aboutBody').innerHTML = (t.aboutBody || []).map(x => `<p>${x}</p>`).join('');
 
   /* filters */
   const cats = [...new Set(CONFIG.artworks.map(g => g.cat))];

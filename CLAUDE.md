@@ -14,7 +14,7 @@ neglect.
 
 There is no framework, no npm, no build step, no component library, no icon
 library, and no CSS methodology. The entire site is four hand-written HTML files
-plus an images folder. `index.html` is 1,719 lines and contains a `CONFIG`
+plus an images folder. `index.html` is 1,743 lines and contains a `CONFIG`
 object, one `<style>` block, the markup, and the render JavaScript. It must keep
 working when opened directly from disk over `file://`. Content lives in `CONFIG`
 and is rendered by plain DOM functions. Anything that reads like "add a
@@ -341,8 +341,10 @@ and every suggestion in this document.
 2. **No location anywhere.** No city, no country, in copy, meta, alt text or
    schema. The single exception is event venues in the timeline, which are facts
    about those events.
-3. **Illustrator first.** Architecture training appears exactly once, in About, as
-   background. Never in a tagline, meta description or schema.
+3. **Illustrator first.** Architecture training appears exactly once, in About,
+   and only as a subordinate clause about method. Never in a tagline, meta
+   description or schema. The bio is first person and three short paragraphs:
+   what he draws, the one architecture line, and ink before colour.
 4. **No commission terms and no prices on the site.** The section shows the four
    formats and nothing else: no prices, no stages, no turnaround, no shop links,
    no payment split, no percentages, no deposit language, in any wording. The
