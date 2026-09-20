@@ -323,6 +323,32 @@ no token file to write variables into, and no build step to run a transform. The
 MCP tools that read a Figma file are still useful; the ones that generate code
 have nowhere to put it.
 
+**There is now a Figma file**, built from this repo and kept deliberately thin:
+`https://www.figma.com/design/EHXuNfm8pYQbyFiUDYLGUk` — "Guita_Ink — Sistema do
+site". It holds the twelve tokens as Figma variables (each with `var(--name)`
+code syntax), the nine text styles, and six components: Selo, Botão, Chip de
+filtro, Distintivo, Moldura da parede, Cartão de merch.
+
+**It is a mirror, not a source of truth.** `index.html` is still the only place
+a token is defined. If the two disagree, the code wins and the Figma file is
+what gets corrected. Three things it cannot represent, all worth knowing before
+trusting it:
+
+- **No `clamp()`.** Every type size in Figma is the clamp *maximum*, i.e. the
+  wide-desktop value. The site scales; the Figma file does not.
+- **No light/dark switch.** Frede's Figma plan allows one mode per variable
+  collection, so the two themes are two folders of variables (`escuro/…`,
+  `claro/…`) rather than two modes of one set. Swapping a frame's theme is
+  manual.
+- **Three pages, and no spacing tokens.** The plan caps pages at three, so
+  every component shares one page. Spacing stays inline `clamp()` here, as §1
+  says, so there is nothing to mirror.
+
+Six fills in the Figma file are hard-coded hex rather than bound to a variable.
+That is correct and matches the code: they sit on Royal or on the gallery
+scrim, neither of which changes with the theme, so a theme-following token
+would be wrong. Any *other* unbound fill is a bug.
+
 What actually works:
 
 1. **Pull the design context** (`get_design_context`, `get_variable_defs`,
