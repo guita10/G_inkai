@@ -124,6 +124,7 @@ nothing.
 | `make-webp.py` | regenerates the WebP derivatives |
 | `dims.py` | rewrites the `DIMS` map **and the wall's reserved height** in `index.html`, both from the real pixels |
 | `make-og-card.py` | redraws `images/og-card.jpg`, the 1200x630 social card |
+| `verify.mjs` | drives Chromium over the whole site and runs every check in §10 |
 
 `add-artwork.py` is the one to reach for. Adding art by hand means four steps and
 the last two, `DIMS` and the wall reserve, fail silently: a wrong number throws
@@ -296,6 +297,7 @@ tools/          all run by hand, none part of the deploy
   dims.py         rewrites the DIMS map and the wall reserve from the real pixels
   make-og-card.py redraws images/og-card.jpg from og-card.html
   og-card.html    the social card's layout; not served, just the mould
+  verify.mjs      runs §10 against a real browser; exit 1 if anything fails
 DESIGN.md       the design system in semantic form
 CLAUDE.md       this file
 ```
@@ -389,9 +391,19 @@ The standing instruction from Frede: *"Verify your work by running actual checks
 — parse the JS, confirm every referenced image exists, confirm i18n parity — not
 by reading the diff and assuming."*
 
-Chromium and Playwright are available. Serve the folder over
-`python3 -m http.server` and drive a real browser. Things worth checking after
-any visual change, all of which have caught real bugs here:
+**`node tools/verify.mjs` runs all of this.** It serves the folder, drives
+Chromium and exits 1 if anything fails, so it can gate a deploy. It needs no
+install: Playwright and Chromium are already on the machine, and it blocks the
+Google Fonts request so it works offline. `--rapido` skips the throttled CLS
+runs (the slow part); `--shop-aberto` also tests the shop with `shopOpen:true`,
+on a temporary copy.
+
+It is checked against planted bugs, not just against a green repo: breaking
+i18n parity, adding an em-dash, putting a commission price back in `CONFIG`,
+forcing horizontal overflow and corrupting one `DIMS` number are all caught.
+When you fix a bug, add a test there rather than testing it by hand again.
+
+The checks themselves, and why each one exists:
 
 - **JS parses** — extract the non-JSON-LD `<script>` blocks and `node --check`.
 - **No tile is cropped** — compare each `img.naturalWidth/naturalHeight` against
