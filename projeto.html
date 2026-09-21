@@ -50,7 +50,16 @@ const CONFIG = {
      a mostrar a placa tipografica de proposito — nunca uma ilustracao
      que nao seja do projecto. Para meter arte nova:
        python3 tools/add-artwork.py <ficheiro> --slug proj-xxx
-     e depois poe o caminho no src aqui e no index.html. */
+     e depois poe o caminho no src aqui e no index.html.
+
+     src     = a capa. E ela que vai no cartao do index e no og:image.
+     gallery = opcional, as restantes imagens da serie, por ordem. Um
+               projecto que e uma serie (as capas mensais do Tokyo
+               Revengers, as cartas de um baralho) mostra-as todas aqui;
+               o cartao do index continua a mostrar so a capa.
+               Sem gallery, a pagina comporta-se como sempre se comportou.
+               Depois de mexer nisto corre o tools/dims.py: as medidas de
+               TODAS estas imagens sao geradas de la. */
   projects: [
     { src: "images/proj-sok.jpg", label: "Survival of Kings", ratio: "34", key: "sok", plate: "SOK" },
     { src: "images/proj-tr.jpg", label: "Tokyo Revengers", ratio: "34", key: "tr", plate: "TR" },
@@ -147,6 +156,14 @@ h1{font-family:var(--f-disp);font-weight:400;font-size:clamp(2rem,5vw,3.2rem);te
 }
 .plate::after{content:"";position:absolute;inset:0;background-image:radial-gradient(var(--royal) 1px,transparent 1.4px);background-size:16px 16px;opacity:.16}
 .plate span{font-family:var(--f-disp);font-size:clamp(3rem,9vw,5.5rem);color:var(--royal-lift);z-index:1}
+/* A serie. Um projecto com uma imagem so continua a dar exactamente o mesmo
+   resultado de antes: um <img> sozinho dentro deste contentor.
+   As medidas vao nos atributos width/height (do PROJ_DIMS) para o browser
+   reservar o espaco antes de a imagem chegar — sem elas a caixa tinha altura
+   zero e a nota e o rodape saltavam. Com varias imagens isso multiplica-se,
+   por isso aqui importa ainda mais do que importava com uma. */
+.shots{display:flex;flex-direction:column;gap:20px;margin:40px 0}
+.shots img{width:100%;height:auto;display:block;border:1px solid var(--hair)}
 .note{
   border-left:2px solid var(--royal);padding-left:16px;color:var(--bone-dim);font-size:.9rem;margin:40px 0;
 }
@@ -194,6 +211,28 @@ const PROJ_DIMS = {
   "proj-pamp.jpg": {w:1553, h:1600},
 };
 
+/* Uma imagem da serie. Tal como no index: serve-se .webp a quem o suporta e
+   cai-se no .jpg pelo onerror. Antes esta pagina puxava sempre o JPEG grande —
+   o do Tokyo Revengers sao 316K contra 216K em WebP. */
+function shotEl(caminho, titulo, i, total){
+  const img = document.createElement('img');
+  const d = PROJ_DIMS[caminho.split('/').pop()];
+  if(d){ img.width = d.w; img.height = d.h; }
+  const webp = caminho.replace(/\.jpe?g$/i, '.webp');
+  let jpgTried = !WEBP_OK;
+  img.onerror = () => { if(!jpgTried){ jpgTried = true; img.src = caminho; } };
+  img.src = WEBP_OK ? webp : caminho;
+  /* Numa serie o alt diz qual e: um leitor de ecra com quatro imagens todas
+     chamadas "Tokyo Revengers" nao ajuda ninguem. */
+  img.alt = total > 1
+    ? `${titulo} · ${i + 1} ${LANG === 'pt' ? 'de' : 'of'} ${total}`
+    : titulo;
+  img.decoding = 'async';
+  /* a primeira e a que se ve primeiro: essa nao e lazy. */
+  if(i === 0){ img.fetchPriority = 'high'; } else { img.loading = 'lazy'; }
+  return img;
+}
+
 const proj = CONFIG.projects.find(p => p.key === key);
 const tp = proj ? t.projects[proj.key] : null;
 
@@ -210,23 +249,14 @@ if(!tp){
   document.getElementById('title').textContent  = tp.title;
   document.getElementById('desc').textContent   = tp.desc;
   const plate = document.getElementById('plate');
-  if(proj.src){
-    const img = document.createElement('img');
-    /* Tal como no index: serve-se .webp a quem o suporta e cai-se no .jpg pelo
-       onerror. Antes esta pagina puxava sempre o JPEG grande — o do Tokyo
-       Revengers sao 316K contra 216K em WebP.
-       As medidas reais vao nos atributos width/height para o browser reservar
-       o espaco antes de a imagem chegar. Sem elas a caixa tinha altura zero e
-       tudo o que vem por baixo (a nota e o rodape) saltava ao carregar. */
-    const file = proj.src.split('/').pop();
-    const d = PROJ_DIMS[file];
-    if(d){ img.width = d.w; img.height = d.h; }
-    const webp = proj.src.replace(/\.jpe?g$/i, '.webp');
-    let jpgTried = !WEBP_OK;
-    img.onerror = () => { if(!jpgTried){ jpgTried = true; img.src = proj.src; } };
-    img.src = WEBP_OK ? webp : proj.src;
-    img.alt = tp.title;
-    plate.replaceWith(img);
+  /* A capa mais o resto da serie, por ordem. Sem gallery fica so a capa e o
+     resultado e o mesmo de sempre. */
+  const serie = [proj.src, ...(proj.gallery || [])].filter(Boolean);
+  if(serie.length){
+    const caixa = document.createElement('div');
+    caixa.className = 'shots';
+    serie.forEach((caminho, i) => caixa.append(shotEl(caminho, tp.title, i, serie.length)));
+    plate.replaceWith(caixa);
   } else {
     plate.querySelector('span').textContent = proj.plate || '';
     document.getElementById('note').textContent = LANG === 'pt'

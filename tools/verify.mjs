@@ -423,6 +423,40 @@ async function navegador(dir, etiqueta){
     chk(maus.length === 0, 'projeto.html nas 3 chaves + invalida + vazia, EN e PT', maus.join(' '));
   }
 
+  /* --- §9.9: em-dashes na copia VISIVEL, nao so no CONFIG ---
+     O teste estatico le o CONFIG. Nao chega: ha copia que nasce no JavaScript
+     e nunca passa pelo CONFIG — foi assim que um em-dash entrou no alt de uma
+     serie de imagens, que um leitor de ecra le em voz alta. Aqui ve-se o que
+     o browser tem mesmo: texto renderizado e atributos alt. */
+  {
+    const achados = [];
+    for (const pag of ['index.html', 'projeto.html?p=sok', 'projeto.html?p=tr', '404.html']) {
+      const p = await nova(1280);
+      await p.goto(base + pag, { waitUntil: 'networkidle' });
+      await p.waitForTimeout(500);
+      const r = await p.evaluate(() => {
+        const o = [];
+        const anda = n => {
+          if (n.nodeType === 3 && n.textContent.includes('\u2014')) o.push('texto: ' + n.textContent.trim().slice(0, 50));
+          /* <script> e <style> sao codigo-fonte, e os comentarios do codigo
+             estao isentos do §9.9. So conta o que o visitante le. */
+          if (n.nodeType === 1) {
+            if (n.tagName === 'SCRIPT' || n.tagName === 'STYLE' || n.tagName === 'NOSCRIPT') return;
+            if (n.alt && n.alt.includes('\u2014')) o.push('alt: ' + n.alt.slice(0, 50));
+            if (n.getAttribute && n.getAttribute('aria-label') && n.getAttribute('aria-label').includes('\u2014'))
+              o.push('aria-label: ' + n.getAttribute('aria-label').slice(0, 50));
+            for (const f of n.childNodes) anda(f);
+          }
+        };
+        anda(document.body);
+        return [...new Set(o)];
+      });
+      for (const x of r) achados.push(`${pag} ${x}`);
+      await p.close();
+    }
+    chk(achados.length === 0, '§9.9 nenhum em-dash na copia renderizada', achados.slice(0, 4).join('  '));
+  }
+
   /* --- file:// ainda funciona --- */
   {
     const p = await nova(1280);

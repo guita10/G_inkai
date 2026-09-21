@@ -305,6 +305,14 @@ CLAUDE.md       this file
 No feature folders, no `src/`, no routing. `index.html` is organised top to
 bottom as: meta and JSON-LD → `CONFIG` → `<style>` → markup → render `<script>`.
 
+**A project can be a series.** `CONFIG.projects[].src` is the cover: it is what
+the card on `index.html` shows and what unfurlers get as `og:image`. An optional
+`gallery: []` holds the rest of the series, in order, and `projeto.html` renders
+cover-then-gallery as a stack. Without `gallery` the page behaves exactly as it
+always did, one image. Every image in both fields gets its real dimensions from
+`PROJ_DIMS`, which `dims.py` generates — with a series the zero-height-box
+problem multiplies per image, so this matters more here than it did with one.
+
 **`projeto.html` holds a slice of `CONFIG`, not a copy.** It used to hold the
 whole thing, and the copy drifted: commission prices, the four stages and the
 2-4 week turnaround were still sitting in it long after §9.4 took them off the
@@ -446,6 +454,12 @@ The checks themselves, and why each one exists:
   Do not test `transition-property`: `all` is its initial value, so an element
   with no transition at all reports `all` and a naive check flags the whole
   document. Four real leaks hid behind that false positive for months.
+- **No em-dashes**, checked twice: once over `CONFIG` and once over what the
+  browser actually renders, including `alt` and `aria-label`. The second check
+  exists because copy can be born in JavaScript and never pass through `CONFIG`
+  — that is how an em-dash got into the alt text of an image series, where a
+  screen reader reads it aloud. Source comments are exempt, so the walk skips
+  `<script>` and `<style>`.
 - **`file://` still works**, not just HTTP.
 
 When a measurement contradicts your expectation, suspect the harness before the

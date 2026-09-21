@@ -155,6 +155,7 @@ def reserve_value(cols, count, total):
 
 def proj_block(src, dims):
     """O PROJ_DIMS da projeto.html, a partir das artes dos projectos.
+    Apanha a capa e as imagens da serie de cada projecto.
 
     Aquela pagina tem um mapa so dela porque nao precisa do resto. Estava a ser
     escrito a mao, com o mesmo problema de sempre: um numero trocado nao da
@@ -163,7 +164,15 @@ def proj_block(src, dims):
     found = PROJECTS.search(src)
     if not found:
         sys.exit("Nao encontrei a lista 'projects: [...]' no index.html.")
-    files = [f for f in re.findall(r'src:\s*"images/([^"]+)"', found.group(1))]
+    # a capa (src) E as imagens da serie (gallery), que sao tantas como as
+    # capas mensais ou as cartas de um baralho. Todas precisam de medidas:
+    # sem elas a caixa nasce com altura zero e a pagina salta ao carregar,
+    # e com uma serie isso multiplica-se por cada imagem.
+    files, vistos = [], set()
+    for f in re.findall(r'"images/([^"]+)"', found.group(1)):
+        if f not in vistos:
+            vistos.add(f)
+            files.append(f)
     rows, orphans = [], []
     pad = max((len(f) for f in files), default=0) + 3
     for f in files:
