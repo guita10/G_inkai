@@ -264,7 +264,10 @@ async function navegador(dir, etiqueta){
   {
     const p = await nova(1440);
     await p.goto(base + 'index.html', { waitUntil: 'networkidle' });
-    await p.evaluate(() => { for (const i of document.querySelectorAll('img')) i.loading = 'eager';
+    /* a parede abre so com as primeiras pecas: as escondidas tinham caixa 0 e
+       passavam o teste por engano. Abre-se toda antes de medir. */
+    await p.evaluate(() => { const m = document.getElementById('wallMore'); if (m && m.offsetParent) m.click();
+      for (const i of document.querySelectorAll('img')) i.loading = 'eager';
       window.scrollTo(0, document.body.scrollHeight); });
     await p.waitForTimeout(3000);
     const cort = await p.evaluate(() => {
@@ -423,12 +426,35 @@ async function navegador(dir, etiqueta){
     await p.close();
   }
 
+  /* --- a parede abre na pre-visualizacao, e o botao abre-a toda --- */
+  {
+    const p = await nova(1440);
+    await p.goto(base + 'index.html', { waitUntil: 'networkidle' });
+    await p.waitForTimeout(500);
+    const r = await p.evaluate(() => {
+      const vis = () => [...document.querySelectorAll('.wall .frame')].filter(f => getComputedStyle(f).display !== 'none').length;
+      const total = CONFIG.artworks.length, prev = CONFIG.wallPreview;
+      const btn = document.getElementById('wallMore');
+      const antes = vis(), temBotao = !!btn.offsetParent, texto = btn.textContent;
+      btn.click();
+      return { total, prev, antes, temBotao, texto, depois: vis(),
+               foco: document.activeElement === document.querySelectorAll('.wall .frame')[prev],
+               some: !document.getElementById('wallMoreRow').offsetParent };
+    });
+    const ok = r.antes === Math.min(r.prev, r.total) && r.temBotao === (r.total > r.prev)
+      && r.texto.includes(String(r.total)) && r.depois === r.total && r.some && r.foco;
+    chk(ok, 'a parede abre com as primeiras pecas e o botao mostra as outras',
+      `${r.antes} de ${r.total}, depois ${r.depois}${r.foco ? '' : ', foco perdido'}`);
+    await p.close();
+  }
+
   /* --- filtros: as partes somam o todo --- */
   {
     const p = await nova(1440);
     await p.goto(base + 'index.html', { waitUntil: 'networkidle' });
     await p.waitForTimeout(600);
     const r = await p.evaluate(() => {
+      const m = document.getElementById('wallMore'); if (m && m.offsetParent) m.click();
       const chips = [...document.querySelectorAll('#filters .chip')];
       const conta = () => [...document.querySelectorAll('.wall .frame')].filter(f => getComputedStyle(f).display !== 'none').length;
       const o = [];
@@ -456,7 +482,10 @@ async function navegador(dir, etiqueta){
         await p.waitForTimeout(700);
         const r = await p.evaluate(() => {
           const imgs = [...document.querySelectorAll('.wrap img')];
-          return { h1: document.querySelector('h1').textContent.trim(),
+          /* a grelha da serie tambem nao pode cortar nada */
+          const cortadas = imgs.filter(i => { const r = i.getBoundingClientRect();
+            return i.naturalWidth && Math.abs(i.naturalWidth / i.naturalHeight - r.width / r.height) > 0.02; }).length;
+          return { h1: document.querySelector('h1').textContent.trim(), cortadas,
                    img: imgs.length ? imgs.every(i => i.naturalWidth > 0) : null, n: imgs.length,
                    robots: document.querySelector('meta[name="robots"]').content };
         });
@@ -464,8 +493,17 @@ async function navegador(dir, etiqueta){
         const real = CHAVES.includes(k);
         if (!r.h1) maus.push(`${loc} ${k}: sem titulo`);
         if (real && r.img === false) maus.push(`${loc} ${k}: imagem partida`);
+        if (r.cortadas) maus.push(`${loc} ${k}: ${r.cortadas} imagens cortadas`);
         if (!real && !r.robots.includes('noindex')) maus.push(`${loc} ${k}: devia ser noindex`);
       }
+      await p.close();
+    }
+    /* a lingua que vem no link do index manda sobre a do browser */
+    {
+      const p = await nova(1100, { locale: 'en-US' });
+      await p.goto(`${base}projeto.html?p=sok&lang=pt`, { waitUntil: 'networkidle' });
+      const l = await p.evaluate(() => ({ lang: document.documentElement.lang, volta: document.querySelector('.back').getAttribute('href') }));
+      if (l.lang !== 'pt' || !l.volta.includes('lang=pt')) maus.push(`?lang=pt ignorado: ${l.lang} ${l.volta}`);
       await p.close();
     }
     chk(maus.length === 0, `projeto.html nas ${CHAVES.length} chaves + invalida + vazia, EN e PT, a serie toda carregada`,

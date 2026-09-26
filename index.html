@@ -134,6 +134,13 @@ const CONFIG = {
      empty to use the local /images/ folder, or set it to
      "https://guitaink.com/" to pull straight from the live deploy.     */
   imageBase: "",
+  /* A parede abre com as primeiras `wallPreview` obras, pela ordem do
+     artworks, e um botao "Ver as N pecas". Quem escolhe o que aparece
+     primeiro e a ordem desta lista: poe em cima o que queres que se veja.
+     Um filtro mostra sempre a categoria inteira. Depois de mudar este numero
+     corre o tools/dims.py: a altura reservada da parede e calculada para
+     estas pecas, nao para todas. */
+  wallPreview: 12,
   hero: { src: "images/oc.jpg", label: "OC 01", ratio: "34" },
   artworks: [
     { src: "images/angela.jpg",                label: "Angela",                    ratio: "34", cat: "character" },
@@ -170,34 +177,16 @@ const CONFIG = {
     { src: "images/yuta-fanart.jpg",           label: "Yuta, Jujutsu Kaisen",     ratio: "34", cat: "fanart" },
     { src: "images/nami-30x40.jpg",            label: "Nami, One Piece",          ratio: "34", cat: "fanart" },
     { src: "images/ilustracao-sem-titulo.jpg", label: "Tony Tony Chopper, card",  ratio: "43", cat: "fanart" },
-    { src: "images/op-deck-nami.jpg",          label: "Nami, One Piece Deck",     ratio: "34", cat: "fanart" },
-    { src: "images/op-deck-robin.jpg",         label: "Robin, One Piece Deck",    ratio: "34", cat: "fanart" },
-    { src: "images/op-deck-yamato.jpg",        label: "Yamato, One Piece Deck",   ratio: "34", cat: "fanart" },
-    { src: "images/op-deck-hancock.jpg",       label: "Boa Hancock, One Piece Deck", ratio: "34", cat: "fanart" },
-    { src: "images/op-deck-roger.jpg",         label: "Gol D. Roger, One Piece Deck", ratio: "34", cat: "fanart" },
-    { src: "images/op-deck-luffy.jpg",         label: "Luffy, One Piece Deck",    ratio: "34", cat: "fanart" },
-    { src: "images/op-deck-blackbeard.jpg",    label: "Blackbeard, One Piece Deck", ratio: "34", cat: "fanart" },
-    { src: "images/op-deck-shanks.jpg",        label: "Shanks, One Piece Deck",   ratio: "34", cat: "fanart" },
-    { src: "images/op-deck-crocodile.jpg",     label: "Crocodile, One Piece Deck", ratio: "34", cat: "fanart" },
-    { src: "images/op-deck-katakuri.jpg",      label: "Katakuri, One Piece Deck", ratio: "34", cat: "fanart" },
-    { src: "images/op-deck-doflamingo.jpg",    label: "Doflamingo, One Piece Deck", ratio: "34", cat: "fanart" },
-    { src: "images/op-deck-kaido.jpg",         label: "Kaido, One Piece Deck",    ratio: "34", cat: "fanart" },
-    { src: "images/op-deck-zoro.jpg",          label: "Zoro, One Piece Deck",     ratio: "34", cat: "fanart" },
-    { src: "images/op-deck-buggy.jpg",         label: "Buggy, One Piece Deck",    ratio: "34", cat: "fanart" },
-    { src: "images/op-deck-ace-clubs.jpg",     label: "Ace of Clubs, One Piece Deck", ratio: "34", cat: "fanart" },
-    { src: "images/op-deck-ace-spades.jpg",    label: "Ace of Spades, One Piece Deck", ratio: "34", cat: "fanart" },
-    { src: "images/op-deck-ace-hearts.jpg",    label: "Ace of Hearts, One Piece Deck", ratio: "34", cat: "fanart" },
-    { src: "images/op-deck-ace-diamonds.jpg",  label: "Ace of Diamonds, One Piece Deck", ratio: "34", cat: "fanart" },
     { src: "images/dante.jpg",                 label: "Dante",                     ratio: "11", cat: "fanart" },
     { src: "images/lucy.jpg",                  label: "Lucy",                      ratio: "11", cat: "fanart" },
   ],
 
-  /* 28 peças do pacote original (era 414 MB → 5,5 MB), mais as 26 de Set 2026:
-     a Angela, sete personagens do Survival of Kings e as 18 cartas do One
-     Piece Deck (fan art): damas, reis, valetes, jokers e ases. Os quatro 2
-     (o molde das cartas de numero) ficam SO na pagina do projecto, nao na
-     parede: decisao do Frede, cartas quase vazias no meio das ilustracoes
-     liam-se como enchimento. O Chopper NAO e do baralho. */
+  /* 28 peças do pacote original (era 414 MB → 5,5 MB), mais as de Set 2026:
+     a Angela e sete personagens do Survival of Kings.
+     O ONE PIECE DECK NAO ESTA NA PAREDE, de proposito (decisao do Frede, Set
+     2026): as 18 cartas eram metade da fan art da parede e repetiam a pagina
+     do projecto. Vivem so la, as 22 com os quatro 2. O Chopper NAO e do
+     baralho e fica aqui. */
 
   projects: [
     /* Os quatro projectos ja tem arte. O One Piece Deck e fan art (§9.1):
@@ -252,7 +241,7 @@ const CONFIG = {
         pamp: { kicker: "Visual identity", title: "PAMP: Prémios Anime Manga Portugal", desc: "Full visual identity: key art, logo lock-ups and event graphics." },
         deck: { kicker: "Fan art, playing cards", title: "One Piece Deck", desc: "One Piece characters drawn as playing cards. Queens: Nami, Robin, Yamato and Boa Hancock. Kings: Gol D. Roger, Luffy, Blackbeard and Shanks. Jacks: Crocodile, Katakuri, Doflamingo and Kaido. Jokers: Zoro and Buggy. Each ace carries the flag of its king's crew." },
       },
-      tlTitle: "Timeline",
+      tlTitle: "Along the way",
       tlUpcoming: "Upcoming", tlNext: "Next up",
       months: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
       timeline: {
@@ -299,6 +288,7 @@ const CONFIG = {
       lbOf: "of",
       placeholderNote: "placeholder, swap in /images",
       wallEmpty: "Nothing in this category yet.",
+      wallMore: "See all {n} pieces",
       copyEmail: "Copy address", copied: "Copied",
       /* Tres factos que ja estao no site, repetidos ao pe do nome: e a
          primeira coisa que um director de arte precisa de ver. Nada aqui e
@@ -362,6 +352,7 @@ const CONFIG = {
       lbOf: "de",
       placeholderNote: "placeholder, substituir em /images",
       wallEmpty: "Ainda não há nada nesta categoria.",
+      wallMore: "Ver as {n} peças",
       copyEmail: "Copiar endereço", copied: "Copiado",
       heroProof: [
         "1.º lugar, concurso de manga Iberanime",
@@ -708,7 +699,7 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
    escrevas a mao — junta a arte e corre o script. */
 .wall{
   --wall-w:calc(min(1240px,100vw) - 52px);
-  min-height:calc(16.77 * (var(--wall-w) - 42px) / 4 + 189px);
+  min-height:calc(3.58 * (var(--wall-w) - 42px) / 4 + 42px);
 }
 .frame{
   break-inside:avoid;margin:0 0 14px;display:block;width:100%;
@@ -762,6 +753,9 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 /* Nada encontrado com este filtro. Antes a parede ficava simplesmente vazia. */
 .wall-empty{display:none;padding:40px 0;color:var(--bone-dim);font-size:.95rem}
 .wall-empty.on{display:block}
+/* o botao que abre a parede toda: ao centro, com o traco da casa por cima */
+.wall-more{display:flex;justify-content:center;padding-top:34px;margin-top:10px;border-top:1px solid var(--hair)}
+.wall-more[hidden]{display:none}
 .hint{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-dim);align-self:center;margin-left:10px}
 
 /* placeholder */
@@ -835,7 +829,9 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 .tl-desc{font-size:.88rem;color:var(--bone-dim);max-width:42rem}
 
 /* ================= ABOUT ================= */
-.about{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:56px;align-items:center}
+/* a bio a esquerda, o percurso a direita. start e nao center: as duas
+   colunas tem alturas muito diferentes e centradas a mais curta flutuava. */
+.about{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(38px,6vw,80px);align-items:start}
 .about .body{font-family:var(--f-disp);font-size:1.28rem;line-height:1.6}
 .about .body p + p{margin-top:.85em}
 /* Esta e a unica caixa de texto da pagina SEM altura reservada, e e de
@@ -845,15 +841,10 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
    salto que evita. A seccao fica bem abaixo da dobra, onde o JS ja correu
    muito antes de alguem la chegar: medido, nao acrescenta CLS nenhum. */
 .about .meta{margin-top:22px;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--bone-dim)}
-.about-mark{
-  aspect-ratio:1/1;display:grid;place-items:center;position:relative;overflow:hidden;
-  border:1px solid var(--hair);background:var(--raise);
-}
-.about-mark .glyph{font-family:var(--f-disp);font-size:clamp(4rem,11vw,7rem);color:var(--royal-lift);z-index:1}
-.about-mark::after{
-  content:"";position:absolute;inset:0;
-  background-image:radial-gradient(var(--royal) 1px,transparent 1.4px);background-size:13px 13px;opacity:.22;
-}
+/* o percurso, dentro do Sobre. O traco vertical do .tl ja separa as duas
+   colunas; o titulo pequeno segue o mesmo desenho dos kickers. */
+.about-tl-title{font-family:var(--f-ui);font-size:.66rem;font-weight:500;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--bone-dim);margin-bottom:26px}
 
 /* ================= COMMISSIONS (a faixa) =================
    Os quatro formatos, a nota e o botao do email passaram para o loja.html,
@@ -862,6 +853,12 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 .badge{font-family:var(--f-ui);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;padding:8px 16px;border-radius:999px}
 .badge.open{background:var(--royal);color:#fff}
 .badge.closed{border:1px solid var(--hair);color:var(--bone-dim)}
+.comm-band{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:clamp(30px,6vw,80px);align-items:start}
+/* linhas, nao caixas: cada formato numa linha de cabelo, com o numero da casa */
+.comm-formats{list-style:none;border-top:1px solid var(--hair);counter-reset:f}
+.comm-formats li{display:flex;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid var(--hair);
+  font-family:var(--f-disp);font-size:1.15rem;counter-increment:f}
+.comm-formats li::before{content:"0" counter(f);font:500 .62rem var(--f-ui);letter-spacing:.2em;color:var(--royal-lift)}
 
 /* ================= CONTACT ================= */
 .mail{
@@ -1019,7 +1016,7 @@ footer{font-family:var(--f-ui);
 
 /* ================= RESPONSIVE ================= */
 @media (max-width:980px){
-  .wall{column-count:3;min-height:calc(22.36 * (var(--wall-w) - 28px) / 3 + 252px)}
+  .wall{column-count:3;min-height:calc(4.77 * (var(--wall-w) - 28px) / 3 + 56px)}
   .hero-grid{grid-template-columns:1fr;gap:34px;align-items:start}
   /* Numa coluna so nao ha nada a trocar: a ordem do HTML (obra, depois texto)
      e exactamente a que se quer ver. Antes a obra vinha por baixo do titulo,
@@ -1031,13 +1028,24 @@ footer{font-family:var(--f-ui);
      fazer ocupar um ecra inteiro de altura (a 4/5, 560 de largura sao 700 de
      alto). */
   .hero-art{max-width:560px}
-  .projects{grid-template-columns:1fr}
+  /* dois a dois: um so por linha punha a seccao com quase 3000px */
+  .projects{grid-template-columns:repeat(2,1fr)}
   .about{grid-template-columns:1fr;gap:38px}
-  .about-mark{max-width:300px}
+  .comm-band{grid-template-columns:1fr}
 }
 @media (max-width:620px){
+  /* Em telemovel os projectos passam para uma fila que se arrasta de lado:
+     cada cartao com ~80% da largura, o seguinte a espreitar a direita para
+     se perceber que ha mais. Empilhados eram quatro ecras de cartoes.
+     A fila sai 26px para cada lado (o padding do .wrap), para os cartoes
+     chegarem a borda do ecra; o scroll-padding alinha-os com o texto. */
+  .projects{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:80%;
+    overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0 26px;
+    margin:0 -26px;padding:0 26px 10px;gap:14px;scrollbar-width:none}
+  .projects::-webkit-scrollbar{display:none}
+  .proj{scroll-snap-align:start}
   .bar{min-height:64px}
-  .wall{column-count:2;min-height:calc(33.54 * (var(--wall-w) - 14px) / 2 + 378px)}
+  .wall{column-count:2;min-height:calc(7.15 * (var(--wall-w) - 14px) / 2 + 84px)}
   .links{display:none}
   .knobs{margin-left:auto}
   .nav-toggle{display:block}
@@ -1091,8 +1099,6 @@ footer{font-family:var(--f-ui);
     <nav class="links" aria-label="Main">
       <a href="#work"     data-t="navWork"></a>
       <a href="#projects" data-t="navProjects"></a>
-      <a href="#timeline" data-t="tlTitle"></a>
-      <a href="#about"    data-t="navAbout"></a>
       <!-- data-shop-link e nao um id: o painel do menu movel clona estes
            links com cloneNode(true), que copia o id tal e qual. Com id havia
            dois elementos #navShop no documento, o querySelector so apanhava um
@@ -1100,6 +1106,7 @@ footer{font-family:var(--f-ui);
            tratar as duas copias de uma vez. -->
       <a href="loja.html" data-loja="" data-t="navShop" data-shop-link hidden></a>
       <a href="#comm"     data-t="navComm"></a>
+      <a href="#about"    data-t="navAbout"></a>
       <a href="#contact"  data-t="navContact"></a>
     </nav>
     <div class="knobs">
@@ -1163,6 +1170,10 @@ footer{font-family:var(--f-ui);
     <div class="filters rv" id="filters" role="group" aria-label="Filter gallery"></div>
     <div class="wall" id="wall"></div>
     <p class="wall-empty" id="wallEmpty" data-t="wallEmpty"></p>
+    <!-- aparece so no "Tudo", enquanto a parede estiver na pre-visualizacao -->
+    <div class="wall-more" id="wallMoreRow" hidden>
+      <button class="btn" id="wallMore" type="button"></button>
+    </div>
   </section>
 
   <!-- PROJECTS -->
@@ -1175,17 +1186,35 @@ footer{font-family:var(--f-ui);
     <div class="projects" id="projGrid"></div>
   </section>
 
-  <!-- TIMELINE -->
-  <section id="timeline">
+  <!-- COMMISSIONS — uma faixa. Os formatos, a loja e o pedido por email
+       estao no loja.html, a pagina onde se vende. O href certo (com a
+       lingua escolhida) e posto pelo JS; o que esta aqui e o de recurso. -->
+  <section id="comm">
     <div class="head rv">
       <div>
-        <h2 class="sec-title rv" data-t="tlTitle"></h2>
+        <h2 class="sec-title rv" data-t="commTitle"></h2>
       </div>
+      <span class="badge" id="commBadge"></span>
     </div>
-    <div class="tl" id="tl"></div>
+    <div class="comm-band">
+      <div>
+        <p class="lede rv" data-t="commIntro" style="margin-bottom:34px"></p>
+        <div class="row rv">
+          <a class="btn fill" href="loja.html#comissoes" data-loja="#comissoes"><span data-t="commSee"></span> →</a>
+          <a class="btn" href="loja.html#merch" data-loja="#merch" data-shop-link hidden><span data-t="navShop"></span> →</a>
+        </div>
+      </div>
+      <!-- os quatro formatos, so os nomes (§9.4: nada de precos, fases ou
+           prazos). Enchem o lado direito da faixa, que estava vazio, e dizem
+           o que ha antes de se sair da pagina. -->
+      <ol class="comm-formats rv" id="commFormats"></ol>
+    </div>
   </section>
 
-  <!-- ABOUT -->
+  <!-- ABOUT — a bio e, ao lado, o percurso. O percurso era uma seccao
+       inteira para cinco entradas; o quadrado do 墨 que estava aqui era
+       espaco vazio (em telemovel, ~300px de nada). Juntos, cada um da
+       contexto ao outro e a pagina perde uma seccao. -->
   <section id="about">
     <div class="head rv">
       <div>
@@ -1197,24 +1226,10 @@ footer{font-family:var(--f-ui);
         <div class="body" id="aboutBody"></div>
         <p class="meta" data-t="aboutMeta"></p>
       </div>
-      <div class="about-mark rv" aria-hidden="true"><span class="glyph">墨</span></div>
-    </div>
-  </section>
-
-  <!-- COMMISSIONS — uma faixa. Os formatos, a loja e o pedido por email
-       estao no loja.html, a pagina onde se vende. O href certo (com a
-       lingua escolhida) e posto pelo JS; o que esta aqui e o de recurso. -->
-  <section id="comm">
-    <div class="head rv">
-      <div>
-        <h2 class="sec-title rv" data-t="commTitle"></h2>
+      <div class="about-tl rv" id="timeline">
+        <h3 class="about-tl-title" data-t="tlTitle"></h3>
+        <div class="tl" id="tl"></div>
       </div>
-      <span class="badge" id="commBadge"></span>
-    </div>
-    <p class="lede rv" data-t="commIntro" style="margin-bottom:34px"></p>
-    <div class="row rv">
-      <a class="btn fill" href="loja.html#comissoes" data-loja="#comissoes"><span data-t="commSee"></span> →</a>
-      <a class="btn" href="loja.html#merch" data-loja="#merch" data-shop-link hidden><span data-t="navShop"></span> →</a>
     </div>
   </section>
 
@@ -1265,6 +1280,8 @@ const LANG_PEDIDA = new URLSearchParams(location.search).get('lang');
 let LANG = (LANG_PEDIDA === 'pt' || LANG_PEDIDA === 'en') ? LANG_PEDIDA
   : ((navigator.language || 'en').toLowerCase().startsWith('pt') ? 'pt' : 'en');
 let activeCat = 'all';
+/* a parede abre na pre-visualizacao; o botao abre-a toda e fica aberta */
+let wallOpen = false;
 /* o tema segue a preferência do sistema; o botão continua a mandar por cima */
 if(matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.dataset.theme = 'light';
 const T  = () => CONFIG.i18n[LANG];
@@ -1366,12 +1383,19 @@ function setFilter(c){
 }
 function applyFilter(){
   let shown = 0;
-  $$('#wall .frame').forEach(f => {
-    const hide = activeCat !== 'all' && f.dataset.cat !== activeCat;
+  const total = CONFIG.artworks.length;
+  const preview = CONFIG.wallPreview || total;
+  /* no "Tudo", enquanto nao se abrir, so as primeiras `preview`; um filtro
+     mostra sempre a categoria inteira */
+  const cortar = activeCat === 'all' && !wallOpen && total > preview;
+  $$('#wall .frame').forEach((f, i) => {
+    const hide = (activeCat !== 'all' && f.dataset.cat !== activeCat) || (cortar && i >= preview);
     f.classList.toggle('hidden', hide);
     if(!hide) shown++;
   });
-  $('#workCount').textContent = `${shown} / ${CONFIG.artworks.length}`;
+  $('#workCount').textContent = `${shown} / ${total}`;
+  $('#wallMoreRow').hidden = !cortar;
+  $('#wallMore').textContent = T().wallMore.replace('{n}', total);
   $('#wallEmpty').classList.toggle('on', shown === 0);
   /* Com um filtro activo sobram menos pecas e a altura reservada no CSS
      deixaria um buraco por baixo. Filtrar e um gesto do utilizador, por isso
@@ -1430,7 +1454,7 @@ function renderText(){
     const tp = t.projects[p.key];
     const card = document.createElement('a');
     card.className = 'proj rv';
-    card.href = `${CONFIG.projectPage}?p=${encodeURIComponent(p.key)}`;
+    card.href = `${CONFIG.projectPage}?p=${encodeURIComponent(p.key)}${LANG === 'pt' ? '&lang=pt' : ''}`;
     /* sem target=_blank: e uma pagina do proprio site e ela ja traz o link de
        voltar. Abrir separadores por cima dos separadores de alguem e das
        coisas que so incomodam. */
@@ -1499,6 +1523,7 @@ function renderText(){
   $$('[data-shop-link]').forEach(a => { a.hidden = !shopOn; });
   const lq = LANG === 'pt' ? '?lang=pt' : '';
   $$('[data-loja]').forEach(a => { a.href = `loja.html${lq}${a.dataset.loja}`; });
+  $('#commFormats').innerHTML = CONFIG.tiers.map(x => `<li>${t.tiers[x.key].name}</li>`).join('');
   const open = CONFIG.commissionsOpen;
   const badge = $('#commBadge');
   badge.textContent = open ? t.commOpen : t.commClosed;
@@ -1534,8 +1559,9 @@ function drawLb(){
   const g = CONFIG.artworks[lbIdx];
   const st = $('#lbStage'); st.innerHTML = ''; st.append(artEl(g, true));
   /* Onde estou na sequencia. Sem isto nao se percebia se faltavam duas pecas
-     ou vinte, e o filtro activo muda o total — por isso conta-se sobre as
-     visiveis, nao sobre as 28. */
+     ou vinte, e o filtro activo muda o total — por isso conta-se sobre a
+     categoria. Conta tambem as que a pre-visualizacao da parede esconde: as
+     setas sao uma forma de ver tudo sem abrir a parede. */
   const v = visibleIdxs();
   const pos = v.indexOf(lbIdx) + 1;
   $('#lbCap').textContent = `${no(lbIdx)} · ${g.label}`;
@@ -1561,6 +1587,14 @@ function stepLb(d){
   lbIdx = v[(pos + d + v.length) % v.length];
   drawLb();
 }
+$('#wallMore').onclick = () => {
+  const preview = CONFIG.wallPreview || 0;
+  wallOpen = true; applyFilter();
+  /* o foco vai para a primeira peca nova, senao quem usa teclado ficava no
+     botao que acabou de desaparecer */
+  const f = $$('#wall .frame')[preview];
+  if(f) f.focus({ preventScroll: true });
+};
 $('#lbClose').onclick = closeLb;
 $('#lbPrev').onclick  = () => stepLb(-1);
 $('#lbNext').onclick  = () => stepLb(1);

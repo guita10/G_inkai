@@ -168,6 +168,16 @@ inert. Do not add it to Playfair and assume it took.
 
 - Container `max-width: 1240px`, `26px` gutters, centred.
 - Section rhythm `clamp(56px, 8vw, 96px)` top and bottom.
+- **Home page order** (Sept 2026 redesign): hero → selected work → projects →
+  commissions band → about (with the timeline beside the bio as "Along the
+  way") → contact. Work first because it is the proof; commissions third so
+  the one conversion on the page sits within the first half, not at 9,200px.
+- **The wall opens with a preview** of the first `wallPreview` (12) pieces in
+  `CONFIG` order and a "See all N pieces" button. Order the list so the best
+  original work comes first. A filter always shows its whole category.
+- **Projects** are four across on desktop, two across below 980px, and a
+  horizontal scroll-snap row below 620px, each card 80% wide so the next one
+  peeks in and signals there is more.
 - **Hero:** asymmetric split, `minmax(0,1fr) / minmax(0,.72fr)`, `60px` gap,
   `align-items: start`. Text left, artwork right. Never centred.
 - **Section headers stack vertically, left-aligned** — eyebrow, then headline.

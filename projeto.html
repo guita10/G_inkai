@@ -174,6 +174,21 @@ h1{font-family:var(--f-disp);font-weight:400;font-size:clamp(2rem,5vw,3.2rem);te
    por isso aqui importa ainda mais do que importava com uma. */
 .shots{display:flex;flex-direction:column;gap:20px;margin:40px 0}
 .shots img{width:100%;height:auto;display:block;border:1px solid var(--hair)}
+/* O resto da serie, numa grelha. Empilhadas a largura toda, as 22 cartas do
+   baralho davam ~27000px de scroll e nao se via a serie como serie. A capa
+   continua grande por cima; cada peca da grelha abre o ficheiro inteiro.
+   auto-fill com um minimo de 200px: tres por linha no desktop, duas num
+   telemovel. Nunca se corta nada: cada imagem guarda a sua proporcao. */
+.grelha{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;align-items:start}
+.grelha a{display:block;transition:transform .12s ease-out}
+.grelha a:active{transform:scale(.97)}
+@media (max-width:620px){.grelha{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
+/* §9.8 — tem de vir DEPOIS das regras da grelha: no bloco de cima perdia
+   para elas por ordem, e a transicao continuava ligada (o verify apanhou-o). */
+@media (prefers-reduced-motion:reduce){
+  .grelha a{transition:none}
+  .grelha a:active{transform:none}
+}
 .note{
   border-left:2px solid var(--royal);padding-left:16px;color:var(--bone-dim);font-size:.9rem;margin:40px 0;
 }
@@ -201,7 +216,10 @@ footer{border-top:1px solid var(--hair);margin-top:60px;padding:26px 0 50px;font
    CONFIG acima — os mesmos que alimentam os cartões do index.html.          */
 const q = new URLSearchParams(location.search);
 const key = q.get('p');
-const LANG = (navigator.language || 'en').toLowerCase().startsWith('pt') ? 'pt' : 'en';
+/* a lingua que veio no link do index (?lang=pt), senao a do browser */
+const pedida = q.get('lang');
+const LANG = (pedida === 'pt' || pedida === 'en') ? pedida
+  : ((navigator.language || 'en').toLowerCase().startsWith('pt') ? 'pt' : 'en');
 const t = CONFIG.i18n[LANG];
 document.documentElement.lang = LANG;
 
@@ -294,7 +312,18 @@ if(!tp){
   if(serie.length){
     const caixa = document.createElement('div');
     caixa.className = 'shots';
-    serie.forEach((caminho, i) => caixa.append(shotEl(caminho, tp.title, i, serie.length)));
+    caixa.append(shotEl(serie[0], tp.title, 0, serie.length));
+    if(serie.length > 1){
+      const grelha = document.createElement('div');
+      grelha.className = 'grelha';
+      serie.slice(1).forEach((caminho, k) => {
+        const a = document.createElement('a');
+        a.href = caminho; a.target = '_blank'; a.rel = 'noopener';
+        a.append(shotEl(caminho, tp.title, k + 1, serie.length));
+        grelha.append(a);
+      });
+      caixa.append(grelha);
+    }
     plate.replaceWith(caixa);
   } else {
     plate.querySelector('span').textContent = proj.plate || '';
@@ -318,6 +347,10 @@ if(!tp){
   document.querySelector('meta[property="og:image"]').setAttribute('content', shareImg);
   document.querySelector('link[rel="canonical"]').setAttribute('href', pageUrl);
 }
+/* o regresso ao portefolio leva a lingua consigo */
+const casa = LANG === 'pt' ? 'index.html?lang=pt#projects' : 'index.html#projects';
+document.querySelector('.back').href = casa;
+document.getElementById('footBack').href = casa;
 document.getElementById('backLabel').textContent = LANG === 'pt' ? 'Todo o trabalho' : 'All work';
 document.getElementById('footBack').textContent  = LANG === 'pt' ? '← Voltar ao portefólio' : '← Back to portfolio';
 document.getElementById('footL').textContent = `© ${new Date().getFullYear()} ${CONFIG.artistName} · ${CONFIG.realName}`;

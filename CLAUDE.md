@@ -142,9 +142,10 @@ this repo or the answer is a dozen lines of vanilla code.
 ## 4. Asset management
 
 ```
-images/           61 full-size JPEG (1600px longest side: 54 artworks + 3 project
-                  covers + the four 2s of the deck, which are on its project
-                  page only; the deck reuses a queen as its cover) + og-card.jpg, and a WebP for most (see below)
+images/           61 full-size JPEG (1600px longest side: 36 artworks on the wall,
+                  3 project covers, and the 22 One Piece Deck cards, which live
+                  on the deck's project page only; the deck reuses a queen as
+                  its cover) + og-card.jpg, and a WebP for most (see below)
 images/thumb/     61 thumbnails (760px) + WebP
 ```
 
@@ -186,17 +187,21 @@ was **CLS 0.96**. The fix is reserving the space in CSS up front:
 | `.wall` | a `calc()` | see below |
 
 The wall's reserve is a formula, not a constant, because the right height
-changes with viewport width: the sum of every piece's height-over-width ratio
-(**67.1** for these 54) times one column's width, over the column count, plus
-margins. Aim **1-5% under** the real height. Under-reserving settles by a few
+changes with viewport width: the sum of every visible piece's height-over-width
+ratio times one column's width, over the column count, plus margins. The wall
+opens with only the first `CONFIG.wallPreview` pieces (12), so the reserve
+counts those 12, not all 36: `dims.py` reads `wallPreview` and cuts the list
+before summing (**14.3** for these 12). The rest appear on a click, which is
+user input and does not count as layout shift. Aim **1-5% under** the real height. Under-reserving settles by a few
 pixels; over-reserving opens a gap that closes again, which counts just the
 same. Result after all of it: 0.006 throttled, 0 unthrottled.
 
 **The three coefficients are generated — never hand-edit them.** They used to
 be the repo's sharpest footgun: change the gallery, forget the ratio sum and the count,
 and the CLS quietly comes back. `dims.py` now derives all three from the thumb
-ratios in `DIMS` and the length of `CONFIG.artworks`, and rewrites the CSS. Run
-it after any change to the gallery, not just after adding files.
+ratios in `DIMS`, `CONFIG.wallPreview` and the order of `CONFIG.artworks`, and
+rewrites the CSS. Run it after any change to the gallery, including reordering
+it, not just after adding files: the first 12 are what the reserve measures.
 
 **Source order is part of the reserve.** The hero artwork is written *before*
 the copy in the markup, and `order` swaps them back on desktop. It used to be
@@ -310,6 +315,11 @@ CLAUDE.md       this file
 No feature folders, no `src/`, no routing. `index.html` is organised top to
 bottom as: meta and JSON-LD → `CONFIG` → `<style>` → markup → render `<script>`.
 
+**Home page order**: hero → selected work → projects → commissions band →
+about (bio beside the timeline) → contact. The timeline is not its own
+section any more; its `id="timeline"` sits on the block inside About, so old
+`#timeline` links still land. `DESIGN.md` §5 has the reasoning.
+
 **A project can be a series.** `CONFIG.projects[].src` is the cover: it is what
 the card on `index.html` shows and what unfurlers get as `og:image`. An optional
 `gallery: []` holds the rest of the series, in order, and `projeto.html` renders
@@ -400,9 +410,10 @@ A Figma file will not know about the constraints in §9. Those outrank it.
 These are Frede's decisions. They outrank every design skill, every Figma file,
 and every suggestion in this document.
 
-1. **Fan art is never sold.** 28 of the 54 works are fan art (Chainsaw Man,
-   Attack on Titan, Jujutsu Kaisen, One Piece, including all 18 cards of the
-   One Piece Deck project) and carry `cat:"fanart"`. They may
+1. **Fan art is never sold.** 10 of the 36 works on the wall are fan art
+   (Chainsaw Man, Attack on Titan, Jujutsu Kaisen, One Piece) and carry
+   `cat:"fanart"`. The 22 cards of the One Piece Deck project are fan art too;
+   they are on its project page only, not on the wall, by Frede's decision. They may
    be displayed, never sold as prints or merch. Any commerce affordance filters
    to `character` and `sketches`. The ImageGallery JSON-LD deliberately attaches
    no offer to any artwork.

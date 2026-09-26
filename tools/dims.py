@@ -130,6 +130,13 @@ def wall(src, dims):
         sys.exit("Nao encontrei a lista 'artworks: [...]' no index.html.")
     names = re.findall(r'src:\s*"images/([^"]+)"', found.group(1))
     orphans = [n for n in names if n not in dims]
+    # A parede abre so com as primeiras `wallPreview` obras (o resto aparece
+    # quando alguem carrega no botao, e isso ja e gesto do utilizador). A
+    # reserva e para o que se ve ao carregar a pagina, por isso conta so essas.
+    # Reservar para as 36 deixava um buraco de milhares de pixeis.
+    prev = re.search(r'wallPreview:\s*(\d+)', src)
+    if prev:
+        names = names[:int(prev.group(1))]
     total = sum(dims[n]["th"] / dims[n]["tw"] for n in names if n in dims)
     return len(names), total, orphans
 
