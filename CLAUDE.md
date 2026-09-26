@@ -143,11 +143,12 @@ this repo or the answer is a dozen lines of vanilla code.
 ## 4. Asset management
 
 ```
-images/           62 full-size JPEG (1600px longest side: 37 artworks, 3 project
-                  covers, and the One Piece Deck: 22 cards plus the card back,
+images/           65 full-size JPEG (1600px longest side: 37 artworks, 3 project
+                  covers, Tokyo Revengers vols 2-4 (proj-tr-2/3/4, the TR
+                  project page only), and the One Piece Deck: 22 cards plus the card back,
                   on the deck's project page; the Ace of Hearts is the deck's
                   cover and its one card on the wall) + og-card.jpg, and a WebP for most (see below)
-images/thumb/     62 thumbnails (760px) + WebP
+images/thumb/     65 thumbnails (760px) + WebP
 ```
 
 Four files have no WebP because WebP came out larger than the JPEG. That is
@@ -231,7 +232,12 @@ or it lands in the gallery and the ImageGallery JSON-LD.
 **The One Piece Deck on the wall is one card only**: the Ace of Hearts, as a
 way in (Frede's request). It is also the deck's project cover. The other
 cards, and the card back (`op-deck-back.jpg`, first in the deck's `gallery`),
-are on the project page.
+are on the project page, in natural deck order: the back, then suit by suit
+(spades, hearts, diamonds, clubs), each Ace, 2, Jack, Queen, King, then the two
+Jokers. The Ace of Hearts appears again in its hearts slot, on purpose, so that
+suit reads complete under the cover. Each ace carries its king's flag, which is
+how the suits were checked: Shanks spades, Luffy hearts, Roger diamonds,
+Blackbeard clubs.
 
 No CDN. No image service. Netlify serves the files as they are.
 
