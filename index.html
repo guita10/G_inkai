@@ -113,9 +113,17 @@ const CONFIG = {
   /* ---------- SHOP (merch) ----------
      ⚠️ LANCAMENTO: shopOpen:false mantem a seccao INTEIRA e o link do menu
         escondidos, para este ficheiro poder ir para o ar antes do drop. No dia
-        do lancamento sao DOIS gestos:
-        1. shopOpen:true aqui   2. por os produtos Merch a Activo no Shopify.
-        Fechar e o inverso — senao as pessoas caem numa coleccao vazia.
+        do lancamento sao TRES gestos, e a ordem importa:
+        1. no Shopify, os produtos Merch a Activo E publicados na "Loja online"
+        2. no Shopify, a coleccao "Merch — Guita_Ink" publicada na "Loja online"
+        3. shopOpen:true aqui — por ultimo, quando 1 e 2 ja estao feitos.
+        ACTIVO NAO E PUBLICADO. Os quatro produtos de comissao estiveram Activos
+        durante dois meses e ninguem os conseguia abrir, porque nunca tinham
+        sido publicados na Loja online. O link do email de aceitacao dava 404.
+        Corrigido a 26 Set 2026. Confirma nos dois sitios: estado "Activo" E o
+        canal "Loja online" marcado, na ficha de cada produto.
+        Fechar e o inverso, pela ordem contraria — senao as pessoas caem numa
+        coleccao vazia.
      handle: deixa "" para o cartao ir para a coleccao Merch; preenche com o
         handle do produto Shopify quando o produto tiver o nome definitivo.
      src: foto do produto, opcional (mesmas regras das obras). Vazio → placa.
