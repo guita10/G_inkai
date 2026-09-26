@@ -129,6 +129,11 @@ const CONFIG = {
         { src:"images/nome.jpg", label:"Título", cat:"webtoon", ratio:"34" }
      ratio: "34" portrait · "12" webtoon vertical · "11" square
      cat:   webtoon · covers · character · fanart · sketches
+     collab: true  (opcional) poe a peca TAMBEM no filtro "Colaborações", sem
+            lhe mudar a categoria. Uma colab de fan art continua fan art
+            (§9.1: nunca se vende), por isso isto e uma marca a mais e nao
+            uma categoria. Fan art e so o que nao e original: personagens
+            de uma serie que nao e do Frede, mesmo que o nome nao o diga.
      Export ~1600px on the long side, .jpg, under ~400 KB.
      imageBase is prepended only to paths that aren't already absolute — leave it
      empty to use the local /images/ folder, or set it to
@@ -151,15 +156,15 @@ const CONFIG = {
   artworks: [
     { src: "images/angela.jpg",                label: "Angela",                    ratio: "34", cat: "character" },
     { src: "images/mira-starborn.jpg",         label: "Mira Starborn",             ratio: "11", cat: "character" },
-    { src: "images/collab-mira-final.jpg",     label: "Mira, collab",             ratio: "34", cat: "character" },
-    { src: "images/collab.jpg",                label: "Duelo, collab",            ratio: "43", cat: "character" },
+    { src: "images/collab-mira-final.jpg",     label: "Mira, collab",             ratio: "34", cat: "character", collab: true },
+    { src: "images/collab.jpg",                label: "Duelo, Dragon Ball collab", ratio: "43", cat: "fanart", collab: true },
     { src: "images/arkevil-final.jpg",         label: "ArkEvil",                   ratio: "34", cat: "character" },
     { src: "images/oc.jpg",                    label: "OC 01",                   ratio: "34", cat: "character" },
     { src: "images/oc-1.jpg",                  label: "OC 02",                   ratio: "11", cat: "character" },
     { src: "images/oc-2.jpg",                  label: "OC 03",                   ratio: "34", cat: "character" },
     { src: "images/silen.jpg",                 label: "Silen",                     ratio: "34", cat: "character" },
     { src: "images/the-witch.jpg",             label: "The Witch",                 ratio: "34", cat: "character" },
-    { src: "images/kon.jpg",                   label: "Kon",                       ratio: "11", cat: "character" },
+    { src: "images/kon.jpg",                   label: "Kon, Chainsaw Man",        ratio: "11", cat: "fanart" },
     { src: "images/ilustracao-sem-titulo-1.jpg", label: "Espírito",                  ratio: "11", cat: "character" },
     { src: "images/geisha.jpg",                label: "Geisha",                    ratio: "34", cat: "character" },
     { src: "images/clair.jpg",                 label: "Clair",                     ratio: "11", cat: "character" },
@@ -250,7 +255,7 @@ const CONFIG = {
       navMenu: "Menu",
       featuredLabel: "Featured",
       galleryTitle: "Selected work",
-      filters: { all: "All", webtoon: "Webtoon", covers: "Covers", character: "Character design", fanart: "Fan art", sketches: "Sketches" },
+      filters: { all: "All", webtoon: "Webtoon", covers: "Covers", character: "Character design", fanart: "Fan art", sketches: "Sketches", collab: "Collabs" },
       projectsTitle: "Featured projects",
       openProject: "Open project",
       readWebtoon: "Read on Webtoon",
@@ -326,7 +331,7 @@ const CONFIG = {
       navMenu: "Menu",
       featuredLabel: "Destaque",
       galleryTitle: "Trabalho selecionado",
-      filters: { all: "Tudo", webtoon: "Webtoon", covers: "Capas", character: "Design de personagens", fanart: "Fan art", sketches: "Esboços" },
+      filters: { all: "Tudo", webtoon: "Webtoon", covers: "Capas", character: "Design de personagens", fanart: "Fan art", sketches: "Esboços", collab: "Colaborações" },
       projectsTitle: "Projetos em destaque",
       openProject: "Abrir projeto",
       readWebtoon: "Ler no Webtoon",
@@ -1409,6 +1414,11 @@ function artEl(item, full){
    Projectos (Set 2026: o Survival of Kings). A parede ja nao o destaca. */
 const featProj = () => CONFIG.projects.find(p => p.key === CONFIG.featured);
 
+/* a obra g entra no filtro c? A categoria e uma so; "collab" e uma marca a
+   mais, por isso uma colab de fan art aparece nos dois filtros. A parede e a
+   lightbox perguntam aqui, para nunca discordarem. */
+const noFiltro = (g, c) => c === 'all' || g.cat === c || (c === 'collab' && !!g.collab);
+
 /* uma moldura da parede ou do destaque: abre a obra i na lightbox */
 function frameEl(g, i){
   const fig = document.createElement('figure');
@@ -1447,7 +1457,7 @@ function applyFilter(){
      mostra sempre a categoria inteira */
   const cortar = activeCat === 'all' && !wallOpen && total > preview;
   $$('#wall .frame').forEach((f, i) => {
-    const hide = (activeCat !== 'all' && f.dataset.cat !== activeCat) || (cortar && i >= preview);
+    const hide = !noFiltro(CONFIG.artworks[i], activeCat) || (cortar && i >= preview);
     f.classList.toggle('hidden', hide);
     if(!hide) shown++;
   });
@@ -1501,6 +1511,8 @@ function renderText(){
 
   /* filters */
   const cats = [...new Set(CONFIG.artworks.map(g => g.cat))];
+  /* o chip das colabs so aparece se houver alguma, e fica no fim */
+  if(CONFIG.artworks.some(g => g.collab)) cats.push('collab');
   $('#filters').innerHTML = ['all', ...cats].map(c =>
     `<button class="chip ${c === activeCat ? 'on' : ''}" data-cat="${c}" aria-pressed="${c === activeCat}">${t.filters[c] || c}</button>`).join('');
   $$('#filters .chip').forEach(b => b.onclick = () => setFilter(b.dataset.cat));
@@ -1646,7 +1658,7 @@ function renderText(){
 /* ---------- lightbox ---------- */
 let lbIdx = 0;
 const visibleIdxs = () => CONFIG.artworks.map((g,i) => i)
-  .filter(i => activeCat === 'all' || CONFIG.artworks[i].cat === activeCat);
+  .filter(i => noFiltro(CONFIG.artworks[i], activeCat));
 let lbOpener = null;
 function openLb(i){
   lbOpener = document.activeElement;

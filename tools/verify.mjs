@@ -482,18 +482,31 @@ async function navegador(dir, etiqueta){
     const p = await nova(1440);
     await p.goto(base + 'index.html', { waitUntil: 'networkidle' });
     await p.waitForTimeout(600);
-    const r = await p.evaluate(() => {
+    const { o: r, querCol } = await p.evaluate(() => {
       const m = document.getElementById('wallMore'); if (m && m.offsetParent) m.click();
       const chips = [...document.querySelectorAll('#filters .chip')];
       const conta = () => [...document.querySelectorAll('.wall .frame')].filter(f => getComputedStyle(f).display !== 'none').length;
       const o = [];
-      for (const c of chips) { c.click(); o.push({ n: c.textContent.trim(), v: conta() }); }
+      const lb = () => { // quantas pecas a lightbox percorre com este filtro
+        const vistos = new Set(); const f = [...document.querySelectorAll('.wall .frame')].find(x => getComputedStyle(x).display !== 'none');
+        if (!f) return 0; f.click();
+        for (let k = 0; k < 200; k++) { const s = document.getElementById('lbCap').textContent; if (vistos.has(s)) break; vistos.add(s); document.getElementById('lbNext').click(); }
+        document.getElementById('lbClose').click(); return vistos.size;
+      };
+      for (const c of chips) { c.click(); o.push({ n: c.textContent.trim(), cat: c.dataset.cat, v: conta(), lb: c.dataset.cat === 'collab' ? lb() : null }); }
       chips[0].click();
-      return o;
+      return { o, querCol: CONFIG.artworks.filter(a => a.collab).length };
     });
-    const todos = r[0].v, soma = r.slice(1).reduce((a, x) => a + x.v, 0);
+    /* as categorias partem a parede sem sobras; "collab" e uma marca por cima
+       delas (uma colab de fan art esta nos dois), por isso fica fora da soma */
+    const partes = r.slice(1).filter(x => x.cat !== 'collab');
+    const todos = r[0].v, soma = partes.reduce((a, x) => a + x.v, 0);
     chk(todos === soma, 'os filtros somam o total da parede',
-      `${r.slice(1).map(x => x.v).join('+')} = ${soma} de ${todos}`);
+      `${partes.map(x => x.v).join('+')} = ${soma} de ${todos}`);
+    const col = r.find(x => x.cat === 'collab');
+    chk(querCol === 0 ? !col : (col && col.v === querCol && col.lb === querCol),
+      'o filtro das colaboracoes mostra todas as colabs, e a lightbox percorre so essas',
+      col ? `${col.v} na parede, ${col.lb} na lightbox, de ${querCol}` : 'sem colabs, sem chip');
     await p.close();
   }
 
