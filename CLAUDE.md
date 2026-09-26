@@ -142,9 +142,9 @@ this repo or the answer is a dozen lines of vanilla code.
 ## 4. Asset management
 
 ```
-images/           36 full-size JPEG (1600px longest side: 33 artworks + 3 project
-                  covers) + og-card.jpg, and 33 WebP
-images/thumb/     36 thumbnails (760px) + 35 WebP
+images/           39 full-size JPEG (1600px longest side: 36 artworks + 3 project
+                  covers) + og-card.jpg, and a WebP for most (see below)
+images/thumb/     39 thumbnails (760px) + WebP
 ```
 
 Four files have no WebP because WebP came out larger than the JPEG. That is
@@ -186,7 +186,7 @@ was **CLS 0.96**. The fix is reserving the space in CSS up front:
 
 The wall's reserve is a formula, not a constant, because the right height
 changes with viewport width: the sum of every piece's height-over-width ratio
-(**38.0** for these 33) times one column's width, over the column count, plus
+(**41.8** for these 36) times one column's width, over the column count, plus
 margins. Aim **1-5% under** the real height. Under-reserving settles by a few
 pixels; over-reserving opens a gap that closes again, which counts just the
 same. Result after all of it: 0.006 throttled, 0 unthrottled.
@@ -399,7 +399,7 @@ A Figma file will not know about the constraints in §9. Those outrank it.
 These are Frede's decisions. They outrank every design skill, every Figma file,
 and every suggestion in this document.
 
-1. **Fan art is never sold.** 10 of the 33 works are fan art (Chainsaw Man,
+1. **Fan art is never sold.** 10 of the 36 works are fan art (Chainsaw Man,
    Attack on Titan, Jujutsu Kaisen, One Piece) and carry `cat:"fanart"`. They may
    be displayed, never sold as prints or merch. Any commerce affordance filters
    to `character` and `sketches`. The ImageGallery JSON-LD deliberately attaches
