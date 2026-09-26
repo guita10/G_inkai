@@ -434,12 +434,13 @@ A Figma file will not know about the constraints in §9. Those outrank it.
 These are Frede's decisions. They outrank every design skill, every Figma file,
 and every suggestion in this document.
 
-1. **Fan art is never sold.** 13 of the 37 works in `CONFIG.artworks` are fan
+1. **Fan art is never sold.** 15 of the 37 works in `CONFIG.artworks` are fan
    art (Chainsaw Man, including Kon, the Fox Devil; Attack on Titan; Jujutsu
-   Kaisen; One Piece, including the One Piece Deck's Ace of Hearts; and Dragon
-   Ball, the Duelo collab) and carry `cat:"fanart"`. Fan art means *not an
-   original*, whatever the label says: Kon and Duelo sat in Character design
-   until a review by eye in September 2026. A collab is marked with
+   Kaisen; One Piece, including the One Piece Deck's Ace of Hearts; Dragon
+   Ball, the Duelo collab; and Clair and ArkEvil, confirmed by Frede) and carry
+   `cat:"fanart"`. Fan art means *not an original*, whatever the label says:
+   Kon, Duelo, Clair and ArkEvil sat in Character design until a review in
+   September 2026. A collab is marked with
    `collab: true` **on top of** its category, never instead of it, so a fan-art
    collab stays fan art; the "Collabs" chip reads that flag. The whole One
    Piece Deck project is fan art; its other cards are on its page only. They may

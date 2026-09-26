@@ -278,7 +278,7 @@ inert. Do not add it to Playfair and assume it took.
 
 ### Business and legal — these outrank every taste rule above
 
-- **Fan art is never sold.** 13 of 37 works are fan art. A collab is a flag on
+- **Fan art is never sold.** 15 of 37 works are fan art. A collab is a flag on
   top of the category (the "Collabs" chip), so a fan-art collab stays fan art. They display; they
   carry no price, no cart, no print or merch affordance, and no `offer` in
   structured data. Any commerce element filters to `character` and `sketches`.
