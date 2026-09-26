@@ -170,15 +170,21 @@ const CONFIG = {
     { src: "images/yuta-fanart.jpg",           label: "Yuta, Jujutsu Kaisen",     ratio: "34", cat: "fanart" },
     { src: "images/nami-30x40.jpg",            label: "Nami, One Piece",          ratio: "34", cat: "fanart" },
     { src: "images/ilustracao-sem-titulo.jpg", label: "Tony Tony Chopper, card",  ratio: "43", cat: "fanart" },
+    { src: "images/op-deck-nami.jpg",          label: "Nami, One Piece Deck",     ratio: "34", cat: "fanart" },
+    { src: "images/op-deck-robin.jpg",         label: "Robin, One Piece Deck",    ratio: "34", cat: "fanart" },
+    { src: "images/op-deck-yamato.jpg",        label: "Yamato, One Piece Deck",   ratio: "34", cat: "fanart" },
+    { src: "images/op-deck-hancock.jpg",       label: "Boa Hancock, One Piece Deck", ratio: "34", cat: "fanart" },
     { src: "images/dante.jpg",                 label: "Dante",                     ratio: "11", cat: "fanart" },
     { src: "images/lucy.jpg",                  label: "Lucy",                      ratio: "11", cat: "fanart" },
   ],
 
-  /* 28 peças do pacote original (era 414 MB → 5,5 MB), mais as 8 de Set 2026:
-     a Angela e sete personagens do Survival of Kings. */
+  /* 28 peças do pacote original (era 414 MB → 5,5 MB), mais as 12 de Set 2026:
+     a Angela, sete personagens do Survival of Kings e as quatro damas do
+     One Piece Deck (fan art). */
 
   projects: [
-    /* Os tres projectos ja tem arte. Se algum dia um src ficar "", o cartao volta
+    /* Os quatro projectos ja tem arte. O One Piece Deck e fan art (§9.1):
+       mostra-se, nunca se vende — nem as cartas, nem prints delas. Se algum dia um src ficar "", o cartao volta
        a mostrar a placa tipografica de proposito — nunca uma ilustracao que nao
        seja do projecto. Para meter arte nova:
          python3 tools/add-artwork.py <ficheiro> --slug proj-xxx
@@ -187,6 +193,8 @@ const CONFIG = {
       gallery: ["images/arti.jpg", "images/kei.jpg", "images/edan.jpg", "images/lumi.jpg", "images/masami.jpg", "images/yakura.jpg", "images/kindo.jpg"] },
     { src: "images/proj-tr.jpg",   label: "Tokyo Revengers", ratio: "34", key: "tr",   plate: "TR"  },
     { src: "images/proj-pamp.jpg", label: "PAMP",            ratio: "34", key: "pamp", plate: "P"   },
+    { src: "images/op-deck-nami.jpg", label: "One Piece Deck", ratio: "34", key: "deck", plate: "Q",
+      gallery: ["images/op-deck-robin.jpg", "images/op-deck-yamato.jpg", "images/op-deck-hancock.jpg"] },
   ],
 
   /* ---------- TIMELINE ----------
@@ -220,6 +228,7 @@ const CONFIG = {
         sok:  { kicker: "Webtoon series", title: "Survival of Kings", desc: "Ongoing webtoon / graphic novel, co-created with writer Reeeborn. Ink-style panels and vertical-scroll storytelling." },
         tr:   { kicker: "Monthly, with Distrito Manga", title: "Tokyo Revengers, covers reimagined", desc: "Each volume cover redrawn in the original format, with faces from the anime and manga community standing in for the characters. A new one goes out every month, alongside the publisher's releases." },
         pamp: { kicker: "Visual identity", title: "PAMP: Prémios Anime Manga Portugal", desc: "Full visual identity: key art, logo lock-ups and event graphics." },
+        deck: { kicker: "Fan art, playing cards", title: "One Piece Deck", desc: "One Piece characters drawn as playing cards. These are the four queens: Nami, Robin, Yamato and Boa Hancock." },
       },
       tlTitle: "Timeline",
       tlUpcoming: "Upcoming", tlNext: "Next up",
@@ -293,6 +302,7 @@ const CONFIG = {
         sok:  { kicker: "Série webtoon", title: "Survival of Kings", desc: "Webtoon / graphic novel em curso, co-criado com o escritor Reeeborn. Painéis a tinta e narrativa em scroll vertical." },
         tr:   { kicker: "Mensal, com a Distrito Manga", title: "Tokyo Revengers, capas reinterpretadas", desc: "Cada capa de volume refeita no formato original, com figuras da comunidade anime e manga no lugar das personagens. Sai uma por mês, a acompanhar os lançamentos da editora." },
         pamp: { kicker: "Identidade visual", title: "PAMP: Prémios Anime Manga Portugal", desc: "Identidade visual completa: key art, logótipos e grafismo de evento." },
+        deck: { kicker: "Fan art, cartas de jogar", title: "One Piece Deck", desc: "Personagens de One Piece desenhadas como cartas de jogar. Estas são as quatro damas: Nami, Robin, Yamato e Boa Hancock." },
       },
       tlTitle: "Percurso",
       tlUpcoming: "Em breve", tlNext: "A seguir",
@@ -579,7 +589,14 @@ header{
 .hero-grid{display:grid;grid-template-columns:minmax(0,.66fr) minmax(0,1fr);gap:clamp(30px,4vw,56px);align-items:center}
 /* No HTML a obra vem primeiro (ver o comentario no markup). Aqui troca-se a
    ordem das colunas para o texto ficar a esquerda e a obra a direita. */
-.hero-copy{order:1}
+.hero-copy{order:1;
+  /* A altura toda do bloco, reservada antes de ele existir. Numa ligacao
+     lenta o browser pinta a meio do HTML: ja tem o h1 mas ainda nao criou a
+     frase, os botoes e a lista. Como o bloco esta centrado ao lado da obra,
+     cada linha que chegava puxava-o para cima (0,013 de CLS, em duas cargas
+     de tres). Medido sem JS: h1 (2,24em do seu tamanho) + frase 104 + botoes
+     44 + lista 131 = +279px. Fica 274, um pouco abaixo, como manda o §4. */
+  min-height:calc(2.24 * clamp(1.8rem,3.1vw,2.85rem) + 274px)}
 .hero-art{order:2}
 /* O h1 encolheu de clamp(3.2rem,9vw,7rem) para isto. Com o "Ink first" fora,
    o titulo deixou de ser o cartaz e passou a ser informacao: diz o que ele
@@ -669,7 +686,7 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
    escrevas a mao — junta a arte e corre o script. */
 .wall{
   --wall-w:calc(min(1240px,100vw) - 52px);
-  min-height:calc(10.45 * (var(--wall-w) - 42px) / 4 + 126px);
+  min-height:calc(11.85 * (var(--wall-w) - 42px) / 4 + 140px);
 }
 .frame{
   break-inside:avoid;margin:0 0 14px;display:block;width:100%;
@@ -745,7 +762,9 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
    ser cortada), por isso o corpo de cada cartao comeca a alturas diferentes.
    O que se pode alinhar e o fim — os cartoes acabam ao mesmo nivel e os tres
    "Open project" ficam na mesma linha, que e o que se le como ordem. */
-.projects{display:grid;grid-template-columns:1.35fr 1fr .85fr;gap:20px;align-items:stretch}
+/* quatro projectos: mais uma coluna na mesma fila, ainda com larguras
+   desiguais. Duas filas de dois punham a seccao com o dobro da altura. */
+.projects{display:grid;grid-template-columns:1.3fr 1fr .85fr 1fr;gap:20px;align-items:stretch}
 .proj{
   text-decoration:none;color:inherit;background:var(--raise);border:1px solid var(--hair);
   display:flex;flex-direction:column;transition:border-color .3s,transform .3s;
@@ -978,7 +997,7 @@ footer{font-family:var(--f-ui);
 
 /* ================= RESPONSIVE ================= */
 @media (max-width:980px){
-  .wall{column-count:3;min-height:calc(13.93 * (var(--wall-w) - 28px) / 3 + 168px)}
+  .wall{column-count:3;min-height:calc(15.81 * (var(--wall-w) - 28px) / 3 + 187px)}
   .hero-grid{grid-template-columns:1fr;gap:34px;align-items:start}
   /* Numa coluna so nao ha nada a trocar: a ordem do HTML (obra, depois texto)
      e exactamente a que se quer ver. Antes a obra vinha por baixo do titulo,
@@ -996,7 +1015,7 @@ footer{font-family:var(--f-ui);
 }
 @media (max-width:620px){
   .bar{min-height:64px}
-  .wall{column-count:2;min-height:calc(20.9 * (var(--wall-w) - 14px) / 2 + 252px)}
+  .wall{column-count:2;min-height:calc(23.71 * (var(--wall-w) - 14px) / 2 + 280px)}
   .links{display:none}
   .knobs{margin-left:auto}
   .nav-toggle{display:block}
@@ -1235,7 +1254,7 @@ const srcOf = s => /^https?:\/\//i.test(s) ? s : (CONFIG.imageBase || '') + s;
 /* image that degrades to a labelled placeholder when the file is missing.
    full=false  → serve images/thumb/… (760px) — grelha, tira, cartões
    full=true   → serve o ficheiro grande (1600px) — só no lightbox            */
-const DIMS = {"aki.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"angela.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"arkevil-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"arti.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"clair.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"collab-mira-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"collab.jpg":{"w":1600,"h":1280,"tw":760,"th":608},"dante.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"edan.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"estudo-luz.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"even-yeager.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"final-aot-season-4.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"geisha.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"ilustracao-sem-titulo-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"ilustracao-sem-titulo.jpg":{"w":1600,"h":1067,"tw":760,"th":507},"italy.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kei.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kindo.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kon.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"lucy.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"lumi.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"makima.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"masami.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"mira-starborn.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"nami-30x40.jpg":{"w":1200,"h":1600,"tw":570,"th":760},"oc-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"oc-2.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"oc.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"pochita.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"proj-pamp.jpg":{"w":1553,"h":1600,"tw":738,"th":760},"proj-sok.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"proj-tr.jpg":{"w":1066,"h":1600,"tw":507,"th":760},"shocked.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"silen.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"spain.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"surpresa.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"the-witch.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"yakura.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"yuta-fanart.jpg":{"w":1280,"h":1600,"tw":608,"th":760}};
+const DIMS = {"aki.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"angela.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"arkevil-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"arti.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"clair.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"collab-mira-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"collab.jpg":{"w":1600,"h":1280,"tw":760,"th":608},"dante.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"edan.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"estudo-luz.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"even-yeager.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"final-aot-season-4.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"geisha.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"ilustracao-sem-titulo-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"ilustracao-sem-titulo.jpg":{"w":1600,"h":1067,"tw":760,"th":507},"italy.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kei.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kindo.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kon.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"lucy.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"lumi.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"makima.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"masami.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"mira-starborn.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"nami-30x40.jpg":{"w":1200,"h":1600,"tw":570,"th":760},"oc-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"oc-2.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"oc.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"op-deck-hancock.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-nami.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-robin.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-yamato.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"pochita.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"proj-pamp.jpg":{"w":1553,"h":1600,"tw":738,"th":760},"proj-sok.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"proj-tr.jpg":{"w":1066,"h":1600,"tw":507,"th":760},"shocked.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"silen.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"spain.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"surpresa.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"the-witch.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"yakura.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"yuta-fanart.jpg":{"w":1280,"h":1600,"tw":608,"th":760}};
 /* Proporcao a usar na moldura. Sai do mapa DIMS, ou seja dos pixeis reais do
    ficheiro. O campo `ratio` do CONFIG fica so como rede: arte nova que ainda
    nao passou pelo tools/dims.py nao tem entrada em DIMS e cai no molde antigo. */

@@ -39,6 +39,14 @@ const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const RAPIDO = process.argv.includes('--rapido');
 const SHOP = process.argv.includes('--shop-aberto');
 
+/* as chaves dos projectos saem do proprio CONFIG: um projecto novo entra no
+   teste sem ninguem se lembrar de o acrescentar aqui */
+const CHAVES = (() => {
+  const s = readFileSync(join(ROOT, 'projeto.html'), 'utf8');
+  const i = s.indexOf('const CONFIG'), j = s.indexOf('</script>', i);
+  return new Function(`${s.slice(i, j)}; return CONFIG;`)().projects.map(p => p.key);
+})();
+
 /* as paginas que vao para o ar */
 const PAGINAS = ['index.html', 'projeto.html', 'loja.html', '404.html'];
 
@@ -440,7 +448,7 @@ async function navegador(dir, etiqueta){
     let serieSok = 0;
     for (const loc of ['en-US', 'pt-PT']) {
       const p = await nova(1100, { locale: loc });
-      for (const k of ['sok', 'tr', 'pamp', 'naoexiste', '']) {
+      for (const k of [...CHAVES, 'naoexiste', '']) {
         await p.goto(`${base}projeto.html?p=${k}`, { waitUntil: 'networkidle' });
         /* a serie inteira, nao so a capa: as outras sao lazy e sem as forcar
            reportavam naturalWidth 0 e passavam por engano */
@@ -453,14 +461,14 @@ async function navegador(dir, etiqueta){
                    robots: document.querySelector('meta[name="robots"]').content };
         });
         if (k === 'sok') serieSok = r.n;
-        const real = ['sok', 'tr', 'pamp'].includes(k);
+        const real = CHAVES.includes(k);
         if (!r.h1) maus.push(`${loc} ${k}: sem titulo`);
         if (real && r.img === false) maus.push(`${loc} ${k}: imagem partida`);
         if (!real && !r.robots.includes('noindex')) maus.push(`${loc} ${k}: devia ser noindex`);
       }
       await p.close();
     }
-    chk(maus.length === 0, 'projeto.html nas 3 chaves + invalida + vazia, EN e PT, a serie toda carregada',
+    chk(maus.length === 0, `projeto.html nas ${CHAVES.length} chaves + invalida + vazia, EN e PT, a serie toda carregada`,
       maus.join(' ') || `Survival of Kings: ${serieSok} imagens`);
   }
 

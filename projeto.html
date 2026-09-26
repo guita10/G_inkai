@@ -46,7 +46,7 @@ const CONFIG = {
   realName: "Frederico Guita",
 
   /* ---------- PROJECTS ----------
-     Os tres ja tem arte. Se algum dia um src ficar "", a pagina volta
+     Os quatro ja tem arte. Se algum dia um src ficar "", a pagina volta
      a mostrar a placa tipografica de proposito — nunca uma ilustracao
      que nao seja do projecto. Para meter arte nova:
        python3 tools/add-artwork.py <ficheiro> --slug proj-xxx
@@ -65,6 +65,8 @@ const CONFIG = {
       gallery: ["images/arti.jpg", "images/kei.jpg", "images/edan.jpg", "images/lumi.jpg", "images/masami.jpg", "images/yakura.jpg", "images/kindo.jpg"] },
     { src: "images/proj-tr.jpg", label: "Tokyo Revengers", ratio: "34", key: "tr", plate: "TR" },
     { src: "images/proj-pamp.jpg", label: "PAMP", ratio: "34", key: "pamp", plate: "P" },
+    { src: "images/op-deck-nami.jpg", label: "One Piece Deck", ratio: "34", key: "deck", plate: "Q",
+      gallery: ["images/op-deck-robin.jpg", "images/op-deck-yamato.jpg", "images/op-deck-hancock.jpg"] },
   ],
 
   /* ---------- COPY DOS PROJECTOS (EN / PT) ----------
@@ -76,6 +78,7 @@ const CONFIG = {
         sok: { kicker: "Webtoon series", title: "Survival of Kings", desc: "Ongoing webtoon / graphic novel, co-created with writer Reeeborn. Ink-style panels and vertical-scroll storytelling." },
         tr: { kicker: "Monthly, with Distrito Manga", title: "Tokyo Revengers, covers reimagined", desc: "Each volume cover redrawn in the original format, with faces from the anime and manga community standing in for the characters. A new one goes out every month, alongside the publisher's releases." },
         pamp: { kicker: "Visual identity", title: "PAMP: Prémios Anime Manga Portugal", desc: "Full visual identity: key art, logo lock-ups and event graphics." },
+        deck: { kicker: "Fan art, playing cards", title: "One Piece Deck", desc: "One Piece characters drawn as playing cards. These are the four queens: Nami, Robin, Yamato and Boa Hancock." },
       },
     },
     pt: {
@@ -83,6 +86,7 @@ const CONFIG = {
         sok: { kicker: "Série webtoon", title: "Survival of Kings", desc: "Webtoon / graphic novel em curso, co-criado com o escritor Reeeborn. Painéis a tinta e narrativa em scroll vertical." },
         tr: { kicker: "Mensal, com a Distrito Manga", title: "Tokyo Revengers, capas reinterpretadas", desc: "Cada capa de volume refeita no formato original, com figuras da comunidade anime e manga no lugar das personagens. Sai uma por mês, a acompanhar os lançamentos da editora." },
         pamp: { kicker: "Identidade visual", title: "PAMP: Prémios Anime Manga Portugal", desc: "Identidade visual completa: key art, logótipos e grafismo de evento." },
+        deck: { kicker: "Fan art, cartas de jogar", title: "One Piece Deck", desc: "Personagens de One Piece desenhadas como cartas de jogar. Estas são as quatro damas: Nami, Robin, Yamato e Boa Hancock." },
       },
     },
   },
@@ -207,16 +211,20 @@ const WEBP_OK = (() => {
    pixeis verdadeiros. Troca a arte de um projecto e corre o script — nao
    escrevas estes numeros a mao. */
 const PROJ_DIMS = {
-  "proj-sok.jpg":  {w:1280, h:1600},
-  "arti.jpg":      {w:1280, h:1600},
-  "kei.jpg":       {w:1280, h:1600},
-  "edan.jpg":      {w:1280, h:1600},
-  "lumi.jpg":      {w:1280, h:1600},
-  "masami.jpg":    {w:1280, h:1600},
-  "yakura.jpg":    {w:1280, h:1600},
-  "kindo.jpg":     {w:1280, h:1600},
-  "proj-tr.jpg":   {w:1066, h:1600},
-  "proj-pamp.jpg": {w:1553, h:1600},
+  "proj-sok.jpg":        {w:1280, h:1600},
+  "arti.jpg":            {w:1280, h:1600},
+  "kei.jpg":             {w:1280, h:1600},
+  "edan.jpg":            {w:1280, h:1600},
+  "lumi.jpg":            {w:1280, h:1600},
+  "masami.jpg":          {w:1280, h:1600},
+  "yakura.jpg":          {w:1280, h:1600},
+  "kindo.jpg":           {w:1280, h:1600},
+  "proj-tr.jpg":         {w:1066, h:1600},
+  "proj-pamp.jpg":       {w:1553, h:1600},
+  "op-deck-nami.jpg":    {w:1139, h:1600},
+  "op-deck-robin.jpg":   {w:1139, h:1600},
+  "op-deck-yamato.jpg":  {w:1139, h:1600},
+  "op-deck-hancock.jpg": {w:1139, h:1600},
 };
 
 /* Uma imagem da serie. Tal como no index: serve-se .webp a quem o suporta e
