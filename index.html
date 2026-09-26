@@ -141,23 +141,15 @@ const CONFIG = {
      corre o tools/dims.py: a altura reservada da parede e calculada para
      estas pecas, nao para todas. */
   wallPreview: 12,
-  /* O projecto em destaque no topo do "Trabalho selecionado": a capa grande,
-     as pecas do gallery dele a volta, e um cartao com o titulo e os links.
-     Essas pecas SAEM da parede de baixo (nao aparecem duas vezes) mas
-     continuam no artworks: e de la que a lightbox e o JSON-LD as leem.
-     Pedido do Frede, Set 2026: destacar o Survival of Kings. Para tirar o
-     destaque, featured: "". Depois de mudar corre o tools/dims.py. */
+  /* O projecto em destaque: ganha o cartao grande, a largura toda, no topo
+     dos Projectos, com a capa, o texto, as pecas da serie e os links. Os
+     outros projectos ficam numa fila por baixo. A parede do Trabalho NAO o
+     destaca: e uma grelha igual para todas as pecas (pedido do Frede, Set
+     2026). Para tirar o destaque, featured: "". */
   featured: "sok",
   hero: { src: "images/oc.jpg", label: "OC 01", ratio: "34" },
   artworks: [
     { src: "images/angela.jpg",                label: "Angela",                    ratio: "34", cat: "character" },
-    { src: "images/kei.jpg",                   label: "Kei, Survival of Kings",   ratio: "34", cat: "character" },
-    { src: "images/edan.jpg",                  label: "Edan, Survival of Kings",  ratio: "34", cat: "character" },
-    { src: "images/lumi.jpg",                  label: "Lumi, Survival of Kings",  ratio: "34", cat: "character" },
-    { src: "images/masami.jpg",                label: "Masami, Survival of Kings", ratio: "34", cat: "character" },
-    { src: "images/arti.jpg",                  label: "Arti, Survival of Kings",  ratio: "34", cat: "character" },
-    { src: "images/yakura.jpg",                label: "Yakura, Survival of Kings", ratio: "34", cat: "character" },
-    { src: "images/kindo.jpg",                 label: "Kindo, Survival of Kings", ratio: "34", cat: "character" },
     { src: "images/mira-starborn.jpg",         label: "Mira Starborn",             ratio: "11", cat: "character" },
     { src: "images/collab-mira-final.jpg",     label: "Mira, collab",             ratio: "34", cat: "character" },
     { src: "images/collab.jpg",                label: "Duelo, collab",            ratio: "43", cat: "character" },
@@ -173,6 +165,16 @@ const CONFIG = {
     { src: "images/clair.jpg",                 label: "Clair",                     ratio: "11", cat: "character" },
     { src: "images/italy.jpg",                 label: "Italy",                     ratio: "34", cat: "character" },
     { src: "images/spain.jpg",                 label: "Spain",                     ratio: "34", cat: "character" },
+    /* o elenco do Survival of Kings: depois das outras personagens, de
+       proposito. O projecto ja tem o cartao grande nos Projectos; a parede
+       e igual para todas (pedido do Frede, Set 2026). */
+    { src: "images/arti.jpg",                  label: "Arti, Survival of Kings",  ratio: "34", cat: "character" },
+    { src: "images/kei.jpg",                   label: "Kei, Survival of Kings",   ratio: "34", cat: "character" },
+    { src: "images/edan.jpg",                  label: "Edan, Survival of Kings",  ratio: "34", cat: "character" },
+    { src: "images/lumi.jpg",                  label: "Lumi, Survival of Kings",  ratio: "34", cat: "character" },
+    { src: "images/masami.jpg",                label: "Masami, Survival of Kings", ratio: "34", cat: "character" },
+    { src: "images/yakura.jpg",                label: "Yakura, Survival of Kings", ratio: "34", cat: "character" },
+    { src: "images/kindo.jpg",                 label: "Kindo, Survival of Kings", ratio: "34", cat: "character" },
     { src: "images/estudo-luz.jpg",            label: "Estudo de luz",             ratio: "34", cat: "sketches" },
     { src: "images/shocked.jpg",               label: "Shocked",                   ratio: "34", cat: "sketches" },
     { src: "images/surpresa.jpg",              label: "Surpresa",                  ratio: "11", cat: "sketches" },
@@ -209,12 +211,12 @@ const CONFIG = {
       gallery: ["images/arti.jpg", "images/kei.jpg", "images/edan.jpg", "images/lumi.jpg", "images/masami.jpg", "images/yakura.jpg", "images/kindo.jpg"] },
     { src: "images/proj-tr.jpg",   label: "Tokyo Revengers", ratio: "34", key: "tr",   plate: "TR"  },
     { src: "images/proj-pamp.jpg", label: "PAMP",            ratio: "34", key: "pamp", plate: "P"   },
-    { src: "images/op-deck-nami.jpg", label: "One Piece Deck", ratio: "34", key: "deck", plate: "Q",
-      gallery: ["images/op-deck-back.jpg", "images/op-deck-robin.jpg", "images/op-deck-yamato.jpg", "images/op-deck-hancock.jpg",
+    { src: "images/op-deck-ace-hearts.jpg", label: "One Piece Deck", ratio: "34", key: "deck", plate: "Q",
+      gallery: ["images/op-deck-back.jpg", "images/op-deck-nami.jpg", "images/op-deck-robin.jpg", "images/op-deck-yamato.jpg", "images/op-deck-hancock.jpg",
                 "images/op-deck-roger.jpg", "images/op-deck-luffy.jpg", "images/op-deck-blackbeard.jpg", "images/op-deck-shanks.jpg",
                 "images/op-deck-crocodile.jpg", "images/op-deck-katakuri.jpg", "images/op-deck-doflamingo.jpg", "images/op-deck-kaido.jpg",
                 "images/op-deck-zoro.jpg", "images/op-deck-buggy.jpg",
-                "images/op-deck-ace-clubs.jpg", "images/op-deck-ace-spades.jpg", "images/op-deck-ace-hearts.jpg", "images/op-deck-ace-diamonds.jpg",
+                "images/op-deck-ace-clubs.jpg", "images/op-deck-ace-spades.jpg", "images/op-deck-ace-diamonds.jpg",
                 "images/op-deck-2-clubs.jpg", "images/op-deck-2-spades.jpg", "images/op-deck-2-hearts.jpg", "images/op-deck-2-diamonds.jpg"] },
   ],
 
@@ -762,32 +764,6 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 .frame .meta .n{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#6B7BFF;
   font-variant-numeric:tabular-nums}
 .frame.hidden{display:none}
-/* ---- O DESTAQUE (CONFIG.featured) ----
-   Quatro colunas, as mesmas molduras 4:5 da parede. A capa ocupa dois por
-   dois; as pecas do projecto enchem a volta; o ultimo lugar e o cartao com o
-   titulo e os links. Com as sete personagens do Survival of Kings da tres
-   filas certas: 4 (capa) + 7 + 1 = 12 lugares.
-   --feat-rows e GERADO pelo tools/dims.py, pela mesma razao da parede. */
-.featured{--fcols:4;--feat-rows:3;
-  --wall-w:calc(min(1240px,100vw) - 52px);
-  display:grid;grid-template-columns:repeat(var(--fcols),minmax(0,1fr));gap:14px;
-  margin:6px 0 clamp(40px,6vw,64px);
-  min-height:calc(var(--feat-rows) * 1.25 * (var(--wall-w) - (var(--fcols) - 1) * 14px) / var(--fcols) + (var(--feat-rows) - 1) * 14px)}
-/* sem :empty aqui: antes do JS correr o bloco esta vazio e :empty tirava-lhe a
-   altura reservada. Quando nao ha destaque o JS poe-lhe hidden. */
-.featured[hidden]{display:none}
-.feat-cover{grid-column:span 2;grid-row:span 2;display:block;position:relative;overflow:hidden;
-  border:1px solid var(--hair);background:var(--raise);transition:border-color .3s}
-.feat-cover:hover{border-color:var(--royal-lift)}
-.feat-cover img{width:100%;height:100%;object-fit:contain}
-.feat-card{aspect-ratio:4/5;display:flex;flex-direction:column;justify-content:flex-end;gap:10px;
-  padding:clamp(14px,2vw,24px);border:1px solid var(--hair);border-top:2px solid var(--royal);overflow:hidden}
-.feat-card .k{font-family:var(--f-ui);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--royal-lift)}
-.feat-card h3{font-size:clamp(1.15rem,2vw,1.6rem)}
-.feat-card p{font-size:.84rem;color:var(--bone-dim)}
-.feat-card a{font-family:var(--f-ui);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--bone-dim);text-decoration:none;padding:6px 0;transition:color .2s ease}
-.feat-card a:hover{color:var(--bone)}
 /* Nada encontrado com este filtro. Antes a parede ficava simplesmente vazia. */
 .wall-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .wall-bar .filters{margin-bottom:0}
@@ -821,7 +797,27 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
    "Open project" ficam na mesma linha, que e o que se le como ordem. */
 /* quatro projectos: mais uma coluna na mesma fila, ainda com larguras
    desiguais. Duas filas de dois punham a seccao com o dobro da altura. */
-.projects{display:grid;grid-template-columns:1.3fr 1fr .85fr 1fr;gap:20px;align-items:stretch}
+.projects{display:grid;grid-template-columns:1.25fr 1fr .9fr;gap:20px;align-items:stretch}
+/* O PROJECTO EM DESTAQUE (CONFIG.featured) — pedido do Frede, Set 2026.
+   A capa a esquerda, o texto a direita, e por baixo do texto as pecas da
+   serie numa tira: o que se ve aqui e o que se encontra ao abrir. O traco
+   Royal por cima e o mesmo sinal de "isto e o principal" do resto do site.
+   Linhas, nao sombras. A altura fica reservada (min-height) porque o cartao
+   e escrito pelo JS e esta logo a seguir ao hero. */
+.proj-feat{margin-bottom:20px;min-height:calc(.5 * (min(1240px,100vw) - 52px))}
+.proj-feat[hidden]{display:none}
+.pf{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);
+  background:var(--raise);border:1px solid var(--hair);border-top:2px solid var(--royal)}
+.pf-art{display:block;border-right:1px solid var(--hair)}
+.pf-art img{width:100%;height:auto;display:block}
+.pf-body{padding:clamp(22px,3.4vw,44px);display:flex;flex-direction:column;justify-content:center;gap:14px}
+.pf .k{font-family:var(--f-ui);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--royal-raise)}
+.pf h3{font-size:clamp(1.7rem,3.2vw,2.6rem)}
+.pf h3 a{text-decoration:none}
+.pf p{color:var(--bone-dim);max-width:34rem}
+.pf-strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-top:6px}
+.pf-strip img{width:100%;height:auto;aspect-ratio:4/5;object-fit:contain;background:var(--raise-2);border:1px solid var(--hair)}
+.pf-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
 .proj{
   text-decoration:none;color:inherit;background:var(--raise);border:1px solid var(--hair);
   display:flex;flex-direction:column;transition:border-color .3s,transform .3s;
@@ -1032,7 +1028,7 @@ footer{font-family:var(--f-ui);
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .rv{opacity:1;transform:none;transition:none}
-  .proj,.frame,.btn,.mail,.feat-cover,.feat-card a{transition:none}
+  .proj,.frame,.btn,.mail{transition:none}
   /* faltavam os controlos: knob (tema/idioma), chips de filtro e botoes da
      lightbox. Todos eram transicoes de cor, mas o .btn ao lado tambem so muda
      cores e ja estava desligado — ou vale para todos ou nao vale para nenhum. */
@@ -1058,8 +1054,6 @@ footer{font-family:var(--f-ui);
 /* ================= RESPONSIVE ================= */
 @media (max-width:980px){
   .wall{--cols:3;--wall-rows:4}
-  /* o texto do cartao nao cabe numa coluna estreita: fica titulo e links */
-  .feat-card p{display:none}
   .hero-grid{grid-template-columns:1fr;gap:34px;align-items:start}
   /* Numa coluna so nao ha nada a trocar: a ordem do HTML (obra, depois texto)
      e exactamente a que se quer ver. Antes a obra vinha por baixo do titulo,
@@ -1071,8 +1065,11 @@ footer{font-family:var(--f-ui);
      fazer ocupar um ecra inteiro de altura (a 4/5, 560 de largura sao 700 de
      alto). */
   .hero-art{max-width:560px}
-  /* dois a dois: um so por linha punha a seccao com quase 3000px */
-  .projects{grid-template-columns:repeat(2,1fr)}
+  /* os tres cartoes lado a lado; um so por linha punha a seccao enorme */
+  .projects{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .proj-feat{min-height:calc(.56 * (min(1240px,100vw) - 52px))}
+  .pf{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
+  .pf-strip{grid-template-columns:repeat(4,minmax(0,1fr))}
   .about{grid-template-columns:1fr;gap:38px}
   .comm-band{grid-template-columns:1fr}
 }
@@ -1087,9 +1084,11 @@ footer{font-family:var(--f-ui);
     margin:0 -26px;padding:0 26px 10px;gap:14px;scrollbar-width:none}
   .projects::-webkit-scrollbar{display:none}
   .proj{scroll-snap-align:start}
+  .proj-feat{min-height:calc(1.25 * (100vw - 52px))}
+  .pf{grid-template-columns:1fr}
+  .pf-art{border-right:0;border-bottom:1px solid var(--hair)}
   .bar{min-height:64px}
   .wall{--cols:2;--wall-rows:6}
-  .featured{--fcols:2;--feat-rows:6}
   .links{display:none}
   .knobs{margin-left:auto}
   .nav-toggle{display:block}
@@ -1141,8 +1140,8 @@ footer{font-family:var(--f-ui);
       <b id="brandName"></b>
     </a>
     <nav class="links" aria-label="Main">
-      <a href="#work"     data-t="navWork"></a>
       <a href="#projects" data-t="navProjects"></a>
+      <a href="#work"     data-t="navWork"></a>
       <!-- data-shop-link e nao um id: o painel do menu movel clona estes
            links com cloneNode(true), que copia o id tal e qual. Com id havia
            dois elementos #navShop no documento, o querySelector so apanhava um
@@ -1203,6 +1202,19 @@ footer{font-family:var(--f-ui);
     </div>
   </div>
 
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="head rv">
+      <div>
+        <h2 class="sec-title rv" data-t="projectsTitle"></h2>
+      </div>
+    </div>
+    <!-- o projecto em destaque (CONFIG.featured) a largura toda, e os
+         outros numa fila por baixo -->
+    <div class="proj-feat" id="projFeat"></div>
+    <div class="projects" id="projGrid"></div>
+  </section>
+
   <!-- WORK -->
   <section id="work">
     <div class="head rv">
@@ -1210,8 +1222,6 @@ footer{font-family:var(--f-ui);
         <h2 class="sec-title rv" data-t="galleryTitle"></h2>
       </div>
     </div>
-    <!-- o projecto em destaque (CONFIG.featured): capa, pecas e cartao -->
-    <div class="featured" id="featured"></div>
     <!-- a contagem fica junto dos filtros: conta a parede, nao o destaque, e
          por baixo do titulo parecia contar tudo -->
     <div class="wall-bar rv">
@@ -1224,16 +1234,6 @@ footer{font-family:var(--f-ui);
     <div class="wall-more" id="wallMoreRow" hidden>
       <button class="btn" id="wallMore" type="button"></button>
     </div>
-  </section>
-
-  <!-- PROJECTS -->
-  <section id="projects">
-    <div class="head rv">
-      <div>
-        <h2 class="sec-title rv" data-t="projectsTitle"></h2>
-      </div>
-    </div>
-    <div class="projects" id="projGrid"></div>
   </section>
 
   <!-- COMMISSIONS — uma faixa. Os formatos, a loja e o pedido por email
@@ -1398,11 +1398,10 @@ function artEl(item, full){
   return img;
 }
 
-/* ---------- o destaque ---------- */
-/* As pecas que o destaque mostra: o gallery do projecto em CONFIG.featured.
-   A parede de baixo salta estas, para nada aparecer duas vezes. */
+/* ---------- o projecto em destaque ----------
+   CONFIG.featured escolhe o projecto que ganha o cartao grande no topo dos
+   Projectos (Set 2026: o Survival of Kings). A parede ja nao o destaca. */
 const featProj = () => CONFIG.projects.find(p => p.key === CONFIG.featured);
-const featSrcs = () => { const p = featProj(); return new Set(p ? (p.gallery || []) : []); };
 
 /* uma moldura da parede ou do destaque: abre a obra i na lightbox */
 function frameEl(g, i){
@@ -1419,48 +1418,10 @@ function frameEl(g, i){
   return fig;
 }
 
-/* A capa e as pecas nao dependem da lingua; o cartao sim, por isso e o
-   renderText que o escreve (featCard). */
-function renderFeatured(){
-  const box = $('#featured'); box.innerHTML = '';
-  const p = featProj();
-  box.hidden = !p;
-  if(!p) return;
-  const cover = document.createElement('a');
-  cover.className = 'feat-cover';
-  cover.id = 'featCover';
-  cover.append(artEl({ src: p.src, label: p.label, ratio: p.ratio }));
-  box.append(cover);
-  (p.gallery || []).forEach(src => {
-    const i = CONFIG.artworks.findIndex(g => g.src === src);
-    if(i >= 0) box.append(frameEl(CONFIG.artworks[i], i));
-  });
-  const card = document.createElement('div');
-  card.className = 'feat-card';
-  card.id = 'featCard';
-  box.append(card);
-}
-function featCard(t){
-  const p = featProj(); if(!p) return;
-  const tp = t.projects[p.key];
-  const href = `${CONFIG.projectPage}?p=${encodeURIComponent(p.key)}${LANG === 'pt' ? '&lang=pt' : ''}`;
-  $('#featCover').href = href;
-  $('#featCover').setAttribute('aria-label', `${tp.title} · ${t.openProject}`);
-  /* o link do Webtoon so aparece no projecto que o tem (o do CONFIG.otherLinks) */
-  const wt = p.key === 'sok' ? CONFIG.otherLinks.find(l => l.label === 'Webtoon') : null;
-  $('#featCard').innerHTML = `<span class="k">${tp.kicker}</span><h3>${tp.title}</h3><p>${tp.desc}</p>
-    <a href="${href}">${t.openProject} →</a>`
-    + (wt && wt.url ? `<a href="${wt.url}" target="_blank" rel="noopener">${t.readWebtoon} ↗</a>` : '');
-}
-
 /* ---------- a parede ---------- */
 function renderWall(){
   const s = $('#wall'); s.innerHTML = '';
-  const fora = featSrcs();
-  CONFIG.artworks.forEach((g,i) => {
-    if(fora.has(g.src)) return;       // esta no destaque, nao se repete
-    s.append(frameEl(g, i));
-  });
+  CONFIG.artworks.forEach((g,i) => s.append(frameEl(g, i)));
   applyFilter();
 }
 function setFilter(c){
@@ -1474,7 +1435,7 @@ function setFilter(c){
 }
 function applyFilter(){
   let shown = 0;
-  const total = $$('#wall .frame').length;   // a parede, sem as do destaque
+  const total = $$('#wall .frame').length;
   const preview = CONFIG.wallPreview || total;
   /* no "Tudo", enquanto nao se abrir, so as primeiras `preview`; um filtro
      mostra sempre a categoria inteira */
@@ -1539,15 +1500,54 @@ function renderText(){
   $$('#filters .chip').forEach(b => b.onclick = () => setFilter(b.dataset.cat));
   applyFilter();
 
-  featCard(t);
-
   /* projects */
+  const projHref = p => `${CONFIG.projectPage}?p=${encodeURIComponent(p.key)}${LANG === 'pt' ? '&lang=pt' : ''}`;
+  /* O projecto em destaque (CONFIG.featured): a largura toda, com a capa, o
+     texto, as pecas da serie numa tira e os links. Nao e um <a> inteiro como
+     os outros cartoes porque leva dois destinos (o projecto e o Webtoon), e
+     links dentro de links nao sao permitidos. */
+  const fbox = $('#projFeat'); fbox.innerHTML = '';
+  const fp = featProj();
+  fbox.hidden = !fp;
+  if(fp){
+    const tp = t.projects[fp.key];
+    const href = projHref(fp);
+    const wt = fp.key === 'sok' ? CONFIG.otherLinks.find(l => l.label === 'Webtoon') : null;
+    const art = document.createElement('a');
+    art.className = 'pf-art'; art.href = href;
+    art.setAttribute('aria-label', `${tp.title} · ${t.openProject}`);
+    art.append(artEl(fp));
+    const body = document.createElement('div');
+    body.className = 'pf-body';
+    body.innerHTML = `<span class="k">${tp.kicker}</span><h3><a href="${href}">${tp.title}</a></h3><p>${tp.desc}</p>`;
+    const pecas = (fp.gallery || []).slice(0, 7);
+    if(pecas.length){
+      const strip = document.createElement('a');
+      strip.className = 'pf-strip'; strip.href = href;
+      strip.setAttribute('aria-label', `${tp.title} · ${t.openProject}`);
+      pecas.forEach(src => {
+        const g = CONFIG.artworks.find(a => a.src === src) || { src, label: tp.title };
+        strip.append(artEl(g));
+      });
+      body.append(strip);
+    }
+    const links = document.createElement('div');
+    links.className = 'pf-links';
+    links.innerHTML = `<a class="btn fill" href="${href}">${t.openProject} →</a>`
+      + (wt && wt.url ? `<a class="btn" href="${wt.url}" target="_blank" rel="noopener">${t.readWebtoon} ↗</a>` : '');
+    body.append(links);
+    const card = document.createElement('article');
+    card.className = 'pf rv';
+    card.append(art, body);
+    fbox.append(card);
+  }
   const grid = $('#projGrid'); grid.innerHTML = '';
   CONFIG.projects.forEach(p => {
+    if(fp && p.key === fp.key) return;   // ja esta no cartao grande
     const tp = t.projects[p.key];
     const card = document.createElement('a');
     card.className = 'proj rv';
-    card.href = `${CONFIG.projectPage}?p=${encodeURIComponent(p.key)}${LANG === 'pt' ? '&lang=pt' : ''}`;
+    card.href = projHref(p);
     /* sem target=_blank: e uma pagina do proprio site e ela ja traz o link de
        voltar. Abrir separadores por cima dos separadores de alguem e das
        coisas que so incomodam. */
@@ -1925,7 +1925,6 @@ navMq.addEventListener('change', e => { if(e.matches && navPanel.classList.conta
 
 /* ---------- boot ---------- */
 renderHeroArt();
-renderFeatured();
 renderWall();
 renderText();
 syncStructuredData();

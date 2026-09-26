@@ -74,22 +74,20 @@ render `<script>` of `index.html` that build DOM nodes from `CONFIG`:
 | Function | Builds |
 | --- | --- |
 | `artEl(item, full)` | an `<img>` with WebP/JPEG fallback, dimensions, srcset on the hero |
-| `frameEl(item, i)` | one wall tile (a 4:5 frame that opens the lightbox); shared by the wall and the featured block |
-| `renderFeatured()` / `featCard(t)` | the featured project block at the top of Selected Work (`CONFIG.featured`): cover, its gallery pieces, and the title card |
-| `renderWall()` | the gallery wall, one tile per `CONFIG.artworks` entry except the featured project's pieces |
+| `frameEl(item, i)` | one wall tile (a 4:5 frame that opens the lightbox) |
+| `renderWall()` | the gallery wall, one tile per `CONFIG.artworks` entry |
 | `renderHeroArt()` | the hero artwork |
-| `renderText()` | everything language-dependent: `[data-t]` text, filters, projects, tiers, timeline |
+| `renderText()` | everything language-dependent: `[data-t]` text, filters, projects (including the wide card of the featured project, `CONFIG.featured`), tiers, timeline |
 | `openLb` / `drawLb` / `closeLb` / `stepLb` | the lightbox |
 | `observeReveals` / `stagger` | scroll reveals |
 | `trackCurrentSection()` | nav scroll-spy |
 | `setNav(open, refocus)` | the mobile menu |
 | `syncStructuredData()` | writes JSON-LD from `CONFIG` |
 
-Boot is six calls at the bottom of the file, in order:
+Boot is five calls at the bottom of the file, in order:
 
 ```js
 renderHeroArt();
-renderFeatured();
 renderWall();
 renderText();
 syncStructuredData();
@@ -147,8 +145,8 @@ this repo or the answer is a dozen lines of vanilla code.
 ```
 images/           62 full-size JPEG (1600px longest side: 37 artworks, 3 project
                   covers, and the One Piece Deck: 22 cards plus the card back,
-                  on the deck's project page; only the Ace of Hearts is also
-                  on the wall, and the deck reuses a queen as its cover) + og-card.jpg, and a WebP for most (see below)
+                  on the deck's project page; the Ace of Hearts is the deck's
+                  cover and its one card on the wall) + og-card.jpg, and a WebP for most (see below)
 images/thumb/     62 thumbnails (760px) + WebP
 ```
 
@@ -193,11 +191,11 @@ The wall's reserve is a formula, not a constant, because the right height
 changes with viewport width. Since the September 2026 uniform grid every tile
 is 4:5, so the height is simply rows × (1.25 × one column's width) + the gaps
 between rows, and the CSS stores only the row count (`--wall-rows`, three
-places: 4, 3 and 2 columns). The featured block works the same way with
-`--feat-rows` (cover = 4 slots, plus its pieces, plus the title card). The
-wall opens with the first `CONFIG.wallPreview` pieces (12) that are not in the
-featured block; the rest appear on a click, which is user input and does not
-count as layout shift.
+places: 4, 3 and 2 columns). The wall opens with the first
+`CONFIG.wallPreview` pieces (12); the rest appear on a click, which is user
+input and does not count as layout shift. The featured project card at the
+top of Projects reserves its own height too (`.proj-feat` min-height: half the
+content width on desktop, the cover's full height on a phone).
 
 **Uniform tiles never crop.** Tiles are 4:5 because 17 of the 29 wall pieces
 are exactly 4:5; everything else is fitted whole with `object-fit:contain`
@@ -210,9 +208,8 @@ same. Result after all of it: 0.006 throttled, 0 unthrottled.
 **The three coefficients are generated — never hand-edit them.** They used to
 be the repo's sharpest footgun: change the gallery, forget the ratio sum and the count,
 and the CLS quietly comes back. `dims.py` now derives the row counts from
-`CONFIG.artworks`, `CONFIG.wallPreview`, `CONFIG.featured` and that project's
-`gallery`, and rewrites the CSS. Run it after any change to the gallery or the
-featured project, not just after adding files.
+`CONFIG.artworks` and `CONFIG.wallPreview` and rewrites the CSS. Run it after
+any change to the gallery, not just after adding files.
 
 **Source order is part of the reserve.** The hero artwork is written *before*
 the copy in the markup, and `order` swaps them back on desktop. It used to be
@@ -232,8 +229,9 @@ when the link is shared, drawn in `tools/og-card.html` and screenshotted by
 or it lands in the gallery and the ImageGallery JSON-LD.
 
 **The One Piece Deck on the wall is one card only**: the Ace of Hearts, as a
-way in (Frede's request). The other cards, and the card back
-(`op-deck-back.jpg`, first in the deck's `gallery`), are on the project page.
+way in (Frede's request). It is also the deck's project cover. The other
+cards, and the card back (`op-deck-back.jpg`, first in the deck's `gallery`),
+are on the project page.
 
 No CDN. No image service. Netlify serves the files as they are.
 
@@ -330,8 +328,12 @@ CLAUDE.md       this file
 No feature folders, no `src/`, no routing. `index.html` is organised top to
 bottom as: meta and JSON-LD → `CONFIG` → `<style>` → markup → render `<script>`.
 
-**Home page order**: hero → selected work → projects → commissions band →
-about (bio beside the timeline) → contact. The timeline is not its own
+**Home page order**: hero → projects (the featured project, `CONFIG.featured`,
+as a full-width card with its cover, text, a strip of its series and its
+links; the others in a row below) → selected work (one uniform grid, no
+project highlighted; the Survival of Kings cast sits after the other
+originals on purpose) → commissions band → about (bio beside the timeline) →
+contact. The timeline is not its own
 section any more; its `id="timeline"` sits on the block inside About, so old
 `#timeline` links still land. `DESIGN.md` §5 has the reasoning.
 

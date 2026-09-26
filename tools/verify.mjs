@@ -276,7 +276,7 @@ async function navegador(dir, etiqueta){
          nao a proporcao da obra: a obra entra inteira por object-fit:contain.
          Por isso o teste aceita as duas coisas que garantem "nada cortado" —
          proporcoes iguais, ou contain — e falha com cover ou fill. */
-      for (const i of document.querySelectorAll('.wall img, .featured img')) {
+      for (const i of document.querySelectorAll('.wall img, .pf img')) {
         if (!i.naturalWidth) { o.push(i.getAttribute('src') + ':nao carregou'); continue; }
         const r = i.getBoundingClientRect();
         const igual = Math.abs(i.naturalWidth / i.naturalHeight - r.width / r.height) <= 0.02;
@@ -454,7 +454,7 @@ async function navegador(dir, etiqueta){
     await p.close();
   }
 
-  /* --- o destaque: capa, as pecas do projecto, o cartao, e nada repetido --- */
+  /* --- o projecto em destaque: o cartao grande nos Projectos --- */
   {
     const p = await nova(1440);
     await p.goto(base + 'index.html', { waitUntil: 'networkidle' });
@@ -462,17 +462,18 @@ async function navegador(dir, etiqueta){
     const r = await p.evaluate(() => {
       const proj = CONFIG.projects.find(x => x.key === CONFIG.featured);
       if (!proj) return { sem: true };
-      const box = document.getElementById('featured');
-      const nomes = el => [...el.querySelectorAll('img')].map(i => i.getAttribute('src').split('/').pop().replace(/\.webp$/, '.jpg'));
-      const noDestaque = nomes(box), naParede = nomes(document.getElementById('wall'));
-      return { capa: !!box.querySelector('.feat-cover img'),
-               pecas: box.querySelectorAll('.frame').length, quer: (proj.gallery || []).length,
-               cartao: !!box.querySelector('.feat-card h3') && box.querySelector('.feat-card h3').textContent.trim().length > 0,
-               repetidas: noDestaque.filter(n => naParede.includes(n)) };
+      const box = document.getElementById('projFeat');
+      const outros = [...document.querySelectorAll('#projGrid .proj')].map(a => a.getAttribute('href'));
+      return { capa: !!box.querySelector('.pf-art img'),
+               tira: box.querySelectorAll('.pf-strip img').length, quer: Math.min(7, (proj.gallery || []).length),
+               titulo: (box.querySelector('.pf h3') || {}).textContent || '',
+               abre: [...box.querySelectorAll('a')].some(a => a.getAttribute('href').includes('p=' + proj.key)),
+               repetido: outros.some(h => h.includes('p=' + proj.key)),
+               nOutros: outros.length, total: CONFIG.projects.length };
     });
-    chk(r.sem || (r.capa && r.pecas === r.quer && r.cartao && r.repetidas.length === 0),
-      'o destaque tem capa, as pecas do projecto e o cartao, sem repetir a parede',
-      r.sem ? 'sem destaque' : `${r.pecas} de ${r.quer} pecas${r.repetidas.length ? ', repetidas: ' + r.repetidas.join(' ') : ''}`);
+    chk(r.sem || (r.capa && r.tira === r.quer && r.titulo.trim() && r.abre && !r.repetido && r.nOutros === r.total - 1),
+      'o projecto em destaque tem o cartao grande, a tira da serie e nao se repete',
+      r.sem ? 'sem destaque' : `${r.tira} de ${r.quer} na tira, ${r.nOutros} outros cartoes`);
     await p.close();
   }
 
