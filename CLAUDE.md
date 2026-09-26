@@ -143,12 +143,13 @@ this repo or the answer is a dozen lines of vanilla code.
 ## 4. Asset management
 
 ```
-images/           65 full-size JPEG (1600px longest side: 37 artworks, 3 project
-                  covers, Tokyo Revengers vols 2-4 (proj-tr-2/3/4, the TR
-                  project page only), and the One Piece Deck: 22 cards plus the card back,
+images/           70 full-size JPEG (1600px longest side: 37 artworks, 3 project
+                  covers, Tokyo Revengers vols 2-4 (proj-tr-2/3/4) and five PAMP
+                  identity pieces (proj-pamp-2..6), both on their project pages
+                  only, and the One Piece Deck: 22 cards plus the card back,
                   on the deck's project page; the Ace of Hearts is the deck's
                   cover and its one card on the wall) + og-card.jpg, and a WebP for most (see below)
-images/thumb/     65 thumbnails (760px) + WebP
+images/thumb/     70 thumbnails (760px) + WebP
 ```
 
 Four files have no WebP because WebP came out larger than the JPEG. That is
