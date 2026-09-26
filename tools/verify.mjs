@@ -272,10 +272,15 @@ async function navegador(dir, etiqueta){
     await p.waitForTimeout(3000);
     const cort = await p.evaluate(() => {
       const o = [];
-      for (const i of document.querySelectorAll('.wall img')) {
+      /* Com a grelha uniforme (Set 2026) a caixa do <img> e a moldura 4:5,
+         nao a proporcao da obra: a obra entra inteira por object-fit:contain.
+         Por isso o teste aceita as duas coisas que garantem "nada cortado" —
+         proporcoes iguais, ou contain — e falha com cover ou fill. */
+      for (const i of document.querySelectorAll('.wall img, .featured img')) {
         if (!i.naturalWidth) { o.push(i.getAttribute('src') + ':nao carregou'); continue; }
         const r = i.getBoundingClientRect();
-        if (Math.abs(i.naturalWidth / i.naturalHeight - r.width / r.height) > 0.02) o.push(i.getAttribute('src'));
+        const igual = Math.abs(i.naturalWidth / i.naturalHeight - r.width / r.height) <= 0.02;
+        if (!igual && getComputedStyle(i).objectFit !== 'contain') o.push(i.getAttribute('src'));
       }
       return o;
     });
@@ -416,7 +421,8 @@ async function navegador(dir, etiqueta){
     const abriu = await p.evaluate(() => document.getElementById('lb').classList.contains('open'));
     await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(400);
     const volta = await p.evaluate(() => document.getElementById('lbPos').textContent.trim());
-    const nPecas = await p.evaluate(() => document.querySelectorAll('.wall .frame').length);
+    /* a lightbox percorre todas as obras, as do destaque incluidas */
+    const nPecas = await p.evaluate(() => CONFIG.artworks.length);
     await p.keyboard.press('Escape'); await p.waitForTimeout(400);
     const fechou = await p.evaluate(() => ({
       fechada: !document.getElementById('lb').classList.contains('open'),
@@ -433,7 +439,7 @@ async function navegador(dir, etiqueta){
     await p.waitForTimeout(500);
     const r = await p.evaluate(() => {
       const vis = () => [...document.querySelectorAll('.wall .frame')].filter(f => getComputedStyle(f).display !== 'none').length;
-      const total = CONFIG.artworks.length, prev = CONFIG.wallPreview;
+      const total = document.querySelectorAll('#wall .frame').length, prev = CONFIG.wallPreview;
       const btn = document.getElementById('wallMore');
       const antes = vis(), temBotao = !!btn.offsetParent, texto = btn.textContent;
       btn.click();
@@ -445,6 +451,28 @@ async function navegador(dir, etiqueta){
       && r.texto.includes(String(r.total)) && r.depois === r.total && r.some && r.foco;
     chk(ok, 'a parede abre com as primeiras pecas e o botao mostra as outras',
       `${r.antes} de ${r.total}, depois ${r.depois}${r.foco ? '' : ', foco perdido'}`);
+    await p.close();
+  }
+
+  /* --- o destaque: capa, as pecas do projecto, o cartao, e nada repetido --- */
+  {
+    const p = await nova(1440);
+    await p.goto(base + 'index.html', { waitUntil: 'networkidle' });
+    await p.waitForTimeout(500);
+    const r = await p.evaluate(() => {
+      const proj = CONFIG.projects.find(x => x.key === CONFIG.featured);
+      if (!proj) return { sem: true };
+      const box = document.getElementById('featured');
+      const nomes = el => [...el.querySelectorAll('img')].map(i => i.getAttribute('src').split('/').pop().replace(/\.webp$/, '.jpg'));
+      const noDestaque = nomes(box), naParede = nomes(document.getElementById('wall'));
+      return { capa: !!box.querySelector('.feat-cover img'),
+               pecas: box.querySelectorAll('.frame').length, quer: (proj.gallery || []).length,
+               cartao: !!box.querySelector('.feat-card h3') && box.querySelector('.feat-card h3').textContent.trim().length > 0,
+               repetidas: noDestaque.filter(n => naParede.includes(n)) };
+    });
+    chk(r.sem || (r.capa && r.pecas === r.quer && r.cartao && r.repetidas.length === 0),
+      'o destaque tem capa, as pecas do projecto e o cartao, sem repetir a parede',
+      r.sem ? 'sem destaque' : `${r.pecas} de ${r.quer} pecas${r.repetidas.length ? ', repetidas: ' + r.repetidas.join(' ') : ''}`);
     await p.close();
   }
 

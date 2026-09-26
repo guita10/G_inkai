@@ -62,10 +62,16 @@ PATTERN = re.compile(r"const DIMS = (\{.*?\});")
 # A lista de obras da parede, dentro do CONFIG.
 ARTWORKS = re.compile(r"\n  artworks:\s*\[(.*?)\n  \],", re.S)
 
-# Cada um dos tres min-height do .wall. A contagem de colunas vem de dentro do
-# proprio min-height, por isso um so padrao chega para os tres.
-RESERVE = re.compile(
-    r"min-height:calc\([\d.]+ \* \(var\(--wall-w\) - \d+px\) / (\d+) \+ \d+px\)")
+# As filas reservadas da parede e do destaque (Set 2026: grelha uniforme).
+# Com as molduras todas 4:5 a altura so depende de quantas filas ha, por isso
+# o CSS guarda so esse numero e a conta faz-se la. Aparecem por ordem: a regra
+# base (4 colunas), a de 980px (3) e a de 620px (2). O destaque tem duas: a
+# base (4) e a de 620px (2); aos 980px continua com 4.
+WALL_ROWS = re.compile(r"--wall-rows:(\d+)")
+FEAT_ROWS = re.compile(r"--feat-rows:(\d+)")
+WALL_COLS = (4, 3, 2)
+FEAT_COLS = (4, 2)
+FEATURED = re.compile(r'\n  featured:\s*"([^"]*)"')
 
 # O mapa pequeno da pagina de projecto. So as artes dos projectos, so w e h:
 # aquela pagina nao usa miniaturas. Era o ultimo mapa de pixeis escrito a mao.
@@ -134,11 +140,49 @@ def wall(src, dims):
     # quando alguem carrega no botao, e isso ja e gesto do utilizador). A
     # reserva e para o que se ve ao carregar a pagina, por isso conta so essas.
     # Reservar para as 36 deixava um buraco de milhares de pixeis.
+    # As pecas do projecto em destaque nao estao na parede (estao por cima dela).
+    fora = set(featured_gallery(src))
+    names = [n for n in names if n not in fora]
     prev = re.search(r'wallPreview:\s*(\d+)', src)
     if prev:
         names = names[:int(prev.group(1))]
     total = sum(dims[n]["th"] / dims[n]["tw"] for n in names if n in dims)
     return len(names), total, orphans
+
+
+def featured_gallery(src):
+    """Os ficheiros do gallery do projecto em CONFIG.featured ([] se nao houver)."""
+    f = FEATURED.search(src)
+    block = PROJECTS.search(src)
+    if not f or not f.group(1) or not block:
+        return []
+    for entry in re.split(r"\n    \{", block.group(1)):
+        if re.search(r'key:\s*"%s"' % re.escape(f.group(1)), entry):
+            g = re.search(r"gallery:\s*\[(.*?)\]", entry, re.S)
+            return re.findall(r'"images/([^"]+)"', g.group(1)) if g else []
+    return []
+
+
+def rows(n, cols):
+    return -(-n // cols) if n > 0 else 0
+
+
+def rewrite(src, pattern, cols_list, counts, label):
+    """Poe o numero certo de filas em cada ocorrencia de `pattern`, por ordem."""
+    found = list(pattern.finditer(src))
+    if len(found) != len(cols_list):
+        sys.exit(f"Esperava {len(cols_list)} '{pattern.pattern}' no index.html, encontrei {len(found)}.")
+    out, last, dirty = [], 0, False
+    for m, cols in zip(found, cols_list):
+        want = rows(counts, cols)
+        new = pattern.pattern.split(":")[0] + f":{want}"
+        if m.group(0) != new:
+            dirty = True
+            print(f"  ~ {label} a {cols} colunas: {m.group(0)} -> {new}")
+        out.append(src[last:m.start()] + new)
+        last = m.end()
+    out.append(src[last:])
+    return "".join(out), dirty
 
 
 def reserve_value(cols, count, total):
@@ -229,25 +273,16 @@ def main():
     for n in orphans:
         print(f"  ! {n}: esta no artworks mas nao tem imagem — fora da conta da parede")
 
-    wall_dirty = False
-    out, last = [], 0
-    for m in RESERVE.finditer(src):
-        cols = int(m.group(1))
-        new = reserve_value(cols, count, total)
-        if new != m.group(0):
-            wall_dirty = True
-            print(f"  ~ parede a {cols} colunas: {m.group(0)}\n"
-                  f"                         -> {new}")
-        out.append(src[last:m.start()] + new)
-        last = m.end()
-    out.append(src[last:])
-
-    if len(out) != 4:
-        sys.exit(f"Esperava tres min-height do .wall no index.html, encontrei {len(out) - 1}.")
-    src = "".join(out)
+    # a parede: uma fila por cada `cols` pecas
+    src, d1 = rewrite(src, WALL_ROWS, WALL_COLS, count, "parede")
+    # o destaque: a capa ocupa 4 lugares (2x2), mais as pecas, mais o cartao
+    feat = featured_gallery(src)
+    lugares = 4 + len(feat) + 1 if FEATURED.search(src) and FEATURED.search(src).group(1) else 0
+    src, d2 = rewrite(src, FEAT_ROWS, FEAT_COLS, lugares, "destaque")
+    wall_dirty = d1 or d2
 
     if not wall_dirty:
-        print(f"Parede ja certa: {count} obras, proporcoes somam {total:.2f}.")
+        print(f"Parede ja certa: {count} obras ao abrir; destaque com {len(feat)} pecas.")
 
     # ---- 3. o mapa da pagina de projecto ----------------------------------
     psrc = open(PROJ, encoding="utf-8").read()

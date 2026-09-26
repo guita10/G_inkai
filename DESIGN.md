@@ -172,9 +172,16 @@ inert. Do not add it to Playfair and assume it took.
   commissions band → about (with the timeline beside the bio as "Along the
   way") → contact. Work first because it is the proof; commissions third so
   the one conversion on the page sits within the first half, not at 9,200px.
+- **Selected work has two parts.** First the featured project
+  (`CONFIG.featured`, now Survival of Kings): the cover two by two, its pieces
+  around it, and a title card with a Royal top rule and the project links. Then
+  the wall, a uniform grid of 4:5 frames in rows (4 / 3 / 2 columns). Uniform
+  never means cropped: art that is not 4:5 is fitted whole (`contain`) on the
+  raised surface, like a print mat.
 - **The wall opens with a preview** of the first `wallPreview` (12) pieces in
-  `CONFIG` order and a "See all N pieces" button. Order the list so the best
-  original work comes first. A filter always shows its whole category.
+  `CONFIG` order, skipping the featured project's, and a "See all N pieces"
+  button. A filter always shows its whole category. The count sits on the
+  filter row because it counts the wall, not the featured block.
 - **Projects** are four across on desktop, two across below 980px, and a
   horizontal scroll-snap row below 620px, each card 80% wide so the next one
   peeks in and signals there is more.

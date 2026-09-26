@@ -141,6 +141,13 @@ const CONFIG = {
      corre o tools/dims.py: a altura reservada da parede e calculada para
      estas pecas, nao para todas. */
   wallPreview: 12,
+  /* O projecto em destaque no topo do "Trabalho selecionado": a capa grande,
+     as pecas do gallery dele a volta, e um cartao com o titulo e os links.
+     Essas pecas SAEM da parede de baixo (nao aparecem duas vezes) mas
+     continuam no artworks: e de la que a lightbox e o JSON-LD as leem.
+     Pedido do Frede, Set 2026: destacar o Survival of Kings. Para tirar o
+     destaque, featured: "". Depois de mudar corre o tools/dims.py. */
+  featured: "sok",
   hero: { src: "images/oc.jpg", label: "OC 01", ratio: "34" },
   artworks: [
     { src: "images/angela.jpg",                label: "Angela",                    ratio: "34", cat: "character" },
@@ -177,6 +184,9 @@ const CONFIG = {
     { src: "images/yuta-fanart.jpg",           label: "Yuta, Jujutsu Kaisen",     ratio: "34", cat: "fanart" },
     { src: "images/nami-30x40.jpg",            label: "Nami, One Piece",          ratio: "34", cat: "fanart" },
     { src: "images/ilustracao-sem-titulo.jpg", label: "Tony Tony Chopper, card",  ratio: "43", cat: "fanart" },
+    /* o baralho vive na pagina do projecto; na parede fica so este as, como
+       porta de entrada (pedido do Frede). */
+    { src: "images/op-deck-ace-hearts.jpg",    label: "Ace of Hearts, One Piece Deck", ratio: "34", cat: "fanart" },
     { src: "images/dante.jpg",                 label: "Dante",                     ratio: "11", cat: "fanart" },
     { src: "images/lucy.jpg",                  label: "Lucy",                      ratio: "11", cat: "fanart" },
   ],
@@ -200,7 +210,7 @@ const CONFIG = {
     { src: "images/proj-tr.jpg",   label: "Tokyo Revengers", ratio: "34", key: "tr",   plate: "TR"  },
     { src: "images/proj-pamp.jpg", label: "PAMP",            ratio: "34", key: "pamp", plate: "P"   },
     { src: "images/op-deck-nami.jpg", label: "One Piece Deck", ratio: "34", key: "deck", plate: "Q",
-      gallery: ["images/op-deck-robin.jpg", "images/op-deck-yamato.jpg", "images/op-deck-hancock.jpg",
+      gallery: ["images/op-deck-back.jpg", "images/op-deck-robin.jpg", "images/op-deck-yamato.jpg", "images/op-deck-hancock.jpg",
                 "images/op-deck-roger.jpg", "images/op-deck-luffy.jpg", "images/op-deck-blackbeard.jpg", "images/op-deck-shanks.jpg",
                 "images/op-deck-crocodile.jpg", "images/op-deck-katakuri.jpg", "images/op-deck-doflamingo.jpg", "images/op-deck-kaido.jpg",
                 "images/op-deck-zoro.jpg", "images/op-deck-buggy.jpg",
@@ -235,6 +245,7 @@ const CONFIG = {
       filters: { all: "All", webtoon: "Webtoon", covers: "Covers", character: "Character design", fanart: "Fan art", sketches: "Sketches" },
       projectsTitle: "Featured projects",
       openProject: "Open project",
+      readWebtoon: "Read on Webtoon",
       projects: {
         sok:  { kicker: "Webtoon series", title: "Survival of Kings", desc: "Ongoing webtoon / graphic novel, co-created with writer Reeeborn. Ink-style panels and vertical-scroll storytelling." },
         tr:   { kicker: "Monthly, with Distrito Manga", title: "Tokyo Revengers, covers reimagined", desc: "Each volume cover redrawn in the original format, with faces from the anime and manga community standing in for the characters. A new one goes out every month, alongside the publisher's releases." },
@@ -310,6 +321,7 @@ const CONFIG = {
       filters: { all: "Tudo", webtoon: "Webtoon", covers: "Capas", character: "Design de personagens", fanart: "Fan art", sketches: "Esboços" },
       projectsTitle: "Projetos em destaque",
       openProject: "Abrir projeto",
+      readWebtoon: "Ler no Webtoon",
       projects: {
         sok:  { kicker: "Série webtoon", title: "Survival of Kings", desc: "Webtoon / graphic novel em curso, co-criado com o escritor Reeeborn. Painéis a tinta e narrativa em scroll vertical." },
         tr:   { kicker: "Mensal, com a Distrito Manga", title: "Tokyo Revengers, capas reinterpretadas", desc: "Cada capa de volume refeita no formato original, com figuras da comunidade anime e manga no lugar das personagens. Sai uma por mês, a acompanhar os lançamentos da editora." },
@@ -674,43 +686,43 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
    28 para 10 continuava a mostrar quatro.
    Agora e uma parede. As colunas reorganizam-se sozinhas com `columns`, sem
    JavaScript e sem matematica de grelha, e cada moldura recebe a proporcao
-   verdadeira do ficheiro pelo --ar (do mapa DIMS). Nada e cortado, tal como
+   verdadeira do ficheiro (ate Set 2026; agora ve a nota da grelha). Nada e cortado, tal como
    antes, mas ve-se tudo de uma vez. */
-/* column-count e nao a abreviatura `columns`: com `columns:4 240px` o browser
-   faz min(contagem, quantas cabem a 240px) e num telemovel de 390px isso dava
-   UMA coluna de 338px — 11 mil pixeis de scroll e cada peca do tamanho do
-   ecra. A contagem sozinha e sempre respeitada. Os dois degraus vivem nas
-   media queries que a folha ja tinha, para nao abrir uma terceira. */
-.wall{column-count:4;column-gap:14px}
-/* A altura reservada antes de o JS correr.
-   O documento e grande e, numa ligacao lenta, o browser ja pintou o cabecalho
-   e o hero quando o script la no fundo chega. Se a parede nascesse do nada
-   nesse momento, empurrava para baixo tudo o que vem a seguir — era isto que
-   dava 0,96 de CLS na tira antiga.
-   Nao e um numero fixo, porque a altura certa muda com a largura do ecra. E a
-   conta: a altura de uma parede em n colunas e a soma das proporcoes de todas
-   as pecas (altura a dividir pela largura) vezes a largura de uma coluna,
-   tudo a dividir pelo numero de colunas, mais as margens.
-   Da 1 a 5% ABAIXO do real, de proposito: reservar a menos deixa a pagina
-   assentar uns pixeis: reservar a mais abria um buraco que depois fechava, o
-   que conta como salto na mesma.
-   Os tres numeros aqui em baixo sao GERADOS: saem do tools/dims.py, que le as
-   proporcoes verdadeiras dos ficheiros e conta as obras do artworks. Nao os
-   escrevas a mao — junta a arte e corre o script. */
+/* GRELHA UNIFORME (Set 2026, pedido do Frede: "uniformizar o resto").
+   Antes eram colunas de alturas diferentes, cada moldura com a proporcao do
+   seu ficheiro. Agora todas as molduras tem a mesma proporcao, 4:5, e
+   alinham em filas. 4:5 porque e a proporcao de 17 das 29 pecas da parede:
+   essas enchem a moldura de ponta a ponta.
+   A REGRA NAO MUDA: nenhuma obra e cortada. O object-fit e contain, nunca
+   cover: uma peca quadrada fica inteira, com uma faixa do fundo por cima e
+   por baixo, como um passe-partout. O verify mede isto em cada peca.
+   O numero de colunas vive em --cols e o de filas em --wall-rows, para a
+   altura reservada (em baixo) poder ser uma conta so. */
+.wall{--cols:4;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:14px}
+/* A altura reservada antes de o JS correr. Numa ligacao lenta o browser ja
+   pintou o cabecalho e o hero quando o script la no fundo chega; se a parede
+   nascesse do nada, empurrava tudo para baixo (era isto que dava 0,96 de CLS).
+   Com molduras todas iguais a conta e exacta: filas vezes a altura de uma
+   moldura (1,25 vezes a largura de uma coluna) mais os espacos entre filas.
+   --wall-rows e GERADO pelo tools/dims.py, a partir do numero de pecas que a
+   parede mostra ao abrir (wallPreview, sem as do destaque). Nao o escrevas a
+   mao — muda a parede e corre o script. */
 .wall{
   --wall-w:calc(min(1240px,100vw) - 52px);
-  min-height:calc(3.58 * (var(--wall-w) - 42px) / 4 + 42px);
+  --wall-rows:3;
+  min-height:calc(var(--wall-rows) * 1.25 * (var(--wall-w) - (var(--cols) - 1) * 14px) / var(--cols) + (var(--wall-rows) - 1) * 14px);
 }
 .frame{
-  break-inside:avoid;margin:0 0 14px;display:block;width:100%;
+  display:block;width:100%;margin:0;
   cursor:zoom-in;position:relative;
   background:var(--raise);border:1px solid var(--hair);overflow:hidden;
-  aspect-ratio:var(--ar,3/4);
+  aspect-ratio:4/5;
   transition:border-color .3s,transform .3s;
 }
 .frame:hover{border-color:var(--royal-lift)}
 .frame:focus-visible{outline:2px solid var(--royal-lift);outline-offset:3px}
-.frame img,.frame .ph{width:100%;height:100%;object-fit:cover}
+/* contain e nao cover: a obra entra inteira na moldura, nunca cortada */
+.frame img,.frame .ph{width:100%;height:100%;object-fit:contain}
 .lb-stage img{width:auto;height:auto}
 .frame .meta{
   position:absolute;inset:auto 0 0 0;padding:40px 14px 12px;
@@ -750,7 +762,36 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 .frame .meta .n{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#6B7BFF;
   font-variant-numeric:tabular-nums}
 .frame.hidden{display:none}
+/* ---- O DESTAQUE (CONFIG.featured) ----
+   Quatro colunas, as mesmas molduras 4:5 da parede. A capa ocupa dois por
+   dois; as pecas do projecto enchem a volta; o ultimo lugar e o cartao com o
+   titulo e os links. Com as sete personagens do Survival of Kings da tres
+   filas certas: 4 (capa) + 7 + 1 = 12 lugares.
+   --feat-rows e GERADO pelo tools/dims.py, pela mesma razao da parede. */
+.featured{--fcols:4;--feat-rows:3;
+  --wall-w:calc(min(1240px,100vw) - 52px);
+  display:grid;grid-template-columns:repeat(var(--fcols),minmax(0,1fr));gap:14px;
+  margin:6px 0 clamp(40px,6vw,64px);
+  min-height:calc(var(--feat-rows) * 1.25 * (var(--wall-w) - (var(--fcols) - 1) * 14px) / var(--fcols) + (var(--feat-rows) - 1) * 14px)}
+/* sem :empty aqui: antes do JS correr o bloco esta vazio e :empty tirava-lhe a
+   altura reservada. Quando nao ha destaque o JS poe-lhe hidden. */
+.featured[hidden]{display:none}
+.feat-cover{grid-column:span 2;grid-row:span 2;display:block;position:relative;overflow:hidden;
+  border:1px solid var(--hair);background:var(--raise);transition:border-color .3s}
+.feat-cover:hover{border-color:var(--royal-lift)}
+.feat-cover img{width:100%;height:100%;object-fit:contain}
+.feat-card{aspect-ratio:4/5;display:flex;flex-direction:column;justify-content:flex-end;gap:10px;
+  padding:clamp(14px,2vw,24px);border:1px solid var(--hair);border-top:2px solid var(--royal);overflow:hidden}
+.feat-card .k{font-family:var(--f-ui);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--royal-lift)}
+.feat-card h3{font-size:clamp(1.15rem,2vw,1.6rem)}
+.feat-card p{font-size:.84rem;color:var(--bone-dim)}
+.feat-card a{font-family:var(--f-ui);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--bone-dim);text-decoration:none;padding:6px 0;transition:color .2s ease}
+.feat-card a:hover{color:var(--bone)}
 /* Nada encontrado com este filtro. Antes a parede ficava simplesmente vazia. */
+.wall-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.wall-bar .filters{margin-bottom:0}
+.wall-bar{margin-bottom:22px}
 .wall-empty{display:none;padding:40px 0;color:var(--bone-dim);font-size:.95rem}
 .wall-empty.on{display:block}
 /* o botao que abre a parede toda: ao centro, com o traco da casa por cima */
@@ -991,7 +1032,7 @@ footer{font-family:var(--f-ui);
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .rv{opacity:1;transform:none;transition:none}
-  .proj,.frame,.btn,.mail{transition:none}
+  .proj,.frame,.btn,.mail,.feat-cover,.feat-card a{transition:none}
   /* faltavam os controlos: knob (tema/idioma), chips de filtro e botoes da
      lightbox. Todos eram transicoes de cor, mas o .btn ao lado tambem so muda
      cores e ja estava desligado — ou vale para todos ou nao vale para nenhum. */
@@ -1016,7 +1057,9 @@ footer{font-family:var(--f-ui);
 
 /* ================= RESPONSIVE ================= */
 @media (max-width:980px){
-  .wall{column-count:3;min-height:calc(4.77 * (var(--wall-w) - 28px) / 3 + 56px)}
+  .wall{--cols:3;--wall-rows:4}
+  /* o texto do cartao nao cabe numa coluna estreita: fica titulo e links */
+  .feat-card p{display:none}
   .hero-grid{grid-template-columns:1fr;gap:34px;align-items:start}
   /* Numa coluna so nao ha nada a trocar: a ordem do HTML (obra, depois texto)
      e exactamente a que se quer ver. Antes a obra vinha por baixo do titulo,
@@ -1045,7 +1088,8 @@ footer{font-family:var(--f-ui);
   .projects::-webkit-scrollbar{display:none}
   .proj{scroll-snap-align:start}
   .bar{min-height:64px}
-  .wall{column-count:2;min-height:calc(7.15 * (var(--wall-w) - 14px) / 2 + 84px)}
+  .wall{--cols:2;--wall-rows:6}
+  .featured{--fcols:2;--feat-rows:6}
   .links{display:none}
   .knobs{margin-left:auto}
   .nav-toggle{display:block}
@@ -1165,9 +1209,15 @@ footer{font-family:var(--f-ui);
       <div>
         <h2 class="sec-title rv" data-t="galleryTitle"></h2>
       </div>
+    </div>
+    <!-- o projecto em destaque (CONFIG.featured): capa, pecas e cartao -->
+    <div class="featured" id="featured"></div>
+    <!-- a contagem fica junto dos filtros: conta a parede, nao o destaque, e
+         por baixo do titulo parecia contar tudo -->
+    <div class="wall-bar rv">
+      <div class="filters" id="filters" role="group" aria-label="Filter gallery"></div>
       <span class="count" id="workCount" aria-live="polite" aria-atomic="true"></span>
     </div>
-    <div class="filters rv" id="filters" role="group" aria-label="Filter gallery"></div>
     <div class="wall" id="wall"></div>
     <p class="wall-empty" id="wallEmpty" data-t="wallEmpty"></p>
     <!-- aparece so no "Tudo", enquanto a parede estiver na pre-visualizacao -->
@@ -1293,15 +1343,10 @@ const srcOf = s => /^https?:\/\//i.test(s) ? s : (CONFIG.imageBase || '') + s;
 /* image that degrades to a labelled placeholder when the file is missing.
    full=false  → serve images/thumb/… (760px) — grelha, tira, cartões
    full=true   → serve o ficheiro grande (1600px) — só no lightbox            */
-const DIMS = {"aki.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"angela.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"arkevil-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"arti.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"clair.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"collab-mira-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"collab.jpg":{"w":1600,"h":1280,"tw":760,"th":608},"dante.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"edan.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"estudo-luz.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"even-yeager.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"final-aot-season-4.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"geisha.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"ilustracao-sem-titulo-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"ilustracao-sem-titulo.jpg":{"w":1600,"h":1067,"tw":760,"th":507},"italy.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kei.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kindo.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kon.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"lucy.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"lumi.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"makima.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"masami.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"mira-starborn.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"nami-30x40.jpg":{"w":1200,"h":1600,"tw":570,"th":760},"oc-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"oc-2.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"oc.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"op-deck-2-clubs.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-2-diamonds.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-2-hearts.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-2-spades.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-ace-clubs.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-ace-diamonds.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-ace-hearts.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-ace-spades.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-blackbeard.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-buggy.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-crocodile.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-doflamingo.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-hancock.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-kaido.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-katakuri.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-luffy.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-nami.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-robin.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-roger.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-shanks.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-yamato.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-zoro.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"pochita.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"proj-pamp.jpg":{"w":1553,"h":1600,"tw":738,"th":760},"proj-sok.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"proj-tr.jpg":{"w":1066,"h":1600,"tw":507,"th":760},"shocked.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"silen.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"spain.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"surpresa.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"the-witch.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"yakura.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"yuta-fanart.jpg":{"w":1280,"h":1600,"tw":608,"th":760}};
-/* Proporcao a usar na moldura. Sai do mapa DIMS, ou seja dos pixeis reais do
-   ficheiro. O campo `ratio` do CONFIG fica so como rede: arte nova que ainda
-   nao passou pelo tools/dims.py nao tem entrada em DIMS e cai no molde antigo. */
-const AR = {'34':'3/4','12':'1/2','11':'1/1','43':'4/3'};
-const arOf = item => {
-  const d = DIMS[item.src.split('/').pop()];
-  return d ? d.w + '/' + d.h : (AR[String(item.ratio)] || '3/4');
-};
+const DIMS = {"aki.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"angela.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"arkevil-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"arti.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"clair.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"collab-mira-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"collab.jpg":{"w":1600,"h":1280,"tw":760,"th":608},"dante.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"edan.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"estudo-luz.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"even-yeager.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"final-aot-season-4.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"geisha.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"ilustracao-sem-titulo-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"ilustracao-sem-titulo.jpg":{"w":1600,"h":1067,"tw":760,"th":507},"italy.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kei.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kindo.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kon.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"lucy.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"lumi.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"makima.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"masami.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"mira-starborn.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"nami-30x40.jpg":{"w":1200,"h":1600,"tw":570,"th":760},"oc-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"oc-2.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"oc.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"op-deck-2-clubs.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-2-diamonds.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-2-hearts.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-2-spades.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-ace-clubs.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-ace-diamonds.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-ace-hearts.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-ace-spades.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-back.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-blackbeard.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-buggy.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-crocodile.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-doflamingo.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-hancock.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-kaido.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-katakuri.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-luffy.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-nami.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-robin.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-roger.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-shanks.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-yamato.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-zoro.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"pochita.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"proj-pamp.jpg":{"w":1553,"h":1600,"tw":738,"th":760},"proj-sok.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"proj-tr.jpg":{"w":1066,"h":1600,"tw":507,"th":760},"shocked.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"silen.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"spain.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"surpresa.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"the-witch.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"yakura.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"yuta-fanart.jpg":{"w":1280,"h":1600,"tw":608,"th":760}};
+/* (O arOf, que dava a cada moldura a proporcao do seu ficheiro, saiu com a
+   grelha uniforme de Set 2026: as molduras sao todas 4:5 e a obra entra
+   inteira com object-fit:contain. O DIMS continua a dar width/height.) */
 /* O browser suporta WebP? Testamos uma vez. O WebP pesa menos ~39% com a mesma
    qualidade — quem nao suportar recebe o .jpg de sempre, sem dar por nada.
    Os .webp geram-se com:  python3 tools/make-webp.py                          */
@@ -1353,22 +1398,68 @@ function artEl(item, full){
   return img;
 }
 
+/* ---------- o destaque ---------- */
+/* As pecas que o destaque mostra: o gallery do projecto em CONFIG.featured.
+   A parede de baixo salta estas, para nada aparecer duas vezes. */
+const featProj = () => CONFIG.projects.find(p => p.key === CONFIG.featured);
+const featSrcs = () => { const p = featProj(); return new Set(p ? (p.gallery || []) : []); };
+
+/* uma moldura da parede ou do destaque: abre a obra i na lightbox */
+function frameEl(g, i){
+  const fig = document.createElement('figure');
+  fig.className = 'frame';
+  fig.dataset.cat = g.cat;
+  fig.tabIndex = 0; fig.setAttribute('role','button'); fig.setAttribute('aria-label', g.label);
+  const meta = document.createElement('figcaption');
+  meta.className = 'meta';
+  meta.innerHTML = `<div class="n">${no(i)}</div><div class="t">${g.label}</div>`;
+  fig.append(artEl(g), meta);
+  fig.onclick = () => openLb(i);
+  fig.onkeydown = e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openLb(i); } };
+  return fig;
+}
+
+/* A capa e as pecas nao dependem da lingua; o cartao sim, por isso e o
+   renderText que o escreve (featCard). */
+function renderFeatured(){
+  const box = $('#featured'); box.innerHTML = '';
+  const p = featProj();
+  box.hidden = !p;
+  if(!p) return;
+  const cover = document.createElement('a');
+  cover.className = 'feat-cover';
+  cover.id = 'featCover';
+  cover.append(artEl({ src: p.src, label: p.label, ratio: p.ratio }));
+  box.append(cover);
+  (p.gallery || []).forEach(src => {
+    const i = CONFIG.artworks.findIndex(g => g.src === src);
+    if(i >= 0) box.append(frameEl(CONFIG.artworks[i], i));
+  });
+  const card = document.createElement('div');
+  card.className = 'feat-card';
+  card.id = 'featCard';
+  box.append(card);
+}
+function featCard(t){
+  const p = featProj(); if(!p) return;
+  const tp = t.projects[p.key];
+  const href = `${CONFIG.projectPage}?p=${encodeURIComponent(p.key)}${LANG === 'pt' ? '&lang=pt' : ''}`;
+  $('#featCover').href = href;
+  $('#featCover').setAttribute('aria-label', `${tp.title} · ${t.openProject}`);
+  /* o link do Webtoon so aparece no projecto que o tem (o do CONFIG.otherLinks) */
+  const wt = p.key === 'sok' ? CONFIG.otherLinks.find(l => l.label === 'Webtoon') : null;
+  $('#featCard').innerHTML = `<span class="k">${tp.kicker}</span><h3>${tp.title}</h3><p>${tp.desc}</p>
+    <a href="${href}">${t.openProject} →</a>`
+    + (wt && wt.url ? `<a href="${wt.url}" target="_blank" rel="noopener">${t.readWebtoon} ↗</a>` : '');
+}
+
 /* ---------- a parede ---------- */
 function renderWall(){
   const s = $('#wall'); s.innerHTML = '';
+  const fora = featSrcs();
   CONFIG.artworks.forEach((g,i) => {
-    const fig = document.createElement('figure');
-    fig.className = 'frame';
-    fig.style.setProperty('--ar', arOf(g));
-    fig.dataset.cat = g.cat;
-    fig.tabIndex = 0; fig.setAttribute('role','button'); fig.setAttribute('aria-label', g.label);
-    const meta = document.createElement('figcaption');
-    meta.className = 'meta';
-    meta.innerHTML = `<div class="n">${no(i)}</div><div class="t">${g.label}</div>`;
-    fig.append(artEl(g), meta);
-    fig.onclick = () => openLb(i);
-    fig.onkeydown = e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openLb(i); } };
-    s.append(fig);
+    if(fora.has(g.src)) return;       // esta no destaque, nao se repete
+    s.append(frameEl(g, i));
   });
   applyFilter();
 }
@@ -1383,7 +1474,7 @@ function setFilter(c){
 }
 function applyFilter(){
   let shown = 0;
-  const total = CONFIG.artworks.length;
+  const total = $$('#wall .frame').length;   // a parede, sem as do destaque
   const preview = CONFIG.wallPreview || total;
   /* no "Tudo", enquanto nao se abrir, so as primeiras `preview`; um filtro
      mostra sempre a categoria inteira */
@@ -1447,6 +1538,8 @@ function renderText(){
     `<button class="chip ${c === activeCat ? 'on' : ''}" data-cat="${c}" aria-pressed="${c === activeCat}">${t.filters[c] || c}</button>`).join('');
   $$('#filters .chip').forEach(b => b.onclick = () => setFilter(b.dataset.cat));
   applyFilter();
+
+  featCard(t);
 
   /* projects */
   const grid = $('#projGrid'); grid.innerHTML = '';
@@ -1832,6 +1925,7 @@ navMq.addEventListener('change', e => { if(e.matches && navPanel.classList.conta
 
 /* ---------- boot ---------- */
 renderHeroArt();
+renderFeatured();
 renderWall();
 renderText();
 syncStructuredData();

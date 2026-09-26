@@ -74,7 +74,9 @@ render `<script>` of `index.html` that build DOM nodes from `CONFIG`:
 | Function | Builds |
 | --- | --- |
 | `artEl(item, full)` | an `<img>` with WebP/JPEG fallback, dimensions, srcset on the hero |
-| `renderWall()` | the gallery wall, one tile per `CONFIG.artworks` entry |
+| `frameEl(item, i)` | one wall tile (a 4:5 frame that opens the lightbox); shared by the wall and the featured block |
+| `renderFeatured()` / `featCard(t)` | the featured project block at the top of Selected Work (`CONFIG.featured`): cover, its gallery pieces, and the title card |
+| `renderWall()` | the gallery wall, one tile per `CONFIG.artworks` entry except the featured project's pieces |
 | `renderHeroArt()` | the hero artwork |
 | `renderText()` | everything language-dependent: `[data-t]` text, filters, projects, tiers, timeline |
 | `openLb` / `drawLb` / `closeLb` / `stepLb` | the lightbox |
@@ -83,10 +85,11 @@ render `<script>` of `index.html` that build DOM nodes from `CONFIG`:
 | `setNav(open, refocus)` | the mobile menu |
 | `syncStructuredData()` | writes JSON-LD from `CONFIG` |
 
-Boot is five calls at the bottom of the file, in order:
+Boot is six calls at the bottom of the file, in order:
 
 ```js
 renderHeroArt();
+renderFeatured();
 renderWall();
 renderText();
 syncStructuredData();
@@ -142,11 +145,11 @@ this repo or the answer is a dozen lines of vanilla code.
 ## 4. Asset management
 
 ```
-images/           61 full-size JPEG (1600px longest side: 36 artworks on the wall,
-                  3 project covers, and the 22 One Piece Deck cards, which live
-                  on the deck's project page only; the deck reuses a queen as
-                  its cover) + og-card.jpg, and a WebP for most (see below)
-images/thumb/     61 thumbnails (760px) + WebP
+images/           62 full-size JPEG (1600px longest side: 37 artworks, 3 project
+                  covers, and the One Piece Deck: 22 cards plus the card back,
+                  on the deck's project page; only the Ace of Hearts is also
+                  on the wall, and the deck reuses a queen as its cover) + og-card.jpg, and a WebP for most (see below)
+images/thumb/     62 thumbnails (760px) + WebP
 ```
 
 Four files have no WebP because WebP came out larger than the JPEG. That is
@@ -187,21 +190,29 @@ was **CLS 0.96**. The fix is reserving the space in CSS up front:
 | `.wall` | a `calc()` | see below |
 
 The wall's reserve is a formula, not a constant, because the right height
-changes with viewport width: the sum of every visible piece's height-over-width
-ratio times one column's width, over the column count, plus margins. The wall
-opens with only the first `CONFIG.wallPreview` pieces (12), so the reserve
-counts those 12, not all 36: `dims.py` reads `wallPreview` and cuts the list
-before summing (**14.3** for these 12). The rest appear on a click, which is
-user input and does not count as layout shift. Aim **1-5% under** the real height. Under-reserving settles by a few
+changes with viewport width. Since the September 2026 uniform grid every tile
+is 4:5, so the height is simply rows × (1.25 × one column's width) + the gaps
+between rows, and the CSS stores only the row count (`--wall-rows`, three
+places: 4, 3 and 2 columns). The featured block works the same way with
+`--feat-rows` (cover = 4 slots, plus its pieces, plus the title card). The
+wall opens with the first `CONFIG.wallPreview` pieces (12) that are not in the
+featured block; the rest appear on a click, which is user input and does not
+count as layout shift.
+
+**Uniform tiles never crop.** Tiles are 4:5 because 17 of the 29 wall pieces
+are exactly 4:5; everything else is fitted whole with `object-fit:contain`
+and sits on `--raise` like a mat. `verify.mjs` accepts a tile only if its
+image either matches the frame's ratio or is `contain`; switching to `cover`
+is caught (tested against that planted bug). Aim **1-5% under** the real height. Under-reserving settles by a few
 pixels; over-reserving opens a gap that closes again, which counts just the
 same. Result after all of it: 0.006 throttled, 0 unthrottled.
 
 **The three coefficients are generated — never hand-edit them.** They used to
 be the repo's sharpest footgun: change the gallery, forget the ratio sum and the count,
-and the CLS quietly comes back. `dims.py` now derives all three from the thumb
-ratios in `DIMS`, `CONFIG.wallPreview` and the order of `CONFIG.artworks`, and
-rewrites the CSS. Run it after any change to the gallery, including reordering
-it, not just after adding files: the first 12 are what the reserve measures.
+and the CLS quietly comes back. `dims.py` now derives the row counts from
+`CONFIG.artworks`, `CONFIG.wallPreview`, `CONFIG.featured` and that project's
+`gallery`, and rewrites the CSS. Run it after any change to the gallery or the
+featured project, not just after adding files.
 
 **Source order is part of the reserve.** The hero artwork is written *before*
 the copy in the markup, and `order` swaps them back on desktop. It used to be
@@ -219,6 +230,10 @@ when the link is shared, drawn in `tools/og-card.html` and screenshotted by
 `tools/make-og-card.py`. It has no thumbnail and no WebP on purpose, and both
 `dims.py` and `make-webp.py` skip it by name. Never add it to `CONFIG.artworks`
 or it lands in the gallery and the ImageGallery JSON-LD.
+
+**The One Piece Deck on the wall is one card only**: the Ace of Hearts, as a
+way in (Frede's request). The other cards, and the card back
+(`op-deck-back.jpg`, first in the deck's `gallery`), are on the project page.
 
 No CDN. No image service. Netlify serves the files as they are.
 
@@ -410,10 +425,10 @@ A Figma file will not know about the constraints in §9. Those outrank it.
 These are Frede's decisions. They outrank every design skill, every Figma file,
 and every suggestion in this document.
 
-1. **Fan art is never sold.** 10 of the 36 works on the wall are fan art
-   (Chainsaw Man, Attack on Titan, Jujutsu Kaisen, One Piece) and carry
-   `cat:"fanart"`. The 22 cards of the One Piece Deck project are fan art too;
-   they are on its project page only, not on the wall, by Frede's decision. They may
+1. **Fan art is never sold.** 11 of the 37 works in `CONFIG.artworks` are fan
+   art (Chainsaw Man, Attack on Titan, Jujutsu Kaisen, One Piece, including the
+   One Piece Deck's Ace of Hearts) and carry `cat:"fanart"`. The whole One
+   Piece Deck project is fan art; its other cards are on its page only. They may
    be displayed, never sold as prints or merch. Any commerce affordance filters
    to `character` and `sketches`. The ImageGallery JSON-LD deliberately attaches
    no offer to any artwork.
