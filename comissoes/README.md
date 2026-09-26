@@ -21,7 +21,9 @@ Notion. O site só faz uma coisa — recolher o pedido.
 
 ## 1. O site
 
-A secção de comissões mostra os **quatro formatos e mais nada**. Sem preços,
+A secção de comissões (no `loja.html`, a página onde se vende; a página
+inicial só tem uma faixa com o caminho para lá) mostra os **quatro formatos
+e mais nada**. Sem preços,
 sem fases, sem prazos, sem links para a loja. O botão abre um email já
 preenchido com as perguntas de que preciso para dar um valor: formato,
 personagem, referências, pose, cores, data e uso comercial.

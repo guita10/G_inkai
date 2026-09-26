@@ -11,7 +11,7 @@
  * COMO CORRER
  *     node tools/verify.mjs               # tudo
  *     node tools/verify.mjs --rapido      # salta o CLS travado (o mais lento)
- *     node tools/verify.mjs --shop-aberto # testa tambem com shopOpen:true
+ *     node tools/verify.mjs --shop-aberto # testa tambem com shopOpen:true (index e loja)
  *
  *   Sai com codigo 1 se alguma coisa falhar, para poder travar um deploy.
  *   Nao precisa de instalar nada: o Playwright e o Chromium ja ca estao.
@@ -39,6 +39,9 @@ const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const RAPIDO = process.argv.includes('--rapido');
 const SHOP = process.argv.includes('--shop-aberto');
 
+/* as paginas que vao para o ar */
+const PAGINAS = ['index.html', 'projeto.html', 'loja.html', '404.html'];
+
 let falhas = 0, testes = 0;
 const ok   = (m, d = '') => { testes++; console.log(`  \x1b[32m✓\x1b[0m ${m}${d ? '  ' + d : ''}`); };
 const mau  = (m, d = '') => { testes++; falhas++; console.log(`  \x1b[31m✗\x1b[0m ${m}${d ? '  ' + d : ''}`); };
@@ -59,7 +62,7 @@ function estatico(){
   tit('1. Ficheiros e conteudo');
 
   // o JS parseia? (cada bloco <script> que nao seja JSON-LD)
-  for (const pag of ['index.html', 'projeto.html', '404.html']) {
+  for (const pag of PAGINAS) {
     const src = readFileSync(join(ROOT, pag), 'utf8');
     let i = 0, erro = null;
     for (const m of src.matchAll(/<script(?![^>]*application\/ld\+json)[^>]*>([\s\S]*?)<\/script>/g)) {
@@ -80,7 +83,7 @@ function estatico(){
 
   // todas as imagens referidas existem
   const faltam = [];
-  for (const pag of ['index.html', 'projeto.html', '404.html']) {
+  for (const pag of PAGINAS) {
     const src = readFileSync(join(ROOT, pag), 'utf8');
     for (const m of src.matchAll(/["'(](images\/[^"')\s]+)/g)) {
       if (m[1].includes('nome.jpg')) continue;            // exemplo num comentario
@@ -126,17 +129,35 @@ function config(){
       && eq(A.i18n.en.projects, B.i18n.en.projects) && eq(A.i18n.pt.projects, B.i18n.pt.projects),
       'a fatia de projeto.html esta sincronizada com o index');
 
+  /* loja.html: e a casa da loja e das comissoes. O que o index tambem le
+     tem de ser igual nos dois; o que so a loja usa ja nao pode estar no
+     index (foi assim que o projeto.html acumulou precos mortos). */
+  const L = carrega('loja.html');
+  const comuns = ['artistName', 'realName', 'email', 'instagram', 'commissionsOpen', 'tiers', 'shopOpen'];
+  const txt = ['commTitle', 'commOpen', 'commClosed', 'commIntro', 'navShop', 'navComm', 'tiers'];
+  const dif = [...comuns.filter(k => !eq(A[k], L[k])),
+    ...['en', 'pt'].flatMap(l => txt.filter(k => !eq(A.i18n[l][k], L.i18n[l][k])).map(k => `${l}.${k}`))];
+  chk(dif.length === 0, 'loja.html e index.html dizem o mesmo nos campos que partilham', dif.join(' '));
+  const soLoja = ['shop', 'merch', 'shopDrop', 'merchCollection'].filter(k => k in A);
+  chk(soLoja.length === 0, 'o merch vive so no loja.html, nao no index', soLoja.join(' '));
+  const len = Object.keys(L.i18n.en).sort(), lpt = Object.keys(L.i18n.pt).sort();
+  const lso = [...len.filter(k => !lpt.includes(k)), ...lpt.filter(k => !len.includes(k))];
+  chk(lso.length === 0, 'paridade EN/PT no loja.html', lso.join(' ') || `${len.length} chaves de cada lado`);
+
   // §9.9 — nada de em-dashes na copia visivel
   const emdash = [];
   const anda = (o, p) => { for (const [k, v] of Object.entries(o)) {
     if (typeof v === 'string') { if (v.includes('—')) emdash.push(`${p}.${k}`); }
     else if (v && typeof v === 'object') anda(v, `${p}.${k}`); } };
-  anda(A.i18n, 'index'); anda(B.i18n, 'projeto');
+  anda(A.i18n, 'index'); anda(B.i18n, 'projeto'); anda(L.i18n, 'loja');
   chk(emdash.length === 0, '§9.9 nenhum em-dash na copia visivel', emdash.join(' '));
 
   // §9.4 — nenhum preco de comissao no CONFIG nem no JSON-LD
+  /* no loja.html so a parte das comissoes: o merch tem precos de prateleira
+     na pagina de proposito, as comissoes nunca. */
+  const daComissao = l => Object.fromEntries(Object.entries(L.i18n[l]).filter(([k]) => /^comm|^tiers$|^mail/.test(k)));
   const comiss = JSON.stringify({ tiers: A.tiers, i18n: { en: A.i18n.en.tiers, pt: A.i18n.pt.tiers } })
-    + JSON.stringify(B);
+    + JSON.stringify(B) + JSON.stringify({ tiers: L.tiers, en: daComissao('en'), pt: daComissao('pt') });
   chk(!/"price"|priceCurrency|€\s*\d|\d\s*€/.test(comiss),
       '§9.4 nenhum preco de comissao no CONFIG');
   const ld = [...src.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)]
@@ -213,18 +234,20 @@ async function navegador(dir, etiqueta){
      A banda dos 621-743px esteve partida durante meses e 390/768/1440
      pareciam todos bem. Por isso e de 4 em 4 pixeis. */
   {
-    const p = await nova(1280);
-    await p.goto(base + 'index.html', { waitUntil: 'networkidle' });
     const maus = [];
-    for (let w = 320; w <= 1600; w += 4) {
-      await p.setViewportSize({ width: w, height: 900 });
-      await p.waitForTimeout(40);
-      const o = await p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-      if (o > 0) maus.push(`${w}px:+${o}`);
+    for (const pag of ['index.html', 'loja.html']) {
+      const p = await nova(1280);
+      await p.goto(base + pag, { waitUntil: 'networkidle' });
+      for (let w = 320; w <= 1600; w += 4) {
+        await p.setViewportSize({ width: w, height: 900 });
+        await p.waitForTimeout(40);
+        const o = await p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+        if (o > 0) maus.push(`${pag} ${w}px:+${o}`);
+      }
+      await p.close();
     }
-    chk(maus.length === 0, 'zero overflow horizontal de 320 a 1600px (de 4 em 4)',
+    chk(maus.length === 0, 'zero overflow horizontal de 320 a 1600px (de 4 em 4), index e loja',
       maus.slice(0, 6).join(' '));
-    await p.close();
   }
 
   /* --- nenhuma peca cortada ---
@@ -252,7 +275,7 @@ async function navegador(dir, etiqueta){
   /* --- reduced-motion: pela DURACAO, nunca pela propriedade --- */
   {
     const fugas = {};
-    for (const pag of ['index.html', 'projeto.html?p=sok', '404.html']) {
+    for (const pag of ['index.html', 'projeto.html?p=sok', 'loja.html', '404.html']) {
       const p = await nova(1280, { reducedMotion: 'reduce' });
       await p.goto(base + pag, { waitUntil: 'networkidle' });
       await p.waitForTimeout(600);
@@ -266,7 +289,7 @@ async function navegador(dir, etiqueta){
       await p.close();
     }
     const total = Object.values(fugas).flat();
-    chk(total.length === 0, '§9.8 zero efeitos sob prefers-reduced-motion, nas tres paginas',
+    chk(total.length === 0, '§9.8 zero efeitos sob prefers-reduced-motion, nas quatro paginas',
       total.join(' '));
   }
 
@@ -274,9 +297,9 @@ async function navegador(dir, etiqueta){
      Elementos com background-image (gradiente) ficam de fora: a cor de fundo
      computada nao diz nada sobre eles e o resultado seria um falso positivo.
      Esses medem-se nos pixeis, nao no DOM. */
-  {
+  for (const pag of ['index.html', 'loja.html']) {
     const p = await nova(1280);
-    await p.goto(base + 'index.html', { waitUntil: 'networkidle' });
+    await p.goto(base + pag, { waitUntil: 'networkidle' });
     await p.waitForTimeout(600);
     for (const tema of ['dark', 'light']) {
       await p.evaluate(t => document.documentElement.setAttribute('data-theme', t), tema);
@@ -312,17 +335,20 @@ async function navegador(dir, etiqueta){
         }
         return [...new Set(out)];
       });
-      chk(f.length === 0, `contraste no tema ${tema}`, f.slice(0, 5).join('  '));
+      chk(f.length === 0, `contraste no tema ${tema}, ${pag}`, f.slice(0, 5).join('  '));
     }
     await p.close();
   }
 
   /* --- seletores sem alvo e afordancias falsas --- */
-  {
+  for (const pag of ['index.html', 'loja.html']) {
     const p = await nova(1280);
-    await p.goto(base + 'index.html', { waitUntil: 'networkidle' });
+    await p.goto(base + pag, { waitUntil: 'networkidle' });
     await p.waitForTimeout(500);
-    const r = await p.evaluate(() => {
+    /* A loja tem dois estados com CSS proprio: o do merch so tem alvo com a
+       loja aberta, o de "so comissoes" so com ela fechada. Mede-se nos dois e
+       so e morto o seletor que nao tem alvo em NENHUM. */
+    const medir = () => p.evaluate(() => {
       const mortos = [];
       for (const sh of document.styleSheets) { let rs; try { rs = sh.cssRules; } catch (e) { continue; }
         const anda = l => { for (const r of l) { if (r.cssRules) { anda(r.cssRules); continue; }
@@ -340,8 +366,15 @@ async function navegador(dir, etiqueta){
       }
       return { mortos: [...new Set(mortos)], falsos: [...new Set(falsos)] };
     });
-    chk(r.mortos.length === 0, 'nenhum seletor CSS sem alvo', r.mortos.slice(0, 5).join(' '));
-    chk(r.falsos.length === 0, 'nenhum cursor:pointer sem destino clicavel', r.falsos.join(' '));
+    const r = await medir();
+    if (pag === 'loja.html') {
+      await p.evaluate(() => { CONFIG.shopOpen = !CONFIG.shopOpen; render(); });
+      const r2 = await medir();
+      r.mortos = r.mortos.filter(x => r2.mortos.includes(x));
+      r.falsos = [...new Set([...r.falsos, ...r2.falsos])];
+    }
+    chk(r.mortos.length === 0, `nenhum seletor CSS sem alvo, ${pag}`, r.mortos.slice(0, 5).join(' '));
+    chk(r.falsos.length === 0, `nenhum cursor:pointer sem destino clicavel, ${pag}`, r.falsos.join(' '));
     await p.close();
   }
 
@@ -372,12 +405,13 @@ async function navegador(dir, etiqueta){
     const abriu = await p.evaluate(() => document.getElementById('lb').classList.contains('open'));
     await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(400);
     const volta = await p.evaluate(() => document.getElementById('lbPos').textContent.trim());
+    const nPecas = await p.evaluate(() => document.querySelectorAll('.wall .frame').length);
     await p.keyboard.press('Escape'); await p.waitForTimeout(400);
     const fechou = await p.evaluate(() => ({
       fechada: !document.getElementById('lb').classList.contains('open'),
       scroll: document.body.style.overflow }));
-    chk(abriu && /28/.test(volta) && fechou.fechada && fechou.scroll === '',
-      'lightbox abre, da a volta, fecha e solta o scroll', `${volta}`);
+    chk(abriu && volta.includes(String(nPecas)) && fechou.fechada && fechou.scroll === '',
+      'lightbox abre, da a volta, fecha e solta o scroll', `${volta} de ${nPecas}`);
     await p.close();
   }
 
@@ -403,16 +437,22 @@ async function navegador(dir, etiqueta){
   /* --- projeto.html: todas as chaves, as duas linguas --- */
   {
     const maus = [];
+    let serieSok = 0;
     for (const loc of ['en-US', 'pt-PT']) {
       const p = await nova(1100, { locale: loc });
       for (const k of ['sok', 'tr', 'pamp', 'naoexiste', '']) {
         await p.goto(`${base}projeto.html?p=${k}`, { waitUntil: 'networkidle' });
+        /* a serie inteira, nao so a capa: as outras sao lazy e sem as forcar
+           reportavam naturalWidth 0 e passavam por engano */
+        await p.evaluate(() => { for (const i of document.querySelectorAll('.wrap img')) i.loading = 'eager'; });
+        await p.waitForTimeout(700);
         const r = await p.evaluate(() => {
-          const i = document.querySelector('.wrap img');
+          const imgs = [...document.querySelectorAll('.wrap img')];
           return { h1: document.querySelector('h1').textContent.trim(),
-                   img: i ? i.naturalWidth > 0 : null,
+                   img: imgs.length ? imgs.every(i => i.naturalWidth > 0) : null, n: imgs.length,
                    robots: document.querySelector('meta[name="robots"]').content };
         });
+        if (k === 'sok') serieSok = r.n;
         const real = ['sok', 'tr', 'pamp'].includes(k);
         if (!r.h1) maus.push(`${loc} ${k}: sem titulo`);
         if (real && r.img === false) maus.push(`${loc} ${k}: imagem partida`);
@@ -420,7 +460,47 @@ async function navegador(dir, etiqueta){
       }
       await p.close();
     }
-    chk(maus.length === 0, 'projeto.html nas 3 chaves + invalida + vazia, EN e PT', maus.join(' '));
+    chk(maus.length === 0, 'projeto.html nas 3 chaves + invalida + vazia, EN e PT, a serie toda carregada',
+      maus.join(' ') || `Survival of Kings: ${serieSok} imagens`);
+  }
+
+  /* --- loja.html: as duas linguas, fechada e aberta, e o caminho desde o index --- */
+  {
+    const maus = [];
+    for (const lq of ['', '?lang=pt']) {
+      const p = await nova(1100, { locale: 'en-US' });
+      await p.goto(`${base}loja.html${lq}`, { waitUntil: 'networkidle' });
+      const r = await p.evaluate(() => {
+        const fechada = { h1: document.querySelector('h1').textContent.trim(),
+          lang: document.documentElement.lang,
+          merch: !document.getElementById('merch').hidden,
+          formatos: document.querySelectorAll('#tiers .tier').length,
+          mail: document.getElementById('commCta').href.startsWith('mailto:') };
+        const eraAberta = CONFIG.shopOpen;
+        CONFIG.shopOpen = true; render();
+        const cartoes = [...document.querySelectorAll('#merchGrid .merch-card')];
+        const aberta = { merch: !document.getElementById('merch').hidden, cartoes: cartoes.length,
+          loja: cartoes.every(a => a.href.startsWith(CONFIG.shop)) };
+        CONFIG.shopOpen = eraAberta; render();
+        return { fechada, aberta, eraAberta };
+      });
+      const quer = lq ? 'pt' : 'en';
+      if (r.fechada.lang !== quer) maus.push(`${lq || 'sem ?lang'}: lingua ${r.fechada.lang}`);
+      if (!r.fechada.h1) maus.push(`${quer}: sem titulo`);
+      if (r.fechada.formatos !== 4) maus.push(`${quer}: ${r.fechada.formatos} formatos`);
+      if (!r.fechada.mail) maus.push(`${quer}: o pedido nao e um mailto`);
+      if (!r.eraAberta && r.fechada.merch) maus.push(`${quer}: merch visivel com shopOpen:false`);
+      if (!r.aberta.merch || r.aberta.cartoes < 1 || !r.aberta.loja) maus.push(`${quer}: merch aberto partido`);
+      await p.close();
+    }
+    /* do index para a loja, a lingua vai no link */
+    const p = await nova(1280, { locale: 'en-US' });
+    await p.goto(base + 'index.html', { waitUntil: 'networkidle' });
+    await p.evaluate(() => document.getElementById('langTgl').click());
+    const hrefs = await p.evaluate(() => [...document.querySelectorAll('[data-loja]')].map(a => a.getAttribute('href')));
+    if (!hrefs.length || !hrefs.every(h => h.startsWith('loja.html?lang=pt'))) maus.push('index PT: links sem ?lang=pt ' + hrefs.join(' '));
+    await p.close();
+    chk(maus.length === 0, 'loja.html em EN e PT, fechada e aberta, e o index leva la a lingua', maus.join(' '));
   }
 
   /* --- §9.9: em-dashes na copia VISIVEL, nao so no CONFIG ---
@@ -430,7 +510,7 @@ async function navegador(dir, etiqueta){
      o browser tem mesmo: texto renderizado e atributos alt. */
   {
     const achados = [];
-    for (const pag of ['index.html', 'projeto.html?p=sok', 'projeto.html?p=tr', '404.html']) {
+    for (const pag of ['index.html', 'projeto.html?p=sok', 'projeto.html?p=tr', 'loja.html', 'loja.html?lang=pt', '404.html']) {
       const p = await nova(1280);
       await p.goto(base + pag, { waitUntil: 'networkidle' });
       await p.waitForTimeout(500);
@@ -465,7 +545,11 @@ async function navegador(dir, etiqueta){
     const r = await p.evaluate(() => ({
       molduras: document.querySelectorAll('.wall .frame').length,
       h1: document.querySelector('.hero h1').textContent.trim().length }));
-    chk(r.molduras > 0 && r.h1 > 0, 'o site abre por file://', `${r.molduras} molduras`);
+    await p.goto('file://' + join(ROOT, 'loja.html'), { waitUntil: 'networkidle' });
+    await p.waitForTimeout(400);
+    const formatos = await p.evaluate(() => document.querySelectorAll('#tiers .tier').length);
+    chk(r.molduras > 0 && r.h1 > 0 && formatos === 4, 'o site abre por file://, index e loja',
+      `${r.molduras} molduras, ${formatos} formatos`);
     await p.close();
   }
 
@@ -486,7 +570,7 @@ if (SHOP) {
   /* A loja fechada e o estado que vai para o ar, mas o estado aberto tem de
      ser testado antes do dia do lancamento, nao nesse dia. */
   const tmp = mkdtempSync(join(tmpdir(), 'gi-shop-'));
-  for (const f of ['index.html', 'projeto.html', '404.html'])
+  for (const f of PAGINAS)
     writeFileSync(join(tmp, f), readFileSync(join(ROOT, f), 'utf8')
       .replace('  shopOpen: false,', '  shopOpen: true,'));
   execFileSync('cp', ['-r', join(ROOT, 'images'), tmp]);

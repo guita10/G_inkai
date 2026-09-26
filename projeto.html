@@ -61,7 +61,8 @@ const CONFIG = {
                Depois de mexer nisto corre o tools/dims.py: as medidas de
                TODAS estas imagens sao geradas de la. */
   projects: [
-    { src: "images/proj-sok.jpg", label: "Survival of Kings", ratio: "34", key: "sok", plate: "SOK" },
+    { src: "images/proj-sok.jpg", label: "Survival of Kings", ratio: "34", key: "sok", plate: "SOK",
+      gallery: ["images/kei.jpg", "images/edan.jpg", "images/lumi.jpg", "images/masami.jpg"] },
     { src: "images/proj-tr.jpg", label: "Tokyo Revengers", ratio: "34", key: "tr", plate: "TR" },
     { src: "images/proj-pamp.jpg", label: "PAMP", ratio: "34", key: "pamp", plate: "P" },
   ],
@@ -207,6 +208,10 @@ const WEBP_OK = (() => {
    escrevas estes numeros a mao. */
 const PROJ_DIMS = {
   "proj-sok.jpg":  {w:1280, h:1600},
+  "kei.jpg":       {w:1280, h:1600},
+  "edan.jpg":      {w:1280, h:1600},
+  "lumi.jpg":      {w:1280, h:1600},
+  "masami.jpg":    {w:1280, h:1600},
   "proj-tr.jpg":   {w:1066, h:1600},
   "proj-pamp.jpg": {w:1553, h:1600},
 };

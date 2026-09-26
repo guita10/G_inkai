@@ -14,7 +14,8 @@ neglect.
 
 There is no framework, no npm, no build step, no component library, no icon
 library, and no CSS methodology. The entire site is four hand-written HTML files
-plus an images folder. `index.html` is 1,743 lines and contains a `CONFIG`
+(`index.html`, `projeto.html`, `loja.html`, `404.html`) plus an images folder.
+`index.html` is about 1,760 lines and contains a `CONFIG`
 object, one `<style>` block, the markup, and the render JavaScript. It must keep
 working when opened directly from disk over `file://`. Content lives in `CONFIG`
 and is rendered by plain DOM functions. Anything that reads like "add a
@@ -25,8 +26,8 @@ dependency", "extract a component", or "run a build" is wrong for this repo.
 ## 1. Token definitions
 
 **Where:** one `:root` block at the top of the `<style>` in `index.html`, with a
-`[data-theme="light"]` block overriding a subset. `projeto.html` and `404.html`
-carry their own copies.
+`[data-theme="light"]` block overriding a subset. `projeto.html`, `loja.html`
+and `404.html` carry their own copies.
 
 **Format:** plain CSS custom properties. No JSON, no Style Dictionary, no
 transformation pipeline. Twelve tokens total.
@@ -73,7 +74,7 @@ render `<script>` of `index.html` that build DOM nodes from `CONFIG`:
 | Function | Builds |
 | --- | --- |
 | `artEl(item, full)` | an `<img>` with WebP/JPEG fallback, dimensions, srcset on the hero |
-| `renderWall()` | the 28-tile gallery wall |
+| `renderWall()` | the gallery wall, one tile per `CONFIG.artworks` entry |
 | `renderHeroArt()` | the hero artwork |
 | `renderText()` | everything language-dependent: `[data-t]` text, filters, projects, tiers, timeline |
 | `openLb` / `drawLb` / `closeLb` / `stepLb` | the lightbox |
@@ -141,8 +142,9 @@ this repo or the answer is a dozen lines of vanilla code.
 ## 4. Asset management
 
 ```
-images/           28 full-size JPEG (1600px longest side) + 25 WebP
-images/thumb/     28 thumbnails (760px) + 27 WebP
+images/           36 full-size JPEG (1600px longest side: 33 artworks + 3 project
+                  covers) + og-card.jpg, and 33 WebP
+images/thumb/     36 thumbnails (760px) + 35 WebP
 ```
 
 Four files have no WebP because WebP came out larger than the JPEG. That is
@@ -184,13 +186,13 @@ was **CLS 0.96**. The fix is reserving the space in CSS up front:
 
 The wall's reserve is a formula, not a constant, because the right height
 changes with viewport width: the sum of every piece's height-over-width ratio
-(**31.8** for these 28) times one column's width, over the column count, plus
+(**38.0** for these 33) times one column's width, over the column count, plus
 margins. Aim **1-5% under** the real height. Under-reserving settles by a few
 pixels; over-reserving opens a gap that closes again, which counts just the
 same. Result after all of it: 0.006 throttled, 0 unthrottled.
 
 **The three coefficients are generated — never hand-edit them.** They used to
-be the repo's sharpest footgun: change the gallery, forget the 31.8 and the 28,
+be the repo's sharpest footgun: change the gallery, forget the ratio sum and the count,
 and the CLS quietly comes back. `dims.py` now derives all three from the thumb
 ratios in `DIMS` and the length of `CONFIG.artworks`, and rewrites the CSS. Run
 it after any change to the gallery, not just after adding files.
@@ -284,9 +286,11 @@ Every interactive control answers a press with `transform: scale(.97)` over
 ```
 index.html      the whole single-page site (CONFIG + CSS + markup + render JS)
 projeto.html    per-project detail page, reads ?p=sok|tr|pamp
+loja.html       the selling page: commissions (four formats, no prices) and,
+                once shopOpen is true, the merch. Reads ?lang=pt|en
 404.html        standalone, self-contained
 robots.txt
-sitemap.xml     four URLs; update lastmod when content changes
+sitemap.xml     five URLs; update lastmod when content changes
 images/         + images/thumb/
 comissoes/      the commission system; nothing here is served
   README.md       how site, Notion and email fit together
@@ -320,6 +324,18 @@ site. They rendered nothing, but they shipped in the source Netlify serves.
 It now carries only what that page reads: `artistName`, `realName`, `projects`,
 and `i18n.{en,pt}.projects`. Those four still have to match `index.html`.
 Nothing else belongs there, so nothing else can go stale.
+
+**`loja.html` is where the site sells, and it owns what only it uses.** The
+merch list and its prices, the Shopify address, the drop name, the shop copy
+and the commission email template live there and nowhere else; `verify.mjs`
+fails if `merch`, `shop`, `shopDrop` or `merchCollection` reappear in
+`index.html`. The home page keeps a short commissions band that links to it.
+The fields both pages read have to match, and `verify.mjs` checks them:
+`artistName`, `realName`, `email`, `instagram`, `commissionsOpen`, `tiers`,
+`shopOpen`, and the copy keys `commTitle`, `commOpen`, `commClosed`,
+`commIntro`, `navShop`, `navComm`, `tiers`. That is why launching the shop is
+`shopOpen:true` in **both** files. Links from the home page carry the chosen
+language as `?lang=pt`, and the page's back links carry it home again.
 
 ---
 
@@ -383,7 +399,7 @@ A Figma file will not know about the constraints in §9. Those outrank it.
 These are Frede's decisions. They outrank every design skill, every Figma file,
 and every suggestion in this document.
 
-1. **Fan art is never sold.** 10 of the 28 works are fan art (Chainsaw Man,
+1. **Fan art is never sold.** 10 of the 33 works are fan art (Chainsaw Man,
    Attack on Titan, Jujutsu Kaisen, One Piece) and carry `cat:"fanart"`. They may
    be displayed, never sold as prints or merch. Any commerce affordance filters
    to `character` and `sketches`. The ImageGallery JSON-LD deliberately attaches
@@ -395,7 +411,8 @@ and every suggestion in this document.
    and only as a subordinate clause about method. Never in a tagline, meta
    description or schema. The bio is first person and three short paragraphs:
    what he draws, the one architecture line, and ink before colour.
-4. **No commission terms and no prices on the site.** The section shows the four
+4. **No commission terms and no prices on the site.** The commissions section
+   (on `loja.html`; the home page only has a band linking there) shows the four
    formats and nothing else: no prices, no stages, no turnaround, no shop links,
    no payment split, no percentages, no deposit language, in any wording. The
    price is not in the markup, not in `CONFIG`, and not in the JSON-LD, because
@@ -429,7 +446,7 @@ by reading the diff and assuming."*
 Chromium and exits 1 if anything fails, so it can gate a deploy. It needs no
 install: Playwright and Chromium are already on the machine, and it blocks the
 Google Fonts request so it works offline. `--rapido` skips the throttled CLS
-runs (the slow part); `--shop-aberto` also tests the shop with `shopOpen:true`,
+runs (the slow part); `--shop-aberto` also tests the shop with `shopOpen:true` (in `index.html` and `loja.html`),
 on a temporary copy.
 
 It is checked against planted bugs, not just against a green repo: breaking

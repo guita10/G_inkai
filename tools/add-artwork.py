@@ -241,8 +241,8 @@ def main():
     print("E no projeto.html — os dois tem de ficar iguais):")
     for slug, name in done:
         print(f'    src: "images/{name}",')
-    print("\nPara obras da GALERIA, junta estas linhas ao artworks do index.html e")
-    print("as mesmas ao projeto.html. O titulo e a categoria escreve-os tu: o")
+    print("\nPara obras da GALERIA, junta estas linhas ao artworks do index.html")
+    print("(so la: o projeto.html ja nao guarda a galeria). O titulo e a categoria escreve-os tu: o")
     print("script nao sabe o que esta na imagem e nao ha de inventar.")
     print("  cat: character | sketches | fanart   (fanart nunca e vendida)")
     for slug, name in done:
