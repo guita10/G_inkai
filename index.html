@@ -174,13 +174,17 @@ const CONFIG = {
     { src: "images/op-deck-robin.jpg",         label: "Robin, One Piece Deck",    ratio: "34", cat: "fanart" },
     { src: "images/op-deck-yamato.jpg",        label: "Yamato, One Piece Deck",   ratio: "34", cat: "fanart" },
     { src: "images/op-deck-hancock.jpg",       label: "Boa Hancock, One Piece Deck", ratio: "34", cat: "fanart" },
+    { src: "images/op-deck-roger.jpg",         label: "Gol D. Roger, One Piece Deck", ratio: "34", cat: "fanart" },
+    { src: "images/op-deck-luffy.jpg",         label: "Luffy, One Piece Deck",    ratio: "34", cat: "fanart" },
+    { src: "images/op-deck-blackbeard.jpg",    label: "Blackbeard, One Piece Deck", ratio: "34", cat: "fanart" },
+    { src: "images/op-deck-shanks.jpg",        label: "Shanks, One Piece Deck",   ratio: "34", cat: "fanart" },
     { src: "images/dante.jpg",                 label: "Dante",                     ratio: "11", cat: "fanart" },
     { src: "images/lucy.jpg",                  label: "Lucy",                      ratio: "11", cat: "fanart" },
   ],
 
-  /* 28 peças do pacote original (era 414 MB → 5,5 MB), mais as 12 de Set 2026:
-     a Angela, sete personagens do Survival of Kings e as quatro damas do
-     One Piece Deck (fan art). */
+  /* 28 peças do pacote original (era 414 MB → 5,5 MB), mais as 16 de Set 2026:
+     a Angela, sete personagens do Survival of Kings e as damas e os reis
+     do One Piece Deck (fan art). O Chopper NAO e do baralho. */
 
   projects: [
     /* Os quatro projectos ja tem arte. O One Piece Deck e fan art (§9.1):
@@ -194,7 +198,8 @@ const CONFIG = {
     { src: "images/proj-tr.jpg",   label: "Tokyo Revengers", ratio: "34", key: "tr",   plate: "TR"  },
     { src: "images/proj-pamp.jpg", label: "PAMP",            ratio: "34", key: "pamp", plate: "P"   },
     { src: "images/op-deck-nami.jpg", label: "One Piece Deck", ratio: "34", key: "deck", plate: "Q",
-      gallery: ["images/op-deck-robin.jpg", "images/op-deck-yamato.jpg", "images/op-deck-hancock.jpg"] },
+      gallery: ["images/op-deck-robin.jpg", "images/op-deck-yamato.jpg", "images/op-deck-hancock.jpg",
+                "images/op-deck-roger.jpg", "images/op-deck-luffy.jpg", "images/op-deck-blackbeard.jpg", "images/op-deck-shanks.jpg"] },
   ],
 
   /* ---------- TIMELINE ----------
@@ -228,7 +233,7 @@ const CONFIG = {
         sok:  { kicker: "Webtoon series", title: "Survival of Kings", desc: "Ongoing webtoon / graphic novel, co-created with writer Reeeborn. Ink-style panels and vertical-scroll storytelling." },
         tr:   { kicker: "Monthly, with Distrito Manga", title: "Tokyo Revengers, covers reimagined", desc: "Each volume cover redrawn in the original format, with faces from the anime and manga community standing in for the characters. A new one goes out every month, alongside the publisher's releases." },
         pamp: { kicker: "Visual identity", title: "PAMP: Prémios Anime Manga Portugal", desc: "Full visual identity: key art, logo lock-ups and event graphics." },
-        deck: { kicker: "Fan art, playing cards", title: "One Piece Deck", desc: "One Piece characters drawn as playing cards. These are the four queens: Nami, Robin, Yamato and Boa Hancock." },
+        deck: { kicker: "Fan art, playing cards", title: "One Piece Deck", desc: "One Piece characters drawn as playing cards. The queens are Nami, Robin, Yamato and Boa Hancock; the kings are Gol D. Roger, Luffy, Blackbeard and Shanks." },
       },
       tlTitle: "Timeline",
       tlUpcoming: "Upcoming", tlNext: "Next up",
@@ -302,7 +307,7 @@ const CONFIG = {
         sok:  { kicker: "Série webtoon", title: "Survival of Kings", desc: "Webtoon / graphic novel em curso, co-criado com o escritor Reeeborn. Painéis a tinta e narrativa em scroll vertical." },
         tr:   { kicker: "Mensal, com a Distrito Manga", title: "Tokyo Revengers, capas reinterpretadas", desc: "Cada capa de volume refeita no formato original, com figuras da comunidade anime e manga no lugar das personagens. Sai uma por mês, a acompanhar os lançamentos da editora." },
         pamp: { kicker: "Identidade visual", title: "PAMP: Prémios Anime Manga Portugal", desc: "Identidade visual completa: key art, logótipos e grafismo de evento." },
-        deck: { kicker: "Fan art, cartas de jogar", title: "One Piece Deck", desc: "Personagens de One Piece desenhadas como cartas de jogar. Estas são as quatro damas: Nami, Robin, Yamato e Boa Hancock." },
+        deck: { kicker: "Fan art, cartas de jogar", title: "One Piece Deck", desc: "Personagens de One Piece desenhadas como cartas de jogar. As damas são a Nami, a Robin, a Yamato e a Boa Hancock; os reis são o Gol D. Roger, o Luffy, o Barba Negra e o Shanks." },
       },
       tlTitle: "Percurso",
       tlUpcoming: "Em breve", tlNext: "A seguir",
@@ -686,7 +691,7 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
    escrevas a mao — junta a arte e corre o script. */
 .wall{
   --wall-w:calc(min(1240px,100vw) - 52px);
-  min-height:calc(11.85 * (var(--wall-w) - 42px) / 4 + 140px);
+  min-height:calc(13.26 * (var(--wall-w) - 42px) / 4 + 154px);
 }
 .frame{
   break-inside:avoid;margin:0 0 14px;display:block;width:100%;
@@ -997,7 +1002,7 @@ footer{font-family:var(--f-ui);
 
 /* ================= RESPONSIVE ================= */
 @media (max-width:980px){
-  .wall{column-count:3;min-height:calc(15.81 * (var(--wall-w) - 28px) / 3 + 187px)}
+  .wall{column-count:3;min-height:calc(17.68 * (var(--wall-w) - 28px) / 3 + 205px)}
   .hero-grid{grid-template-columns:1fr;gap:34px;align-items:start}
   /* Numa coluna so nao ha nada a trocar: a ordem do HTML (obra, depois texto)
      e exactamente a que se quer ver. Antes a obra vinha por baixo do titulo,
@@ -1015,7 +1020,7 @@ footer{font-family:var(--f-ui);
 }
 @media (max-width:620px){
   .bar{min-height:64px}
-  .wall{column-count:2;min-height:calc(23.71 * (var(--wall-w) - 14px) / 2 + 280px)}
+  .wall{column-count:2;min-height:calc(26.52 * (var(--wall-w) - 14px) / 2 + 308px)}
   .links{display:none}
   .knobs{margin-left:auto}
   .nav-toggle{display:block}
@@ -1254,7 +1259,7 @@ const srcOf = s => /^https?:\/\//i.test(s) ? s : (CONFIG.imageBase || '') + s;
 /* image that degrades to a labelled placeholder when the file is missing.
    full=false  → serve images/thumb/… (760px) — grelha, tira, cartões
    full=true   → serve o ficheiro grande (1600px) — só no lightbox            */
-const DIMS = {"aki.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"angela.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"arkevil-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"arti.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"clair.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"collab-mira-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"collab.jpg":{"w":1600,"h":1280,"tw":760,"th":608},"dante.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"edan.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"estudo-luz.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"even-yeager.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"final-aot-season-4.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"geisha.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"ilustracao-sem-titulo-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"ilustracao-sem-titulo.jpg":{"w":1600,"h":1067,"tw":760,"th":507},"italy.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kei.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kindo.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kon.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"lucy.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"lumi.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"makima.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"masami.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"mira-starborn.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"nami-30x40.jpg":{"w":1200,"h":1600,"tw":570,"th":760},"oc-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"oc-2.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"oc.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"op-deck-hancock.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-nami.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-robin.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-yamato.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"pochita.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"proj-pamp.jpg":{"w":1553,"h":1600,"tw":738,"th":760},"proj-sok.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"proj-tr.jpg":{"w":1066,"h":1600,"tw":507,"th":760},"shocked.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"silen.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"spain.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"surpresa.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"the-witch.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"yakura.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"yuta-fanart.jpg":{"w":1280,"h":1600,"tw":608,"th":760}};
+const DIMS = {"aki.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"angela.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"arkevil-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"arti.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"clair.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"collab-mira-final.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"collab.jpg":{"w":1600,"h":1280,"tw":760,"th":608},"dante.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"edan.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"estudo-luz.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"even-yeager.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"final-aot-season-4.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"geisha.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"ilustracao-sem-titulo-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"ilustracao-sem-titulo.jpg":{"w":1600,"h":1067,"tw":760,"th":507},"italy.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kei.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kindo.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"kon.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"lucy.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"lumi.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"makima.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"masami.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"mira-starborn.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"nami-30x40.jpg":{"w":1200,"h":1600,"tw":570,"th":760},"oc-1.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"oc-2.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"oc.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"op-deck-blackbeard.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-hancock.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-luffy.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-nami.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-robin.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-roger.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-shanks.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"op-deck-yamato.jpg":{"w":1139,"h":1600,"tw":541,"th":760},"pochita.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"proj-pamp.jpg":{"w":1553,"h":1600,"tw":738,"th":760},"proj-sok.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"proj-tr.jpg":{"w":1066,"h":1600,"tw":507,"th":760},"shocked.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"silen.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"spain.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"surpresa.jpg":{"w":1600,"h":1600,"tw":760,"th":760},"the-witch.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"yakura.jpg":{"w":1280,"h":1600,"tw":608,"th":760},"yuta-fanart.jpg":{"w":1280,"h":1600,"tw":608,"th":760}};
 /* Proporcao a usar na moldura. Sai do mapa DIMS, ou seja dos pixeis reais do
    ficheiro. O campo `ratio` do CONFIG fica so como rede: arte nova que ainda
    nao passou pelo tools/dims.py nao tem entrada em DIMS e cai no molde antigo. */
