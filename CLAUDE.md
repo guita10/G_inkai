@@ -142,9 +142,10 @@ this repo or the answer is a dozen lines of vanilla code.
 ## 4. Asset management
 
 ```
-images/           57 full-size JPEG (1600px longest side: 54 artworks + 3 project
-                  covers; the deck reuses a queen as its cover) + og-card.jpg, and a WebP for most (see below)
-images/thumb/     57 thumbnails (760px) + WebP
+images/           61 full-size JPEG (1600px longest side: 54 artworks + 3 project
+                  covers + the four 2s of the deck, which are on its project
+                  page only; the deck reuses a queen as its cover) + og-card.jpg, and a WebP for most (see below)
+images/thumb/     61 thumbnails (760px) + WebP
 ```
 
 Four files have no WebP because WebP came out larger than the JPEG. That is
