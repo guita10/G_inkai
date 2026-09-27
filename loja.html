@@ -87,9 +87,11 @@ const CONFIG = {
   merchCollection: "merch-guita_ink",
   merch: [                                              // sincronizado com o Shopify, 27 Set 2026 (produtos em Rascunho)
     /* a roupa do Drop 01 primeiro: t-shirt e hoodie, os tres desenhos, preto
-       ou branco, S a XL. Impressa pela Printful por encomenda. */
+       ou branco, S a XL. Impressa pela Printful por encomenda. Hoodie:
+       Gildan 18500 (o hoodie base da Printful), 45 EUR: custa ~20 EUR, ganha
+       um pouco mais do que a t-shirt por venda. */
     { key: "tee",     price: "30", unit: "€", from: false, handle: "t-shirt-drop-01", plate: "衣" },
-    { key: "hoodie",  price: "50", unit: "€", from: false, handle: "hoodie-drop-01",  plate: "帽" },
+    { key: "hoodie",  price: "45", unit: "€", from: false, handle: "hoodie-drop-01",  plate: "帽" },
     { key: "print",   price: "18", unit: "€", from: true,  handle: "art-print-drop-01", plate: "版" },
     { key: "limited", price: "45", unit: "€", from: false, handle: "limited-edition-a3-drop-01", plate: "限" },
     { key: "sticker", price: "4",  unit: "€", from: true,  handle: "stickers-drop-01", plate: "貼" },
@@ -123,7 +125,7 @@ const CONFIG = {
         tee:     { name: "T-shirt",         desc: "Unisex, printed on the front. Black or white, S to XL." },
         hoodie:  { name: "Hoodie",          desc: "Unisex, printed on the front. Black or white, S to XL." },
         print:   { name: "Art print",       desc: "A4 or A3, heavyweight matte paper." },
-        limited: { name: "Limited edition", desc: "A3, signed and numbered. 50 copies, never reprinted." },
+        limited: { name: "Limited edition", desc: "A3, signed and numbered. 50 copies of each design, never reprinted." },
         sticker: { name: "Stickers",        desc: "Die-cut vinyl, matte or holographic." },
         acrylic: { name: "Acrylic keychain", desc: "Double-sided clear acrylic. Made once the batch fills." },
       },
@@ -164,7 +166,7 @@ const CONFIG = {
         tee:     { name: "T-shirt",            desc: "Unissexo, estampada à frente. Preta ou branca, do S ao XL." },
         hoodie:  { name: "Sweat com capuz",    desc: "Unissexo, estampada à frente. Preta ou branca, do S ao XL." },
         print:   { name: "Print",              desc: "A4 ou A3, papel mate de gramagem alta." },
-        limited: { name: "Edição limitada",    desc: "A3, assinada e numerada. 50 exemplares, sem reimpressão." },
+        limited: { name: "Edição limitada",    desc: "A3, assinada e numerada. 50 exemplares de cada desenho, sem reimpressão." },
         sticker: { name: "Autocolantes",       desc: "Vinil recortado, mate ou holográfico." },
         acrylic: { name: "Porta-chaves acrílico", desc: "Acrílico transparente, dupla face. Produzido quando o lote fecha." },
       },
