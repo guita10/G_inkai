@@ -276,7 +276,7 @@ async function navegador(dir, etiqueta){
          nao a proporcao da obra: a obra entra inteira por object-fit:contain.
          Por isso o teste aceita as duas coisas que garantem "nada cortado" —
          proporcoes iguais, ou contain — e falha com cover ou fill. */
-      for (const i of document.querySelectorAll('.wall img, .pf img')) {
+      for (const i of document.querySelectorAll('.wall img, .pf img, .proj > img')) {
         if (!i.naturalWidth) { o.push(i.getAttribute('src') + ':nao carregou'); continue; }
         const r = i.getBoundingClientRect();
         const igual = Math.abs(i.naturalWidth / i.naturalHeight - r.width / r.height) <= 0.02;
@@ -284,7 +284,11 @@ async function navegador(dir, etiqueta){
       }
       return o;
     });
-    chk(cort.length === 0, 'nenhuma peca da parede esta cortada', cort.join(' '));
+    chk(cort.length === 0, 'nenhuma peca da parede nem capa de projecto esta cortada', cort.join(' '));
+    /* as capas da fila de projectos tem a mesma altura (Set 2026): larguras de
+       coluna diferentes e proporcoes diferentes davam titulos desalinhados */
+    const alt = await p.evaluate(() => [...document.querySelectorAll('.proj > img')].map(i => Math.round(i.getBoundingClientRect().height)));
+    chk(alt.length > 0 && new Set(alt).size === 1, 'as capas dos projectos tem todas a mesma altura', alt.join(' / '));
     await p.close();
   }
 

@@ -835,6 +835,13 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 }
 .proj:hover{border-color:var(--royal-lift);transform:translateY(-4px)}
 .proj .body{padding:24px;display:flex;flex-direction:column;gap:9px;flex:1}
+/* as tres capas com a mesma altura: as colunas tem larguras diferentes de
+   proposito e as capas proporcoes diferentes (TR alta, PAMP quase quadrada),
+   por isso cada titulo comecava a uma altura e sobrava um buraco nos cartoes
+   curtos. Mesma regra da parede: altura igual, a capa inteira la dentro
+   (contain), sobre o --raise-2 como um passe-partout. Nunca se corta. */
+.proj > img{width:100%;height:clamp(300px,31vw,440px);object-fit:contain;
+  background:var(--raise-2);border-bottom:1px solid var(--hair)}
 .plate{
   display:grid;place-items:center;background:var(--raise-2);position:relative;overflow:hidden;
   border-bottom:1px solid var(--hair);
@@ -1607,10 +1614,12 @@ function renderText(){
     /* o ano ja aparece em grande na coluna da esquerda no primeiro item de cada
        grupo, por isso aqui so se repete quando NAO aparece la. Sem isso ficava
        "2023" duas vezes lado a lado. */
+    /* O mes sozinho: o ano ja esta em grande a cabeca do grupo (a coluna da
+       esquerda no desktop, o titulo no telemovel). Repetir "ABR 2026" debaixo
+       de "2026" era ruido, e o primeiro item do grupo ficava diferente dos
+       outros. So um item sem mes e sem ano em grande leva o ano escrito. */
     const showsBigYear = cell.textContent !== '';
-    const when = e.month
-      ? (showsBigYear ? t.months[e.month-1] : `${t.months[e.month-1]} ${e.year}`)
-      : (showsBigYear ? '' : `${e.year}`);
+    const when = e.month ? t.months[e.month-1] : (showsBigYear ? '' : `${e.year}`);
     const flag = e.status === 'next'
       ? `<span class="tl-flag">${e === firstNext ? t.tlNext : t.tlUpcoming}</span>` : '';
     const item = document.createElement('article');

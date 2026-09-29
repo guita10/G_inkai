@@ -203,7 +203,7 @@ content width on desktop, the cover's full height on a phone).
 are exactly 4:5; everything else is fitted whole with `object-fit:contain`
 and sits on `--raise` like a mat. `verify.mjs` accepts a tile only if its
 image either matches the frame's ratio or is `contain`; switching to `cover`
-is caught (tested against that planted bug). Aim **1-5% under** the real height. Under-reserving settles by a few
+is caught (tested against that planted bug). The covers in the row of project cards follow the same rule: one fixed height, the cover whole inside it (`contain`), so the three titles line up; `verify.mjs` checks both. Aim **1-5% under** the real height. Under-reserving settles by a few
 pixels; over-reserving opens a gap that closes again, which counts just the
 same. Result after all of it: 0.006 throttled, 0 unthrottled.
 
