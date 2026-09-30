@@ -148,6 +148,28 @@ function config(){
   chk(dif.length === 0, 'loja.html e index.html dizem o mesmo nos campos que partilham', dif.join(' '));
   const soLoja = ['shop', 'merch', 'shopDrop', 'merchCollection'].filter(k => k in A);
   chk(soLoja.length === 0, 'o merch vive so no loja.html, nao no index', soLoja.join(' '));
+  /* o cesto compra pelo ID de cada variante: um ID em falta ou repetido e um
+     artigo que nao chega ao checkout, ou o artigo errado. Um por combinacao,
+     so digitos, nenhum repetido em lado nenhum, e cada opcao com nome nas
+     duas linguas. (Se os IDs batem com o Shopify, isto nao ve: e o teste do
+     browser que confere uma amostra.) */
+  {
+    const maus = [], vistos = new Set();
+    for (const m of L.merch.filter(m => !m.hold)) {
+      if (!m.opts || !m.variants) { maus.push(`${m.key}: sem opts/variants`); continue; }
+      const combos = m.opts.reduce((a, o) => a * o.v.length, 1);
+      if (m.variants.length !== combos) maus.push(`${m.key}: ${m.variants.length} IDs para ${combos} combinacoes`);
+      for (const id of m.variants) {
+        if (!/^\d{10,}$/.test(id)) maus.push(`${m.key}: ID estranho ${id}`);
+        if (vistos.has(id)) maus.push(`${m.key}: ID repetido ${id}`);
+        vistos.add(id);
+      }
+      for (const o of m.opts) for (const l of ['en', 'pt'])
+        if (!L.i18n[l].optNames[o.k]) maus.push(`${l}: opcao ${o.k} sem nome`);
+    }
+    chk(maus.length === 0, 'o cesto tem um ID do Shopify por variante, sem repetidos',
+      maus.join(' ') || `${vistos.size} variantes`);
+  }
   const len = Object.keys(L.i18n.en).sort(), lpt = Object.keys(L.i18n.pt).sort();
   const lso = [...len.filter(k => !lpt.includes(k)), ...lpt.filter(k => !len.includes(k))];
   chk(lso.length === 0, 'paridade EN/PT no loja.html', lso.join(' ') || `${len.length} chaves de cada lado`);
@@ -240,12 +262,22 @@ async function navegador(dir, etiqueta){
 
   /* --- overflow horizontal: varrer, nao espreitar ---
      A banda dos 621-743px esteve partida durante meses e 390/768/1440
-     pareciam todos bem. Por isso e de 4 em 4 pixeis. */
+     pareciam todos bem. Por isso e de 4 em 4 pixeis.
+     A loja tambem em PT e com o cesto cheio: "Escolhe" e mais largo do que
+     "Choose", e foi em PT, com artigos no cesto, que os cartoes rebentaram
+     os 320px (Set 2026). So em EN e vazia, o teste passava. */
   {
     const maus = [];
-    for (const pag of ['index.html', 'loja.html']) {
+    for (const pag of ['index.html', 'loja.html', 'loja.html?lang=pt']) {
       const p = await nova(1280);
       await p.goto(base + pag, { waitUntil: 'networkidle' });
+      if (pag.startsWith('loja')) await p.evaluate(() => {
+        if (!CONFIG.shopOpen) return;
+        /* a ultima variante de cada produto (a mais comprida: Sumo / White /
+           XL), dez de cada, sem guardar no browser */
+        cesto = CONFIG.merch.filter(m => m.variants && !m.hold)
+          .map(m => ({ id: m.variants[m.variants.length - 1], q: 10 }));
+        desenhaCesto(); });
       for (let w = 320; w <= 1600; w += 4) {
         await p.setViewportSize({ width: w, height: 900 });
         await p.waitForTimeout(40);
@@ -254,7 +286,7 @@ async function navegador(dir, etiqueta){
       }
       await p.close();
     }
-    chk(maus.length === 0, 'zero overflow horizontal de 320 a 1600px (de 4 em 4), index e loja',
+    chk(maus.length === 0, 'zero overflow horizontal de 320 a 1600px (de 4 em 4), index e loja EN/PT com o cesto cheio',
       maus.slice(0, 6).join(' '));
   }
 
@@ -572,12 +604,13 @@ async function navegador(dir, etiqueta){
         CONFIG.shopOpen = true; render();
         const cartoes = [...document.querySelectorAll('#merchGrid .merch-card')];
         const aberta = { merch: !document.getElementById('merch').hidden, cartoes: cartoes.length,
-          loja: cartoes.every(a => a.href.startsWith(CONFIG.shop)),
-          /* um produto em hold nao esta publicado no Shopify: o cartao dele
-             levava a uma pagina que nao abre. Tem de haver um cartao por cada
-             produto sem hold, nem mais nem menos. */
+          /* desde o cesto (30 Set 2026) cada cartao compra: tem de ter o botao */
+          loja: cartoes.every(c => c.querySelector('button.add')),
+          /* um produto em hold nao esta publicado no Shopify: ia para o
+             checkout um artigo que nao se pode comprar. Tem de haver um cartao
+             por cada produto sem hold, nem mais nem menos. */
           quer: CONFIG.merch.filter(m => !m.hold).length,
-          semHold: cartoes.every(a => !CONFIG.merch.some(m => m.hold && m.handle && a.href.endsWith('/products/' + m.handle))) };
+          semHold: cartoes.every(c => !CONFIG.merch.some(m => m.hold && m.key === c.dataset.key)) };
         CONFIG.shopOpen = eraAberta; render();
         return { fechada, aberta, eraAberta };
       });
@@ -599,6 +632,65 @@ async function navegador(dir, etiqueta){
     if (!hrefs.length || !hrefs.every(h => h.startsWith('loja.html?lang=pt'))) maus.push('index PT: links sem ?lang=pt ' + hrefs.join(' '));
     await p.close();
     chk(maus.length === 0, 'loja.html em EN e PT, fechada e aberta, e o index leva la a lingua', maus.join(' '));
+  }
+
+  /* --- o cesto: escolher, juntar, contar, o link do checkout e guardar ---
+     O link e o que o Shopify recebe; um ID trocado e a t-shirt errada em
+     casa de alguem. Por isso compara-se com uma AMOSTRA tirada do Shopify
+     (30 Set 2026): Monk / White / M da t-shirt tem este ID e mais nenhum. */
+  {
+    const maus = [];
+    const AMOSTRA = { valores: ['Monk', 'White', 'M'], id: '60968526905678' };
+    const p = await nova(1100, { locale: 'en-US' });
+    await p.goto(base + 'loja.html', { waitUntil: 'networkidle' });
+    await p.evaluate(() => { localStorage.clear(); CONFIG.shopOpen = true; cesto = []; render(); });
+    const card = k => `#merchGrid .merch-card[data-key="${k}"]`;
+    // 1. sem tamanho nao entra
+    await p.click(`${card('tee')} button.add`);
+    let r = await p.evaluate(k => ({ n: cesto.length,
+      msg: document.querySelector(`${k} .card-msg`).textContent,
+      inval: !!document.querySelector(`${k} select[aria-invalid="true"]`) }), card('tee'));
+    if (r.n || !r.msg || !r.inval) maus.push(`sem tamanho: entrou no cesto ou sem aviso (${JSON.stringify(r)})`);
+    // 2. Monk / White / M, duas vezes, e um print OC 03
+    const sels = await p.$$(`${card('tee')} select`);
+    for (const [i, v] of AMOSTRA.valores.entries()) await sels[i].selectOption(v);
+    await p.click(`${card('tee')} button.add`);
+    await p.click(`${card('tee')} button.add`);
+    await p.locator(`${card('print')} select`).selectOption('OC 03');
+    await p.click(`${card('print')} button.add`);
+    r = await p.evaluate(() => ({ cesto: JSON.parse(JSON.stringify(cesto)),
+      href: document.getElementById('pagar').getAttribute('href'),
+      total: document.getElementById('total').textContent,
+      linhas: document.querySelectorAll('#linhas .linha').length,
+      print: CONFIG.merch.find(m => m.key === 'print').variants[2], shop: CONFIG.shop,
+      precos: CONFIG.merch.filter(m => ['tee', 'print'].includes(m.key)).map(m => +m.price) }));
+    if (r.cesto[0]?.id !== AMOSTRA.id) maus.push(`Monk/White/M deu ${r.cesto[0]?.id}, o Shopify diz ${AMOSTRA.id}`);
+    const querHref = `${r.shop}/cart/${AMOSTRA.id}:2,${r.print}:1`;
+    if (r.href !== querHref) maus.push(`checkout ${r.href}, esperava ${querHref}`);
+    if (r.linhas !== 2) maus.push(`${r.linhas} linhas no cesto, esperava 2`);
+    const querTotal = r.precos[0] * 2 + r.precos[1];
+    if (parseInt(r.total) !== querTotal) maus.push(`total ${r.total}, esperava ${querTotal}`);
+    // 3. todas as variantes vao e voltam: valores → ID → os mesmos valores
+    const ida = await p.evaluate(() => Object.entries(VARIANTES)
+      .filter(([id, x]) => idDe(x.m, x.valores) !== id).map(([id]) => id));
+    if (ida.length) maus.push(`${ida.length} variantes nao voltam ao mesmo ID: ${ida[0]}`);
+    // 4. sobrevive a um recarregar, e em PT fala portugues
+    await p.reload({ waitUntil: 'networkidle' });
+    r = await p.evaluate(() => { CONFIG.shopOpen = true; render();
+      document.getElementById('langTgl').click();
+      return { n: document.querySelectorAll('#linhas .linha').length,
+        txt: document.getElementById('linhas').textContent }; });
+    if (r.n !== 2) maus.push(`depois de recarregar: ${r.n} linhas`);
+    if (!r.txt.includes('Branco')) maus.push('em PT a cor nao vem traduzida');
+    // 5. menos, tirar, e vazio outra vez
+    await p.click('#linhas .linha:nth-child(2) .menos');
+    await p.click('#linhas .linha:nth-child(1) .tirar');
+    r = await p.evaluate(() => ({ n: cesto.length, fim: document.getElementById('cestoFim').hidden,
+      vazio: !document.getElementById('cestoVazio').hidden, href: document.getElementById('pagar').getAttribute('href') }));
+    if (r.n || !r.fim || !r.vazio || r.href !== '#') maus.push(`esvaziar falhou ${JSON.stringify(r)}`);
+    await p.evaluate(() => localStorage.clear());
+    await p.close();
+    chk(maus.length === 0, 'o cesto escolhe, soma, guarda e manda o checkout certo ao Shopify', maus.join(' '));
   }
 
   /* --- §9.9: em-dashes na copia VISIVEL, nao so no CONFIG ---

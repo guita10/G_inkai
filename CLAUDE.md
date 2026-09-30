@@ -379,6 +379,28 @@ publishing the product go together, and `verify.mjs` checks one card per
 unheld product. Links from the home page carry the chosen
 language as `?lang=pt`, and the page's back links carry it home again.
 
+**People buy on `loja.html`, not on the Shopify storefront.** Each merch card
+has its options (design, colour, size) and an "Add to bag" button; the bag
+lives on the page, and "Checkout" opens Shopify's checkout with the bag
+already in it, through a cart permalink: `<shop>/cart/ID:QTY,ID:QTY`. Only
+the payment leaves the site: Shopify takes payment on its own checkout only,
+and that order is what Printful fulfils. No request goes to Shopify before
+the click, so the page still works offline and over `file://`, and no
+Shopify script is loaded. The bag is kept in `localStorage` for two days,
+every access in `try/catch`. The size has no default on purpose (a
+pre-selected S is a wrong-size shirt in the post).
+
+That needs every variant's Shopify ID, in `CONFIG.merch[].variants`, in
+Cartesian order of `opts` (first option slowest, the order Shopify lists
+them). **The IDs are copies.** If Printful re-syncs a product and Shopify
+issues new IDs, checkout opens without that item; after touching a product in
+Printful, pull the IDs again. `verify.mjs` checks one unique ID per
+combination, and checks the checkout link against one sample taken from
+Shopify (T-shirt Monk / White / M = `60968526905678`); update that sample if
+the IDs change. It also sweeps overflow on the shop in PT with a full bag:
+"Escolhe" is wider than "Choose", and that combination once pushed the cards
+past 320px while EN with an empty bag passed.
+
 ---
 
 ## 8. Integrating a Figma design
