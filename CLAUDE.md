@@ -150,6 +150,8 @@ images/           70 full-size JPEG (1600px longest side: 37 artworks, 3 project
                   on the deck's project page; the Ace of Hearts is the deck's
                   cover and its one card on the wall) + og-card.jpg, and a WebP for most (see below)
 images/thumb/     70 thumbnails (760px) + WebP
+images/merch/     four 800x800 shop-card photos (loja.html). Not artwork: dims.py
+                  and make-webp.py only read images/ itself, so they skip it
 ```
 
 Four files have no WebP because WebP came out larger than the JPEG. That is
@@ -369,7 +371,12 @@ The fields both pages read have to match, and `verify.mjs` checks them:
 `artistName`, `realName`, `email`, `instagram`, `commissionsOpen`, `tiers`,
 `shopOpen`, and the copy keys `commTitle`, `commOpen`, `commClosed`,
 `commIntro`, `navShop`, `navComm`, `tiers`. That is why launching the shop is
-`shopOpen:true` in **both** files. Links from the home page carry the chosen
+`shopOpen:true` in **both** files. **The shop launched on 30 September 2026**
+with four products fulfilled by Printful (t-shirt, hoodie, art print, stickers).
+A merch entry with `hold: true` exists in Shopify but is not published, so its
+card is hidden (the limited edition and the keychain); lifting a hold and
+publishing the product go together, and `verify.mjs` checks one card per
+unheld product. Links from the home page carry the chosen
 language as `?lang=pt`, and the page's back links carry it home again.
 
 ---

@@ -572,7 +572,12 @@ async function navegador(dir, etiqueta){
         CONFIG.shopOpen = true; render();
         const cartoes = [...document.querySelectorAll('#merchGrid .merch-card')];
         const aberta = { merch: !document.getElementById('merch').hidden, cartoes: cartoes.length,
-          loja: cartoes.every(a => a.href.startsWith(CONFIG.shop)) };
+          loja: cartoes.every(a => a.href.startsWith(CONFIG.shop)),
+          /* um produto em hold nao esta publicado no Shopify: o cartao dele
+             levava a uma pagina que nao abre. Tem de haver um cartao por cada
+             produto sem hold, nem mais nem menos. */
+          quer: CONFIG.merch.filter(m => !m.hold).length,
+          semHold: cartoes.every(a => !CONFIG.merch.some(m => m.hold && m.handle && a.href.endsWith('/products/' + m.handle))) };
         CONFIG.shopOpen = eraAberta; render();
         return { fechada, aberta, eraAberta };
       });
@@ -583,6 +588,7 @@ async function navegador(dir, etiqueta){
       if (!r.fechada.mail) maus.push(`${quer}: o pedido nao e um mailto`);
       if (!r.eraAberta && r.fechada.merch) maus.push(`${quer}: merch visivel com shopOpen:false`);
       if (!r.aberta.merch || r.aberta.cartoes < 1 || !r.aberta.loja) maus.push(`${quer}: merch aberto partido`);
+      if (r.aberta.cartoes !== r.aberta.quer || !r.aberta.semHold) maus.push(`${quer}: ${r.aberta.cartoes} cartoes de merch, esperava ${r.aberta.quer} (os em hold nao aparecem)`);
       await p.close();
     }
     /* do index para a loja, a lingua vai no link */

@@ -121,7 +121,7 @@ const CONFIG = {
      Tem de ser iguais nos dois ficheiros; o tools/verify.mjs falha se nao
      forem. No dia do lancamento, shopOpen:true AQUI E no loja.html — os
      passos todos estao no comentario de la. */
-  shopOpen: false,
+  shopOpen: true,                                       // lancada a 30 Set 2026
 
   /* ---------- IMAGES ----------
      Same convention as the live site's CONFIG, so lines can be pasted straight
@@ -314,14 +314,6 @@ const CONFIG = {
       wallEmpty: "Nothing in this category yet.",
       wallMore: "See all {n} pieces",
       copyEmail: "Copy address", copied: "Copied",
-      /* Tres factos que ja estao no site, repetidos ao pe do nome: e a
-         primeira coisa que um director de arte precisa de ver. Nada aqui e
-         novo — saem do timeline.iberanime e dos projects.tr / projects.sok. */
-      heroProof: [
-        "1st place, Iberanime manga contest",
-        "Published covers, Distrito Manga",
-        "Webtoon in progress with Reeeborn",
-      ],
     },
     pt: {
       heroTitle: "Ilustração e design de personagens",
@@ -379,11 +371,6 @@ const CONFIG = {
       wallEmpty: "Ainda não há nada nesta categoria.",
       wallMore: "Ver as {n} peças",
       copyEmail: "Copiar endereço", copied: "Copiado",
-      heroProof: [
-        "1.º lugar, concurso de manga Iberanime",
-        "Capas publicadas, Distrito Manga",
-        "Webtoon em curso com o Reeeborn",
-      ],
     }
   }
 };
@@ -600,13 +587,8 @@ header{
 /* O hero encolheu. Dizia o nome e mostrava uma peca, mas empurrava a galeria
    toda para fora do primeiro ecra — e a galeria e o que as pessoas vem ver. */
 .hero{padding:clamp(28px,3.4vw,56px) 0 clamp(38px,5vw,66px);position:relative}
-/* Os tres factos por baixo dos botoes. Linhas, nao caixas, como o resto. */
-.proof{list-style:none;margin:30px 0 0;padding:20px 0 0;border-top:1px solid var(--hair);
-  display:flex;flex-direction:column;gap:9px;max-width:30rem;min-height:101px}
-.proof li{font-family:var(--f-ui);font-size:.78rem;letter-spacing:.02em;color:var(--bone-dim);
-  display:flex;gap:11px;align-items:baseline}
-.proof li::before{content:"";flex:none;width:5px;height:5px;border-radius:999px;
-  background:var(--royal);transform:translateY(-2px)}
+/* A lista dos tres factos por baixo dos botoes saiu (pedido do Frede, Set
+   2026): os tres continuam no site, no timeline e nos projectos. */
 /* O mailto so serve a quem tem um cliente de email configurado. Num portatil
    de agencia, que costuma viver no webmail, carregar no endereco nao faz
    nada. O botao ao lado copia o endereco e resolve esse caso. */
@@ -632,9 +614,10 @@ header{
      lenta o browser pinta a meio do HTML: ja tem o h1 mas ainda nao criou a
      frase, os botoes e a lista. Como o bloco esta centrado ao lado da obra,
      cada linha que chegava puxava-o para cima (0,013 de CLS, em duas cargas
-     de tres). Medido sem JS: h1 (2,24em do seu tamanho) + frase 104 + botoes
-     44 + lista 131 = +279px. Fica 274, um pouco abaixo, como manda o §4. */
-  min-height:calc(2.24 * clamp(1.8rem,3.1vw,2.85rem) + 274px)}
+     de tres). Sem a lista dos factos (Set 2026), medido de 390 a 1600px:
+     h1 (2,24em do seu tamanho) + frase e botoes = +147/148px, igual em todas
+     as larguras. Fica 144, um pouco abaixo, como manda o §4. */
+  min-height:calc(2.24 * clamp(1.8rem,3.1vw,2.85rem) + 144px)}
 .hero-art{order:2}
 /* O h1 encolheu de clamp(3.2rem,9vw,7rem) para isto. Com o "Ink first" fora,
    o titulo deixou de ser o cartaz e passou a ser informacao: diz o que ele
@@ -1215,7 +1198,6 @@ footer{font-family:var(--f-ui);
           <a class="btn fill" href="#work"><span data-t="ctaWork"></span> →</a>
           <a class="btn" href="loja.html#comissoes" data-loja="#comissoes"><span data-t="ctaComm"></span></a>
         </div>
-        <ul class="proof" id="heroProof"></ul>
       </div>
     </div>
   </div>
@@ -1510,7 +1492,6 @@ function renderText(){
   $('#brandName').textContent = CONFIG.artistName;
 
   /* os tres factos do hero */
-  $('#heroProof').innerHTML = (t.heroProof || []).map(x => `<li>${x}</li>`).join('');
 
   /* a bio, em paragrafos. Era um texto corrido so; em tres blocos le-se melhor
      e cada ideia fica com o seu espaco. */

@@ -82,7 +82,7 @@ const CONFIG = {
         comissao e orcamento e o numero vai por email (§9.4); um print a 18€ e
         preco de prateleira. Se alguma vez puseres um src aqui, lembra-te do
         §9.1: fan art nao se vende, nem como print nem como autocolante. */
-  shopOpen: false,
+  shopOpen: true,                                       // lancada a 30 Set 2026
   shopDrop: "Drop 01",
   merchCollection: "merch-guita_ink",
   merch: [                                              // sincronizado com o Shopify, 27 Set 2026 (produtos em Rascunho)
@@ -90,12 +90,12 @@ const CONFIG = {
        ou branco, S a XL. Impressa pela Printful por encomenda. Hoodie:
        Gildan 18500 (o hoodie base da Printful), 45 EUR: custa ~20 EUR, ganha
        um pouco mais do que a t-shirt por venda. */
-    { key: "tee",     price: "30", unit: "€", from: false, handle: "t-shirt-drop-01", plate: "衣" },
-    { key: "hoodie",  price: "45", unit: "€", from: false, handle: "hoodie-drop-01",  plate: "帽" },
-    { key: "print",   price: "18", unit: "€", from: false, handle: "art-print-drop-01", plate: "版" },  // so A4 (Set 2026): em A3 os ficheiros dao ~214 DPI
-    { key: "limited", price: "45", unit: "€", from: false, handle: "limited-edition-a3-drop-01", plate: "限" },
-    { key: "sticker", price: "4",  unit: "€", from: true,  handle: "stickers-drop-01", plate: "貼" },
-    { key: "acrylic", price: "12", unit: "€", from: false, handle: "acrylic-keychain-drop-01-pre-order", plate: "鍵", preorder: true },
+    { key: "tee",     price: "30", unit: "€", from: false, handle: "t-shirt-drop-01", plate: "衣", src: "images/merch/tshirt.jpg",   w: 800, h: 800 },
+    { key: "hoodie",  price: "45", unit: "€", from: false, handle: "hoodie-drop-01",  plate: "帽", src: "images/merch/hoodie.jpg",   w: 800, h: 800 },
+    { key: "print",   price: "18", unit: "€", from: false, handle: "art-print-drop-01", plate: "版", src: "images/merch/print.jpg",    w: 800, h: 800 },  // so A4 (Set 2026): em A3 os ficheiros dao ~214 DPI
+    { key: "limited", price: "45", unit: "€", from: false, handle: "limited-edition-a3-drop-01", plate: "限", hold: true },
+    { key: "sticker", price: "4",  unit: "€", from: false, handle: "stickers-drop-01", plate: "貼", src: "images/merch/stickers.jpg", w: 800, h: 800 },
+    { key: "acrylic", price: "12", unit: "€", from: false, handle: "acrylic-keychain-drop-01-pre-order", plate: "鍵", preorder: true, hold: true },
   ],
 
   /* ---------- TEXTOS (EN / PT) ---------- */
@@ -126,7 +126,7 @@ const CONFIG = {
         hoodie:  { name: "Hoodie",          desc: "Unisex, printed on the front. Black or white, S to XL." },
         print:   { name: "Art print",       desc: "A4, heavyweight matte paper. Three original portraits." },
         limited: { name: "Limited edition", desc: "A3, signed and numbered. 50 copies of each design, never reprinted." },
-        sticker: { name: "Stickers",        desc: "Die-cut vinyl, matte or holographic." },
+        sticker: { name: "Stickers",        desc: "Vinyl, cut around the character." },
         acrylic: { name: "Acrylic keychain", desc: "Double-sided clear acrylic. Made once the batch fills." },
       },
       mailSubject: "Commission request",
@@ -167,7 +167,7 @@ const CONFIG = {
         hoodie:  { name: "Sweat com capuz",    desc: "Unissexo, estampada à frente. Preta ou branca, do S ao XL." },
         print:   { name: "Print",              desc: "A4, papel mate de gramagem alta. Três retratos originais." },
         limited: { name: "Edição limitada",    desc: "A3, assinada e numerada. 50 exemplares de cada desenho, sem reimpressão." },
-        sticker: { name: "Autocolantes",       desc: "Vinil recortado, mate ou holográfico." },
+        sticker: { name: "Autocolantes",       desc: "Vinil, recortado à volta da personagem." },
         acrylic: { name: "Porta-chaves acrílico", desc: "Acrílico transparente, dupla face. Produzido quando o lote fecha." },
       },
       mailSubject: "Pedido de comissão",
@@ -298,9 +298,10 @@ h2{font-size:clamp(1.7rem,3.6vw,2.6rem);text-transform:uppercase;letter-spacing:
 
 /* ---- merch: estes cartoes SAO links (vao ao produto ou a coleccao), por
    isso levam hover. Os das comissoes nao: sao so informacao. ---- */
-/* tres por linha: com a roupa sao seis cartoes, duas linhas certas. Com
-   quatro por linha sobravam dois sozinhos em baixo. */
-.merch{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:30px}
+/* quatro por linha: no lancamento (Set 2026) estao quatro cartoes a vista
+   (os dois em hold nao aparecem), uma linha certa; em tablet e telemovel
+   passam a duas, 2x2. Se voltarem a ser seis, tres por linha. */
+.merch{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:30px}
 .merch-card{
   text-decoration:none;color:inherit;background:var(--raise);border:1px solid var(--hair);
   display:flex;flex-direction:column;transition:border-color .3s ease,transform .3s cubic-bezier(.2,.7,.3,1);
@@ -494,7 +495,12 @@ function render(){
     const mg = $('#merchGrid'); mg.innerHTML = '';
     CONFIG.merch.forEach(m => {
       const tm = t.merchItems[m.key];
-      if(!tm) return;
+      /* hold: true = o produto existe no Shopify mas nao esta publicado, por
+         isso o cartao nao aparece (senao levava a uma pagina que nao abre).
+         Set 2026: a edicao limitada espera por originais maiores (as A3 dao
+         ~200 DPI) e o porta-chaves por um fornecedor. Tirar o hold e publicar
+         o produto no Shopify, as duas coisas juntas. */
+      if(!tm || m.hold) return;
       const card = document.createElement('a');
       card.className = 'merch-card';
       card.href = m.handle ? `${CONFIG.shop}/products/${m.handle}` : merchColl;
@@ -503,6 +509,9 @@ function render(){
       art.className = 'art';
       if(m.src){
         const img = document.createElement('img');
+        /* largura e altura antes do src: o browser reserva o quadrado antes de
+           a foto chegar e os cartoes nao saltam (as fotos sao 800x800). */
+        if(m.w && m.h){ img.width = m.w; img.height = m.h; }
         img.src = m.src; img.alt = tm.name; img.loading = 'lazy'; img.decoding = 'async';
         art.append(img);
       } else {
