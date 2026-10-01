@@ -1,0 +1,48 @@
+<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>404 · Guita_Ink</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232E45FF'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23F2F0EC' font-family='serif'%3E墨%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Inter:wght@400&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Inter:wght@400&display=swap"></noscript>
+<style>
+/* Esta pagina e propositadamente sozinha: o Netlify serve-a quando o endereco
+   nao existe, e nesse momento nao ha nada de que se possa depender. Por isso
+   carrega os seus proprios tokens, em vez de os importar de lado nenhum.
+   Sao os mesmos do index.html — se la mudares um, muda aqui. */
+:root{
+  --void:#0A0A0A;
+  --royal:#2E45FF;
+  --royal-lift:#5568FF;   /* 4,54:1 sobre --void: chega para o 404 grande */
+  --bone:#F2F0EC;
+  --bone-dim:#8C877F;     /* 5,55:1 sobre --void */
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--void);color:var(--bone);font-family:Inter,system-ui,sans-serif;
+ min-height:100dvh;display:grid;place-items:center;text-align:center;padding:30px}
+h1{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(3rem,14vw,7rem);
+ color:var(--royal-lift);line-height:1}
+p{color:var(--bone-dim);margin:14px 0 30px;font-size:.95rem}
+/* 2px e o raio dos botoes em todo o site. A borda nasce transparente para que
+   o hover nao empurre o texto 1px.
+   Antes o hover era um box-shadow inset a fazer de borda. Funcionava, mas o
+   sistema desenha linhas e nao tem sombra nenhuma fora de um @keyframes — uma
+   borda a serio diz o mesmo sem abrir a excepcao. */
+a{display:inline-block;text-decoration:none;color:#fff;background:var(--royal);
+ border:1px solid var(--royal);border-radius:2px;padding:13px 28px;font-size:.86rem;
+ min-height:44px;                      /* o minimo de alvo de toque, como no .btn */
+ transition:background .2s ease,border-color .2s ease,transform .12s ease}
+a:hover{background:transparent;border-color:var(--royal-lift)}
+a:focus-visible{outline:2px solid var(--royal-lift);outline-offset:3px}
+/* Todo o controlo do site responde ao toque com um scale(.97) em 120ms. */
+a:active{transform:scale(.97)}
+@media (prefers-reduced-motion:reduce){
+  a{transition:none}
+  a:active{transform:none}
+}
+</style></head><body><div>
+<h1>404</h1>
+<!-- a página é bilingue: cada metade leva o seu lang, senão um leitor de ecrã
+     lê a parte inglesa com pronúncia portuguesa -->
+<p><span lang="pt">Esta página não existe.</span> / <span lang="en">This page doesn't exist.</span></p>
+<a href="/"><span lang="pt">Voltar ao início</span> / <span lang="en">Back home</span></a>
+</div></body></html>
