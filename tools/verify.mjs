@@ -283,10 +283,21 @@ async function navegador(dir, etiqueta){
         await p.waitForTimeout(40);
         const o = await p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
         if (o > 0) maus.push(`${pag} ${w}px:+${o}`);
+        /* a barra tem margem dos dois lados. Um padding:10px 0 no .bar anulou
+           durante meses o padding lateral do .wrap, e abaixo dos ~1290px a
+           marca e o ultimo botao colavam-se a borda do ecra (a 0px no
+           telemovel). So se viu quando o logotipo passou a ser o sapo. */
+        const m = await p.evaluate(() => {
+          const bar = document.querySelector('.bar');
+          const vis = [...bar.querySelectorAll('a, button, img')].filter(e => e.getClientRects().length && getComputedStyle(e).visibility !== 'hidden');
+          const r = vis.map(e => e.getBoundingClientRect());
+          return { esq: Math.min(...r.map(x => x.left)), dir: innerWidth - Math.max(...r.map(x => x.right)) };
+        });
+        if (m.esq < 8 || m.dir < 8) maus.push(`${pag} ${w}px: barra encostada (esq ${Math.round(m.esq)}, dir ${Math.round(m.dir)})`);
       }
       await p.close();
     }
-    chk(maus.length === 0, 'zero overflow horizontal de 320 a 1600px (de 4 em 4), index e loja EN/PT com o cesto cheio',
+    chk(maus.length === 0, 'zero overflow horizontal de 320 a 1600px (de 4 em 4), e a barra com margem, index e loja EN/PT com o cesto cheio',
       maus.slice(0, 6).join(' '));
   }
 

@@ -15,8 +15,8 @@
 ## 1. Visual Theme & Atmosphere
 
 An ink-dark editorial field where the artwork is the only thing allowed to be
-loud. Near-black paper, one saturated blue used like a stamp pad, and a great
-deal of air. The mood is a printer's proof sheet rather than a product page:
+loud. Near-black paper, one green taken from the frog mascot and used like a
+stamp pad, and a great deal of air. The mood is a printer's proof sheet rather than a product page:
 serif display type set large and tight, uppercase micro-labels tracked wide
 like plate captions, hairline rules instead of boxes, and a fixed film-grain
 veil over everything so the flat vectors read as paper rather than screen.
@@ -39,19 +39,19 @@ not belong to this site.
 
 ## 2. Color Palette & Roles
 
-One accent hue. Three tints of it exist **only** because contrast against three
-different surfaces demands it — treat them as one colour with accessibility
-variants, never as a three-colour palette.
+One accent hue. It has three token names (`--frog`, `--frog-lift`,
+`--frog-raise`) so a tint can exist **only** where contrast against a surface
+demands it; today, in each theme, all three hold the same value. Treat them as
+one colour with accessibility variants, never as a three-colour palette.
 
 ### Dark (default)
 
 - **Void** (`#0A0A0A`) — the field; page background. Never `#000000`.
 - **Raise** (`#121212`) — raised surface: cards, tiles, frames.
 - **Raise 2** (`#1A1A1A`) — second-level surface, inset panels.
-- **Royal** (`#2E45FF`) — the single accent. Fills, seal, selection, focus.
-- **Royal Lift** (`#5568FF`) — same accent, lifted for small text **on Void** (4.54:1, just over the 4.5 AA floor). Also the italic in the hero headline.
-  Not enough over the gallery scrim, though: measured against the real pixels of all 28 tiles it tops out at 3.78:1, because its luminance (0.19) cannot reach 4.5 against a dark backdrop however opaque the scrim. The tile number uses **Royal Raise** (`#6B7BFF`) there instead, measured at 4.63:1.
-- **Royal Raise** (`#6B7BFF`) — same accent, lifted again for small text **on Raise** (5.27:1). Royal Lift only reaches 4.29:1 there and fails AA.
+- **Frog** (`#80AB5C`) — the single accent, the green of the frog's body, measured off the drawing (October 2026; it replaced the Royal blue `#2E45FF`). Fills, selection, focus, the italic in the hero headline. It is light enough to do every job alone: 7.45:1 on Void, 7.05:1 on Raise, 6.55:1 on Raise 2, 7.66:1 on the gallery scrim.
+- **Frog Lift / Frog Raise** — kept as names (small text on Void / on Raise) for the day one shade is not enough, but today both equal Frog.
+- **Text on Frog is dark** (`var(--void)`), never white: white on this green is 2.66:1 and fails. Green fill with a dark mark is the frog itself, green body, black outline.
 - **Bone** (`#F2F0EC`) — primary text. Warm off-white, never `#FFFFFF`.
 - **Bone Dim** (`#8C877F`) — secondary text, captions, metadata.
 - **Hair** (`rgba(242,240,236,.13)`) — 1px structural rules and card borders. The site draws lines, not boxes.
@@ -59,16 +59,15 @@ variants, never as a three-colour palette.
 ### Light
 
 - **Void** `#F4F2ED` · **Raise** `#FFFFFF` · **Raise 2** `#EDEAE3`
-- **Royal** `#2436C9` — all three accent tints collapse to this one value; on white cards it reaches 8.59:1 unaided.
+- **Frog** `#456827` — the same hue darkened until it passes everywhere: 5.75:1 on Void, 6.44:1 on Raise, 5.36:1 on Raise 2. The light Void on top of it (button text) is 5.75:1. The body green itself would fail here (2.4:1).
 - **Bone** `#141310` · **Bone Dim** `#6B655C` · **Hair** `rgba(20,19,16,.13)`
 
-**[brand override] — accent saturation.** `#2E45FF` is 100% saturated, over the
-80% ceiling, and it is a blue. This is the Queen of Jacks blue and it is the
-identity; it is also why the seal reads as an ink stamp rather than a UI chip.
-Not negotiable. It is applied like ink — small fills, one seal, hairlines —
-never as a glow, a gradient wash, or a neon edge, which is what the ceiling
-exists to prevent. The light theme value `#2436C9` measures ~70% and complies
-on its own.
+**The accent comes from the mascot.** The frog is the logo, and the site's one
+colour is his. It stays applied like ink: small fills, hairlines, the italic,
+never as a glow, a gradient wash or a neon edge. Both values sit well under the
+80% saturation ceiling (`#80AB5C` ~32%, `#456827` ~45%). The frog's other
+colours (belly `#C9E4B9`, mouth `#6F3A28`, eye `#E2C259`) live in the logo only;
+they are not a palette.
 
 ---
 
@@ -76,7 +75,7 @@ on its own.
 
 - **Display — `Playfair Display`** (400 / 500 / 400 italic). Headlines at
   `clamp(3.2rem, 9vw, 7rem)` with `-0.025em` tracking. Hierarchy comes from
-  weight, tracking and colour; the italic in Royal Lift is the emphasis device.
+  weight, tracking and colour; the italic in Frog green is the emphasis device.
 - **Body — `LT Museum`, falling back to `Lora`.** Weight 300, line-height 1.65,
   measure capped at `30rem`–`42rem`.
 - **UI — `Inter`** (300 / 400 / 500). Nav, buttons, chips, eyebrows, captions,
@@ -111,7 +110,7 @@ inert. Do not add it to Playfair and assume it took.
 ## 4. Component Stylings
 
 - **Buttons.** `2px` radius — near-square, printed, not pill. `1px` Hair border,
-  transparent fill; the primary inverts to a Royal fill with white text and
+  transparent fill; the primary inverts to a Frog fill with dark text and
   wipes back to transparent on hover. A diagonal light sweep crosses the filled
   button on hover (`left: -120% → 100%`, 650ms). No outer glow, ever.
   Transition: `background .25s ease, border-color .25s ease, color .25s ease`.
@@ -128,7 +127,7 @@ inert. Do not add it to Playfair and assume it took.
   nav at boot, so there is one list, not two. `aria-expanded`, focus trapped,
   Escape closes and returns focus, and it closes itself if the viewport grows
   past the breakpoint.
-- **Commission steps.** Four stages in an ordered list, each with a Royal top
+- **Commission steps.** Four stages in an ordered list, each with a Frog top
   rule, staggered down a staircase (`margin-top` 0 / 18 / 36 / 54px) over
   unequal columns (`1.18fr 1fr 1fr .92fr`). **No step numbers.** The stage name
   is the label; the list order and the staircase carry the sequence. Numbering
@@ -146,10 +145,15 @@ inert. Do not add it to Playfair and assume it took.
   Border warms to the accent on hover; a mask-position wipe reveals the caption.
   `scroll-snap-align: start`. Keyboard-operable: `role="button"`, Enter **and**
   Space.
-- **The 墨 seal.** 30px, `8px` radius, Royal fill, Playfair glyph in white.
-  Stamps in on load: `scale(1.5) rotate(-14deg)` → rest, 550ms on
+- **The frog logo** (October 2026; it replaced the 墨 seal). Frede's own
+  drawing, cut out of its white ground with a light die-cut border around it,
+  so the black outline still reads on the dark field (on the light field the
+  border disappears and the outline does the work). 30×36px in the bar, served
+  at 3× (`images/frog-logo.png`), with `width`/`height` on the `<img>`. Made by
+  `tools/make-frog-logo.py` from `tools/frog-source.jpg`, which also writes the
+  favicon. Stamps in on load: `scale(1.5) rotate(-14deg)` → rest, 550ms on
   `cubic-bezier(.2, 1.5, .4, 1)` — the only overshoot in the system, and it is
-  there because a stamp bounces. Do not restyle, recolour or animate it
+  there because a stamp bounces. Do not redraw, recolour or re-animate it
   differently on new screens.
 - **Cards.** Only where elevation carries hierarchy. Default to a `1px` Hair
   top rule and whitespace instead. Radius stays at `2px`; `999px` is for chips
@@ -172,7 +176,7 @@ inert. Do not add it to Playfair and assume it took.
   commissions band → about (with the timeline beside the bio as "Along the
   way") → contact. Projects lead, with the featured one (`CONFIG.featured`,
   Survival of Kings) as a full-width card: cover left, text right, a strip of
-  its series, a Royal top rule. The other projects follow in a row.
+  its series, a Frog top rule. The other projects follow in a row.
 - **Selected work is one uniform grid**, no project highlighted: 4:5 frames
   in rows (4 / 3 / 2 columns). Uniform never means cropped: art that is not
   4:5 is fitted whole (`contain`) on the raised surface, like a print mat.
@@ -219,7 +223,7 @@ inert. Do not add it to Playfair and assume it took.
 - **The two house curves.** `cubic-bezier(.2, .7, .3, 1)` for reveals (800ms,
   opacity + transform) and `cubic-bezier(.16, .84, .36, 1)` for the ink-bleed
   `clip-path` wipe on section titles (1.1s). Use these; do not introduce new
-  easings casually. `cubic-bezier(.2, 1.5, .4, 1)` is reserved for the seal.
+  easings casually. `cubic-bezier(.2, 1.5, .4, 1)` is reserved for the logo stamp.
 - **Reveals fire once, via `IntersectionObserver`.** There is not a single
   `window` scroll listener in the codebase and there must not be one. Scroll-spy
   in the nav is also an observer, with `aria-current` on the active link.
@@ -230,7 +234,7 @@ inert. Do not add it to Playfair and assume it took.
   the system: it makes the browser watch every animatable property and silently
   picks up any that is added to the rule later. List what actually changes.
 - **`prefers-reduced-motion` disables everything.** The clip-path reveal, the
-  seal stamp, the button sweep, the timeline dot pulse, smooth scrolling, every
+  logo stamp, the button sweep, the timeline dot pulse, smooth scrolling, every
   staggered delay, every press-scale, and every interactive control — buttons, theme and language
   knobs, filter chips, lightbox controls. Colour-only fades
   count: if one control is silenced they all are. Anything added must extend
@@ -247,14 +251,14 @@ inert. Do not add it to Playfair and assume it took.
 
 ### Craft
 
-- No emojis. The 墨 glyph is a typeset character, not an emoji, and is the only
-  non-Latin mark in the system.
+- No emojis. The CJK glyphs on the typographic plates are typeset characters,
+  not emoji, and the frog is a drawing, not an icon set.
 - No pure `#000000` anywhere, and no pure `#FFFFFF` as the field or as body text.
-  `#fff` is allowed on the eight elements that sit on a saturated Royal fill or
-  on the artwork scrim: the skip link, the seal, the tile title, the filled
-  button, the lightbox controls. Those grounds do not follow the theme, so the
-  text on them must not either.
-- No second accent hue. The three Royal tints are one colour.
+  `#fff` is allowed only on the artwork scrim and the lightbox: the tile title
+  and the lightbox controls. Those grounds do not follow the theme, so the text
+  on them must not either. Anything sitting on a Frog fill (the skip link, the
+  filled button, the open badge, flags, the selection) uses `var(--void)`.
+- No second accent hue. The Frog tints are one colour.
 - No neon, glow, or outer-shadow treatments on the accent.
 - No gradient text on headlines.
 - No shadows. This system draws hairlines.

@@ -37,9 +37,9 @@ transformation pipeline. Twelve tokens total.
   --void:#0A0A0A;         /* the field */
   --raise:#121212;        /* raised surface */
   --raise-2:#1A1A1A;
-  --royal:#2E45FF;        /* Queen of Jacks blue */
-  --royal-lift:#5568FF;   /* for small text on near-black */
-  --royal-raise:#6B7BFF;  /* for small text on --raise */
+  --frog:#80AB5C;         /* the frog's green (light theme: #456827) */
+  --frog-lift:#80AB5C;    /* small text on --void */
+  --frog-raise:#80AB5C;   /* small text on --raise */
   --bone:#F2F0EC;
   --bone-dim:#8C877F;
   --hair:rgba(242,240,236,.13);
@@ -49,11 +49,16 @@ transformation pipeline. Twelve tokens total.
 }
 ```
 
-**The three blues are one colour.** `--royal-lift` and `--royal-raise` exist only
-because contrast against different surfaces demands it. Treat them as
-accessibility variants, never as a three-colour palette. The measured ratios are
-in `DESIGN.md` and they are tight: `--royal-lift` on `--void` is 4.54:1 against a
-4.5 floor.
+**The accent is the frog's green, and it is one colour.** Since October 2026
+the logo is Frede's frog and the accent is the green of its body, measured off
+the drawing: `#80AB5C` dark, `#456827` light (the body green fails on the light
+field, 2.4:1, so it is darkened until it passes). It replaced the Royal blue
+`#2E45FF`, and the tokens were renamed `--royal*` → `--frog*` so no green is
+called royal. `--frog-lift` and `--frog-raise` are accessibility variants, not a
+palette; today they hold the same value as `--frog` in each theme, because this
+green is light enough to pass everywhere (7.45:1 on `--void`). **Text on the
+green is dark, `var(--void)`, never white**: white on `#80AB5C` is 2.66:1. The
+measured ratios are in `DESIGN.md`.
 
 There is no spacing scale token. Spacing is written inline, usually as
 `clamp()`. Do not invent a scale and refactor to it.
@@ -126,6 +131,7 @@ nothing.
 | `make-webp.py` | regenerates the WebP derivatives |
 | `dims.py` | rewrites the `DIMS` map **and the wall's reserved height** in `index.html`, both from the real pixels |
 | `make-og-card.py` | redraws `images/og-card.jpg`, the 1200x630 social card |
+| `make-frog-logo.py` | cuts the frog out of `tools/frog-source.jpg`, adds the light sticker border, writes `images/frog-logo.png`, `images/frog-sticker.png` and the favicon in all four pages |
 | `verify.mjs` | drives Chromium over the whole site and runs every check in §10 |
 
 `add-artwork.py` is the one to reach for. Adding art by hand means four steps and
@@ -152,6 +158,10 @@ images/           70 full-size JPEG (1600px longest side: 37 artworks, 3 project
 images/thumb/     70 thumbnails (760px) + WebP
 images/merch/     four 800x800 shop-card photos (loja.html). Not artwork: dims.py
                   and make-webp.py only read images/ itself, so they skip it
+images/frog-logo.png, frog-sticker.png
+                  the frog logo (bar, 3x) and its large version (social card).
+                  Not artwork; PNG, so dims.py and make-webp.py (JPEG only)
+                  never see them. Made by tools/make-frog-logo.py
 ```
 
 Four files have no WebP because WebP came out larger than the JPEG. That is
@@ -255,12 +265,17 @@ Icons are four things, in order of preference:
 1. **Text glyphs in markup** — `‹` `›` `×` for the lightbox controls, `◐` for
    the theme toggle, `↗` on outbound links, `→` on internal ones. Each carries
    an `aria-label`.
-2. **The 墨 seal** — a CJK character set in Playfair on a Royal square. It is the
-   logo. Never restyle, recolour, or re-animate it.
+2. **The frog** — Frede's own drawing, the logo since October 2026 (it replaced
+   the 墨 seal). A PNG with a light die-cut border so its black outline reads on
+   the dark field. Never redraw, recolour, or re-animate it; if Frede redraws
+   it, replace `tools/frog-source.jpg` and run `tools/make-frog-logo.py`, then
+   `tools/make-og-card.py`.
 3. **CSS-drawn geometry** — the mobile menu hamburger is two pseudo-elements that
    rotate into an X. No SVG.
-4. **Inline SVG data URIs** — exactly two in the whole repo: the favicon, and the
-   `feTurbulence` film grain. Both are backgrounds, not markup.
+4. **Inline data URIs** — the `feTurbulence` film grain (SVG, the only inline
+   SVG in the repo) and the favicon (a 64x64 PNG of the frog, written into all
+   four pages by `make-frog-logo.py`; inline so `404.html` stays self-contained
+   at any path).
 
 Any button that renders a glyph **must set `font-family`**. Five of them once
 didn't and fell through to the browser default, rendering in Arial.
@@ -277,13 +292,14 @@ the structural device. There is **no elevation shadow anywhere** — the only tw
 ring out of the timeline's upcoming-event dot. Do not introduce elevation,
 glassmorphism, or a card with a border *and* a shadow.
 
-**Radius is a documented three-value system**, and mixing outside it is a bug:
+**Radius is a documented two-value system**, and mixing outside it is a bug:
 
 | Radius | Used by |
 | --- | --- |
 | `2px` | buttons, skip link — near-square, printed |
-| `8px` | the 墨 seal only |
 | `999px` | chips, knobs, dots, lightbox controls |
+
+(`8px` was the 墨 seal's alone; it went with the seal.)
 
 **Responsive** — four media queries, no more:
 
@@ -299,7 +315,7 @@ Type and spacing scale with `clamp()` rather than breakpoints wherever possible.
 
 **Motion:** two house curves — `cubic-bezier(.2,.7,.3,1)` for reveals,
 `cubic-bezier(.16,.84,.36,1)` for the clip-path title wipe. `cubic-bezier(.2,1.5,.4,1)`
-is reserved for the seal stamp. Plain `ease` is correct for colour transitions.
+is reserved for the logo stamp. Plain `ease` is correct for colour transitions.
 **Never `transition: all`** — name the properties. Animate only `transform` and
 `opacity`. There is not one `window` scroll listener in the codebase and there
 must not be; use `IntersectionObserver`.
@@ -328,6 +344,8 @@ tools/          all run by hand, none part of the deploy
   make-webp.py    regenerates the WebP derivatives
   dims.py         rewrites the DIMS map and the wall reserve from the real pixels
   make-og-card.py redraws images/og-card.jpg from og-card.html
+  make-frog-logo.py the frog logo, its sticker and the favicon, from frog-source.jpg
+  frog-source.jpg the frog as Frede drew it; not served
   og-card.html    the social card's layout; not served, just the mould
   verify.mjs      runs §10 against a real browser; exit 1 if anything fails
 DESIGN.md       the design system in semantic form
@@ -436,6 +454,10 @@ Six fills in the Figma file are hard-coded hex rather than bound to a variable.
 That is correct and matches the code: they sit on Royal or on the gallery
 scrim, neither of which changes with the theme, so a theme-following token
 would be wrong. Any *other* unbound fill is a bug.
+
+**⚠️ The Figma file predates the frog (October 2026).** It still holds the
+Royal blue variables and the Selo component. Until it is updated, trust it for
+type and layout only, never for colour or the logo.
 
 What actually works:
 
