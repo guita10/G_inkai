@@ -145,13 +145,16 @@ inert. Do not add it to Playfair and assume it took.
   Border warms to the accent on hover; a mask-position wipe reveals the caption.
   `scroll-snap-align: start`. Keyboard-operable: `role="button"`, Enter **and**
   Space.
-- **The frog logo** (October 2026; it replaced the 墨 seal). Frede's own
-  drawing, cut out of its white ground with a light die-cut border around it,
-  so the black outline still reads on the dark field (on the light field the
-  border disappears and the outline does the work). 30×36px in the bar, served
-  at 3× (`images/frog-logo.png`), with `width`/`height` on the `<img>`. Made by
-  `tools/make-frog-logo.py` from `tools/frog-source.jpg`, which also writes the
-  favicon. Stamps in on load: `scale(1.5) rotate(-14deg)` → rest, 550ms on
+- **The frog coin** (October 2026; it replaced the 墨 seal). Frede's own
+  drawing, traced into flat vector shapes ink by ink (line, body, belly, mouth,
+  tongue, the eye and its ochre half) and set on a coin of Frog green. The
+  frog's body shares the coin's green, so his black line does the drawing, the
+  way a stamp does. It is the seal's successor: a field of the accent carrying
+  one mark. A circle keeps the same footprint everywhere: the bar, the browser
+  tab, Shopify, an Instagram avatar. 36×36px in the bar
+  (`images/frog-logo.svg`, sharp at any density), with `width`/`height` on the
+  `<img>`. Made by `tools/make-frog-logo.py` from `tools/frog-source.jpg`,
+  which also writes the favicon. Stamps in on load: `scale(1.5) rotate(-14deg)` → rest, 550ms on
   `cubic-bezier(.2, 1.5, .4, 1)` — the only overshoot in the system, and it is
   there because a stamp bounces. Do not redraw, recolour or re-animate it
   differently on new screens.

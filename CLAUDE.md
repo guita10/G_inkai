@@ -131,7 +131,7 @@ nothing.
 | `make-webp.py` | regenerates the WebP derivatives |
 | `dims.py` | rewrites the `DIMS` map **and the wall's reserved height** in `index.html`, both from the real pixels |
 | `make-og-card.py` | redraws `images/og-card.jpg`, the 1200x630 social card |
-| `make-frog-logo.py` | cuts the frog out of `tools/frog-source.jpg`, adds the light sticker border, writes `images/frog-logo.png`, `images/frog-sticker.png` and the favicon in all four pages |
+| `make-frog-logo.py` | traces the frog in `tools/frog-source.jpg` into vector shapes, ink by ink (it does not redraw it), sets it on a `--frog` coin, writes `images/frog-logo.svg`, the favicon in all four pages, and `tools/frog-logo-1024.png` for use off the site. Needs `potracer` |
 | `verify.mjs` | drives Chromium over the whole site and runs every check in §10 |
 
 `add-artwork.py` is the one to reach for. Adding art by hand means four steps and
@@ -158,10 +158,11 @@ images/           70 full-size JPEG (1600px longest side: 37 artworks, 3 project
 images/thumb/     70 thumbnails (760px) + WebP
 images/merch/     four 800x800 shop-card photos (loja.html). Not artwork: dims.py
                   and make-webp.py only read images/ itself, so they skip it
-images/frog-logo.png, frog-sticker.png
-                  the frog logo (bar, 3x) and its large version (social card).
-                  Not artwork; PNG, so dims.py and make-webp.py (JPEG only)
-                  never see them. Made by tools/make-frog-logo.py
+images/frog-logo.svg
+                  the logo: the frog, traced to vector, on a green coin. Used by
+                  the bar and the social card. Not artwork; SVG, so dims.py and
+                  make-webp.py (JPEG only) never see it. Made by
+                  tools/make-frog-logo.py
 ```
 
 Four files have no WebP because WebP came out larger than the JPEG. That is
@@ -265,11 +266,16 @@ Icons are four things, in order of preference:
 1. **Text glyphs in markup** — `‹` `›` `×` for the lightbox controls, `◐` for
    the theme toggle, `↗` on outbound links, `→` on internal ones. Each carries
    an `aria-label`.
-2. **The frog** — Frede's own drawing, the logo since October 2026 (it replaced
-   the 墨 seal). A PNG with a light die-cut border so its black outline reads on
-   the dark field. Never redraw, recolour, or re-animate it; if Frede redraws
-   it, replace `tools/frog-source.jpg` and run `tools/make-frog-logo.py`, then
-   `tools/make-og-card.py`.
+2. **The frog coin** — Frede's own drawing, the logo since October 2026 (it
+   replaced the 墨 seal). The drawing is traced into vector shapes, one per ink,
+   and set on a coin of `--frog` green: the body shares the coin's green, so his
+   black line does the drawing, like a stamp. A circle keeps one footprint in
+   the bar, the browser tab, Shopify and an Instagram avatar. Never redraw,
+   recolour, or re-animate the frog; if Frede redraws it, replace
+   `tools/frog-source.jpg` and run `tools/make-frog-logo.py`, then
+   `tools/make-og-card.py`. A new colour in the drawing has to be added to
+   `TINTAS` in the script, measured off the drawing, or the nearest ink takes
+   it (the eye's ochre half once came out pink).
 3. **CSS-drawn geometry** — the mobile menu hamburger is two pseudo-elements that
    rotate into an X. No SVG.
 4. **Inline data URIs** — the `feTurbulence` film grain (SVG, the only inline
@@ -344,8 +350,9 @@ tools/          all run by hand, none part of the deploy
   make-webp.py    regenerates the WebP derivatives
   dims.py         rewrites the DIMS map and the wall reserve from the real pixels
   make-og-card.py redraws images/og-card.jpg from og-card.html
-  make-frog-logo.py the frog logo, its sticker and the favicon, from frog-source.jpg
+  make-frog-logo.py the frog coin logo (SVG) and the favicon, from frog-source.jpg
   frog-source.jpg the frog as Frede drew it; not served
+  frog-logo-1024.png the coin as a big PNG, for Instagram, Shopify, email; not served
   og-card.html    the social card's layout; not served, just the mould
   verify.mjs      runs §10 against a real browser; exit 1 if anything fails
 DESIGN.md       the design system in semantic form
