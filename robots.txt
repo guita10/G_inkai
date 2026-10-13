@@ -1,0 +1,5 @@
+# Dominio proprio, activo.
+User-agent: *
+Allow: /
+
+Sitemap: https://guitaink.com/sitemap.xml
