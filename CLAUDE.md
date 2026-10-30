@@ -345,6 +345,10 @@ images/         + images/thumb/
 comissoes/      the commission system; nothing here is served
   README.md       how site, Notion and email fit together
   email-onboarding.md  the acceptance email, PT and EN
+politicas/      the shop's policies, PT and EN; nothing here is served
+  politicas-loja.md  source of the texts pasted into Shopify (returns,
+                  shipping, terms, contact, the privacy contact line). No
+                  prices, no shipping amounts: those stay in Shopify
 tools/          all run by hand, none part of the deploy
   add-artwork.py  originals or a folder → full + thumb + webp + DIMS, in one command
   make-webp.py    regenerates the WebP derivatives
