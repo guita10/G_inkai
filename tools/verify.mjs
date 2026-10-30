@@ -601,12 +601,17 @@ async function navegador(dir, etiqueta){
 
   /* --- loja.html: as duas linguas, fechada e aberta, e o caminho desde o index --- */
   {
-    const maus = [];
+    const maus = [], lrMaus = [];
     for (const lq of ['', '?lang=pt']) {
       const p = await nova(1100, { locale: 'en-US' });
       await p.goto(`${base}loja.html${lq}`, { waitUntil: 'networkidle' });
       const r = await p.evaluate(() => {
-        const fechada = { h1: document.querySelector('h1').textContent.trim(),
+        /* Livro de Reclamacoes: obrigatorio por lei, visivel no site. Um
+           rodape refeito que o perca nao da erro nenhum; este teste da. */
+        const a = document.getElementById('footLr');
+        const lr = a && { href: a.href, txt: a.textContent.trim(),
+          vis: a.getBoundingClientRect().width > 0 && getComputedStyle(a).visibility !== 'hidden' };
+        const fechada = { lr, h1: document.querySelector('h1').textContent.trim(),
           lang: document.documentElement.lang,
           merch: !document.getElementById('merch').hidden,
           formatos: document.querySelectorAll('#tiers .tier').length,
@@ -633,8 +638,17 @@ async function navegador(dir, etiqueta){
       if (!r.eraAberta && r.fechada.merch) maus.push(`${quer}: merch visivel com shopOpen:false`);
       if (!r.aberta.merch || r.aberta.cartoes < 1 || !r.aberta.loja) maus.push(`${quer}: merch aberto partido`);
       if (r.aberta.cartoes !== r.aberta.quer || !r.aberta.semHold) maus.push(`${quer}: ${r.aberta.cartoes} cartoes de merch, esperava ${r.aberta.quer} (os em hold nao aparecem)`);
+      const lr = r.fechada.lr;
+      if (!lr) lrMaus.push(`${quer}: sem #footLr`);
+      else {
+        if (!lr.href.startsWith('https://www.livroreclamacoes.pt/')) lrMaus.push(`${quer}: aponta para ${lr.href}`);
+        if (!lr.vis) lrMaus.push(`${quer}: escondido`);
+        if (lr.txt.length < 6) lrMaus.push(`${quer}: sem texto`);
+        if (quer === 'pt' && !lr.txt.includes('Livro de Reclamações')) lrMaus.push(`pt: diz "${lr.txt}"`);
+      }
       await p.close();
     }
+    chk(lrMaus.length === 0, 'loja.html mostra o Livro de Reclamacoes no rodape, EN e PT', lrMaus.join(' '));
     /* do index para a loja, a lingua vai no link */
     const p = await nova(1280, { locale: 'en-US' });
     await p.goto(base + 'index.html', { waitUntil: 'networkidle' });

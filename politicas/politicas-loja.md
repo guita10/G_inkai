@@ -15,8 +15,8 @@ devoluções no mínimo legal, portes da Printful, envio para todo o mundo.
 - [ ] **30 dias para defeitos**: é o prazo que a Printful dá para reclamar um
       defeito. Confirma no teu painel Printful.
 - [ ] **Livro de Reclamações Eletrónico**: em Portugal, quem vende online tem de
-      ter uma ligação para livroreclamacoes.pt visível no site. Registas-te lá
-      como fornecedor e eu ponho a ligação no rodapé de loja.html.
+      ter uma ligação para livroreclamacoes.pt visível no site. A ligação já
+      está no rodapé de loja.html; falta registares-te lá como fornecedor.
 - [ ] **Tu e você**: estes textos tratam por tu, como o site. A política de
       privacidade gerada pelo Shopify trata por você; só lhe mexo no contacto.
 

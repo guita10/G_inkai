@@ -44,6 +44,9 @@ const CONFIG = {
   email: "frederico@guitaink.com",
   instagram: "https://www.instagram.com/guita_ink",
   shop: "https://xqms3c-zk.myshopify.com",              // Shopify: so o checkout
+  /* Obrigatorio para quem vende online em Portugal: acesso visivel ao Livro
+     de Reclamacoes Eletronico no site. Vai no rodape, ao lado do Instagram. */
+  livroReclamacoes: "https://www.livroreclamacoes.pt/Inicio/",
 
   /* ---------- COMISSOES ----------
      §9.4: aqui ficam os QUATRO FORMATOS e mais nada. Nenhum preco, nenhuma
@@ -192,6 +195,7 @@ const CONFIG = {
         + "Commercial use (yes / no): \n\n"
         + "Thanks,\n",
       questions: "Questions first? Write to",
+      footComplaints: "Complaints book",
     },
     pt: {
       navShop: "Loja", navComm: "Comissões",
@@ -249,6 +253,7 @@ const CONFIG = {
         + "Uso comercial (sim / não): \n\n"
         + "Obrigado,\n",
       questions: "Dúvidas antes? Escreve para",
+      footComplaints: "Livro de Reclamações",
     },
   },
 };
@@ -471,6 +476,7 @@ footer{font-family:var(--f-ui);
   gap:16px;flex-wrap:wrap;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-dim)}
 footer a{text-decoration:none;transition:color .2s ease}
 footer a:hover{color:var(--bone)}
+.foot-links{display:flex;flex-wrap:wrap;gap:16px 22px}
 
 /* toda a coisa que se carrega responde ao toque */
 .btn:active,.knob:active{transform:scale(.97)}
@@ -578,7 +584,10 @@ footer a:hover{color:var(--bone)}
 
   <footer>
     <span id="footL"></span>
-    <a id="footIg" href="#" target="_blank" rel="noopener">Instagram ↗</a>
+    <span class="foot-links">
+      <a id="footLr" href="#" target="_blank" rel="noopener"><span id="footLrLabel"></span> ↗</a>
+      <a id="footIg" href="#" target="_blank" rel="noopener">Instagram ↗</a>
+    </span>
   </footer>
 </div>
 </main>
@@ -871,6 +880,8 @@ function render(){
 
   $('#footL').textContent = `© ${new Date().getFullYear()} ${CONFIG.artistName} · ${CONFIG.realName}`;
   $('#footIg').href = CONFIG.instagram;
+  $('#footLrLabel').textContent = t.footComplaints;
+  $('#footLr').href = CONFIG.livroReclamacoes;
 }
 
 render();

@@ -337,7 +337,9 @@ Every interactive control answers a press with `transform: scale(.97)` over
 index.html      the whole single-page site (CONFIG + CSS + markup + render JS)
 projeto.html    per-project detail page, reads ?p=sok|tr|pamp|deck
 loja.html       the selling page: commissions (four formats, no prices) and,
-                once shopOpen is true, the merch. Reads ?lang=pt|en
+                once shopOpen is true, the merch. Reads ?lang=pt|en. Its
+                footer links the Livro de Reclamações Eletrónico, required
+                by law for selling online in Portugal; verify.mjs checks it
 404.html        standalone, self-contained
 robots.txt
 sitemap.xml     six URLs; update lastmod when content changes
