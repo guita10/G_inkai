@@ -4,5 +4,11 @@ __pycache__/
 
 # installed by: npx skills add Leonxlnx/taste-skill
 .agents/
-.claude/
 skills-lock.json
+
+# .claude stays ignored (skills installed locally), except grill-me,
+# which is committed so every cloud session has it
+.claude/*
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/grill-me/

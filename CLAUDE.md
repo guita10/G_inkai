@@ -357,6 +357,10 @@ tools/          all run by hand, none part of the deploy
   verify.mjs      runs §10 against a real browser; exit 1 if anything fails
 DESIGN.md       the design system in semantic form
 CLAUDE.md       this file
+.claude/skills/ skills for Claude sessions; not served
+  grill-me/       "grill me": one multiple-choice question at a time about a
+                  plan, until every decision is made. From
+                  github.com/RobMitt/grill-me-skill, copied unchanged
 ```
 
 No feature folders, no `src/`, no routing. `index.html` is organised top to
