@@ -347,6 +347,13 @@ images/         + images/thumb/
 comissoes/      the commission system; nothing here is served
   README.md       how site, Notion and email fit together
   email-onboarding.md  the acceptance email, PT and EN
+marca/          the brand sheet for printers and collaborators; not served
+  Guita_Ink-brand-sheet.pdf  one A4 page: the frog coin, the palette (HEX,
+                  RGB, approximate CMYK), the three faces, the rules
+  brand-sheet.tpl.html  its source. The fonts (Google Fonts woff2, base64)
+                  and images/frog-logo.svg are pasted in at /*FONTS*/ and
+                  /*LOGO*/, then Chromium prints it to A4. Redo it when a
+                  token or the logo changes
 politicas/      the shop's policies, PT and EN; nothing here is served
   politicas-loja.md  source of the texts pasted into Shopify (returns,
                   shipping, terms, contact, the privacy contact line). No

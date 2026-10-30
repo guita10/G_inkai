@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Guita_Ink Brand Sheet</title>
+<style>
+/*FONTS*/
+
+/* Layout: a printer's proof sheet. A dark band carries the coin, the way the
+   site does; the rest is paper ruled with hairlines, a plate caption per section. */
+:root{
+  --void:#0A0A0A; --bone:#F2F0EC; --bone-dim:#8C877F; --frog:#80AB5C;
+  --paper:#F4F2ED; --ink:#141310; --ink-dim:#6B655C; --frog-ink:#456827;
+  --hair:rgba(20,19,16,.13);
+  --f-disp:'Playfair Display',Georgia,serif;
+  --f-body:'Lora',Georgia,serif;
+  --f-ui:'Inter',system-ui,-apple-system,sans-serif;
+}
+@page{size:A4;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:210mm;height:297mm;overflow:hidden;background:var(--paper);color:var(--ink);
+  -webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:var(--f-body);font-size:8.6pt;line-height:1.5;display:flex;flex-direction:column}
+
+.label{font-family:var(--f-ui);font-weight:400;font-size:6.2pt;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-dim)}
+
+/* the band */
+.band{background:var(--void);color:var(--bone);padding:10mm 16mm 9mm;
+  display:grid;grid-template-columns:38mm 1fr;gap:11mm;align-items:center}
+.band svg{width:38mm;height:38mm;display:block}
+.band .label{color:var(--bone-dim)}
+.wordmark{font-family:var(--f-disp);font-weight:400;font-size:38pt;letter-spacing:-.025em;line-height:1;margin:2.5mm 0 3mm}
+.band p{text-wrap:balance;font-size:9.6pt;line-height:1.45;max-width:30em}
+.band p em{color:var(--frog)}
+
+/* the paper */
+main{flex:1;padding:6.5mm 16mm 0;display:flex;flex-direction:column;gap:4.4mm}
+section{border-top:1px solid var(--hair);padding-top:3.2mm;display:grid;grid-template-columns:30mm minmax(0,1fr);gap:7mm}
+h2{font-family:var(--f-disp);font-weight:500;font-size:9.5pt;letter-spacing:.1em;text-transform:uppercase;line-height:1.2}
+h2 + .label{display:block;margin-top:1.2mm}
+ul{list-style:none;display:grid;gap:1.3mm}
+li{padding-left:3.4mm;position:relative}
+li::before{content:"";position:absolute;left:0;top:.62em;width:1.6mm;height:1px;background:var(--frog-ink)}
+.mono{font-family:var(--f-ui);font-size:7.4pt;letter-spacing:.02em}
+
+/* logo */
+.logo{display:grid;grid-template-columns:auto minmax(0,1fr);gap:7mm;align-items:start}
+.samples{display:flex;gap:3mm}
+.sample{display:grid;gap:1.4mm;justify-items:center}
+.tile{width:21mm;height:21mm;display:grid;place-items:center}
+.tile svg{width:14mm;height:14mm}
+.tile.dark{background:var(--void)}
+.tile.light{background:var(--paper);outline:1px solid var(--hair);outline-offset:-1px}
+.logo p{margin-bottom:1.6mm}
+
+/* colour */
+.rowlab{margin:0 0 1.6mm}
+.swatches{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3mm;margin-bottom:2.8mm}
+.sw{display:grid;gap:1.2mm;align-content:start}
+.chip{height:7mm;outline:1px solid var(--hair);outline-offset:-1px}
+.sw b{font-family:var(--f-ui);font-weight:500;font-size:7pt;letter-spacing:.12em;text-transform:uppercase}
+.sw b span{font-weight:400;letter-spacing:.06em;text-transform:none;color:var(--ink-dim)}
+.sw .mono{font-size:6.6pt;line-height:1.45;font-variant-numeric:tabular-nums}
+.cols ul{margin-top:.6mm}
+.note{font-size:7.4pt;color:var(--ink-dim);margin-top:1.6mm}
+
+/* type */
+.type{display:grid;gap:1.4mm}
+.face{display:grid;grid-template-columns:34mm minmax(0,1fr);gap:5mm;align-items:baseline}
+.face b{display:block;font-family:var(--f-ui);font-weight:500;font-size:7.4pt;letter-spacing:.06em}
+.face .label{display:block;margin-top:.6mm;letter-spacing:.14em}
+.s-disp{font-family:var(--f-disp);font-weight:400;font-size:16pt;letter-spacing:-.015em;line-height:1.12}
+.s-disp small{font-weight:500;font-size:8.5pt;letter-spacing:.1em;text-transform:uppercase;margin-left:3mm;color:var(--ink-dim)}
+.s-body{font-family:var(--f-body);font-size:10pt;line-height:1.5}
+.s-body em{font-style:italic}
+.s-ui{font-family:var(--f-ui);font-size:8pt;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-dim)}
+.s-ui span{color:var(--frog-ink);font-weight:500}
+
+footer{margin-top:auto;padding:3.6mm 16mm 6.5mm;display:flex;justify-content:space-between;gap:6mm;border-top:1px solid var(--hair)}
+</style>
+</head>
+<body>
+
+<header class="band">
+  /*LOGO*/
+  <div>
+    <span class="label">Brand sheet · October 2026</span>
+    <h1 class="wordmark">Guita_Ink</h1>
+    <p>Illustration and character design, anime and manga-influenced. The artwork is the loud thing; around it, a dark ground and <em>one green</em>.</p>
+  </div>
+</header>
+
+<main>
+
+  <section>
+    <div><h2>Logo</h2><span class="label">Logótipo</span></div>
+    <div class="logo">
+      <div class="samples">
+        <div class="sample"><div class="tile dark">/*LOGO*/</div><span class="label">On Void</span></div>
+        <div class="sample"><div class="tile light">/*LOGO*/</div><span class="label">On paper</span></div>
+      </div>
+      <div>
+        <p>The frog coin: Frede's own frog, traced to vector from his drawing and set on a coin of Frog green, so his black line does the drawing, like a stamp.</p>
+        <ul>
+          <li>Use the supplied files as they are: <span class="mono">frog-logo.svg</span> (vector, any size) or <span class="mono">frog-logo-1024.png</span>.</li>
+          <li>Never redraw, recolour, stretch or animate the frog.</li>
+          <li>Always the whole coin. The circle keeps one shape everywhere: a browser tab, the shop, an Instagram avatar.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cols">
+    <div><h2>Colour</h2><span class="label">Cor</span></div>
+    <div>
+      <p class="label rowlab">On dark grounds · the default</p>
+      <div class="swatches">
+        <div class="sw"><div class="chip" style="background:#80AB5C"></div><b>Frog <span>· accent</span></b><span class="mono">#80AB5C<br>RGB 128 171 92<br>CMYK 25 0 46 33</span></div>
+        <div class="sw"><div class="chip" style="background:#0A0A0A"></div><b>Void <span>· ground</span></b><span class="mono">#0A0A0A<br>RGB 10 10 10<br>CMYK 0 0 0 96</span></div>
+        <div class="sw"><div class="chip" style="background:#F2F0EC"></div><b>Bone <span>· text</span></b><span class="mono">#F2F0EC<br>RGB 242 240 236<br>CMYK 0 1 2 5</span></div>
+        <div class="sw"><div class="chip" style="background:#8C877F"></div><b>Bone Dim <span>· captions</span></b><span class="mono">#8C877F<br>RGB 140 135 127<br>CMYK 0 4 9 45</span></div>
+      </div>
+      <p class="label rowlab">On light grounds</p>
+      <div class="swatches">
+        <div class="sw"><div class="chip" style="background:#456827"></div><b>Frog <span>· accent</span></b><span class="mono">#456827<br>RGB 69 104 39<br>CMYK 34 0 62 59</span></div>
+        <div class="sw"><div class="chip" style="background:#F4F2ED"></div><b>Void <span>· ground</span></b><span class="mono">#F4F2ED<br>RGB 244 242 237<br>CMYK 0 1 3 4</span></div>
+        <div class="sw"><div class="chip" style="background:#141310"></div><b>Bone <span>· text</span></b><span class="mono">#141310<br>RGB 20 19 16<br>CMYK 0 5 20 92</span></div>
+        <div class="sw"><div class="chip" style="background:#6B655C"></div><b>Bone Dim <span>· captions</span></b><span class="mono">#6B655C<br>RGB 107 101 92<br>CMYK 0 6 14 58</span></div>
+      </div>
+      <ul>
+        <li>One accent: the frog's green. No second colour, no gradients, no glow. The frog's belly, mouth and eye colours stay in the logo.</li>
+        <li>Text and marks on green are Void, never white: Void on Frog reads 7.45:1, white only 2.66:1.</li>
+      </ul>
+      <p class="note">CMYK figures are straight conversions from RGB. Ask the printer for a proof before a run.</p>
+    </div>
+  </section>
+
+  <section>
+    <div><h2>Type</h2><span class="label">Tipografia</span></div>
+    <div class="type">
+      <div class="face">
+        <div><b>Playfair Display</b><span class="label">Titles<br>400 · 500 · 400 italic</span></div>
+        <div class="s-disp">Illustration and character design</div>
+      </div>
+      <div class="face">
+        <div><b>Lora</b><span class="label">Running text<br>400 · 400 italic</span></div>
+        <div class="s-body">Anime and manga-influenced work. <em>Characters, covers and the worlds they live in.</em></div>
+      </div>
+      <div class="face">
+        <div><b>Inter</b><span class="label">Labels, buttons<br>300 · 400 · 500</span></div>
+        <div class="s-ui">Commissions · <span>Open</span></div>
+      </div>
+      <p class="note">All three are free on Google Fonts. Small labels are Inter in capitals, spaced wide, like captions on a print.</p>
+    </div>
+  </section>
+
+  <section>
+    <div><h2>Rules</h2><span class="label">Regras</span></div>
+    <ul>
+      <li>Fan art is never sold. Prints and merch carry original work only; fan art can be shown, never sold.</li>
+      <li>Lines, not boxes: 1px hairlines, no shadows. Corners are near-square (2px); only small tags are round.</li>
+      <li>Give the art air. Dark ground, one green, generous space, nothing competing with the drawing.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  <span class="label">frederico@guitaink.com · guitaink.com · instagram.com/guita_ink</span>
+  <span class="label">Credit: Guita_Ink · Frederico Guita</span>
+</footer>
+
+</body>
+</html>
