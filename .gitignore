@@ -6,9 +6,10 @@ __pycache__/
 .agents/
 skills-lock.json
 
-# .claude stays ignored (skills installed locally), except grill-me,
-# which is committed so every cloud session has it
+# .claude stays ignored (skills installed locally), except the skills
+# committed so every cloud session has them
 .claude/*
 !.claude/skills/
 .claude/skills/*
 !.claude/skills/grill-me/
+!.claude/skills/ui-ux-pro-max/

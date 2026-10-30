@@ -374,6 +374,20 @@ CLAUDE.md       this file
   grill-me/       "grill me": one multiple-choice question at a time about a
                   plan, until every decision is made. From
                   github.com/RobMitt/grill-me-skill, copied unchanged
+  ui-ux-pro-max/  a searchable UI/UX guidance database (Python, standard
+                  library only, no network). From github.com/nextlevelbuilder/
+                  ui-ux-pro-max-skill at 9a3f14f, copied unchanged plus its
+                  MIT LICENSE. Its SKILL.md calls the script through
+                  ${CLAUDE_PLUGIN_ROOT}, which is unset here: run
+                  `python3 -B .claude/skills/ui-ux-pro-max/scripts/search.py`
+                  from the repo root. Its answers are generic advice and rank
+                  BELOW this file and DESIGN.md: asked about this site it
+                  proposed a blue accent, white text on the CTA, Swiss
+                  minimalism and a spacing scale, all wrong here. Never take
+                  from it an icon library, GSAP, Tailwind, a stack, a palette
+                  or fonts, and never run it with --persist: DESIGN.md is the
+                  design system, and a design-system/MASTER.md would be a
+                  second one
 ```
 
 No feature folders, no `src/`, no routing. `index.html` is organised top to
