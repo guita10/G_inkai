@@ -10,29 +10,42 @@
    carrega os seus proprios tokens, em vez de os importar de lado nenhum.
    Sao os mesmos do index.html — se la mudares um, muda aqui. */
 :root{
-  --void:#0A0A0A;
-  --frog:#80AB5C;        /* o verde do sapo; texto por cima dele e escuro */
-  --frog-lift:#80AB5C;   /* 7,45:1 sobre --void */
-  --bone:#F2F0EC;
-  --bone-dim:#8C877F;     /* 5,55:1 sobre --void */
+  --void:#F3F7F8;         /* o branco das nuvens: o dia e o tema por omissao */
+  --sky:#0E5CAB;          /* o azul do topo do ceu; texto por cima dele e o --void */
+  --sky-lift:#0E5CAB;     /* 6,21:1 sobre --void */
+  --bone:#0E2233;
+  --bone-dim:#56646C;     /* 5,67:1 sobre --void */
+}
+/* a noite, so com o telemovel em modo escuro. Aqui sem JS: esta pagina nao
+   tem botao de tema, por isso a preferencia do sistema chega. */
+@media (prefers-color-scheme:dark){
+  :root{
+    --void:#081A28;
+    --sky:#77D8F1;        /* 10,83:1 sobre --void */
+    --sky-lift:#77D8F1;
+    --bone:#E6F4F6;
+    --bone-dim:#8FA6B2;   /* 6,95:1 sobre --void */
+  }
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--void);color:var(--bone);font-family:Inter,system-ui,sans-serif;
  min-height:100dvh;display:grid;place-items:center;text-align:center;padding:30px}
 h1{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(3rem,14vw,7rem);
- color:var(--frog-lift);line-height:1}
+ color:var(--sky-lift);line-height:1}
 p{color:var(--bone-dim);margin:14px 0 30px;font-size:.95rem}
 /* 2px e o raio dos botoes em todo o site. A borda nasce transparente para que
    o hover nao empurre o texto 1px.
    Antes o hover era um box-shadow inset a fazer de borda. Funcionava, mas o
    sistema desenha linhas e nao tem sombra nenhuma fora de um @keyframes — uma
    borda a serio diz o mesmo sem abrir a excepcao. */
-a{display:inline-block;text-decoration:none;color:var(--void);background:var(--frog);
- border:1px solid var(--frog);border-radius:2px;padding:13px 28px;font-size:.86rem;
+a{display:inline-block;text-decoration:none;color:var(--void);background:var(--sky);
+ border:1px solid var(--sky);border-radius:2px;padding:13px 28px;font-size:.86rem;
  min-height:44px;                      /* o minimo de alvo de toque, como no .btn */
  transition:background .2s ease,border-color .2s ease,transform .12s ease}
-a:hover{background:transparent;border-color:var(--frog-lift)}
-a:focus-visible{outline:2px solid var(--frog-lift);outline-offset:3px}
+/* no hover o fundo sai e o texto passa a --bone: com a cor de antes (--void)
+   ficava da cor da pagina e desaparecia */
+a:hover{background:transparent;color:var(--bone);border-color:var(--sky-lift)}
+a:focus-visible{outline:2px solid var(--sky-lift);outline-offset:3px}
 /* Todo o controlo do site responde ao toque com um scale(.97) em 120ms. */
 a:active{transform:scale(.97)}
 @media (prefers-reduced-motion:reduce){

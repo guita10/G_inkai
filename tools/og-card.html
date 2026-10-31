@@ -8,26 +8,29 @@
 <!DOCTYPE html><html><head><meta charset="utf-8">
 <!--FONTS-->
 <style>
+/* Out 2026 (2): o cartao passa para o ceu, como o topo do site. O ceu do
+   Survival of Kings de ponta a ponta, a mesma sombra azul atras do texto, e o
+   texto branco por cima. O italico vai no ciano do horizonte (o --sky da
+   noite), que sobre a sombra azul se le bem. */
 *{margin:0;padding:0;box-sizing:border-box}
-body{width:1200px;height:630px;background:#0A0A0A;color:#F2F0EC;overflow:hidden;
-  font-family:'Lora',Georgia,serif;display:flex;position:relative}
-.grain{position:absolute;inset:0;pointer-events:none;opacity:.55;
+body{width:1200px;height:630px;color:#FFFFFF;overflow:hidden;
+  font-family:'Lora',Georgia,serif;display:flex;position:relative;
+  background:radial-gradient(ellipse 70% 95% at 24% 52%,rgba(9,52,104,.86) 0%,rgba(9,52,104,.66) 50%,rgba(9,52,104,0) 100%),
+             url("../images/bg/sky-1920.jpg") center 74%/cover no-repeat #0E5CAB}
+.grain{position:absolute;inset:0;pointer-events:none;opacity:.3;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/><feColorMatrix type='saturate' values='0'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='.16'/></svg>")}
-.left{flex:1;padding:64px 56px;display:flex;flex-direction:column;justify-content:space-between;z-index:1}
+.left{width:640px;padding:64px 56px;display:flex;flex-direction:column;justify-content:space-between;z-index:1}
 .brand{display:flex;align-items:center;gap:14px}
 /* o logotipo e o sapo na moeda verde (Out 2026), o mesmo da barra do site */
 .logo{height:64px;width:64px;display:block}
 .name{font-family:'Playfair Display',Georgia,serif;font-size:27px;letter-spacing:.01em}
 h1{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:104px;line-height:.98;letter-spacing:-.025em}
-h1 em{display:block;font-style:italic;color:#80AB5C}
-.sub{font-family:'Inter',sans-serif;font-size:15px;letter-spacing:.3em;text-transform:uppercase;color:#8C877F;margin-top:26px}
+h1 em{display:block;font-style:italic;color:#77D8F1}
+.sub{font-family:'Inter',sans-serif;font-size:15px;letter-spacing:.3em;text-transform:uppercase;color:#FFFFFF;margin-top:26px}
 .proof{list-style:none;display:flex;flex-direction:column;gap:9px;
-  border-top:1px solid rgba(242,240,236,.13);padding-top:20px}
-.proof li{font-family:'Inter',sans-serif;font-size:15px;color:#8C877F;display:flex;gap:11px;align-items:baseline}
-.proof li::before{content:"";width:5px;height:5px;border-radius:999px;background:#80AB5C;flex:none;transform:translateY(-2px)}
-.right{width:430px;position:relative;border-left:1px solid rgba(242,240,236,.13)}
-.right img{width:100%;height:100%;object-fit:cover;object-position:center 22%;display:block}
-.right::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#0A0A0A 0%,transparent 34%)}
+  border-top:1px solid rgba(255,255,255,.35);padding-top:20px}
+.proof li{font-family:'Inter',sans-serif;font-size:15px;color:#FFFFFF;display:flex;gap:11px;align-items:baseline}
+.proof li::before{content:"";width:5px;height:5px;border-radius:999px;background:#77D8F1;flex:none;transform:translateY(-2px)}
 </style></head><body>
 <div class="grain"></div>
 <div class="left">
@@ -41,5 +44,4 @@ h1 em{display:block;font-style:italic;color:#80AB5C}
     <li>Published covers, Distrito Manga</li>
   </ul>
 </div>
-<div class="right"><img src="../images/oc.jpg" alt=""></div>
 </body></html>

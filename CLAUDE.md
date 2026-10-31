@@ -25,8 +25,9 @@ dependency", "extract a component", or "run a build" is wrong for this repo.
 
 ## 1. Token definitions
 
-**Where:** one `:root` block at the top of the `<style>` in `index.html`, with a
-`[data-theme="light"]` block overriding a subset. `projeto.html`, `loja.html`
+**Where:** one `:root` block at the top of the `<style>` in `index.html` (the
+day, the default), with a `[data-theme="dark"]` block overriding a subset (the
+night). `projeto.html`, `loja.html`
 and `404.html` carry their own copies.
 
 **Format:** plain CSS custom properties. No JSON, no Style Dictionary, no
@@ -34,31 +35,41 @@ transformation pipeline. Twelve tokens total.
 
 ```css
 :root{
-  --void:#0A0A0A;         /* the field */
-  --raise:#121212;        /* raised surface */
-  --raise-2:#1A1A1A;
-  --frog:#80AB5C;         /* the frog's green (light theme: #456827) */
-  --frog-lift:#80AB5C;    /* small text on --void */
-  --frog-raise:#80AB5C;   /* small text on --raise */
-  --bone:#F2F0EC;
-  --bone-dim:#8C877F;
-  --hair:rgba(242,240,236,.13);
+  --void:#F3F7F8;         /* the field: cloud white (night: #081A28) */
+  --raise:#FFFFFF;        /* raised surface (night: #0D2435) */
+  --raise-2:#E8EEF0;      /* (night: #122D42) */
+  --sky:#0E5CAB;          /* the accent: top of the sky (night: #77D8F1) */
+  --sky-lift:#0E5CAB;     /* small text on --void */
+  --sky-raise:#0E5CAB;    /* small text on --raise */
+  --bone:#0E2233;         /* text: the silhouettes' night blue (night: #E6F4F6) */
+  --bone-dim:#56646C;     /* (night: #8FA6B2) */
+  --hair:rgba(14,34,51,.13);
   --f-disp:'Playfair Display',Georgia,serif;
   --f-body:'LT Museum','Lora',Georgia,serif;
   --f-ui:'Inter',system-ui,-apple-system,sans-serif;
 }
 ```
 
-**The accent is the frog's green, and it is one colour.** Since October 2026
-the logo is Frede's frog and the accent is the green of its body, measured off
-the drawing: `#80AB5C` dark, `#456827` light (the body green fails on the light
-field, 2.4:1, so it is darkened until it passes). It replaced the Royal blue
-`#2E45FF`, and the tokens were renamed `--royal*` → `--frog*` so no green is
-called royal. `--frog-lift` and `--frog-raise` are accessibility variants, not a
-palette; today they hold the same value as `--frog` in each theme, because this
-green is light enough to pass everywhere (7.45:1 on `--void`). **Text on the
-green is dark, `var(--void)`, never white**: white on `#80AB5C` is 2.66:1. The
-measured ratios are in `DESIGN.md`.
+**The site is the sky, and the accent is one colour.** In October 2026 (the
+second change that month) Frede chose two of his originals from the Survival of
+Kings universe as the base of the site: the sky over a hill with two
+silhouettes, and the line-up of seven characters (`images/bg/`). The palette
+is measured off them: day is cloud white, night-blue text and the blue at the
+top of the sky, `#0E5CAB`; night is the sky's dark blue-teal, cloud-white text
+and the cyan at the horizon, `#77D8F1`. **Day is the default**; a one-line
+script at the top of each page sets `data-theme="dark"` when the phone prefers
+dark (at the top so a dark-mode phone never flashes day first). The toggle
+still overrides both ways; `404.html` uses a plain `@media` instead.
+
+The accent replaced the frog's green `#80AB5C` (which had replaced the Royal
+blue `#2E45FF`), and the tokens were renamed `--frog*` → `--sky*` so no blue
+is called frog. **The frog coin stays green**: it is Frede's drawing, its
+green lives in the SVG, and it is not a theme colour. `--sky-lift` and
+`--sky-raise` are accessibility variants, not a palette; today they equal
+`--sky` in each theme. **Text on the accent is `var(--void)`** in both themes
+(6.21:1 day, 10.83:1 night). **Text over the sky is white** in both themes, on
+a veil of the sky's own blue behind the text block; `verify.mjs` measures the
+pixels behind it. The measured ratios are in `DESIGN.md`.
 
 There is no spacing scale token. Spacing is written inline, usually as
 `clamp()`. Do not invent a scale and refactor to it.
@@ -81,7 +92,6 @@ render `<script>` of `index.html` that build DOM nodes from `CONFIG`:
 | `artEl(item, full)` | an `<img>` with WebP/JPEG fallback, dimensions, srcset on the hero |
 | `frameEl(item, i)` | one wall tile (a 4:5 frame that opens the lightbox) |
 | `renderWall()` | the gallery wall, one tile per `CONFIG.artworks` entry |
-| `renderHeroArt()` | the hero artwork |
 | `renderText()` | everything language-dependent: `[data-t]` text, filters, projects (including the wide card of the featured project, `CONFIG.featured`), tiers, timeline |
 | `openLb` / `drawLb` / `closeLb` / `stepLb` | the lightbox |
 | `observeReveals` / `stagger` | scroll reveals |
@@ -89,10 +99,10 @@ render `<script>` of `index.html` that build DOM nodes from `CONFIG`:
 | `setNav(open, refocus)` | the mobile menu |
 | `syncStructuredData()` | writes JSON-LD from `CONFIG` |
 
-Boot is five calls at the bottom of the file, in order:
+Boot is four calls at the bottom of the file, in order (`renderHeroArt()`
+went with the hero artwork, October 2026: the hero is now the sky, in CSS):
 
 ```js
-renderHeroArt();
 renderWall();
 renderText();
 syncStructuredData();
@@ -158,6 +168,13 @@ images/           70 full-size JPEG (1600px longest side: 37 artworks, 3 project
 images/thumb/     70 thumbnails (760px) + WebP
 images/merch/     four 800x800 shop-card photos (loja.html). Not artwork: dims.py
                   and make-webp.py only read images/ itself, so they skip it
+images/bg/        the two Survival of Kings originals used as backgrounds
+                  (Oct 2026): sky-900/1920 (.webp + .jpg) behind the hero and
+                  the shop's page head; cast-1000/1920 under the commissions;
+                  cast-night-* is the same file with only the outer white
+                  canvas made transparent, for the night theme (the characters
+                  and the grey plate are untouched). Not artwork in the
+                  gallery: dims.py and make-webp.py only read images/ itself
 images/frog-logo.svg
                   the logo: the frog, traced to vector, on a green coin. Used by
                   the bar and the social card. Not artwork; SVG, so dims.py and
@@ -198,7 +215,8 @@ was **CLS 0.96**. The fix is reserving the space in CSS up front:
 | `.sec-title` | `1.06em` | one line, same trick |
 | `.bar` | `73 / 71 / 64px` | per breakpoint; empty it is 54px |
 | `.btn` | `44px` | also the minimum touch target |
-| `.hero-art .shot` | `aspect-ratio` | was 14px empty, 605px full: the single biggest shift |
+| `.hero` | `min-height:min(82svh,780px)` | the sky band is a fixed height, so text arriving after the JS moves nothing below |
+| `.hero-copy` | `calc(2.24 × h1 + 144px)` | the text block is centred in the sky; without the reserve each line arriving pulled the title up |
 | `.hero h1` | `max-width:10.5em` | forces two lines at every size, so the 2.24em reserve is always exact |
 | `.wall` | a `calc()` | see below |
 
@@ -226,7 +244,9 @@ and the CLS quietly comes back. `dims.py` now derives the row counts from
 `CONFIG.artworks` and `CONFIG.wallPreview` and rewrites the CSS. Run it after
 any change to the gallery, not just after adding files.
 
-**Source order is part of the reserve.** The hero artwork is written *before*
+**Source order is part of the reserve.** (The hero artwork this paragraph is
+about left in October 2026; the lesson stands for anything placed with
+`order`.) The hero artwork was written *before*
 the copy in the markup, and `order` swaps them back on desktop. It used to be
 the other way round, with `order:-1` lifting the art above the text on phones.
 On a slow line that shifted 0.33: the browser painted the copy at the top while
@@ -268,10 +288,11 @@ Icons are four things, in order of preference:
    an `aria-label`.
 2. **The frog coin** — Frede's own drawing, the logo since October 2026 (it
    replaced the 墨 seal). The drawing is traced into vector shapes, one per ink,
-   and set on a coin of `--frog` green: the body shares the coin's green, so his
+   and set on a coin of the frog's green: the body shares the coin's green, so his
    black line does the drawing, like a stamp. A circle keeps one footprint in
    the bar, the browser tab, Shopify and an Instagram avatar. Never redraw,
-   recolour, or re-animate the frog; if Frede redraws it, replace
+   recolour, or re-animate the frog (its coin is the frog's own green,
+   `#80AB5C`, in the SVG: the site's blue never touches it); if Frede redraws it, replace
    `tools/frog-source.jpg` and run `tools/make-frog-logo.py`, then
    `tools/make-og-card.py`. A new colour in the drawing has to be added to
    `TINTAS` in the script, measured off the drawing, or the nearest ink takes
@@ -297,6 +318,16 @@ the structural device. There is **no elevation shadow anywhere** — the only tw
 `box-shadow` declarations in the file are inside a `@keyframes` that pulses a
 ring out of the timeline's upcoming-event dot. Do not introduce elevation,
 glassmorphism, or a card with a border *and* a shadow.
+
+**Two pictures are backgrounds, and only these two**: the Survival of Kings
+sky (the hero, the shop's page head) and cast (under the commissions, on the
+home page and the shop). They are CSS backgrounds, full-bleed by negative
+margin plus padding inside `.wrap`, with WebP through `image-set()` and a
+JPEG/PNG line before it as the fallback. The cast never sits behind text (the
+mock-up proved it unreadable); by day `background-blend-mode:multiply` melts
+its white canvas into `--void`, by night the `cast-night` file is used
+instead. Any text placed over a picture needs the veil and the pixel check in
+`verify.mjs`.
 
 **Radius is a documented two-value system**, and mixing outside it is a bug:
 
@@ -343,13 +374,15 @@ loja.html       the selling page: commissions (four formats, no prices) and,
 404.html        standalone, self-contained
 robots.txt
 sitemap.xml     six URLs; update lastmod when content changes
-images/         + images/thumb/
+images/         + images/thumb/, images/merch/, images/bg/ (the two backgrounds)
 comissoes/      the commission system; nothing here is served
   README.md       how site, Notion and email fit together
   email-onboarding.md  the acceptance email, PT and EN
 marca/          the brand sheet for printers and collaborators; not served
   Guita_Ink-brand-sheet.pdf  one A4 page: the frog coin, the palette (HEX,
                   RGB, approximate CMYK), the three faces, the rules
+  ⚠️ both predate the sky (Oct 2026): they still show the frog green as the
+                  accent. Redo them with the sky palette.
   brand-sheet.tpl.html  its source. The fonts (Google Fonts woff2, base64)
                   and images/frog-logo.svg are pasted in at /*FONTS*/ and
                   /*LOGO*/, then Chromium prints it to A4. Redo it when a
@@ -493,8 +526,8 @@ That is correct and matches the code: they sit on Royal or on the gallery
 scrim, neither of which changes with the theme, so a theme-following token
 would be wrong. Any *other* unbound fill is a bug.
 
-**⚠️ The Figma file predates the frog (October 2026).** It still holds the
-Royal blue variables and the Selo component. Until it is updated, trust it for
+**⚠️ The Figma file predates the frog and the sky (October 2026).** It still
+holds the Royal blue variables and the Selo component. Until it is updated, trust it for
 type and layout only, never for colour or the logo.
 
 What actually works:
@@ -594,7 +627,11 @@ The checks themselves, and why each one exists:
   `naturalWidth: 0` and pass by default.
 - **CLS is 0** on load. A scripted `openLb()` injects a shift with no
   `hadRecentInput` and will read as a false regression; measure without it.
-- **Contrast** against computed colours in both themes.
+- **Contrast** against computed colours in both themes. Text over a picture
+  (the sky) is skipped there and measured in the pixels instead: the text is
+  made transparent, each line's box is photographed, and white is compared
+  with the 95th-percentile pixel behind it, day and night, at 1280 and 390px.
+  Tested against a removed veil.
 - **EN/PT parity** across every `data-t` key.
 - **No horizontal overflow** — sweep widths, don't spot-check. The 621–743px
   band was broken for months and 390/768/1440 all looked fine.

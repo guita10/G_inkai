@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
+<script>/* o tema, antes de pintar: o dia e o tema por omissao, a noite so com o
+   telemovel em modo escuro (Out 2026, o ceu). Aqui no topo para quem esta em
+   modo escuro nao ver o dia a piscar antes da noite. */
+if(matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme = 'dark';</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shop · Guita_Ink</title>
 <meta name="robots" content="index,follow">
@@ -262,31 +266,32 @@ const CONFIG = {
 <style>
 /* ================= TOKENS — copia dos do index.html ================= */
 :root{
-  --void:#0A0A0A;         /* the field */
-  --raise:#121212;        /* raised surface */
-  --raise-2:#1A1A1A;
-  --frog:#80AB5C;        /* o verde do sapo (era o azul Royal): ver o index */
-  --frog-lift:#80AB5C;   /* 7,45:1 sobre --void; texto POR CIMA dele e escuro */
-  --frog-raise:#80AB5C;  /* 7,05:1 sobre --raise */
-  --bone:#F2F0EC;
-  --bone-dim:#8C877F;
-  --hair:rgba(242,240,236,.13);
+  --void:#F3F7F8;         /* the field: o branco das nuvens (ver o index) */
+  --raise:#FFFFFF;        /* raised surface */
+  --raise-2:#E8EEF0;
+  --sky:#0E5CAB;          /* o azul do topo do ceu; texto POR CIMA dele e o --void */
+  --sky-lift:#0E5CAB;     /* 6,21:1 sobre --void */
+  --sky-raise:#0E5CAB;    /* 6,69:1 sobre --raise */
+  --bone:#0E2233;
+  --bone-dim:#56646C;
+  --hair:rgba(14,34,51,.13);
   --f-disp:'Playfair Display',Georgia,serif;
   --f-body:'LT Museum','Lora',Georgia,serif;
   --f-ui:'Inter',system-ui,-apple-system,sans-serif;
-  color-scheme:dark;       /* os menus nativos dos <select> seguem o tema */
+  color-scheme:light;      /* os menus nativos dos <select> seguem o tema */
 }
-[data-theme="light"]{
-  color-scheme:light;
-  --void:#F4F2ED;
-  --raise:#FFFFFF;
-  --raise-2:#EDEAE3;
-  --frog:#456827;        /* o mesmo verde, escurecido para passar no claro */
-  --frog-lift:#456827;
-  --frog-raise:#456827;
-  --bone:#141310;
-  --bone-dim:#6B655C;
-  --hair:rgba(20,19,16,.13);
+/* a noite: so para quem tem o telemovel em modo escuro (ver o index) */
+[data-theme="dark"]{
+  color-scheme:dark;
+  --void:#081A28;
+  --raise:#0D2435;
+  --raise-2:#122D42;
+  --sky:#77D8F1;          /* o ciano do horizonte: 10,83:1 sobre --void */
+  --sky-lift:#77D8F1;
+  --sky-raise:#77D8F1;
+  --bone:#E6F4F6;
+  --bone-dim:#8FA6B2;
+  --hair:rgba(230,244,246,.13);
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -299,8 +304,8 @@ body{
   transition:background .4s ease,color .4s ease;overflow-x:hidden;
 }
 a{color:inherit}
-::selection{background:var(--frog);color:var(--void)}
-:focus-visible{outline:2px solid var(--frog-lift);outline-offset:3px}
+::selection{background:var(--sky);color:var(--void)}
+:focus-visible{outline:2px solid var(--sky-lift);outline-offset:3px}
 .wrap{max-width:1240px;margin:0 auto;padding:0 26px;position:relative;z-index:1}
 /* film grain — a mesma textura do index */
 body::after{
@@ -336,13 +341,35 @@ header{
   font:500 .68rem/1 var(--f-ui);letter-spacing:.1em;
   transition:border-color .2s ease,color .2s ease,transform .12s ease-out;
 }
-.knob:hover{border-color:var(--frog-lift);color:var(--bone)}
+.knob:hover{border-color:var(--sky-lift);color:var(--bone)}
 
 /* ================= CABECA DA PAGINA ================= */
 .page-head{padding:clamp(48px,8vw,96px) 0 clamp(36px,5vw,56px);display:flex;flex-direction:column;gap:18px;align-items:flex-start}
+/* Out 2026 (2): o titulo da loja assenta no ceu do Survival of Kings, como o
+   topo do index: uma faixa de ponta a ponta (margem negativa + padding, ver o
+   .hero do index), com o veu azul que faz o texto branco passar os 4,5:1
+   (medido nos pixeis pelo verify.mjs, dia e noite). Aqui a faixa e baixa e
+   mostra a linha do monte, com as silhuetas e a relva. */
+.page-head{
+  position:relative;isolation:isolate;
+  margin-inline:calc(50% - 50vw);padding-inline:calc(50vw - 50%);
+  --veu:linear-gradient(100deg,rgba(9,52,104,.8) 0%,rgba(9,52,104,.55) 50%,rgba(9,52,104,.15) 100%);
+  background:var(--veu),url("images/bg/sky-1920.jpg") center 80%/cover no-repeat;
+  background:var(--veu),image-set(url("images/bg/sky-1920.webp") type("image/webp"),url("images/bg/sky-1920.jpg") type("image/jpeg")) center 80%/cover no-repeat;
+}
+[data-theme="dark"] .page-head{--veu:linear-gradient(100deg,rgba(8,26,40,.84) 0%,rgba(8,26,40,.6) 50%,rgba(8,26,40,.4) 100%)}
+/* tudo o que esta sobre o ceu e branco, nos dois temas: o ceu e sempre o ceu */
+.page-head h1{color:#FFFFFF}
+.page-head .kicker{color:#FFFFFF}
+.page-head .kicker::before{background:#FFFFFF}
+.page-head .btn{border-color:rgba(255,255,255,.7);color:#FFFFFF}
+.page-head .btn:hover{border-color:#FFFFFF}
+.page-head .badge.open{background:#FFFFFF;color:#0E2233}
+.page-head .badge.closed{border-color:rgba(255,255,255,.7);color:#FFFFFF}
+.page-head :focus-visible{outline-color:#FFFFFF}
 .kicker{font-family:var(--f-ui);font-size:.66rem;font-weight:500;letter-spacing:.28em;text-transform:uppercase;
   color:var(--bone-dim);display:flex;align-items:center;gap:12px}
-.kicker::before{content:"";width:26px;height:1px;background:var(--frog-lift);flex:none}
+.kicker::before{content:"";width:26px;height:1px;background:var(--sky-lift);flex:none}
 /* uma linha reservada: o texto vem do JS e a caixa nao pode nascer com zero */
 h1{font-size:clamp(2.4rem,7vw,4.6rem);text-transform:uppercase;letter-spacing:.06em;min-height:1.06em}
 .jump{display:flex;gap:10px;flex-wrap:wrap}
@@ -356,7 +383,7 @@ section{padding:clamp(48px,7vw,84px) 0;border-top:1px solid var(--hair)}
 h2{font-size:clamp(1.7rem,3.6vw,2.6rem);text-transform:uppercase;letter-spacing:.10em;min-height:1.06em}
 .lede{color:var(--bone-dim);max-width:36rem;font-size:1rem;margin-bottom:34px}
 .badge{font-family:var(--f-ui);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;padding:8px 16px;border-radius:999px}
-.badge.open{background:var(--frog);color:var(--void)}
+.badge.open{background:var(--sky);color:var(--void)}
 .badge.closed{border:1px solid var(--hair);color:var(--bone-dim)}
 .row{display:flex;gap:12px;flex-wrap:wrap}
 
@@ -366,9 +393,9 @@ h2{font-size:clamp(1.7rem,3.6vw,2.6rem);text-transform:uppercase;letter-spacing:
   min-height:44px;border:1px solid var(--hair);color:var(--bone);background:transparent;
   transition:background .25s ease,border-color .25s ease,color .25s ease,transform .12s ease-out;
 }
-.btn:hover{border-color:var(--frog-lift)}
-.btn.fill{background:var(--frog);border-color:var(--frog);color:var(--void)}
-.btn.fill:hover{background:transparent;color:var(--bone);border-color:var(--frog-lift)}
+.btn:hover{border-color:var(--sky-lift)}
+.btn.fill{background:var(--sky);border-color:var(--sky);color:var(--void)}
+.btn.fill:hover{background:transparent;color:var(--bone);border-color:var(--sky-lift)}
 
 /* ---- merch: desde que se compra aqui (30 Set 2026) os cartoes ja nao sao
    links: tem as opcoes e o botao do cesto dentro, e um <select> nao pode
@@ -392,22 +419,22 @@ h2{font-size:clamp(1.7rem,3.6vw,2.6rem);text-transform:uppercase;letter-spacing:
 .plate{
   aspect-ratio:1/1;display:grid;place-items:center;background:var(--raise-2);position:relative;overflow:hidden;
 }
-.plate::after{content:"";position:absolute;inset:0;background-image:radial-gradient(var(--frog) 1px,transparent 1.4px);background-size:16px 16px;opacity:.16}
-.plate span{font-family:var(--f-disp);font-size:clamp(2.4rem,5vw,3.4rem);color:var(--frog-lift);z-index:1}
+.plate::after{content:"";position:absolute;inset:0;background-image:radial-gradient(var(--sky) 1px,transparent 1.4px);background-size:16px 16px;opacity:.16}
+.plate span{font-family:var(--f-disp);font-size:clamp(2.4rem,5vw,3.4rem);color:var(--sky-lift);z-index:1}
 .merch-card .body{padding:20px;display:flex;flex-direction:column;gap:8px;flex:1}
 .merch-card h3{font-size:1.1rem}
 .merch-card p{font-size:.8rem;color:var(--bone-dim)}
 /* as opcoes e o botao assentam no fundo do cartao: numa linha de quatro os
    botoes ficam todos a mesma altura, tenha o produto uma caixa ou tres */
 .merch-card .body > .opts{margin-top:auto}
-/* --frog-raise e nao --frog-lift: o cartao e --raise, nao o fundo da pagina */
-.price{font-family:var(--f-disp);color:var(--frog-raise);display:flex;align-items:baseline;gap:3px}
+/* --sky-raise e nao --sky-lift: o cartao e --raise, nao o fundo da pagina */
+.price{font-family:var(--f-disp);color:var(--sky-raise);display:flex;align-items:baseline;gap:3px}
 .price .from{font-family:var(--f-body);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-dim);margin-right:5px}
 .price .n{font-size:1.9rem;line-height:.9}
 .price .u{font-size:.95rem}
 .flag{
   position:absolute;top:12px;left:12px;z-index:2;font-family:var(--f-ui);font-size:.56rem;
-  letter-spacing:.16em;text-transform:uppercase;color:var(--void);background:var(--frog);
+  letter-spacing:.16em;text-transform:uppercase;color:var(--void);background:var(--sky);
   padding:3px 9px;border-radius:999px;
 }
 
@@ -424,12 +451,12 @@ h2{font-size:clamp(1.7rem,3.6vw,2.6rem);text-transform:uppercase;letter-spacing:
   border:1px solid var(--hair);background:var(--void);color:var(--bone);
   font:400 .8rem var(--f-ui);transition:border-color .2s ease;
 }
-.opt select:hover{border-color:var(--frog-lift)}
-.opt select[aria-invalid="true"]{border-color:var(--frog-raise)}
+.opt select:hover{border-color:var(--sky-lift)}
+.opt select[aria-invalid="true"]{border-color:var(--sky-raise)}
 .merch-card .add{width:100%;justify-content:center;margin-top:6px}
 /* a mensagem por baixo do botao ("escolhe o tamanho"): linha reservada, para
    o cartao nao crescer quando ela aparece */
-.card-msg{font-family:var(--f-ui);font-size:.7rem;color:var(--frog-raise);min-height:1.2em;line-height:1.2}
+.card-msg{font-family:var(--f-ui);font-size:.7rem;color:var(--sky-raise);min-height:1.2em;line-height:1.2}
 
 /* ---- o cesto: linhas, nao caixas, como o resto do site ---- */
 .cesto{border-top:1px solid var(--hair);padding-top:28px;margin:10px 0 34px;scroll-margin-top:90px}
@@ -444,7 +471,7 @@ h2{font-size:clamp(1.7rem,3.6vw,2.6rem);text-transform:uppercase;letter-spacing:
 .qtd output{font-family:var(--f-ui);font-size:.9rem;min-width:1.6em;text-align:center}
 .linha .knob{padding:0;font-size:1rem}
 .linha-fim{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
-.linha-fim .p{font-family:var(--f-disp);color:var(--frog-lift);font-size:1.1rem}
+.linha-fim .p{font-family:var(--f-disp);color:var(--sky-lift);font-size:1.1rem}
 .tirar{font:400 .72rem var(--f-ui);color:var(--bone-dim);background:none;border:0;cursor:pointer;
   padding:8px 0;text-decoration:underline;text-underline-offset:3px;transition:color .2s ease}
 .tirar:hover{color:var(--bone)}
@@ -468,8 +495,29 @@ h2{font-size:clamp(1.7rem,3.6vw,2.6rem);text-transform:uppercase;letter-spacing:
 .comm-note{font-family:var(--f-ui);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
   color:var(--bone-dim);margin:-14px 0 40px}
 .ask{margin-top:26px;font-size:.9rem;color:var(--bone-dim)}
-.ask a{color:var(--frog-lift);text-decoration:none;border-bottom:1px solid var(--hair);transition:border-color .2s ease}
-.ask a:hover{border-color:var(--frog-lift)}
+.ask a{color:var(--sky-lift);text-decoration:none;border-bottom:1px solid var(--hair);transition:border-color .2s ease}
+.ask a:hover{border-color:var(--sky-lift)}
+/* Out 2026 (2): o elenco dos sete (Survival of Kings, original do Frede)
+   fecha as comissoes: personagens, que e o que se encomenda. Fica POR BAIXO
+   do texto, nunca atras dele: atras, a lista dos formatos lia-se mal
+   (experimentado na maqueta). O aspect-ratio reserva o espaco antes de a
+   imagem chegar, por isso nao salta nada.
+   De dia o branco da imagem funde-se com o fundo (multiply: branco x fundo =
+   fundo) e a peca assenta na pagina sem rectangulo nenhum. */
+#comissoes::after{
+  content:"";display:block;width:100%;aspect-ratio:1920/1358;margin-top:clamp(30px,5vw,60px);
+  background:url("images/bg/cast-1920.jpg") center/contain no-repeat var(--void);
+  background:image-set(url("images/bg/cast-1920.webp") type("image/webp"),url("images/bg/cast-1920.jpg") type("image/jpeg")) center/contain no-repeat var(--void);
+  background-blend-mode:multiply;
+}
+/* de noite nao ha branco com que fundir (multiply sobre o azul escurecia a
+   peca toda). Usa-se outra versao do mesmo ficheiro: so o branco de FORA, o
+   que toca nas bordas, ficou transparente; as personagens e a placa cinzenta
+   ficam inteiras, e o nevoeiro dos pes esbate na noite como no original
+   esbate no branco. (Feita a partir do original, Out 2026.) */
+[data-theme="dark"] #comissoes::after{background-blend-mode:normal;background-color:transparent;
+  background-image:url("images/bg/cast-night-1000.png");
+  background-image:image-set(url("images/bg/cast-night-1920.webp") type("image/webp"),url("images/bg/cast-night-1000.png") type("image/png"))}
 
 footer{font-family:var(--f-ui);
   padding:26px 0 46px;border-top:1px solid var(--hair);display:flex;justify-content:space-between;
@@ -495,6 +543,18 @@ footer a:hover{color:var(--bone)}
   .linha > div:first-child{grid-column:1 / -1}
   .price .n{font-size:1.5rem}
   .tiers{grid-template-columns:1fr}
+  /* no telemovel a faixa do ceu mostra a parte de baixo (o monte), e o veu
+     desce de cima, onde esta o texto */
+  /* o veu desce ate ao fundo: os botoes ficam por cima da relva, que e clara */
+  .page-head{--veu:linear-gradient(180deg,rgba(9,52,104,.8) 0%,rgba(9,52,104,.7) 60%,rgba(9,52,104,.68) 100%);
+    background:var(--veu),url("images/bg/sky-900.jpg") center 88%/cover no-repeat;
+    background:var(--veu),image-set(url("images/bg/sky-900.webp") type("image/webp"),url("images/bg/sky-900.jpg") type("image/jpeg")) center 88%/cover no-repeat}
+  [data-theme="dark"] .page-head{--veu:linear-gradient(180deg,rgba(8,26,40,.86) 0%,rgba(8,26,40,.55) 100%)}
+  /* o elenco mais leve no telemovel */
+  #comissoes::after{background-image:url("images/bg/cast-1000.jpg");
+    background-image:image-set(url("images/bg/cast-1000.webp") type("image/webp"),url("images/bg/cast-1000.jpg") type("image/jpeg"))}
+  [data-theme="dark"] #comissoes::after{background-image:url("images/bg/cast-night-1000.png");
+    background-image:image-set(url("images/bg/cast-night-1000.webp") type("image/webp"),url("images/bg/cast-night-1000.png") type("image/png"))}
   .brand b{display:none}          /* o selo chega; o nome nao cabe ao lado dos botoes */
 }
 /* §9.8 — sem efeitos nenhuns. A textura do grao fica: e parada. */
@@ -600,7 +660,6 @@ const $ = s => document.querySelector(s);
 const pedida = new URLSearchParams(location.search).get('lang');
 let LANG = (pedida === 'pt' || pedida === 'en') ? pedida
   : ((navigator.language || 'en').toLowerCase().startsWith('pt') ? 'pt' : 'en');
-if(matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.dataset.theme = 'light';
 
 /* ================= O CESTO =================
    Compra-se nesta pagina: escolhe-se desenho, cor e tamanho, junta-se ao

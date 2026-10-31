@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
+<script>/* o tema, antes de pintar: o dia e o tema por omissao, a noite so com o
+   telemovel em modo escuro (Out 2026, o ceu). Aqui no topo para quem esta em
+   modo escuro nao ver o dia a piscar antes da noite. */
+if(matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme = 'dark';</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Project · Guita_Ink</title>
 <meta name="robots" content="index,follow">
@@ -106,27 +110,28 @@ const CONFIG = {
 
 <style>
 :root{
-  --void:#0A0A0A;         /* the field */
-  --raise:#121212;        /* raised surface */
-  --raise-2:#1A1A1A;
-  --frog:#80AB5C;        /* o verde do sapo (era o azul Royal): ver o index */
-  --frog-lift:#80AB5C;   /* 7,45:1 sobre --void; texto POR CIMA dele e escuro */
-  --bone:#F2F0EC;
-  --bone-dim:#8C877F;
-  --hair:rgba(242,240,236,.13);
+  --void:#F3F7F8;         /* the field: o branco das nuvens (ver o index) */
+  --raise:#FFFFFF;        /* raised surface */
+  --raise-2:#E8EEF0;
+  --sky:#0E5CAB;          /* o azul do topo do ceu; texto POR CIMA dele e o --void */
+  --sky-lift:#0E5CAB;     /* 6,21:1 sobre --void */
+  --bone:#0E2233;
+  --bone-dim:#56646C;
+  --hair:rgba(14,34,51,.13);
   --f-disp:'Playfair Display',Georgia,serif;
   --f-body:'LT Museum','Lora',Georgia,serif;      /* corpo — LT Museum se estiver instalada */
   --f-ui:'Inter',system-ui,-apple-system,sans-serif;
 }
-[data-theme="light"]{
-  --void:#F4F2ED;
-  --raise:#FFFFFF;
-  --raise-2:#EDEAE3;
-  --frog:#456827;        /* o mesmo verde, escurecido para passar no claro */
-  --frog-lift:#456827;
-  --bone:#141310;
-  --bone-dim:#6B655C;
-  --hair:rgba(20,19,16,.13);
+/* a noite: so para quem tem o telemovel em modo escuro (ver o index) */
+[data-theme="dark"]{
+  --void:#081A28;
+  --raise:#0D2435;
+  --raise-2:#122D42;
+  --sky:#77D8F1;          /* o ciano do horizonte: 10,83:1 sobre --void */
+  --sky-lift:#77D8F1;
+  --bone:#E6F4F6;
+  --bone-dim:#8FA6B2;
+  --hair:rgba(230,244,246,.13);
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -138,8 +143,8 @@ body{
 }
 img{display:block;max-width:100%;height:auto}  /* par obrigatorio: sem height:auto a imagem esmaga */
 a{color:inherit}
-::selection{background:var(--frog);color:var(--void)}
-:focus-visible{outline:2px solid var(--frog-lift);outline-offset:3px}
+::selection{background:var(--sky);color:var(--void)}
+:focus-visible{outline:2px solid var(--sky-lift);outline-offset:3px}
 .wrap{max-width:900px;margin:0 auto;padding:0 26px;position:relative;z-index:1}
 /* film grain */
 body::after{
@@ -154,7 +159,7 @@ header,main,footer{position:relative;z-index:1}
   padding:30px 0;transition:color .2s;
 }
 .back:hover{color:var(--bone)}
-.k{font-family:var(--f-ui);font-size:.66rem;letter-spacing:.28em;text-transform:uppercase;color:var(--frog-lift)}
+.k{font-family:var(--f-ui);font-size:.66rem;letter-spacing:.28em;text-transform:uppercase;color:var(--sky-lift)}
 /* Esta pagina nao tinha bloco nenhum de prefers-reduced-motion, e o §9.8 diz
    que ele desliga todos os efeitos. Sao poucos: o scroll suave, a transicao de
    cor do corpo e a do link de voltar. O grao do body::after fica — e uma
@@ -170,8 +175,8 @@ h1{font-family:var(--f-disp);font-weight:400;font-size:clamp(2rem,5vw,3.2rem);te
   aspect-ratio:16/9;display:grid;place-items:center;background:var(--raise-2);
   margin:40px 0;position:relative;overflow:hidden;border:1px solid var(--hair);
 }
-.plate::after{content:"";position:absolute;inset:0;background-image:radial-gradient(var(--frog) 1px,transparent 1.4px);background-size:16px 16px;opacity:.16}
-.plate span{font-family:var(--f-disp);font-size:clamp(3rem,9vw,5.5rem);color:var(--frog-lift);z-index:1}
+.plate::after{content:"";position:absolute;inset:0;background-image:radial-gradient(var(--sky) 1px,transparent 1.4px);background-size:16px 16px;opacity:.16}
+.plate span{font-family:var(--f-disp);font-size:clamp(3rem,9vw,5.5rem);color:var(--sky-lift);z-index:1}
 /* A serie. Um projecto com uma imagem so continua a dar exactamente o mesmo
    resultado de antes: um <img> sozinho dentro deste contentor.
    As medidas vao nos atributos width/height (do PROJ_DIMS) para o browser
@@ -196,7 +201,7 @@ h1{font-family:var(--f-disp);font-weight:400;font-size:clamp(2rem,5vw,3.2rem);te
   .grelha a:active{transform:none}
 }
 .note{
-  border-left:2px solid var(--frog);padding-left:16px;color:var(--bone-dim);font-size:.9rem;margin:40px 0;
+  border-left:2px solid var(--sky);padding-left:16px;color:var(--bone-dim);font-size:.9rem;margin:40px 0;
 }
 footer{border-top:1px solid var(--hair);margin-top:60px;padding:26px 0 50px;font-family:var(--f-ui);
   font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-dim);

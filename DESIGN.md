@@ -14,9 +14,16 @@
 
 ## 1. Visual Theme & Atmosphere
 
-An ink-dark editorial field where the artwork is the only thing allowed to be
-loud. Near-black paper, one green taken from the frog mascot and used like a
-stamp pad, and a great deal of air. The mood is a printer's proof sheet rather than a product page:
+**Since October 2026 (the second change that month) the site is the sky.**
+Frede chose two of his own originals from the Survival of Kings universe as the
+base of the whole site: the sky over a hill with two silhouettes, and the
+line-up of seven characters. The palette was measured off them, the sky opens
+the home page and the shop full-bleed, and the cast closes the commissions.
+Day is the default; a phone in dark mode gets the same sky at night.
+
+A cloud-white editorial field where the artwork is the only thing allowed to
+be loud. Off-white paper, one blue taken from the top of the sky and used like
+a stamp pad, and a great deal of air. The mood is a printer's proof sheet rather than a product page:
 serif display type set large and tight, uppercase micro-labels tracked wide
 like plate captions, hairline rules instead of boxes, and a fixed film-grain
 veil over everything so the flat vectors read as paper rather than screen.
@@ -39,35 +46,44 @@ not belong to this site.
 
 ## 2. Color Palette & Roles
 
-One accent hue. It has three token names (`--frog`, `--frog-lift`,
-`--frog-raise`) so a tint can exist **only** where contrast against a surface
+One accent hue. It has three token names (`--sky`, `--sky-lift`,
+`--sky-raise`) so a tint can exist **only** where contrast against a surface
 demands it; today, in each theme, all three hold the same value. Treat them as
 one colour with accessibility variants, never as a three-colour palette.
 
-### Dark (default)
+Every value below was measured off the two Survival of Kings pieces: the sky
+(`images/bg/sky-*`) and the cast (`images/bg/cast-*`).
 
-- **Void** (`#0A0A0A`) — the field; page background. Never `#000000`.
-- **Raise** (`#121212`) — raised surface: cards, tiles, frames.
-- **Raise 2** (`#1A1A1A`) — second-level surface, inset panels.
-- **Frog** (`#80AB5C`) — the single accent, the green of the frog's body, measured off the drawing (October 2026; it replaced the Royal blue `#2E45FF`). Fills, selection, focus, the italic in the hero headline. It is light enough to do every job alone: 7.45:1 on Void, 7.05:1 on Raise, 6.55:1 on Raise 2, 7.66:1 on the gallery scrim.
-- **Frog Lift / Frog Raise** — kept as names (small text on Void / on Raise) for the day one shade is not enough, but today both equal Frog.
-- **Text on Frog is dark** (`var(--void)`), never white: white on this green is 2.66:1 and fails. Green fill with a dark mark is the frog itself, green body, black outline.
-- **Bone** (`#F2F0EC`) — primary text. Warm off-white, never `#FFFFFF`.
-- **Bone Dim** (`#8C877F`) — secondary text, captions, metadata.
-- **Hair** (`rgba(242,240,236,.13)`) — 1px structural rules and card borders. The site draws lines, not boxes.
+### Day (default)
 
-### Light
+- **Void** (`#F3F7F8`) — the field; the white of the clouds. Never `#FFFFFF`.
+- **Raise** (`#FFFFFF`) — raised surface: cards, tiles, frames.
+- **Raise 2** (`#E8EEF0`) — second-level surface, inset panels.
+- **Sky** (`#0E5CAB`) — the single accent, the blue at the top of the sky. Fills, selection, focus, the italic. 6.21:1 on Void, 6.69:1 on Raise, 5.71:1 on Raise 2.
+- **Sky Lift / Sky Raise** — kept as names (small text on Void / on Raise) for the day one shade is not enough; today both equal Sky.
+- **Text on Sky is Void** (`var(--void)`): 6.21:1.
+- **Bone** (`#0E2233`) — primary text: the night-blue of the silhouettes.
+- **Bone Dim** (`#56646C`) — secondary text, captions, metadata. 5.67 / 6.11 / 5.22:1.
+- **Hair** (`rgba(14,34,51,.13)`) — 1px structural rules and card borders. The site draws lines, not boxes.
 
-- **Void** `#F4F2ED` · **Raise** `#FFFFFF` · **Raise 2** `#EDEAE3`
-- **Frog** `#456827` — the same hue darkened until it passes everywhere: 5.75:1 on Void, 6.44:1 on Raise, 5.36:1 on Raise 2. The light Void on top of it (button text) is 5.75:1. The body green itself would fail here (2.4:1).
-- **Bone** `#141310` · **Bone Dim** `#6B655C` · **Hair** `rgba(20,19,16,.13)`
+### Night (`[data-theme="dark"]`, phones in dark mode)
 
-**The accent comes from the mascot.** The frog is the logo, and the site's one
-colour is his. It stays applied like ink: small fills, hairlines, the italic,
-never as a glow, a gradient wash or a neon edge. Both values sit well under the
-80% saturation ceiling (`#80AB5C` ~32%, `#456827` ~45%). The frog's other
-colours (belly `#C9E4B9`, mouth `#6F3A28`, eye `#E2C259`) live in the logo only;
-they are not a palette.
+- **Void** `#081A28` · **Raise** `#0D2435` · **Raise 2** `#122D42` — the dark blue-teal of the sky, darkened.
+- **Sky** `#77D8F1` — the cyan at the horizon: 10.83:1 on Void, 9.75:1 on Raise, 8.70:1 on Raise 2. Void on top of it: 10.83:1.
+- **Bone** `#E6F4F6` (cloud) · **Bone Dim** `#8FA6B2` (6.95 / 6.26 / 5.59:1) · **Hair** `rgba(230,244,246,.13)`
+
+**Over the sky, text is white in both themes**, on a measured veil of the
+sky's own deep blue (`rgba(9,52,104,…)`, night: `rgba(8,26,40,…)`) laid behind
+the text block. White on the bare mid-sky is 3.78:1 and fails; `verify.mjs`
+measures the real pixels behind every line (95th percentile) in both themes.
+
+**The frog stays green.** The coin is Frede's drawing and keeps the frog's
+own green (`#80AB5C`, fixed in the SVG); it is the logo, not a theme colour,
+and it sits on the sky like the grass it matches. The frog's other colours
+(belly `#C9E4B9`, mouth `#6F3A28`, eye `#E2C259`) live in the logo only.
+
+The accent stays applied like ink: small fills, hairlines, the italic, never as
+a glow, a gradient wash or a neon edge.
 
 ---
 
@@ -75,7 +91,7 @@ they are not a palette.
 
 - **Display — `Playfair Display`** (400 / 500 / 400 italic). Headlines at
   `clamp(3.2rem, 9vw, 7rem)` with `-0.025em` tracking. Hierarchy comes from
-  weight, tracking and colour; the italic in Frog green is the emphasis device.
+  weight, tracking and colour; the italic in Sky is the emphasis device.
 - **Body — `LT Museum`, falling back to `Lora`.** Weight 300, line-height 1.65,
   measure capped at `30rem`–`42rem`.
 - **UI — `Inter`** (300 / 400 / 500). Nav, buttons, chips, eyebrows, captions,
@@ -110,7 +126,7 @@ inert. Do not add it to Playfair and assume it took.
 ## 4. Component Stylings
 
 - **Buttons.** `2px` radius — near-square, printed, not pill. `1px` Hair border,
-  transparent fill; the primary inverts to a Frog fill with dark text and
+  transparent fill; the primary inverts to a Sky fill with Void text and
   wipes back to transparent on hover. A diagonal light sweep crosses the filled
   button on hover (`left: -120% → 100%`, 650ms). No outer glow, ever.
   Transition: `background .25s ease, border-color .25s ease, color .25s ease`.
@@ -127,7 +143,7 @@ inert. Do not add it to Playfair and assume it took.
   nav at boot, so there is one list, not two. `aria-expanded`, focus trapped,
   Escape closes and returns focus, and it closes itself if the viewport grows
   past the breakpoint.
-- **Commission steps.** Four stages in an ordered list, each with a Frog top
+- **Commission steps.** Four stages in an ordered list, each with a Sky top
   rule, staggered down a staircase (`margin-top` 0 / 18 / 36 / 54px) over
   unequal columns (`1.18fr 1fr 1fr .92fr`). **No step numbers.** The stage name
   is the label; the list order and the staircase carry the sequence. Numbering
@@ -147,7 +163,8 @@ inert. Do not add it to Playfair and assume it took.
   Space.
 - **The frog coin** (October 2026; it replaced the 墨 seal). Frede's own
   drawing, traced into flat vector shapes ink by ink (line, body, belly, mouth,
-  tongue, the eye and its ochre half) and set on a coin of Frog green. The
+  tongue, the eye and its ochre half) and set on a coin of the frog's green
+  (`#80AB5C`, in the SVG; not a theme token since the sky, Oct 2026). The
   frog's body shares the coin's green, so his black line does the drawing, the
   way a stamp does. It is the seal's successor: a field of the accent carrying
   one mark. A circle keeps the same footprint everywhere: the bar, the browser
@@ -179,7 +196,7 @@ inert. Do not add it to Playfair and assume it took.
   commissions band → about (with the timeline beside the bio as "Along the
   way") → contact. Projects lead, with the featured one (`CONFIG.featured`,
   Survival of Kings) as a full-width card: cover left, text right, a strip of
-  its series, a Frog top rule. The other projects follow in a row.
+  its series, a Sky top rule. The other projects follow in a row.
 - **Selected work is one uniform grid**, no project highlighted: 4:5 frames
   in rows (4 / 3 / 2 columns). Uniform never means cropped: art that is not
   4:5 is fitted whole (`contain`) on the raised surface, like a print mat.
@@ -189,8 +206,12 @@ inert. Do not add it to Playfair and assume it took.
 - **Projects** are four across on desktop, two across below 980px, and a
   horizontal scroll-snap row below 620px, each card 80% wide so the next one
   peeks in and signals there is more.
-- **Hero:** asymmetric split, `minmax(0,1fr) / minmax(0,.72fr)`, `60px` gap,
-  `align-items: start`. Text left, artwork right. Never centred.
+- **Hero:** the Survival of Kings sky, full-bleed (it leaves the 1240px
+  container), `min-height: min(82svh, 780px)` so nothing below it moves. Text
+  left over the veil, never centred; on a phone the text sits at the top, in
+  the deepest blue, and the silhouettes and grass stay whole at the bottom.
+  No artwork column since October 2026: the sky is the hero's picture, and the
+  piece that stood there (OC 01) is on the wall.
 - **Section headers stack vertically, left-aligned** — eyebrow, then headline.
   The title-left / small-text-right split header is banned.
 - **Every multi-column block is deliberately unequal.** Projects run
@@ -257,11 +278,13 @@ inert. Do not add it to Playfair and assume it took.
 - No emojis. The CJK glyphs on the typographic plates are typeset characters,
   not emoji, and the frog is a drawing, not an icon set.
 - No pure `#000000` anywhere, and no pure `#FFFFFF` as the field or as body text.
-  `#fff` is allowed only on the artwork scrim and the lightbox: the tile title
-  and the lightbox controls. Those grounds do not follow the theme, so the text
-  on them must not either. Anything sitting on a Frog fill (the skip link, the
+  `#fff` is allowed only on the artwork scrim, the lightbox and the sky (the
+  hero and the shop's page head): the tile title, the lightbox controls, the
+  text over the sky. Those grounds do not follow the theme, so the text on them
+  must not either. Anything sitting on a Sky fill (the skip link, the
   filled button, the open badge, flags, the selection) uses `var(--void)`.
-- No second accent hue. The Frog tints are one colour.
+- No second accent hue. The Sky tints are one colour. (The frog coin is green
+  because it is the frog, not a second accent.)
 - No neon, glow, or outer-shadow treatments on the accent.
 - No gradient text on headlines.
 - No shadows. This system draws hairlines.

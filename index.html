@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
+<script>/* o tema, antes de pintar: o dia e o tema por omissao, a noite so com o
+   telemovel em modo escuro (Out 2026, o ceu). Aqui no topo para quem esta em
+   modo escuro nao ver o dia a piscar antes da noite. */
+if(matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme = 'dark';</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- ============ SEO ============ -->
@@ -152,7 +156,8 @@ const CONFIG = {
      destaca: e uma grelha igual para todas as pecas (pedido do Frede, Set
      2026). Para tirar o destaque, featured: "". */
   featured: "sok",
-  hero: { src: "images/oc.jpg", label: "OC 01", ratio: "34" },
+  /* hero: saiu em Out 2026. O topo da pagina e o ceu do Survival of Kings
+     (uma imagem de fundo, no CSS do .hero); a OC 01 continua na parede. */
   artworks: [
     { src: "images/angela.jpg",                label: "Angela",                    ratio: "34", cat: "character" },
     { src: "images/mira-starborn.jpg",         label: "Mira Starborn",             ratio: "11", cat: "character" },
@@ -253,7 +258,6 @@ const CONFIG = {
       ctaWork: "View work", ctaComm: "Commissions",
       navWork: "Work", navProjects: "Projects", navAbout: "About", navComm: "Commissions", navContact: "Contact",
       navMenu: "Menu",
-      featuredLabel: "Featured",
       galleryTitle: "Selected work",
       filters: { all: "All", webtoon: "Webtoon", covers: "Covers", character: "Character design", fanart: "Fan art", sketches: "Sketches", collab: "Collabs" },
       projectsTitle: "Featured projects",
@@ -321,7 +325,6 @@ const CONFIG = {
       ctaWork: "Ver trabalho", ctaComm: "Comissões",
       navWork: "Trabalho", navProjects: "Projetos", navAbout: "Sobre", navComm: "Comissões", navContact: "Contacto",
       navMenu: "Menu",
-      featuredLabel: "Destaque",
       galleryTitle: "Trabalho selecionado",
       filters: { all: "Tudo", webtoon: "Webtoon", covers: "Capas", character: "Design de personagens", fanart: "Fan art", sketches: "Esboços", collab: "Colaborações" },
       projectsTitle: "Projetos em destaque",
@@ -379,40 +382,44 @@ const CONFIG = {
 <style>
 /* ================= TOKENS ================= */
 :root{
-  --void:#0A0A0A;         /* the field */
-  --raise:#121212;        /* raised surface */
-  --raise-2:#1A1A1A;
-  /* O verde do sapo, o logotipo desde Out 2026 (era o azul Royal #2E45FF).
-     E o verde do corpo dele, medido no desenho: #80AB5C. No escuro um so tom
-     chega para os tres papeis, porque e muito mais claro do que o azul era:
-     7,45:1 sobre --void, 7,05:1 sobre --raise, 6,55:1 sobre --raise-2.
+  /* Out 2026 (2): o ceu. A paleta saiu de duas pecas originais do universo
+     Survival of Kings que o Frede escolheu como base do site: o ceu com as
+     silhuetas e o elenco dos sete (ambas na pasta bg das imagens).
+     Medido nelas: de dia, o branco das nuvens, o azul-noite das silhuetas
+     para o texto e o azul do topo do ceu; de noite, o azul-petroleo escuro
+     do ceu, a nuvem para o texto e o ciano do horizonte.
+     O dia e o tema por omissao; um telemovel em modo escuro recebe a noite.
+     --sky: 6,21:1 sobre --void, 6,69:1 sobre --raise, 5,71:1 sobre --raise-2.
      -lift e -raise ficam como nomes (texto miudo sobre o fundo / sobre
-     cartoes) para o dia em que um tom nao chegar, mas hoje sao iguais.
-     ⚠️ Texto POR CIMA do verde e escuro (var(--void)), nunca branco: branco
-     sobre este verde da 2,66:1 e chumba. E o sapo: verde com contorno preto. */
-  --frog:#80AB5C;
-  --frog-lift:#80AB5C;   /* texto pequeno sobre --void */
-  --frog-raise:#80AB5C;  /* texto pequeno sobre --raise */
-  --bone:#F2F0EC;
-  --bone-dim:#8C877F;
-  --hair:rgba(242,240,236,.13);
+     cartoes), como antes, para o dia em que um tom nao chegar; hoje iguais.
+     Texto POR CIMA do azul e o --void (6,21:1).
+     O sapo continua verde: e o desenho dele, nao uma cor do tema. */
+  --void:#F3F7F8;         /* the field: o branco das nuvens */
+  --raise:#FFFFFF;        /* raised surface */
+  --raise-2:#E8EEF0;
+  --sky:#0E5CAB;
+  --sky-lift:#0E5CAB;    /* texto pequeno sobre --void */
+  --sky-raise:#0E5CAB;   /* texto pequeno sobre --raise */
+  --bone:#0E2233;         /* o texto: o azul-noite das silhuetas */
+  --bone-dim:#56646C;     /* 5,67:1 sobre --void, 6,11:1 / 5,22:1 */
+  --hair:rgba(14,34,51,.13);
   --f-disp:'Playfair Display',Georgia,serif;
   --f-body:'LT Museum','Lora',Georgia,serif;      /* corpo — LT Museum se estiver instalada */
   --f-ui:'Inter',system-ui,-apple-system,sans-serif;
 }
-[data-theme="light"]{
-  --void:#F4F2ED;
-  --raise:#FFFFFF;
-  --raise-2:#EDEAE3;
-  /* no claro o verde do corpo chumba (2,4:1 sobre #F4F2ED): este e o mesmo
-     tom, escurecido ate passar em tudo. 5,75:1 sobre --void, 6,44:1 sobre
-     --raise, 5,36:1 sobre --raise-2, e o --void por cima dele da 5,75:1. */
-  --frog:#456827;
-  --frog-lift:#456827;
-  --frog-raise:#456827;
-  --bone:#141310;
-  --bone-dim:#6B655C;
-  --hair:rgba(20,19,16,.13);
+/* a noite: o mesmo ceu depois do por do sol. --sky da 10,83:1 sobre --void,
+   9,75:1 sobre --raise, 8,70:1 sobre --raise-2, e o --void por cima dele
+   10,83:1. --bone-dim: 6,95:1 / 6,26:1 / 5,59:1. */
+[data-theme="dark"]{
+  --void:#081A28;
+  --raise:#0D2435;
+  --raise-2:#122D42;
+  --sky:#77D8F1;
+  --sky-lift:#77D8F1;
+  --sky-raise:#77D8F1;
+  --bone:#E6F4F6;
+  --bone-dim:#8FA6B2;
+  --hair:rgba(230,244,246,.13);
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -429,11 +436,11 @@ body{
    width/height, escala a altura junto com a largura e o CLS continua a zero. */
 img{display:block;max-width:100%;height:auto}
 a{color:inherit}
-::selection{background:var(--frog);color:var(--void)}
-:focus-visible{outline:2px solid var(--frog-lift);outline-offset:3px}
+::selection{background:var(--sky);color:var(--void)}
+:focus-visible{outline:2px solid var(--sky-lift);outline-offset:3px}
 
 .skip{
-  position:absolute;left:-9999px;top:10px;z-index:200;background:var(--frog);color:var(--void);
+  position:absolute;left:-9999px;top:10px;z-index:200;background:var(--sky);color:var(--void);
   padding:10px 18px;border-radius:2px;font:500 .8rem var(--f-ui);text-decoration:none;
 }
 .skip:focus{left:10px}
@@ -444,7 +451,7 @@ a{color:inherit}
 }
 .noscript-note b{font-family:var(--f-disp);font-weight:500}
 .noscript-note p{color:var(--bone-dim);font-size:.9rem}
-.noscript-note a{color:var(--frog-lift)}
+.noscript-note a{color:var(--sky-lift)}
 .wrap{max-width:1240px;margin:0 auto;padding:0 26px;position:relative;z-index:1}
 /* a barra vazia tem 54px (so os botoes); com os rotulos la dentro tem 73. */
 .bar{min-height:73px}
@@ -462,7 +469,7 @@ p{text-wrap:pretty}   /* evita uma palavra sozinha na ultima linha */
   font-size:.66rem;font-weight:500;letter-spacing:.28em;text-transform:uppercase;
   color:var(--bone-dim);display:flex;align-items:center;gap:12px;
 }
-.kicker::before{content:"";width:26px;height:1px;background:var(--frog-lift);flex:none}
+.kicker::before{content:"";width:26px;height:1px;background:var(--sky-lift);flex:none}
 .sec-title{font-size:clamp(1.7rem,3.6vw,2.6rem);margin-top:16px;text-transform:uppercase;letter-spacing:.10em}
 /* ---- ALTURA RESERVADA PARA O TEXTO QUE VEM DO JAVASCRIPT ----
    Todo o texto desta pagina e escrito pelo JS a partir do CONFIG, e esse
@@ -475,7 +482,7 @@ p{text-wrap:pretty}   /* evita uma palavra sozinha na ultima linha */
      h1  2,12em (duas linhas)   ·   titulo de seccao  1,06em (uma linha)
    Reservar a medida certa (ou um pouco mais) e o que leva o salto a zero. */
 .sec-title{min-height:1.06em}
-.sec-title em{font-style:italic;color:var(--frog-lift)}
+.sec-title em{font-style:italic;color:var(--sky-lift)}
 .lede{color:var(--bone-dim);max-width:36rem;margin-top:16px;font-size:1rem}
 
 /* ================= HEADER ================= */
@@ -516,7 +523,7 @@ header{
 .links a[aria-current]::after{
   /* bottom acompanha o padding novo: 16 de padding menos 6 = 10, para o traco
      continuar a 6px do texto e nao a 6px do fundo da caixa. */
-  content:"";position:absolute;left:0;right:0;bottom:10px;height:1px;background:var(--frog-lift);
+  content:"";position:absolute;left:0;right:0;bottom:10px;height:1px;background:var(--sky-lift);
 }
 .knobs{display:flex;gap:8px;margin-left:22px}
 
@@ -558,7 +565,7 @@ header{
 .nav-panel.open a:nth-child(5){transition-delay:.20s}
 .nav-panel.open a:nth-child(6){transition-delay:.24s}
 .nav-panel a:hover,.nav-panel a[aria-current]{color:var(--bone)}
-.nav-panel a[aria-current]{color:var(--frog-lift)}
+.nav-panel a[aria-current]{color:var(--sky-lift)}
 
 /* texto so para leitores de ecra */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
@@ -573,7 +580,7 @@ header{
   font:500 .68rem/1 var(--f-ui);letter-spacing:.1em;
   transition:border-color .2s ease,color .2s ease,transform .12s ease-out;
 }
-.knob:hover{border-color:var(--frog-lift);color:var(--bone)}
+.knob:hover{border-color:var(--sky-lift);color:var(--bone)}
 
 /* ================= BUTTONS ================= */
 .btn{
@@ -590,15 +597,42 @@ header{
      Nomeia-las mantem o transform do ::after de fora e evita surpresas. */
   transition:background .25s ease,border-color .25s ease,color .25s ease,transform .12s ease-out;
 }
-.btn:hover{border-color:var(--frog-lift);color:var(--bone)}
-.btn.fill{background:var(--frog);border-color:var(--frog);color:var(--void)}
-.btn.fill:hover{background:transparent;color:var(--bone);border-color:var(--frog-lift)}
+.btn:hover{border-color:var(--sky-lift);color:var(--bone)}
+.btn.fill{background:var(--sky);border-color:var(--sky);color:var(--void)}
+.btn.fill:hover{background:transparent;color:var(--bone);border-color:var(--sky-lift)}
 .row{display:flex;gap:12px;flex-wrap:wrap}
 
 /* ================= HERO ================= */
 /* O hero encolheu. Dizia o nome e mostrava uma peca, mas empurrava a galeria
    toda para fora do primeiro ecra — e a galeria e o que as pessoas vem ver. */
-.hero{padding:clamp(28px,3.4vw,56px) 0 clamp(38px,5vw,66px);position:relative}
+/* Out 2026 (2): o topo da pagina e o ceu. A peca em destaque (OC 01) que
+   aqui estava saiu (continua na parede): o ceu do Survival of Kings, original
+   do Frede, faz agora o papel dela, de ponta a ponta, com o titulo por cima.
+   De ponta a ponta sem sair do .wrap: a margem negativa estica a faixa ate as
+   bordas do ecra e o padding devolve o texto ao alinhamento do resto da
+   pagina. O body tem overflow-x:hidden, por isso a barra de scroll do
+   desktop (que o 100vw conta) nao abre scroll de lado.
+   A altura e fixa (min-height), por isso o texto que chega depois do JS nao
+   mexe em nada por baixo: o CLS continua a zero.
+   O veu azul por cima do ceu nao e decoracao: branco sobre o azul do meio do
+   ceu da 3,78:1 e chumba; com o veu, o pior ponto por tras da frase passa os
+   4,5:1 (o verify.mjs mede-o nos pixeis, dia e noite). */
+.hero{
+  position:relative;isolation:isolate;display:flex;align-items:center;
+  margin-inline:calc(50% - 50vw);padding-inline:calc(50vw - 50%);
+  padding-block:clamp(56px,8vw,96px);
+  min-height:min(82vh,780px);min-height:min(82svh,780px);
+  /* uma sombra azul atras do bloco do texto, e nao a esquerda toda: o titulo
+     cai em cima da nuvem grande, que e quase branca. Medida nos pixeis
+     (1440, 1280, 1024): o pior ponto passa com folga de ~6%. */
+  --veu:radial-gradient(ellipse 62% 80% at 22% 55%,rgba(9,52,104,.84) 0%,rgba(9,52,104,.64) 50%,rgba(9,52,104,0) 100%);
+  background:var(--veu),url("images/bg/sky-1920.jpg") center 78%/cover no-repeat;
+  background:var(--veu),image-set(url("images/bg/sky-1920.webp") type("image/webp"),url("images/bg/sky-1920.jpg") type("image/jpeg")) center 78%/cover no-repeat;
+}
+/* a noite: o mesmo ceu ao fim do dia, com um veu azul-petroleo por cima */
+[data-theme="dark"] .hero{
+  --veu:linear-gradient(100deg,rgba(8,26,40,.82) 0%,rgba(8,26,40,.55) 45%,rgba(8,26,40,.35) 100%);
+}
 /* A lista dos tres factos por baixo dos botoes saiu (pedido do Frede, Set
    2026): os tres continuam no site, no timeline e nos projectos. */
 /* O mailto so serve a quem tem um cliente de email configurado. Num portatil
@@ -606,31 +640,13 @@ header{
    nada. O botao ao lado copia o endereco e resolve esse caso. */
 .mail-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .btn-sm{padding:9px 15px;font-size:.66rem}
-/* O alinhamento ja foi 'end' (as colunas encostadas em baixo): como a obra era
-   359px mais alta que o texto, o titulo caia 480px e a primeira coisa a ver era
-   vazio. Passou a 'start', e agora a 'center'.
-   Com a obra a mandar no hero, 'start' deixava 291px de vazio por baixo do
-   texto e a coluna da esquerda parecia cortada a meio. 'center' reparte esse
-   vazio pelos dois lados (145 em cima, 145 em baixo) e o texto passa a ler-se
-   ao lado da peca, como legenda, em vez de competir com ela.
-   Medido a 1440x900: texto 379px, obra 669px. */
-/* A obra passa a ser a coluna maior. Era ao contrario: o texto levava 1fr e a
-   arte .72fr, ou seja, a peca que devia ser a primeira coisa a ver ocupava
-   menos de metade do hero. Agora a proporcao esta invertida e o texto fica
-   como legenda do que se ve, nao como concorrente. */
-.hero-grid{display:grid;grid-template-columns:minmax(0,.66fr) minmax(0,1fr);gap:clamp(30px,4vw,56px);align-items:center}
-/* No HTML a obra vem primeiro (ver o comentario no markup). Aqui troca-se a
-   ordem das colunas para o texto ficar a esquerda e a obra a direita. */
-.hero-copy{order:1;
-  /* A altura toda do bloco, reservada antes de ele existir. Numa ligacao
-     lenta o browser pinta a meio do HTML: ja tem o h1 mas ainda nao criou a
-     frase, os botoes e a lista. Como o bloco esta centrado ao lado da obra,
-     cada linha que chegava puxava-o para cima (0,013 de CLS, em duas cargas
-     de tres). Sem a lista dos factos (Set 2026), medido de 390 a 1600px:
-     h1 (2,24em do seu tamanho) + frase e botoes = +147/148px, igual em todas
-     as larguras. Fica 144, um pouco abaixo, como manda o §4. */
-  min-height:calc(2.24 * clamp(1.8rem,3.1vw,2.85rem) + 144px)}
-.hero-art{order:2}
+/* A altura toda do bloco do texto, reservada antes de ele existir. Numa
+   ligacao lenta o browser pinta a meio do HTML: ja tem o h1 mas ainda nao
+   criou a frase e os botoes. Como o bloco esta centrado na altura do ceu,
+   cada linha que chegasse puxava-o para cima. h1 (2,24em do seu tamanho) +
+   frase e botoes = ~147px em todas as larguras; fica 144, um pouco abaixo,
+   como manda o §4. */
+.hero-copy{min-height:calc(2.24 * clamp(2.2rem,4.4vw,3.8rem) + 144px)}
 /* O h1 encolheu de clamp(3.2rem,9vw,7rem) para isto. Com o "Ink first" fora,
    o titulo deixou de ser o cartaz e passou a ser informacao: diz o que ele
    faz, e deixa a obra levar o peso visual. */
@@ -641,34 +657,16 @@ header{
    de vazio por baixo. Com a medida fixa, as duas linhas sao sempre duas e a
    reserva de 2,24em esta sempre certa.
    O balance reparte as palavras pelas duas linhas em vez de deixar uma orfa. */
-.hero h1{font-size:clamp(1.8rem,3.1vw,2.85rem);letter-spacing:-.015em;line-height:1.12;
+.hero h1{font-size:clamp(2.2rem,4.4vw,3.8rem);letter-spacing:-.015em;line-height:1.12;color:#FFFFFF;
   max-width:10.5em;text-wrap:balance;min-height:2.24em}
-.hero .tag{color:var(--bone-dim);max-width:30rem;margin:20px 0 30px;font-size:1.02rem;min-height:3.3em}
-.hero-art{
-  position:relative;
-  /* A obra e tao grande quanto o ecra permite, sem nunca ser cortada.
-     A altura e a largura vezes 1,25 (a proporcao 4/5 do ficheiro), por isso
-     limitar a largura a (altura disponivel / 1,25) garante que a peca inteira
-     cabe no primeiro ecra. Sem isto, a 1440 a moldura ficava com 852px de alto
-     e num portatil era preciso fazer scroll so para ver a imagem toda.
-     svh e a altura real do ecra no telemovel, com as barras do browser
-     contadas; a linha vh acima fica como reserva para quem nao a suporta. */
-  max-width:min(100%, calc((100vh - 260px) / 1.25));
-  max-width:min(100%, calc((100svh - 260px) / 1.25));
-}
-/* A moldura da obra do hero guarda o seu espaco antes de a imagem existir.
-   Sem isto ficava com 14px ate o JS correr e depois saltava para ~600px,
-   empurrando a pagina inteira — era a maior fatia do CLS que sobrava.
-   O valor por omissao (4/5) e a proporcao real do ficheiro em CONFIG.hero
-   (oc.jpg, 1280x1600). O renderHeroArt ajusta a variavel a partir do mapa
-   DIMS, para o dia em que trocares a peca do hero por uma de outra forma. */
-.hero-art .shot{overflow:hidden;border:1px solid var(--hair);background:var(--raise);
-  aspect-ratio:var(--hero-ar,4/5)}
-.hero-art .cap{min-height:17px}
-.hero-art .cap{
-  display:flex;justify-content:space-between;gap:14px;margin-top:12px;
-  font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bone-dim);
-}
+.hero .tag{color:#FFFFFF;max-width:30rem;margin:20px 0 30px;font-size:1.02rem;min-height:3.3em}
+/* os botoes sobre o ceu: branco cheio com texto azul-noite, e o de contorno
+   em branco. Fixos nos dois temas, como o texto: o ceu e sempre o ceu. */
+.hero .btn{border-color:rgba(255,255,255,.7);color:#FFFFFF}
+.hero .btn:hover{border-color:#FFFFFF}
+.hero .btn.fill{background:#FFFFFF;border-color:#FFFFFF;color:#0E2233}
+.hero .btn.fill:hover{background:transparent;color:#FFFFFF;border-color:#FFFFFF}
+.hero :focus-visible{outline-color:#FFFFFF}
 
 /* ================= SECTIONS ================= */
 section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
@@ -685,7 +683,7 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
   cursor:pointer;border:1px solid var(--hair);background:transparent;color:var(--bone-dim);
   transition:background .2s ease,border-color .2s ease,color .2s ease,transform .12s ease-out;
 }
-.chip:hover{color:var(--bone);border-color:var(--frog-lift)}
+.chip:hover{color:var(--bone);border-color:var(--sky-lift)}
 .chip.on{background:var(--bone);border-color:var(--bone);color:var(--void)}
 /* ================= A PAREDE (galeria) =================
    Antes isto era uma tira horizontal: 28 pecas das quais se viam quatro de
@@ -727,8 +725,8 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
   aspect-ratio:4/5;
   transition:border-color .3s,transform .3s;
 }
-.frame:hover{border-color:var(--frog-lift)}
-.frame:focus-visible{outline:2px solid var(--frog-lift);outline-offset:3px}
+.frame:hover{border-color:var(--sky-lift)}
+.frame:focus-visible{outline:2px solid var(--sky-lift);outline-offset:3px}
 /* contain e nao cover: a obra entra inteira na moldura, nunca cortada */
 .frame img,.frame .ph{width:100%;height:100%;object-fit:contain}
 .lb-stage img{width:auto;height:auto}
@@ -750,19 +748,21 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
    nunca aparecia. Em ecras sem ponteiro fino fica sempre visivel. */
 @media (hover:none){ .frame .meta{opacity:1} }
 .frame .meta .t{font-family:var(--f-disp);font-size:.92rem;color:#fff}
-/* O numero da peca estava em var(--frog-lift), que muda com o tema, mas o veu
+/* O numero da peca estava em var(--sky-lift), que muda com o tema, mas o veu
    por cima da arte NAO muda: e escuro nos dois temas. No tema claro dava azul
    escuro sobre preto, 2,36:1. O .t ao lado ja estava fixo em #fff pela mesma
    razao, e por isso este esta em hexadecimal e nao num var().
    O valor que aqui estava, #5568FF, foi escolhido a contar com os .88 do veu.
    Medido nos pixeis reais das 28 molduras, com o degrade ja corrigido, da
    3,78:1 no pior caso — a luminancia daquele azul (0,19) nao chega a 4,5 sobre
-   fundo escuro, por mais veu que se ponha. Este, #6B7BFF, e o --frog-raise:
+   fundo escuro, por mais veu que se ponha. Este, #6B7BFF, e o --sky-raise:
    o mesmo azul um tom acima, que o sistema ja tem por esta mesma razao.
    Medido: 4,63:1 no pior pixel das 28.
    Out 2026: o azul deu lugar ao verde do sapo, #80AB5C, fixo pela mesma
    razao. A luminancia dele e 0,34 (a do azul era 0,19), por isso sobra
-   folga: 7,66:1 sobre #050505. */
+   folga: 7,66:1 sobre #050505.
+   Out 2026 (2): com o ceu passa ao ciano do horizonte, o --sky da noite,
+   fixo pela mesma razao (o veu e escuro nos dois temas): 12,5:1 sobre #050505. */
 /* Os numeros das obras (001..028) leem-se em coluna ao percorrer a parede. As
    figuras da Lora sao proporcionais por omissao: medido a 200px, o '1' tem
    73px e o '0' tem 124px, 51px de diferenca. Com tabular-nums passam todos a
@@ -770,7 +770,7 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
    NOTA: isto so funciona aqui porque este texto cai na Lora. Os precos e os
    anos usam Playfair Display, cujo subconjunto latino do Google nao traz a
    feature 'tnum' — la a declaracao seria letra morta, por isso nao esta la. */
-.frame .meta .n{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#80AB5C;
+.frame .meta .n{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#77D8F1;
   font-variant-numeric:tabular-nums}
 .frame.hidden{display:none}
 /* Nada encontrado com este filtro. Antes a parede ficava simplesmente vazia. */
@@ -787,7 +787,7 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 /* placeholder */
 .ph{
   display:grid;place-content:center;text-align:center;gap:6px;padding:18px;
-  background:repeating-linear-gradient(-45deg,transparent 0 12px,rgba(128,171,92,.10) 12px 13px),var(--raise-2);
+  background:repeating-linear-gradient(-45deg,transparent 0 12px,color-mix(in srgb,var(--sky) 10%,transparent) 12px 13px),var(--raise-2);
   color:var(--bone-dim);
 }
 .ph b{font-family:var(--f-disp);font-weight:400;font-size:1rem;color:var(--bone);line-height:1.1}
@@ -816,11 +816,11 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 .proj-feat{margin-bottom:20px;min-height:calc(.5 * (min(1240px,100vw) - 52px))}
 .proj-feat[hidden]{display:none}
 .pf{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);
-  background:var(--raise);border:1px solid var(--hair);border-top:2px solid var(--frog)}
+  background:var(--raise);border:1px solid var(--hair);border-top:2px solid var(--sky)}
 .pf-art{display:block;border-right:1px solid var(--hair)}
 .pf-art img{width:100%;height:auto;display:block}
 .pf-body{padding:clamp(22px,3.4vw,44px);display:flex;flex-direction:column;justify-content:center;gap:14px}
-.pf .k{font-family:var(--f-ui);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--frog-raise)}
+.pf .k{font-family:var(--f-ui);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sky-raise)}
 .pf h3{font-size:clamp(1.7rem,3.2vw,2.6rem)}
 .pf h3 a{text-decoration:none}
 .pf p{color:var(--bone-dim);max-width:34rem}
@@ -831,7 +831,7 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
   text-decoration:none;color:inherit;background:var(--raise);border:1px solid var(--hair);
   display:flex;flex-direction:column;transition:border-color .3s,transform .3s;
 }
-.proj:hover{border-color:var(--frog-lift);transform:translateY(-4px)}
+.proj:hover{border-color:var(--sky-lift);transform:translateY(-4px)}
 .proj .body{padding:24px;display:flex;flex-direction:column;gap:9px;flex:1}
 /* as tres capas com a mesma altura: as colunas tem larguras diferentes de
    proposito e as capas proporcoes diferentes (TR alta, PAMP quase quadrada),
@@ -846,13 +846,13 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 }
 .plate::after{
   content:"";position:absolute;inset:0;
-  background-image:radial-gradient(var(--frog) 1px,transparent 1.4px);background-size:14px 14px;opacity:.16;
+  background-image:radial-gradient(var(--sky) 1px,transparent 1.4px);background-size:14px 14px;opacity:.16;
 }
 .plate span{
-  font-family:var(--f-disp);font-size:clamp(2.6rem,7vw,4rem);color:var(--frog-lift);
+  font-family:var(--f-disp);font-size:clamp(2.6rem,7vw,4rem);color:var(--sky-lift);
   letter-spacing:.04em;z-index:1;
 }
-.proj .k{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--frog-raise)}
+.proj .k{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sky-raise)}
 .proj h3{font-size:1.4rem}
 .proj p{font-size:.86rem;color:var(--bone-dim)}
 .proj .go{margin-top:auto;padding-top:14px;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bone-dim)}
@@ -868,17 +868,17 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
   line-height:1;letter-spacing:-.02em;
 }
 .tl-year:first-child{padding-top:0}
-.tl-year.has-next{opacity:1;color:var(--frog-lift)}
+.tl-year.has-next{opacity:1;color:var(--sky-lift)}
 .tl-item{position:relative;padding:0 0 34px 28px;border-left:1px solid var(--hair)}
 .tl-item:last-child{border-left-color:transparent}
 .tl-item:last-child::after{content:"";position:absolute;left:-1px;top:0;height:28px;width:1px;background:var(--hair)}
 .tl-dot{position:absolute;left:-4px;top:6px;width:7px;height:7px;border-radius:999px;background:var(--bone-dim)}
-.tl-item.next .tl-dot{background:var(--frog)}
-.tl-item.next{border-left-style:dashed;border-left-color:var(--frog)}
+.tl-item.next .tl-dot{background:var(--sky)}
+.tl-item.next{border-left-style:dashed;border-left-color:var(--sky)}
 .tl-when{font-family:var(--f-ui);font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-dim);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.tl-flag{font-family:var(--f-ui);font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--void);background:var(--frog);padding:3px 9px;border-radius:999px}
+.tl-flag{font-family:var(--f-ui);font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--void);background:var(--sky);padding:3px 9px;border-radius:999px}
 .tl-item h3{font-size:clamp(1.35rem,1.9vw,1.72rem);margin:10px 0 4px}
-.tl-where{font-size:.74rem;letter-spacing:.06em;color:var(--frog-lift);margin-bottom:7px}
+.tl-where{font-size:.74rem;letter-spacing:.06em;color:var(--sky-lift);margin-bottom:7px}
 .tl-desc{font-size:.88rem;color:var(--bone-dim);max-width:42rem}
 
 /* ================= ABOUT ================= */
@@ -904,21 +904,42 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
    a pagina onde se vende. Aqui fica uma faixa: titulo, distintivo, uma frase
    e o caminho para la. */
 .badge{font-family:var(--f-ui);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;padding:8px 16px;border-radius:999px}
-.badge.open{background:var(--frog);color:var(--void)}
+.badge.open{background:var(--sky);color:var(--void)}
 .badge.closed{border:1px solid var(--hair);color:var(--bone-dim)}
 .comm-band{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:clamp(30px,6vw,80px);align-items:start}
+/* Out 2026 (2): o elenco dos sete (Survival of Kings, original do Frede)
+   fecha as comissoes: personagens, que e o que se encomenda. Fica POR BAIXO
+   do texto, nunca atras dele: atras, a lista dos formatos lia-se mal
+   (experimentado na maqueta). O aspect-ratio reserva o espaco antes de a
+   imagem chegar, por isso nao salta nada.
+   De dia o branco da imagem funde-se com o fundo (multiply: branco x fundo =
+   fundo) e a peca assenta na pagina sem rectangulo nenhum. */
+#comm::after{
+  content:"";display:block;width:100%;aspect-ratio:1920/1358;margin-top:clamp(30px,5vw,60px);
+  background:url("images/bg/cast-1920.jpg") center/contain no-repeat var(--void);
+  background:image-set(url("images/bg/cast-1920.webp") type("image/webp"),url("images/bg/cast-1920.jpg") type("image/jpeg")) center/contain no-repeat var(--void);
+  background-blend-mode:multiply;
+}
+/* de noite nao ha branco com que fundir (multiply sobre o azul escurecia a
+   peca toda). Usa-se outra versao do mesmo ficheiro: so o branco de FORA, o
+   que toca nas bordas, ficou transparente; as personagens e a placa cinzenta
+   ficam inteiras, e o nevoeiro dos pes esbate na noite como no original
+   esbate no branco. (Feita a partir do original, Out 2026.) */
+[data-theme="dark"] #comm::after{background-blend-mode:normal;background-color:transparent;
+  background-image:url("images/bg/cast-night-1000.png");
+  background-image:image-set(url("images/bg/cast-night-1920.webp") type("image/webp"),url("images/bg/cast-night-1000.png") type("image/png"))}
 /* linhas, nao caixas: cada formato numa linha de cabelo, com o numero da casa */
 .comm-formats{list-style:none;border-top:1px solid var(--hair);counter-reset:f}
 .comm-formats li{display:flex;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid var(--hair);
   font-family:var(--f-disp);font-size:1.15rem;counter-increment:f}
-.comm-formats li::before{content:"0" counter(f);font:500 .62rem var(--f-ui);letter-spacing:.2em;color:var(--frog-lift)}
+.comm-formats li::before{content:"0" counter(f);font:500 .62rem var(--f-ui);letter-spacing:.2em;color:var(--sky-lift)}
 
 /* ================= CONTACT ================= */
 .mail{
   font-family:var(--f-disp);font-size:clamp(1.6rem,5vw,3.2rem);text-decoration:none;
   color:var(--bone);display:inline-block;transition:color .25s;line-height:1.1;
 }
-.mail:hover{color:var(--frog-lift)}
+.mail:hover{color:var(--sky-lift)}
 .c-links{display:flex;gap:26px;flex-wrap:wrap;margin-top:30px;font-size:.8rem}
 .c-links a{font-family:var(--f-ui);color:var(--bone-dim);text-decoration:none;transition:color .2s}
 .c-links a:hover{color:var(--bone)}
@@ -947,9 +968,9 @@ footer{font-family:var(--f-ui);
 .lb-btn{position:fixed;border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;cursor:pointer;width:44px;height:44px;border-radius:999px;
   font:400 1.2rem var(--f-ui);   /* idem: sem isto era Arial */
   transition:background .2s ease,border-color .2s ease,color .2s ease,transform .12s ease-out}
-/* a lightbox e sempre escura, seja qual for o tema: o verde aqui e fixo, o do
-   tema escuro, e o glifo passa a preto (branco sobre o verde da 2,66:1) */
-.lb-btn:hover{background:#80AB5C;border-color:#80AB5C;color:#0A0A0A}
+/* a lightbox e sempre escura, seja qual for o tema: o azul aqui e fixo, o
+   ciano da noite, e o glifo passa a escuro (branco sobre ele da 1,6:1) */
+.lb-btn:hover{background:#77D8F1;border-color:#77D8F1;color:#081A28}
 .lb-close{top:22px;right:22px}
 
 /* Resposta ao carregar. Duas skills pedem o mesmo: o controlo tem de acusar o
@@ -985,7 +1006,7 @@ footer{font-family:var(--f-ui);
 /* 2. SCREENTONE SWEEP — trama manga que atravessa a obra ao passar o rato */
 .frame::after{
   content:"";position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;
-  background-image:radial-gradient(var(--frog) 1.2px,transparent 1.4px);
+  background-image:radial-gradient(var(--sky) 1.2px,transparent 1.4px);
   background-size:7px 7px;
   -webkit-mask-image:linear-gradient(115deg,transparent 35%,#000 50%,transparent 65%);
   mask-image:linear-gradient(115deg,transparent 35%,#000 50%,transparent 65%);
@@ -1000,8 +1021,9 @@ footer{font-family:var(--f-ui);
 .hero h1::before{
   content:"";position:absolute;left:-6%;top:50%;width:0;height:62%;transform:translateY(-50%);
   z-index:-1;opacity:0;
+  /* brancas: por baixo do titulo esta o ceu, nao o fundo da pagina */
   background:repeating-linear-gradient(90deg,
-    var(--frog) 0 1px, transparent 1px 7px);
+    #FFFFFF 0 1px, transparent 1px 7px);
   -webkit-mask-image:linear-gradient(90deg,#000,transparent);
   mask-image:linear-gradient(90deg,#000,transparent);
   animation:speed 1.1s .5s cubic-bezier(.16,.84,.36,1) forwards;
@@ -1028,7 +1050,7 @@ footer{font-family:var(--f-ui);
 /* 6. DOT — o marcador do percurso pulsa quando entra em cena */
 .tl-item.in .tl-dot{animation:ping .9s ease-out}
 @keyframes ping{
-  0%{box-shadow:0 0 0 0 var(--frog)}
+  0%{box-shadow:0 0 0 0 var(--sky)}
   100%{box-shadow:0 0 0 12px transparent}
 }
 
@@ -1073,17 +1095,13 @@ footer{font-family:var(--f-ui);
 /* ================= RESPONSIVE ================= */
 @media (max-width:980px){
   .wall{--cols:3;--wall-rows:4}
-  .hero-grid{grid-template-columns:1fr;gap:34px;align-items:start}
-  /* Numa coluna so nao ha nada a trocar: a ordem do HTML (obra, depois texto)
-     e exactamente a que se quer ver. Antes a obra vinha por baixo do titulo,
-     da tagline, dos botoes e dos tres factos, uns 700px de scroll antes de se
-     ver um desenho numa pagina que existe para os mostrar. */
-  .hero-copy,.hero-art{order:0}
-  /* Com a grelha a cair para uma coluna, a obra fica por baixo do texto. 400px
-     era acanhado para a peca que deve levar o olho; 560 da-lhe presenca sem a
-     fazer ocupar um ecra inteiro de altura (a 4/5, 560 de largura sao 700 de
-     alto). */
-  .hero-art{max-width:560px}
+  /* o ceu ao alto: o texto sobe para o azul mais fundo do topo e as
+     silhuetas e a relva ficam em baixo, inteiras */
+  .hero{align-items:flex-start;min-height:78vh;min-height:78svh;
+    --veu:linear-gradient(180deg,rgba(9,52,104,.66) 0%,rgba(9,52,104,.44) 50%,rgba(9,52,104,0) 75%);
+    background:var(--veu),url("images/bg/sky-900.jpg") center bottom/cover no-repeat;
+    background:var(--veu),image-set(url("images/bg/sky-900.webp") type("image/webp"),url("images/bg/sky-900.jpg") type("image/jpeg")) center bottom/cover no-repeat}
+  [data-theme="dark"] .hero{--veu:linear-gradient(180deg,rgba(8,26,40,.8) 0%,rgba(8,26,40,.45) 60%,rgba(8,26,40,.3) 100%)}
   /* os tres cartoes lado a lado; um so por linha punha a seccao enorme */
   .projects{grid-template-columns:repeat(3,minmax(0,1fr))}
   .proj-feat{min-height:calc(.56 * (min(1240px,100vw) - 52px))}
@@ -1091,6 +1109,11 @@ footer{font-family:var(--f-ui);
   .pf-strip{grid-template-columns:repeat(4,minmax(0,1fr))}
   .about{grid-template-columns:1fr;gap:38px}
   .comm-band{grid-template-columns:1fr}
+  /* o elenco mais leve no telemovel */
+  #comm::after{background-image:url("images/bg/cast-1000.jpg");
+    background-image:image-set(url("images/bg/cast-1000.webp") type("image/webp"),url("images/bg/cast-1000.jpg") type("image/jpeg"))}
+  [data-theme="dark"] #comm::after{background-image:url("images/bg/cast-night-1000.png");
+    background-image:image-set(url("images/bg/cast-night-1000.webp") type("image/webp"),url("images/bg/cast-night-1000.png") type("image/png"))}
 }
 @media (max-width:620px){
   /* Em telemovel os projectos passam para uma fila que se arrasta de lado:
@@ -1194,31 +1217,16 @@ footer{font-family:var(--f-ui);
 <main id="top">
 <div class="wrap">
 
-  <!-- HERO -->
+  <!-- HERO — o ceu do Survival of Kings atras do titulo (Out 2026). O ceu e
+       um fundo no CSS do .hero; aqui fica so o texto. A obra que aqui estava
+       (OC 01) continua na parede. -->
   <div class="hero">
-    <!-- A obra vem primeiro no HTML de proposito. Quando estava depois do
-         texto, o browser pintava o texto no topo enquanto ainda estava a
-         receber o resto do ficheiro e, mal o parser chegasse a moldura, o
-         order:-1 punha-a acima e empurrava o texto 452px para baixo. Dava
-         0,33 de CLS numa ligacao lenta, e so em algumas vezes, consoante o
-         momento em que o browser pintava. Com a obra primeiro no HTML nao ha
-         nada que salte, e em telemovel a ordem que se ve e a mesma do codigo.
-         No desktop o order manda-a para a coluna da direita. -->
-    <div class="hero-grid">
-      <div class="hero-art rv">
-        <div class="shot" id="heroShot"></div>
-        <div class="cap">
-          <span data-t="featuredLabel"></span>
-          <span id="heroCap"></span>
-        </div>
-      </div>
-      <div class="hero-copy">
-        <h1 data-t="heroTitle"></h1>
-        <p class="tag" data-t="tagline"></p>
-        <div class="row">
-          <a class="btn fill" href="#work"><span data-t="ctaWork"></span> →</a>
-          <a class="btn" href="loja.html#comissoes" data-loja="#comissoes"><span data-t="ctaComm"></span></a>
-        </div>
+    <div class="hero-copy">
+      <h1 data-t="heroTitle"></h1>
+      <p class="tag" data-t="tagline"></p>
+      <div class="row">
+        <a class="btn fill" href="#work"><span data-t="ctaWork"></span> →</a>
+        <a class="btn" href="loja.html#comissoes" data-loja="#comissoes"><span data-t="ctaComm"></span></a>
       </div>
     </div>
   </div>
@@ -1353,8 +1361,7 @@ let LANG = (LANG_PEDIDA === 'pt' || LANG_PEDIDA === 'en') ? LANG_PEDIDA
 let activeCat = 'all';
 /* a parede abre na pre-visualizacao; o botao abre-a toda e fica aberta */
 let wallOpen = false;
-/* o tema segue a preferência do sistema; o botão continua a mandar por cima */
-if(matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.dataset.theme = 'light';
+/* o tema e escolhido no topo da pagina, antes de pintar */
 const T  = () => CONFIG.i18n[LANG];
 const rc = r => ({'34':'r-34','12':'r-12','11':'r-11','43':'r-43'})[String(r)] || 'r-34';
 const pretty = r => ({'34':'3:4','12':'1:2','11':'1:1','43':'4:3'})[String(r)] || r;
@@ -1482,27 +1489,6 @@ function applyFilter(){
 }
 
 /* ---------- language-independent hero art ---------- */
-function renderHeroArt(){
-  const h = $('#heroShot'); h.innerHTML = '';
-  /* sizes tem de descrever a largura REAL da imagem no ecra, senao o browser
-     escolhe mal: ate 980px a coluna e .hero-art (max 400px), acima disso a
-     grelha do hero da-lhe cerca de 470px. */
-  h.append(artEl({
-    ...CONFIG.hero,
-    eager: true,
-    wide: true,
-    /* O sizes tem de descrever a largura REAL da imagem no ecra, senao o
-       browser escolhe mal o ficheiro. Ate 980px a coluna e a largura toda
-       (a grelha passa a uma coluna); acima disso a arte leva 1fr de
-       .66fr+1fr com a folga pelo meio, ou seja ~57% da largura util. */
-    sizes: '(max-width: 980px) min(calc(100vw - 52px), 560px), min(57vw, 690px)',
-  }));
-  $('#heroCap').textContent = CONFIG.hero.label;
-  /* mantem a proporcao reservada no CSS em sintonia com o ficheiro real */
-  const hd = DIMS[CONFIG.hero.src.split('/').pop()];
-  if(hd) h.style.setProperty('--hero-ar', hd.w + '/' + hd.h);
-}
-
 /* ---------- everything language-dependent ---------- */
 function renderText(){
   const t = T();
@@ -1953,7 +1939,6 @@ const navMq = matchMedia('(min-width:621px)');
 navMq.addEventListener('change', e => { if(e.matches && navPanel.classList.contains('open')) setNav(false, false); });
 
 /* ---------- boot ---------- */
-renderHeroArt();
 renderWall();
 renderText();
 syncStructuredData();
