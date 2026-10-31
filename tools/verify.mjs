@@ -645,16 +645,20 @@ async function navegador(dir, etiqueta){
         await p.goto(`${base}projeto.html?p=${k}`, { waitUntil: 'networkidle' });
         /* a serie inteira, nao so a capa: as outras sao lazy e sem as forcar
            reportavam naturalWidth 0 e passavam por engano */
-        await p.evaluate(() => { for (const i of document.querySelectorAll('.wrap img')) i.loading = 'eager'; });
+        await p.evaluate(() => { for (const i of document.querySelectorAll('main img')) i.loading = 'eager'; });
         await p.waitForTimeout(700);
         const r = await p.evaluate(() => {
-          const imgs = [...document.querySelectorAll('.wrap img')];
+          /* main e nao .wrap: desde Out 2026 a barra (com o logotipo) tambem e .wrap */
+          const imgs = [...document.querySelectorAll('main img')];
           /* a grelha da serie tambem nao pode cortar nada */
           const cortadas = imgs.filter(i => { const r = i.getBoundingClientRect();
             return i.naturalWidth && Math.abs(i.naturalWidth / i.naturalHeight - r.width / r.height) > 0.02; }).length;
           return { h1: document.querySelector('h1').textContent.trim(), cortadas,
                    img: imgs.length ? imgs.every(i => i.naturalWidth > 0) : null, n: imgs.length,
-                   robots: document.querySelector('meta[name="robots"]').content };
+                   robots: document.querySelector('meta[name="robots"]').content,
+                   /* a barra do site (Out 2026) e o link de fora, quando o projecto o tem */
+                   barra: !!document.querySelector('header .logo') && !!document.getElementById('langTgl'),
+                   link: (document.querySelector('#acts a') || {}).href || '' };
         });
         if (k === 'sok') serieSok = r.n;
         const real = CHAVES.includes(k);
@@ -662,6 +666,8 @@ async function navegador(dir, etiqueta){
         if (real && r.img === false) maus.push(`${loc} ${k}: imagem partida`);
         if (r.cortadas) maus.push(`${loc} ${k}: ${r.cortadas} imagens cortadas`);
         if (!real && !r.robots.includes('noindex')) maus.push(`${loc} ${k}: devia ser noindex`);
+        if (!r.barra) maus.push(`${loc} ${k}: sem a barra (logotipo, lingua)`);
+        if (k === 'sok' && !r.link.includes('webtoons.com')) maus.push(`${loc} sok: sem o botao do Webtoon`);
       }
       await p.close();
     }

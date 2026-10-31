@@ -22,8 +22,9 @@ the home page and the shop full-bleed, and the cast closes the commissions.
 Day is the default; a phone in dark mode gets the same sky at night.
 
 Three of the cast then walk into the layout as cut-outs (Frede's own, no
-background): the knight under the bio in About, the white-haired boy beside
-the email in Contact, the archer in the shop's sky band. Each rises from the
+background): the white-haired boy at the right edge of the home page's sky
+(desktop), the knight under the bio in About, the archer in the shop's sky
+band and again beside the email in Contact. Each rises from the
 edge its drawing is cut on and stands on one of the site's hairlines, like a
 figure stepping onto the ruled lines of a proof sheet. They are the only
 decoration besides the sky, and they never stand behind text.
@@ -84,10 +85,12 @@ sky's own deep blue (`rgba(9,52,104,…)`, night: `rgba(8,26,40,…)`) laid behi
 the text block. White on the bare mid-sky is 3.78:1 and fails; `verify.mjs`
 measures the real pixels behind every line (95th percentile) in both themes.
 
-**The frog stays green.** The coin is Frede's drawing and keeps the frog's
-own green (`#80AB5C`, fixed in the SVG); it is the logo, not a theme colour,
-and it sits on the sky like the grass it matches. The frog's other colours
-(belly `#C9E4B9`, mouth `#6F3A28`, eye `#E2C259`) live in the logo only.
+**The logo is the sky's too.** Since late October 2026 the logo is no longer
+the frog (Frede asked for one that suits the site): a white italic G and the
+underscore of Guita_Ink drawn as an ink stroke, on a coin of the day Sky
+`#0E5CAB`, fixed in the SVG (white on it: 6.69:1). The coin is the same in
+both themes; on the night bar it stands out at 2.64:1 by colour and by its
+white G. There is no green left on the site.
 
 The accent stays applied like ink: small fills, hairlines, the italic, never as
 a glow, a gradient wash or a neon edge.
@@ -103,7 +106,12 @@ a glow, a gradient wash or a neon edge.
   measure capped at `30rem`–`42rem`.
 - **UI — `Inter`** (300 / 400 / 500). Nav, buttons, chips, eyebrows, captions,
   every small tracked label.
-- **Micro-labels.** Uppercase, `0.16em`–`0.22em` tracking, `Inter`, Bone Dim.
+- **Sizes are steps** (October 2026, after a taste-skill review measured
+  running text at 13.8px in grey and 15 different sizes): paragraphs `1rem`
+  (16px) in full Bone, never Bone Dim; buttons, links and notes `.875rem`
+  (14px); micro-labels never under `.75rem` (12px). Bone Dim is for what is
+  secondary: captions, notes, the footer.
+- **Micro-labels.** Uppercase, `0.12em`–`0.24em` tracking, `Inter`, Bone Dim, 12px minimum.
   Used above section headlines and on artwork numbering. This is the one place
   all-caps is correct here — they are plate captions, not subheads.
 - **Only request the weights actually rendered.** One combined Google Fonts
@@ -168,17 +176,17 @@ inert. Do not add it to Playfair and assume it took.
   Border warms to the accent on hover; a mask-position wipe reveals the caption.
   `scroll-snap-align: start`. Keyboard-operable: `role="button"`, Enter **and**
   Space.
-- **The frog coin** (October 2026; it replaced the 墨 seal). Frede's own
-  drawing, traced into flat vector shapes ink by ink (line, body, belly, mouth,
-  tongue, the eye and its ochre half) and set on a coin of the frog's green
-  (`#80AB5C`, in the SVG; not a theme token since the sky, Oct 2026). The
-  frog's body shares the coin's green, so his black line does the drawing, the
-  way a stamp does. It is the seal's successor: a field of the accent carrying
-  one mark. A circle keeps the same footprint everywhere: the bar, the browser
-  tab, Shopify, an Instagram avatar. 36×36px in the bar
-  (`images/frog-logo.svg`, sharp at any density), with `width`/`height` on the
-  `<img>`. Made by `tools/make-frog-logo.py` from `tools/frog-source.jpg`,
-  which also writes the favicon. Stamps in on load: `scale(1.5) rotate(-14deg)` → rest, 550ms on
+- **The logo coin** (late October 2026; it replaced the frog coin, which had
+  replaced the 墨 seal). The G of Guita in the display face's italic
+  (`Playfair Display` 500 Italic, its real outlines, taken with fontTools) and
+  the underscore of Guita_Ink drawn as an ink stroke, thick at the left and
+  thinning to the right like a pen lifting: the G and the `_` say the name,
+  the stroke says Ink. White on a coin of the Sky. A circle keeps the same
+  footprint everywhere: the bar, the browser tab, Shopify, an Instagram
+  avatar. 36×36px in the bar (`images/logo.svg`, sharp at any density), with
+  `width`/`height` on the `<img>`. Made by `tools/make-logo.py`, which also
+  writes the favicon and `tools/logo-1024.png` for use off the site. Frede's
+  frog drawing is kept in `tools/frog-source.jpg`. Stamps in on load: `scale(1.5) rotate(-14deg)` → rest, 550ms on
   `cubic-bezier(.2, 1.5, .4, 1)` — the only overshoot in the system, and it is
   there because a stamp bounces. Do not redraw, recolour or re-animate it
   differently on new screens.
@@ -273,6 +281,15 @@ inert. Do not add it to Playfair and assume it took.
 - **CLS is 0.** Every image carries explicit `width` and `height`, and the global
   image rule pairs `max-width: 100%` with `height: auto` so a constrained column
   scales both axes instead of squashing one. Keep all three.
+- **Small motions, sized to how often they happen** (October 2026, Emil
+  Kowalski's rules): the mobile menu cascades in .3s with 30ms between links;
+  the lightbox opens with a 180ms fade while the art grows from `.98`
+  (`@starting-style`), closes in 120ms, and changing artwork with the arrows
+  never animates; the shop's floating bag button rises 8px in 200ms when the
+  first item goes in. The button sweep moves by `transform`, never `left`.
+- **Touch screens get no moving hovers.** A tap sets `:hover` and it sticks, so
+  under `(hover: none)` the project card does not lift, the screentone does not
+  sweep, the sweep does not cross the button and a filled button stays filled.
 - **Grain veil.** Fixed pseudo-element, inline SVG turbulence, `opacity: .5`,
   `pointer-events: none`. Measured at no frame-time cost under 4× CPU throttle.
 
@@ -283,22 +300,23 @@ inert. Do not add it to Playfair and assume it took.
 ### Craft
 
 - No emojis. The CJK glyphs on the typographic plates are typeset characters,
-  not emoji, and the frog is a drawing, not an icon set.
+  not emoji, and the logo is a letter on a coin, not an icon set.
 - No pure `#000000` anywhere, and no pure `#FFFFFF` as the field or as body text.
   `#fff` is allowed only on the artwork scrim, the lightbox and the sky (the
   hero and the shop's page head): the tile title, the lightbox controls, the
   text over the sky. Those grounds do not follow the theme, so the text on them
   must not either. Anything sitting on a Sky fill (the skip link, the
   filled button, the open badge, flags, the selection) uses `var(--void)`.
-- No second accent hue. The Sky tints are one colour. (The frog coin is green
-  because it is the frog, not a second accent.)
+- No second accent hue. The Sky tints are one colour, and the logo coin is the
+  same Sky.
 - No neon, glow, or outer-shadow treatments on the accent.
 - No gradient text on headlines.
 - No shadows. This system draws hairlines.
 - No custom cursors.
-- No overlapping or absolutely-stacked content. (One exception, measured: the
-  archer stands in the corner of the shop's sky band, absolutely placed, and
-  `verify.mjs` fails the build if her box ever crosses text.)
+- No overlapping or absolutely-stacked content. (Two exceptions, measured: the
+  archer in the corner of the shop's sky band, and the boy at the right edge
+  of the home page's sky, shown above 980px only. Both are absolutely placed,
+  and `verify.mjs` fails the build if either box ever crosses text.)
 - No equal-width column groups — not three cards, not four tiers.
 - No centred hero.
 - No split section headers (title left, text right).

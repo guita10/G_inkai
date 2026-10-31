@@ -63,8 +63,9 @@ still overrides both ways; `404.html` uses a plain `@media` instead.
 
 The accent replaced the frog's green `#80AB5C` (which had replaced the Royal
 blue `#2E45FF`), and the tokens were renamed `--frog*` → `--sky*` so no blue
-is called frog. **The frog coin stays green**: it is Frede's drawing, its
-green lives in the SVG, and it is not a theme colour. `--sky-lift` and
+is called frog. Since late October 2026 the logo is no longer the frog either:
+it is a coin of this same Sky (§5), so there is no green left on the site.
+`--sky-lift` and
 `--sky-raise` are accessibility variants, not a palette; today they equal
 `--sky` in each theme. **Text on the accent is `var(--void)`** in both themes
 (6.21:1 day, 10.83:1 night). **Text over the sky is white** in both themes, on
@@ -141,7 +142,7 @@ nothing.
 | `make-webp.py` | regenerates the WebP derivatives |
 | `dims.py` | rewrites the `DIMS` map **and the wall's reserved height** in `index.html`, both from the real pixels |
 | `make-og-card.py` | redraws `images/og-card.jpg`, the 1200x630 social card |
-| `make-frog-logo.py` | traces the frog in `tools/frog-source.jpg` into vector shapes, ink by ink (it does not redraw it), sets it on a `--frog` coin, writes `images/frog-logo.svg`, the favicon in all four pages, and `tools/frog-logo-1024.png` for use off the site. Needs `potracer` |
+| `make-logo.py` | draws the logo (late Oct 2026): the G of Guita from Playfair Display 500 Italic's real outlines plus the `_` as an ink stroke, white on a `#0E5CAB` coin; writes `images/logo.svg`, the favicon in all four pages, and `tools/logo-1024.png` for use off the site. Needs `fonttools` and network for the font |
 | `verify.mjs` | drives Chromium over the whole site and runs every check in §10 |
 
 `add-artwork.py` is the one to reach for. Adding art by hand means four steps and
@@ -177,12 +178,13 @@ images/bg/        Survival of Kings originals used as decoration (Oct 2026),
                     background), under the commissions on both pages
                   knight-1000, boy-1000, archer-900 (.webp) + a small .png
                     each as the fallback: Frede's cut-outs, trimmed to the
-                    figure and nothing else changed
-images/frog-logo.svg
-                  the logo: the frog, traced to vector, on a green coin. Used by
-                  the bar and the social card. Not artwork; SVG, so dims.py and
-                  make-webp.py (JPEG only) never see it. Made by
-                  tools/make-frog-logo.py
+                    figure and nothing else changed (the boy in the home
+                    page's sky, the knight in About, the archer in the shop's
+                    sky and in Contact)
+images/logo.svg   the logo: the G and the ink stroke on a Sky coin. Used by the
+                  bar of the three pages and the social card. Not artwork; SVG,
+                  so dims.py and make-webp.py (JPEG only) never see it. Made by
+                  tools/make-logo.py
 ```
 
 Four files have no WebP because WebP came out larger than the JPEG. That is
@@ -289,22 +291,23 @@ Icons are four things, in order of preference:
 1. **Text glyphs in markup** — `‹` `›` `×` for the lightbox controls, `◐` for
    the theme toggle, `↗` on outbound links, `→` on internal ones. Each carries
    an `aria-label`.
-2. **The frog coin** — Frede's own drawing, the logo since October 2026 (it
-   replaced the 墨 seal). The drawing is traced into vector shapes, one per ink,
-   and set on a coin of the frog's green: the body shares the coin's green, so his
-   black line does the drawing, like a stamp. A circle keeps one footprint in
-   the bar, the browser tab, Shopify and an Instagram avatar. Never redraw,
-   recolour, or re-animate the frog (its coin is the frog's own green,
-   `#80AB5C`, in the SVG: the site's blue never touches it); if Frede redraws it, replace
-   `tools/frog-source.jpg` and run `tools/make-frog-logo.py`, then
-   `tools/make-og-card.py`. A new colour in the drawing has to be added to
-   `TINTAS` in the script, measured off the drawing, or the nearest ink takes
-   it (the eye's ochre half once came out pink).
+2. **The logo coin** — since late October 2026, at Frede's request ("a logo
+   that better suits the site"). It replaced the frog coin, which had replaced
+   the 墨 seal. The G of Guita in the titles' italic (Playfair Display 500
+   Italic, the font's own outlines, not redrawn) and the `_` of Guita_Ink drawn
+   as an ink stroke, thick to thin: the G and the `_` say the name, the stroke
+   says Ink. White (6.69:1) on a coin of the day Sky `#0E5CAB`, the same in
+   both themes. A circle keeps one footprint in the bar, the browser tab,
+   Shopify and an Instagram avatar. To change it, edit the constants in
+   `tools/make-logo.py` and run it, then `tools/make-og-card.py`; never
+   hand-edit `images/logo.svg` or the favicons. Frede's frog drawing is kept
+   in `tools/frog-source.jpg`, and the script that traced it is in git
+   history (`tools/make-frog-logo.py`), if the frog ever comes back.
 3. **CSS-drawn geometry** — the mobile menu hamburger is two pseudo-elements that
    rotate into an X. No SVG.
 4. **Inline data URIs** — the `feTurbulence` film grain (SVG, the only inline
-   SVG in the repo) and the favicon (a 64x64 PNG of the frog, written into all
-   four pages by `make-frog-logo.py`; inline so `404.html` stays self-contained
+   SVG in the repo) and the favicon (a 64x64 PNG of the logo coin, written into
+   all four pages by `make-logo.py`; inline so `404.html` stays self-contained
    at any path).
 
 Any button that renders a glyph **must set `font-family`**. Five of them once
@@ -331,21 +334,25 @@ through `image-set()` with a JPEG/PNG line before it as the fallback.
 - **The cast** (`cast-cut`, no background) under the commissions on both
   pages, below the text, never behind it. One file for day and night.
 - **Three characters (`.cut`)**, each a decorative `<div aria-hidden>` whose
-  `::before` holds the drawing: the knight at the end of About (index), the
-  white-haired boy in Contact (index), the archer in the shop's sky band
-  (loja). The rules they follow:
+  `::before` holds the drawing: the white-haired boy at the right edge of the
+  home page's sky (index, above 980px only; he moved there from Contact in
+  late Oct 2026, after a taste-skill review found a first screen with a sky
+  and no character), the knight at the end of About (index), and the archer,
+  in the shop's sky band (loja) and in Contact (index). The rules they follow:
   - **Each rises from the side its drawing is cut on**: the knight is cut
     left and bottom, so he sits flush with the screen's left edge
-    (`--bleed`); the boy is cut right and bottom, so the right edge; the
-    archer only at the bottom. Never flip or recrop a drawing to make it fit
-    elsewhere.
+    (`--bleed`); the boy is cut right and bottom, so the right edge (in the
+    hero, `right:0` of the full-bleed band); the archer only at the bottom,
+    so she can stand anywhere on a line. Never flip or recrop a drawing to
+    make it fit elsewhere.
   - **Each stands on a hairline**: the next section's border, the footer's,
     or the bottom of the sky band. `#about` and `#contact` have no bottom
     padding for that reason; the column beside the figure keeps it.
-  - **Never behind text.** The knight and the boy have their own grid cells;
-    the archer is the one absolute figure, in the band's right corner, and is
-    hidden at 620px and below. `verify.mjs` sweeps 390 to 1600px and fails if
-    any figure's box crosses any text box.
+  - **Never behind text.** The knight and the archer in Contact have their
+    own grid cells; the two absolute figures are the boy in the home page's
+    sky (hidden at 980px and below, where the text takes the width) and the
+    archer in the shop's band (hidden at 620px and below). `verify.mjs` sweeps
+    390 to 1600px and fails if any figure's box crosses any text box.
   - `aspect-ratio` reserves each stage, so nothing shifts when it loads.
   - **The entrance**: the drawing rises 14% out of its own stage (overflow
     hidden) with the reveal curve, once, when the stage scrolls in (the
@@ -353,6 +360,12 @@ through `image-set()` with a JPEG/PNG line before it as the fallback.
 
 Any text placed over a picture needs a veil and the pixel check in
 `verify.mjs`.
+
+**Type sizes are steps** (late Oct 2026, after a taste-skill review measured
+running text at 13.8px in grey and 15 sizes on one page): paragraphs `1rem`
+in full `--bone`; buttons, links and notes `.875rem`; the spaced-capitals
+labels stay, never under `.75rem` (12px). `--bone-dim` is for what is
+secondary. `DESIGN.md` §3 has the detail.
 
 **Radius is a documented two-value system**, and mixing outside it is a bug:
 
@@ -373,6 +386,12 @@ Any text placed over a picture needs a veil and the pixel check in
 @media (prefers-reduced-motion:reduce)          /* every effect off          */
 ```
 
+Plus `(hover:none)` for touch screens, which is not a breakpoint: a tap sets
+`:hover` and it sticks, so there the hovers that move (the project card's
+lift, the screentone sweep, the button sweep) are cancelled and a filled
+button stays filled. On the index it sits after the rules it cancels (same
+specificity, the last one wins).
+
 Type and spacing scale with `clamp()` rather than breakpoints wherever possible.
 
 **Motion:** two house curves — `cubic-bezier(.2,.7,.3,1)` for reveals,
@@ -385,13 +404,25 @@ must not be; use `IntersectionObserver`.
 Every interactive control answers a press with `transform: scale(.97)` over
 120ms, and every effect collapses under `prefers-reduced-motion`.
 
+Small motions are sized to how often they happen (Emil Kowalski's rules, Oct
+2026): the mobile menu cascades in .3s with 30ms steps; the lightbox opens
+with a 180ms fade and the art growing from `.98` (`@starting-style`), closes
+in 120ms (`transition-behavior: allow-discrete` on `display`), and changing
+artwork with the arrows never animates; the shop's floating bag button rises
+8px in 200ms when it appears. Browsers without `@starting-style` just show
+them, as before.
+
 ---
 
 ## 7. Project structure
 
 ```
 index.html      the whole single-page site (CONFIG + CSS + markup + render JS)
-projeto.html    per-project detail page, reads ?p=sok|tr|pamp|deck
+projeto.html    per-project detail page, reads ?p=sok|tr|pamp|deck. Since late
+                Oct 2026 it has the shop's bar (logo, back, language, theme),
+                the site's 1240px width, the text beside a large cover on
+                desktop, the series in a grid below, and the project's own
+                outbound link as its button when it has one
 loja.html       the selling page: commissions (four formats, no prices) and,
                 once shopOpen is true, the merch. Reads ?lang=pt|en. Its
                 footer links the Livro de Reclamações Eletrónico, required
@@ -406,12 +437,14 @@ comissoes/      the commission system; nothing here is served
 marca/          the brand sheet for printers and collaborators; not served
   Guita_Ink-brand-sheet.pdf  one A4 page: the frog coin, the palette (HEX,
                   RGB, approximate CMYK), the three faces, the rules
-  ⚠️ both predate the sky (Oct 2026): they still show the frog green as the
-                  accent. Redo them with the sky palette.
+  ⚠️ both predate the sky and the new logo (Oct 2026): they still show the
+                  frog coin and the frog green as the accent. Redo them with
+                  the sky palette and images/logo.svg.
   brand-sheet.tpl.html  its source. The fonts (Google Fonts woff2, base64)
-                  and images/frog-logo.svg are pasted in at /*FONTS*/ and
-                  /*LOGO*/, then Chromium prints it to A4. Redo it when a
-                  token or the logo changes
+                  and the logo SVG are pasted in at /*FONTS*/ and /*LOGO*/,
+                  then Chromium prints it to A4 (it was made with the old
+                  frog-logo.svg; paste images/logo.svg when redoing it). Redo
+                  it when a token or the logo changes
 politicas/      the shop's policies, PT and EN; nothing here is served
   politicas-loja.md  source of the texts pasted into Shopify (returns,
                   shipping, terms, contact, the privacy contact line). No
@@ -421,9 +454,10 @@ tools/          all run by hand, none part of the deploy
   make-webp.py    regenerates the WebP derivatives
   dims.py         rewrites the DIMS map and the wall reserve from the real pixels
   make-og-card.py redraws images/og-card.jpg from og-card.html
-  make-frog-logo.py the frog coin logo (SVG) and the favicon, from frog-source.jpg
-  frog-source.jpg the frog as Frede drew it; not served
-  frog-logo-1024.png the coin as a big PNG, for Instagram, Shopify, email; not served
+  make-logo.py    the logo (SVG), the favicon in the four pages, logo-1024.png
+  logo-1024.png   the logo as a big PNG, for Instagram, Shopify, email; not served
+  frog-source.jpg the frog as Frede drew it (the logo until late Oct 2026); kept,
+                  not served
   og-card.html    the social card's layout; not served, just the mould
   verify.mjs      runs §10 against a real browser; exit 1 if anything fails
 DESIGN.md       the design system in semantic form
@@ -499,7 +533,11 @@ whole thing, and the copy drifted: commission prices, the four stages and the
 site. They rendered nothing, but they shipped in the source Netlify serves.
 It now carries only what that page reads: `artistName`, `realName`, `projects`,
 and `i18n.{en,pt}.projects`. Those four still have to match `index.html`.
-Nothing else belongs there, so nothing else can go stale.
+Nothing else belongs there, so nothing else can go stale. A project may carry
+an optional `link` (its outbound address) with the button's words in
+`i18n.<lang>.projects.<key>.link`: today only Survival of Kings (its Webtoon)
+and PAMP (its Instagram) have one, and the home page's featured card reads
+the same field. Never add a link a project does not really have (§9.5).
 
 **`loja.html` is where the site sells, and it owns what only it uses.** The
 merch list and its prices, the Shopify address, the drop name, the shop copy
@@ -576,9 +614,9 @@ That is correct and matches the code: they sit on Royal or on the gallery
 scrim, neither of which changes with the theme, so a theme-following token
 would be wrong. Any *other* unbound fill is a bug.
 
-**⚠️ The Figma file predates the frog and the sky (October 2026).** It still
-holds the Royal blue variables and the Selo component. Until it is updated, trust it for
-type and layout only, never for colour or the logo.
+**⚠️ The Figma file predates the frog, the sky and the G logo (October 2026).**
+It still holds the Royal blue variables and the Selo component. Until it is
+updated, trust it for type and layout only, never for colour or the logo.
 
 What actually works:
 
@@ -700,6 +738,9 @@ The checks themselves, and why each one exists:
   screen reader reads it aloud. Source comments are exempt, so the walk skips
   `<script>` and `<style>`.
 - **`file://` still works**, not just HTTP.
+- **Project pages**: every key and an invalid one, in both languages, with
+  the whole series loaded and nothing cropped, the bar present, and Survival
+  of Kings' Webtoon button there.
 
 When a measurement contradicts your expectation, suspect the harness before the
 site, and say so when it turns out to be the harness.
@@ -714,3 +755,17 @@ inline comments are in Portuguese and are part of the codebase; match them.
 
 If you think something he decided is wrong, say so directly and say why. Do not
 quietly work around it.
+
+---
+
+## 12. Parked ideas
+
+Ideas Frede wants to keep for later. Not to be built until he asks; listed so
+a future session finds them.
+
+- **A drawing timelapse** (parked 31 Oct 2026, from the taste-skill review).
+  The review asked for one moving picture on the site, and the most honest
+  one is Frede inking: Procreate and Clip Studio record a timelapse of every
+  drawing. Shown as a muted loop with a poster frame, it would fit the bio's
+  "line before colour". Needs the clip from Frede; never a stock or found
+  video (§9.5). Reduced motion shows the poster only (§9.8).
