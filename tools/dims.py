@@ -17,7 +17,7 @@ PARA QUE SERVE
           que nenhuma arte e cortada: a moldura toma a forma do ficheiro.
 
   2. A ALTURA RESERVADA DA PAREDE — os tres min-height do .wall, um por cada
-     numero de colunas (4, 3, 2). A parede so nasce quando o JS la do fundo
+     numero de colunas (3, 2, 2). A parede so nasce quando o JS la do fundo
      corre; sem espaco reservado antes disso, empurrava para baixo tudo o que
      vem a seguir. A conta esta explicada no proprio index.html e depende de
      duas coisas que mudam sempre que mexes na galeria: quantas obras ha e
@@ -62,12 +62,13 @@ PATTERN = re.compile(r"const DIMS = (\{.*?\});")
 # A lista de obras da parede, dentro do CONFIG.
 ARTWORKS = re.compile(r"\n  artworks:\s*\[(.*?)\n  \],", re.S)
 
-# As filas reservadas da parede e do destaque (Set 2026: grelha uniforme).
+# As filas reservadas da parede (Set 2026: grelha uniforme).
 # Com as molduras todas 4:5 a altura so depende de quantas filas ha, por isso
 # o CSS guarda so esse numero e a conta faz-se la. Aparecem por ordem: a regra
-# base (4 colunas), a de 980px (3) e a de 620px (2).
+# base (3 colunas desde Out 2026 (3), obra maior; eram 4), a de 980px (2) e a
+# de 620px (2).
 WALL_ROWS = re.compile(r"--wall-rows:(\d+)")
-WALL_COLS = (4, 3, 2)
+WALL_COLS = (3, 2, 2)
 
 # O mapa pequeno da pagina de projecto. So as artes dos projectos, so w e h:
 # aquela pagina nao usa miniaturas. Era o ultimo mapa de pixeis escrito a mao.
@@ -76,9 +77,9 @@ PROJ_DIMS = re.compile(r"const PROJ_DIMS = \{.*?\n\};", re.S)
 # Os projectos, para saber que ficheiros entram no PROJ_DIMS.
 PROJECTS = re.compile(r"\n  projects:\s*\[(.*?)\n  \],", re.S)
 
-# O espaco entre colunas e por baixo de cada moldura: column-gap e margin-bottom
-# do .frame, os dois a 14px. Se mexeres num, mexe aqui.
-GAP = 14
+# O espaco entre as molduras (o gap do .wall), 12px desde Out 2026 (3).
+# Se mexeres num, mexe no outro.
+GAP = 12
 
 # Ficheiros que vivem em images/ sem serem obras da galeria: nao tem
 # miniatura, nao entram no mapa e nao ha nada de errado com isso.

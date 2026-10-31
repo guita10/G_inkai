@@ -1,28 +1,25 @@
 #!/usr/bin/env python3
 """
-make-logo.py — o logotipo do site: o G e o traco de tinta, numa moeda do azul do ceu.
+make-logo.py — o logotipo do site: o selo 墨, o primeiro que o site teve.
 
 PARA QUE SERVE
-  Desde o fim de Outubro de 2026 o logotipo ja nao e o sapo (pedido do Frede:
-  "um logotipo que combine melhor com o site"). O sapo era verde, a unica cor
-  da pagina fora do ceu; o site passou a ser o ceu do Survival of Kings e o
-  logotipo passou a ser dele tambem:
+  O primeiro logotipo do site (3 de Setembro de 2026) foi um selo: o caracter
+  墨 ("tinta"), branco, num quadrado de cantos redondos da cor da casa. Depois
+  veio o sapo (Outubro) e um G numa moeda (fim de Outubro). A 31 de Outubro o
+  Frede pediu para voltar ao primeiro, com a cor do site (o azul #0E5CAB).
 
-    - a moeda e o azul do topo do ceu (--sky de dia, #0E5CAB). Redonda, como
-      era a do sapo: a mesma pegada na barra, no separador do browser, no
-      Shopify e na foto do Instagram (que ja e um circulo);
-    - o G e o G de Guita, no Playfair Display Medium Italico, a letra dos
-      titulos do site. Nao e desenhado a mao: sao os contornos da propria
-      fonte, tirados com o fontTools, por isso batem certo com o resto;
-    - o traco a seguir ao G e o "_" de Guita_Ink, desenhado como uma pincelada
-      de tinta: grosso a esquerda, a afinar para a direita, como a pena quando
-      levanta. O G e o _ dizem o nome; o traco diz o Ink.
+  O selo de Setembro era texto: um <span>墨</span> com a letra dos titulos, que
+  nao tem caracteres japoneses, por isso cada sistema desenhava o 墨 com a fonte
+  que tinha (no Windows uma, no Mac outra). Este script desenha-o de vez: o
+  contorno do 墨 sai da propria fonte Shippori Mincho B1 ExtraBold (a mincho dos
+  titulos do site desde a mesma data), com o fontTools, e fica em vector. Igual
+  em todo o lado, nitido em qualquer tamanho.
 
-  Branco sobre o azul: 6,69:1. A moeda e a mesma nos dois temas; na barra da
-  noite (#081A28) destaca-se a 2,64:1, pela cor e pelo G branco dentro dela.
+  As medidas sao as do selo original: quadrado com os cantos a ~1/4 do lado
+  (30px com 8px de raio, na barra), o 墨 branco ao centro.
 
   Um comando, tres saidas:
-    images/logo.svg        o logotipo (barra das tres paginas, cartao de partilha)
+    images/logo.svg        o selo (barra das tres paginas, cartao de partilha)
     o <link rel="icon">    dos quatro .html, como data URI PNG de 64x64
                            (assim o 404 continua sozinho: o Netlify serve-o em
                            qualquer endereco e um caminho relativo partia-se)
@@ -30,18 +27,19 @@ PARA QUE SERVE
                            Shopify, assinatura de email). Nao vai para o ar.
 
 QUANDO CORRER
-  Quando o logotipo mudar (a cor da moeda, as proporcoes, a letra). Depois
-  corre o tools/make-og-card.py, que usa o logo.svg.
-  O sapo nao se perdeu: o desenho original continua em tools/frog-source.jpg,
-  e o script que o tracava esta no historico do git (tools/make-frog-logo.py).
+  Quando o selo mudar (a cor, o raio, o tamanho do 墨). Depois corre o
+  tools/make-og-card.py, que usa o logo.svg.
+  Os logotipos de antes estao no historico do git: o G (este mesmo ficheiro,
+  versao de 31 Out), o sapo (tools/make-frog-logo.py; o desenho original do
+  Frede continua em tools/frog-source.jpg).
 
 COMO CORRER
     python3 tools/make-logo.py
 
   Precisa de:  pip install fonttools
   e do Playwright com o Chromium (o mesmo do verify.mjs), para os PNG.
-  A fonte vem do Google Fonts (a mesma que o site pede), por isso precisa de
-  rede da primeira vez; nao fica guardada no repositorio.
+  A fonte inteira (com o 墨) vem do Google Fonts, por isso precisa de rede; o
+  site so serve o subconjunto latino dela (pasta fonts/), que nao tem o 墨.
 """
 
 import base64
@@ -65,17 +63,15 @@ SVG_OUT = os.path.join(ROOT, "images", "logo.svg")
 BIG_OUT = os.path.join(ROOT, "tools", "logo-1024.png")
 PAGINAS = ["index.html", "projeto.html", "loja.html", "404.html"]
 
-MOEDA = "#0E5CAB"       # --sky do dia: o azul do topo do ceu
-TINTA = "#FFFFFF"       # o G e o traco
-# o Playfair Display 500 italico; o pedido com um user-agent de browser de
-# secretaria faz o Google Fonts responder com TTF (o fontTools le-o directo)
-FONTE_CSS = "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500&display=swap"
-
-ALTURA = 272            # a altura das maiusculas do G, numa moeda de 512
-BASE = 388              # a linha de base do G (e do traco)
-TRACO = 0.42            # o comprimento do traco, em fraccao da altura do G
-GROSSURA = 0.13         # a grossura do traco no lado grosso, idem
-FOLGA = 0.02            # o espaco entre o G e o traco, idem
+COR = "#0E5CAB"         # o azul do site (o --sky do dia)
+TINTA = "#FFFFFF"       # o 墨
+LADO = 512              # o quadrado, em unidades do SVG
+RAIO = 0.26             # o raio dos cantos, em fraccao do lado (8px em 30)
+OCUPA = 0.62            # o 墨 ocupa 62% do lado, na maior das duas medidas
+CARACTER = "墨"
+# um user-agent simples faz o Google Fonts responder com o TTF inteiro (com os
+# caracteres japoneses), que o fontTools le directo
+FONTE_CSS = "https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@800&display=swap"
 
 
 def baixa_fonte(pasta):
@@ -84,42 +80,32 @@ def baixa_fonte(pasta):
     m = re.search(r"url\((https://fonts\.gstatic\.com/[^)]+\.ttf)\)", css)
     if not m:
         sys.exit("O Google Fonts nao devolveu um TTF. Sem rede?")
-    caminho = os.path.join(pasta, "playfair-500-italic.ttf")
+    caminho = os.path.join(pasta, "shippori-mincho-b1-800.ttf")
     urllib.request.urlretrieve(m.group(1), caminho)
     return caminho
 
 
-def contorno_g(fonte, cx):
-    """O G em contorno SVG: altura de maiusculas ALTURA, centrado em cx pela
-    sua caixa real, com a linha de base em BASE. Devolve (path, caixa)."""
+def svg_selo(fonte):
     f = TTFont(fonte)
     gs = f.getGlyphSet()
-    g = f.getBestCmap()[ord("G")]
-    k = ALTURA / f["OS/2"].sCapHeight
+    cmap = f.getBestCmap()
+    if ord(CARACTER) not in cmap:
+        sys.exit(f"A fonte nao tem o {CARACTER}.")
+    g = cmap[ord(CARACTER)]
     bp = BoundsPen(gs)
     gs[g].draw(bp)
     xmin, ymin, xmax, ymax = bp.bounds
-    ox = cx - (xmin + xmax) / 2 * k
+    # escala: a maior das duas medidas do caracter ocupa OCUPA do quadrado
+    k = LADO * OCUPA / max(xmax - xmin, ymax - ymin)
+    # centrado pela caixa real do caracter (y da fonte cresce para cima)
+    ox = LADO / 2 - (xmin + xmax) / 2 * k
+    oy = LADO / 2 + (ymin + ymax) / 2 * k
     pen = SVGPathPen(gs)
-    gs[g].draw(TransformPen(pen, (k, 0, 0, -k, ox, BASE)))
-    return pen.getCommands(), (xmin * k + ox, BASE - ymax * k, xmax * k + ox, BASE - ymin * k)
-
-
-def svg_logo(fonte):
-    # o G e o traco formam um par; e o par que fica ao centro da moeda
-    _, (x0, _, x1, _) = contorno_g(fonte, 0)
-    largura = (x1 - x0) + ALTURA * (FOLGA + TRACO)
-    d, (x0, _, x1, _) = contorno_g(fonte, (256 - largura / 2) + (x1 - x0) / 2)
-    bx, L, h = x1 + ALTURA * FOLGA, ALTURA * TRACO, ALTURA * GROSSURA
-    r = h / 2
-    # o traco de tinta: ponta redonda a esquerda, afina para a direita
-    traco = (f"M{bx + r:.1f} {BASE - h:.1f}"
-             f"C{bx + L * .45:.1f} {BASE - h * 1.02:.1f} {bx + L * .8:.1f} {BASE - h * .9:.1f} {bx + L:.1f} {BASE - h * .62:.1f}"
-             f"C{bx + L * .82:.1f} {BASE - h * .18:.1f} {bx + L * .45:.1f} {BASE + h * .02:.1f} {bx + r:.1f} {BASE:.1f}"
-             f"A{r:.1f} {r:.1f} 0 0 1 {bx + r:.1f} {BASE - h:.1f}Z")
-    return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Guita_Ink">'
-            f'<circle cx="256" cy="256" r="256" fill="{MOEDA}"/>'
-            f'<path fill="{TINTA}" d="{d}"/><path fill="{TINTA}" d="{traco}"/></svg>\n')
+    gs[g].draw(TransformPen(pen, (k, 0, 0, -k, ox, oy)))
+    r = LADO * RAIO
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {LADO} {LADO}" role="img" aria-label="Guita_Ink">'
+            f'<rect width="{LADO}" height="{LADO}" rx="{r:.0f}" fill="{COR}"/>'
+            f'<path fill="{TINTA}" d="{pen.getCommands()}"/></svg>\n')
 
 
 RASTER = r"""
@@ -149,9 +135,9 @@ def rasteriza(svg_path, lado, png_path):
 
 def main():
     tmp = tempfile.mkdtemp()
-    print("A buscar o Playfair Display italico ao Google Fonts…")
+    print("A buscar o Shippori Mincho B1 ExtraBold ao Google Fonts…")
     fonte = baixa_fonte(tmp)
-    svg = svg_logo(fonte)
+    svg = svg_selo(fonte)
     open(SVG_OUT, "w", encoding="utf-8").write(svg)
     print(f"images/logo.svg  {len(svg) / 1024:.1f} KB")
 

@@ -35,42 +35,44 @@ transformation pipeline. Twelve tokens total.
 
 ```css
 :root{
-  --void:#F3F7F8;         /* the field: cloud white (night: #081A28) */
-  --raise:#FFFFFF;        /* raised surface (night: #0D2435) */
-  --raise-2:#E8EEF0;      /* (night: #122D42) */
-  --sky:#0E5CAB;          /* the accent: top of the sky (night: #77D8F1) */
+  --void:#F2F1EE;         /* the paper (night: #121211) */
+  --raise:#FFFFFF;        /* the mats behind artwork (night: #1B1B1A) */
+  --raise-2:#E7E6E1;      /* (night: #242422) */
+  --sky:#0E5CAB;          /* the accent: the seal's blue (night: #8DB6F2) */
   --sky-lift:#0E5CAB;     /* small text on --void */
   --sky-raise:#0E5CAB;    /* small text on --raise */
-  --bone:#0E2233;         /* text: the silhouettes' night blue (night: #E6F4F6) */
-  --bone-dim:#56646C;     /* (night: #8FA6B2) */
-  --hair:rgba(14,34,51,.13);
-  --f-disp:'Playfair Display',Georgia,serif;
-  --f-body:'LT Museum','Lora',Georgia,serif;
-  --f-ui:'Inter',system-ui,-apple-system,sans-serif;
+  --bone:#141414;         /* the ink (night: #EDEBE6) */
+  --bone-dim:#5C5B56;     /* (night: #9E9B94) */
+  --hair:rgba(20,20,20,.12);
+  --f-disp:'Shippori Mincho B1','Hiragino Mincho ProN','Yu Mincho',Georgia,serif;
+  --f-body:'Zen Kaku Gothic New',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-ui:'Zen Kaku Gothic New',system-ui,-apple-system,'Segoe UI',sans-serif;
 }
 ```
 
-**The site is the sky, and the accent is one colour.** In October 2026 (the
-second change that month) Frede chose two of his originals from the Survival of
-Kings universe as the base of the site: the sky over a hill with two
-silhouettes, and the line-up of seven characters (`images/bg/`). The palette
-is measured off them: day is cloud white, night-blue text and the blue at the
-top of the sky, `#0E5CAB`; night is the sky's dark blue-teal, cloud-white text
-and the cyan at the horizon, `#77D8F1`. **Day is the default**; a one-line
-script at the top of each page sets `data-theme="dark"` when the phone prefers
-dark (at the top so a dark-mode phone never flashes day first). The toggle
-still overrides both ways; `404.html` uses a plain `@media` instead.
+Plus one layout variable, `--pad` (the page's side margin,
+`clamp(16px,3vw,40px)`), which is not a colour or type token.
 
-The accent replaced the frog's green `#80AB5C` (which had replaced the Royal
-blue `#2E45FF`), and the tokens were renamed `--frog*` → `--sky*` so no blue
-is called frog. Since late October 2026 the logo is no longer the frog either:
-it is a coin of this same Sky (§5), so there is no green left on the site.
-`--sky-lift` and
-`--sky-raise` are accessibility variants, not a palette; today they equal
-`--sky` in each theme. **Text on the accent is `var(--void)`** in both themes
-(6.21:1 day, 10.83:1 night). **Text over the sky is white** in both themes, on
-a veil of the sky's own blue behind the text block; `verify.mjs` measures the
-pixels behind it. The measured ratios are in `DESIGN.md`.
+**Ink on paper, and the work is the star** (31 October 2026, the third design
+that month). Frede asked for the whole site to be rethought, with one goal:
+the art was getting lost among sections, text and decoration. The page is now
+neutral paper, near-black ink and one blue, the blue of the 墨 seal (the first
+logo, back at the same time). The blue is the same `#0E5CAB` as the sky
+palette before it, so the seal, Shopify and the share card stay consistent;
+the token names `--sky*` are kept from that era. **Day is the default**; a
+one-line script at the top of each page sets `data-theme="dark"` when the
+phone prefers dark (at the top so a dark-mode phone never flashes day first).
+The toggle still overrides both ways; `404.html` uses a plain `@media`
+instead.
+
+History, so old comments make sense: Royal blue `#2E45FF` (September) → the
+frog's green `#80AB5C` (early October) → the Survival of Kings sky (October)
+→ ink and paper (31 October). `--sky-lift` and `--sky-raise` are
+accessibility variants, not a palette; today they equal `--sky` in each
+theme. **Text on the accent is `var(--void)`** in both themes (5.93:1 day,
+9.02:1 night). The tile caption band and the lightbox keep fixed colours
+(they sit on the artwork, not on the page). The measured ratios are in
+`DESIGN.md`.
 
 There is no spacing scale token. Spacing is written inline, usually as
 `clamp()`. Do not invent a scale and refactor to it.
@@ -101,7 +103,8 @@ render `<script>` of `index.html` that build DOM nodes from `CONFIG`:
 | `syncStructuredData()` | writes JSON-LD from `CONFIG` |
 
 Boot is four calls at the bottom of the file, in order (`renderHeroArt()`
-went with the hero artwork, October 2026: the hero is now the sky, in CSS):
+went with the hero artwork, October 2026; the hero is now a short band of
+text, and the wall right under it is the first picture):
 
 ```js
 renderWall();
@@ -120,17 +123,23 @@ menu clones the bar nav before boot for exactly this reason.
 **None of any kind.** No `package.json`. No bundler. No transpiler. No
 post-processor. No lockfile.
 
-The only external request the page makes is one combined Google Fonts
-stylesheet, loaded non-blocking:
+**The page makes no request to any other server.** Since 31 October 2026 the
+fonts are files in the repo, `fonts/`: the Latin subset of Shippori Mincho B1
+700 and Zen Kaku Gothic New 400 and 500 (SIL OFL, licences beside them). Each
+page declares them with `@font-face` (`font-display:swap`) and preloads the
+two most used:
 
 ```html
-<link rel="stylesheet" media="print" onload="this.media='all'"
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&family=Lora:wght@400&display=swap">
-<noscript><link rel="stylesheet" href="…"></noscript>
+<link rel="preload" href="fonts/shippori-mincho-b1-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/zen-kaku-gothic-new-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 ```
 
-Only the weights actually rendered are requested. If you change typography,
-re-audit computed styles and update the request in both directions.
+Why not Google Fonts: these are Japanese families, and Google's stylesheet
+for them lists every slice of Japanese characters, 457 KB (118 KB
+compressed) for a site that only shows Latin letters. `404.html` uses
+absolute paths (`/fonts/...`) because it is served at any address. Only the
+weights actually rendered are served; a new weight means a new file and a new
+`@font-face` in every page.
 
 The build-adjacent scripts live in `tools/`, are run by hand, and are never part
 of a deploy. They need `Pillow` and `numpy` locally; the site itself still ships
@@ -142,7 +151,7 @@ nothing.
 | `make-webp.py` | regenerates the WebP derivatives |
 | `dims.py` | rewrites the `DIMS` map **and the wall's reserved height** in `index.html`, both from the real pixels |
 | `make-og-card.py` | redraws `images/og-card.jpg`, the 1200x630 social card |
-| `make-logo.py` | draws the logo (late Oct 2026): the G of Guita from Playfair Display 500 Italic's real outlines plus the `_` as an ink stroke, white on a `#0E5CAB` coin; writes `images/logo.svg`, the favicon in all four pages, and `tools/logo-1024.png` for use off the site. Needs `fonttools` and network for the font |
+| `make-logo.py` | draws the logo: the 墨 seal (the site's first logo, back since 31 Oct 2026), the character's real outline from Shippori Mincho B1 ExtraBold, white on a rounded `#0E5CAB` square; writes `images/logo.svg`, the favicon in all four pages, and `tools/logo-1024.png` for use off the site. Needs `fonttools` and network for the full font (the site only serves its Latin subset, which has no 墨) |
 | `verify.mjs` | drives Chromium over the whole site and runs every check in §10 |
 
 `add-artwork.py` is the one to reach for. Adding art by hand means four steps and
@@ -169,22 +178,20 @@ images/           70 full-size JPEG (1600px longest side: 37 artworks, 3 project
 images/thumb/     70 thumbnails (760px) + WebP
 images/merch/     four 800x800 shop-card photos (loja.html). Not artwork: dims.py
                   and make-webp.py only read images/ itself, so they skip it
-images/bg/        Survival of Kings originals used as decoration (Oct 2026),
-                  not artwork in the gallery (dims.py and make-webp.py only
-                  read images/ itself):
-                  sky-900/1920 (.webp + .jpg): behind the hero and the shop's
-                    page head
+images/bg/        Survival of Kings originals, not artwork in the gallery
+                  (dims.py and make-webp.py only read images/ itself):
                   cast-cut-1000/1920: the seven, cut out by Frede (no
-                    background), under the commissions on both pages
-                  knight-1000, boy-1000, archer-900 (.webp) + a small .png
-                    each as the fallback: Frede's cut-outs, trimmed to the
-                    figure and nothing else changed (the boy in the home
-                    page's sky, the knight in About, the archer in the shop's
-                    sky and in Contact)
-images/logo.svg   the logo: the G and the ink stroke on a Sky coin. Used by the
-                  bar of the three pages and the social card. Not artwork; SVG,
-                  so dims.py and make-webp.py (JPEG only) never see it. Made by
+                    background), beside the commissions on the home page and
+                    under them in the shop. The one Survival of Kings picture
+                    still in the layout since 31 Oct 2026
+                  sky-900/1920, knight, boy, archer: the sky and the three
+                    cut-outs that framed the site in October. Out of the
+                    layout since the ink redesign; kept, not referenced
+images/logo.svg   the logo: the 墨 seal. Used by the bar of the three pages and
+                  the social card. Not artwork; SVG, so dims.py and
+                  make-webp.py (JPEG only) never see it. Made by
                   tools/make-logo.py
+fonts/            the three font files (Latin subsets) and their OFL licences
 ```
 
 Four files have no WebP because WebP came out larger than the JPEG. That is
@@ -216,32 +223,33 @@ was **CLS 0.96**. The fix is reserving the space in CSS up front:
 
 | Element | Reserve | Why that number |
 | --- | --- | --- |
-| `.hero h1` | `2.12em` | two lines; measured constant across every `clamp()` value |
-| `.sec-title` | `1.06em` | one line, same trick |
+| `.hero h1` | `2.04em` | two lines at line-height 1.02 |
+| `.hero h1` | `max-width:10.5em` + a size that follows its column | never one line, never three (the PT title is the longest); `verify.mjs` sweeps 320 to 1600px in both languages |
+| `.hero .tag` | `3.2em` | two lines at 1.6 |
+| `.sec-title` | `1.08em` | one line |
 | `.bar` | `73 / 71 / 64px` | per breakpoint; empty it is 54px |
 | `.btn` | `44px` | also the minimum touch target |
-| `.hero` | `min-height:min(82svh,780px)` | the sky band is a fixed height, so text arriving after the JS moves nothing below |
-| `.hero-copy` | `calc(2.24 × h1 + 144px)` | the text block is centred in the sky; without the reserve each line arriving pulled the title up |
-| `.hero h1` | `max-width:10.5em` | forces two lines at every size, so the 2.24em reserve is always exact |
+| `.filters` | `38px` / `84px` on phones | one row of chips / two; the wall bar is on the first screen |
 | `.wall` | a `calc()` | see below |
 
 The wall's reserve is a formula, not a constant, because the right height
 changes with viewport width. Since the September 2026 uniform grid every tile
 is 4:5, so the height is simply rows × (1.25 × one column's width) + the gaps
 between rows, and the CSS stores only the row count (`--wall-rows`, three
-places: 4, 3 and 2 columns). The wall opens with the first
-`CONFIG.wallPreview` pieces (12); the rest appear on a click, which is user
-input and does not count as layout shift. The featured project card at the
-top of Projects reserves its own height too (`.proj-feat` min-height: half the
-content width on desktop, the cover's full height on a phone).
+places: 3, 2 and 2 columns, 12px gaps, the width from `--pad`). The wall
+opens with the first `CONFIG.wallPreview` pieces (12); the rest appear on a
+click, which is user input and does not count as layout shift. Since the ink
+redesign the wall is on the first screen and the projects come after it, below
+the fold, where nothing needs a reserve.
 
-**Uniform tiles never crop.** Tiles are 4:5 because 17 of the 29 wall pieces
-are exactly 4:5; everything else is fitted whole with `object-fit:contain`
-and sits on `--raise` like a mat. `verify.mjs` accepts a tile only if its
+**Uniform tiles never crop.** Tiles are 4:5 because most wall pieces are
+exactly 4:5; everything else is fitted whole with `object-fit:contain` and
+sits on the white `--raise` like a mat. `verify.mjs` accepts a tile only if its
 image either matches the frame's ratio or is `contain`; switching to `cover`
 is caught (tested against that planted bug). The covers in the row of project cards follow the same rule: one fixed height, the cover whole inside it (`contain`), so the three titles line up; `verify.mjs` checks both. Aim **1-5% under** the real height. Under-reserving settles by a few
 pixels; over-reserving opens a gap that closes again, which counts just the
-same. Result after all of it: 0.006 throttled, 0 unthrottled.
+same. Result after all of it, with the wall on the first screen: about 0.006
+throttled, 0 to 0.001 unthrottled.
 
 **The three coefficients are generated — never hand-edit them.** They used to
 be the repo's sharpest footgun: change the gallery, forget the ratio sum and the count,
@@ -291,18 +299,18 @@ Icons are four things, in order of preference:
 1. **Text glyphs in markup** — `‹` `›` `×` for the lightbox controls, `◐` for
    the theme toggle, `↗` on outbound links, `→` on internal ones. Each carries
    an `aria-label`.
-2. **The logo coin** — since late October 2026, at Frede's request ("a logo
-   that better suits the site"). It replaced the frog coin, which had replaced
-   the 墨 seal. The G of Guita in the titles' italic (Playfair Display 500
-   Italic, the font's own outlines, not redrawn) and the `_` of Guita_Ink drawn
-   as an ink stroke, thick to thin: the G and the `_` say the name, the stroke
-   says Ink. White (6.69:1) on a coin of the day Sky `#0E5CAB`, the same in
-   both themes. A circle keeps one footprint in the bar, the browser tab,
-   Shopify and an Instagram avatar. To change it, edit the constants in
-   `tools/make-logo.py` and run it, then `tools/make-og-card.py`; never
-   hand-edit `images/logo.svg` or the favicons. Frede's frog drawing is kept
-   in `tools/frog-source.jpg`, and the script that traced it is in git
-   history (`tools/make-frog-logo.py`), if the frog ever comes back.
+2. **The 墨 seal** — the site's first logo (3 September 2026), back since 31
+   October 2026 at Frede's request, after the frog coin and the G coin: the
+   character 墨 ("ink") in white on a rounded square of the site's blue
+   (corners at ~26% of the side, as the original 30px square with an 8px
+   radius). In September it was live text, so every system drew 墨 with
+   whatever CJK font it had; now it is the real outline from Shippori Mincho
+   B1 ExtraBold, in vector, the same everywhere. It does not change with the
+   theme. To change it, edit the constants in `tools/make-logo.py` and run it,
+   then `tools/make-og-card.py`; never hand-edit `images/logo.svg` or the
+   favicons. The earlier logos are in git history (the G: `make-logo.py` of 31
+   Oct; the frog: `tools/make-frog-logo.py`, with Frede's drawing kept in
+   `tools/frog-source.jpg`).
 3. **CSS-drawn geometry** — the mobile menu hamburger is two pseudo-elements that
    rotate into an X. No SVG.
 4. **Inline data URIs** — the `feTurbulence` film grain (SVG, the only inline
@@ -319,47 +327,29 @@ didn't and fell through to the browser default, rendering in Arial.
 
 One `<style>` block per file. Plain selectors, no methodology, no preprocessor.
 
-**The system draws lines, not boxes.** `1px solid var(--hair)` at 13% opacity is
-the structural device. There is **no elevation shadow anywhere** — the only two
-`box-shadow` declarations in the file are inside a `@keyframes` that pulses a
-ring out of the timeline's upcoming-event dot. Do not introduce elevation,
-glassmorphism, or a card with a border *and* a shadow.
+**Space and tone, few lines** (since 31 Oct 2026). Sections are separated by
+space and their heading, not by rules, and the art sits on white mats with no
+border. `1px solid var(--hair)` survives only where it carries structure: the
+bar's bottom edge, the footer's top, the commission formats list, the
+timeline's axis and the shop's bag. There is **no elevation shadow anywhere**:
+the only `box-shadow` is inside the `@keyframes` that pulses a ring out of the
+timeline's upcoming-event dot. Do not introduce elevation, glassmorphism, or
+boxes around content.
 
-**Survival of Kings pictures are the decoration, and only these**: all CSS
-backgrounds (no `<img>`, no CONFIG entry: they are not the portfolio), WebP
-through `image-set()` with a JPEG/PNG line before it as the fallback.
+**Nothing decorates the art.** The ink redesign took out everything that
+competed with the work: the Survival of Kings sky behind the hero and the
+shop's head, the three character cut-outs (`.cut`), the screentone that swept
+across tiles and the speed lines under the title. The one Survival of Kings
+picture left in the layout is the line-up of seven (`cast-cut`), beside the
+commissions on the home page (`.comm-art`) and under them in the shop
+(`#comissoes::after`): a CSS background, not an `<img>` and not in CONFIG,
+because it is decoration and not the portfolio, and because it shows exactly
+what a commission buys. It never sits behind text.
 
-- **The sky** behind the hero and the shop's page head, full-bleed by negative
-  margin plus padding inside `.wrap`. Text over it is white, on the veil.
-- **The cast** (`cast-cut`, no background) under the commissions on both
-  pages, below the text, never behind it. One file for day and night.
-- **Three characters (`.cut`)**, each a decorative `<div aria-hidden>` whose
-  `::before` holds the drawing: the white-haired boy at the right edge of the
-  home page's sky (index, above 980px only; he moved there from Contact in
-  late Oct 2026, after a taste-skill review found a first screen with a sky
-  and no character), the knight at the end of About (index), and the archer,
-  in the shop's sky band (loja) and in Contact (index). The rules they follow:
-  - **Each rises from the side its drawing is cut on**: the knight is cut
-    left and bottom, so he sits flush with the screen's left edge
-    (`--bleed`); the boy is cut right and bottom, so the right edge (in the
-    hero, `right:0` of the full-bleed band); the archer only at the bottom,
-    so she can stand anywhere on a line. Never flip or recrop a drawing to
-    make it fit elsewhere.
-  - **Each stands on a hairline**: the next section's border, the footer's,
-    or the bottom of the sky band. `#about` and `#contact` have no bottom
-    padding for that reason; the column beside the figure keeps it.
-  - **Never behind text.** The knight and the archer in Contact have their
-    own grid cells; the two absolute figures are the boy in the home page's
-    sky (hidden at 980px and below, where the text takes the width) and the
-    archer in the shop's band (hidden at 620px and below). `verify.mjs` sweeps
-    390 to 1600px and fails if any figure's box crosses any text box.
-  - `aspect-ratio` reserves each stage, so nothing shifts when it loads.
-  - **The entrance**: the drawing rises 14% out of its own stage (overflow
-    hidden) with the reveal curve, once, when the stage scrolls in (the
-    archer on page load). Under reduced motion it is simply there.
-
-Any text placed over a picture needs a veil and the pixel check in
-`verify.mjs`.
+Any text placed over a picture needs a veil and a pixel check in
+`verify.mjs`. Today none does (the white-on-sky pixel test left with the sky;
+put one back if text ever goes over a picture again). The tile caption is an
+opaque ink band, so the normal contrast test measures it.
 
 **Type sizes are steps** (late Oct 2026, after a taste-skill review measured
 running text at 13.8px in grey and 15 sizes on one page): paragraphs `1rem`
@@ -372,9 +362,10 @@ secondary. `DESIGN.md` §3 has the detail.
 | Radius | Used by |
 | --- | --- |
 | `2px` | buttons, skip link — near-square, printed |
-| `999px` | chips, knobs, dots, lightbox controls |
+| `999px` | chips, badges, knobs, dots, lightbox controls |
 
-(`8px` was the 墨 seal's alone; it went with the seal.)
+(The 墨 seal has its own rounded corners, ~26% of its side, inside its SVG;
+no CSS radius matches it, on purpose.)
 
 **Responsive** — four media queries, no more:
 
@@ -388,15 +379,18 @@ secondary. `DESIGN.md` §3 has the detail.
 
 Plus `(hover:none)` for touch screens, which is not a breakpoint: a tap sets
 `:hover` and it sticks, so there the hovers that move (the project card's
-lift, the screentone sweep, the button sweep) are cancelled and a filled
-button stays filled. On the index it sits after the rules it cancels (same
+lift, the art growing in its tile, the button sweep) are cancelled and a
+filled button stays filled. On the index it sits after the rules it cancels (same
 specificity, the last one wins).
 
 Type and spacing scale with `clamp()` rather than breakpoints wherever possible.
 
 **Motion:** two house curves — `cubic-bezier(.2,.7,.3,1)` for reveals,
 `cubic-bezier(.16,.84,.36,1)` for the clip-path title wipe. `cubic-bezier(.2,1.5,.4,1)`
-is reserved for the logo stamp. Plain `ease` is correct for colour transitions.
+is reserved for the seal's stamp (it was born for it, in September). Few
+effects, on purpose: the title wipe, the seal's stamp, the sweep on filled
+buttons, the timeline dot, and on a tile the art growing 2% with the caption
+band sliding up. Plain `ease` is correct for colour transitions.
 **Never `transition: all`** — name the properties. Animate only `transform` and
 `opacity`. There is not one `window` scroll listener in the codebase and there
 must not be; use `IntersectionObserver`.
@@ -430,16 +424,17 @@ loja.html       the selling page: commissions (four formats, no prices) and,
 404.html        standalone, self-contained
 robots.txt
 sitemap.xml     six URLs; update lastmod when content changes
-images/         + images/thumb/, images/merch/, images/bg/ (the two backgrounds)
+images/         + images/thumb/, images/merch/, images/bg/ (Survival of Kings)
+fonts/          the three font files (Latin subsets) + OFL licences
 comissoes/      the commission system; nothing here is served
   README.md       how site, Notion and email fit together
   email-onboarding.md  the acceptance email, PT and EN
 marca/          the brand sheet for printers and collaborators; not served
   Guita_Ink-brand-sheet.pdf  one A4 page: the frog coin, the palette (HEX,
                   RGB, approximate CMYK), the three faces, the rules
-  ⚠️ both predate the sky and the new logo (Oct 2026): they still show the
-                  frog coin and the frog green as the accent. Redo them with
-                  the sky palette and images/logo.svg.
+  ⚠️ both predate the ink redesign (31 Oct 2026): they still show the frog
+                  coin, the frog green and the old faces. Redo them with the
+                  ink palette, the two Japanese faces and images/logo.svg.
   brand-sheet.tpl.html  its source. The fonts (Google Fonts woff2, base64)
                   and the logo SVG are pasted in at /*FONTS*/ and /*LOGO*/,
                   then Chromium prints it to A4 (it was made with the old
@@ -454,9 +449,9 @@ tools/          all run by hand, none part of the deploy
   make-webp.py    regenerates the WebP derivatives
   dims.py         rewrites the DIMS map and the wall reserve from the real pixels
   make-og-card.py redraws images/og-card.jpg from og-card.html
-  make-logo.py    the logo (SVG), the favicon in the four pages, logo-1024.png
-  logo-1024.png   the logo as a big PNG, for Instagram, Shopify, email; not served
-  frog-source.jpg the frog as Frede drew it (the logo until late Oct 2026); kept,
+  make-logo.py    the 墨 seal (SVG), the favicon in the four pages, logo-1024.png
+  logo-1024.png   the seal as a big PNG, for Instagram, Shopify, email; not served
+  frog-source.jpg the frog as Frede drew it (the logo in October 2026); kept,
                   not served
   og-card.html    the social card's layout; not served, just the mould
   verify.mjs      runs §10 against a real browser; exit 1 if anything fails
@@ -492,13 +487,15 @@ CLAUDE.md       this file
                   session runs as root, where Chromium only starts with
                   --no-sandbox: point CHROME_PATH at a two-line wrapper that
                   adds it. Working files land in .taste-skill/, which git
-                  ignores. It ranks BELOW this file and DESIGN.md, and its
-                  house rules contradict decisions made here: it bans
-                  hairlines (§6 is built on them), a third typeface, small
-                  spaced capitals, kickers and every gradient but a scrim
-                  (the sky's veil is one, on purpose). So: never let it deal
-                  a direction, palette or type (if ever, only with --keep
-                  palette,type); never use assets.mjs to bring in found
+                  ignores. It ranks BELOW this file and DESIGN.md. Its review
+                  shaped the ink redesign of 31 Oct 2026 (art first, readable
+                  sizes, two typefaces, few lines), but some of its house
+                  rules still contradict decisions made here: the kickers
+                  above project titles, the few uppercase labels, the lines
+                  that remain (§6) and the 001 numbers in the lightbox. So:
+                  never let it deal a direction, palette or type (Frede
+                  chooses those; if ever, only with --keep palette,type);
+                  never use assets.mjs to bring in found
                   pictures (every picture here is Frede's, §9.5); never fill
                   copy with its "sample details" (§9.5 again); and do not
                   silence its findings with taste-skill-ignore comments. Use
@@ -510,14 +507,16 @@ CLAUDE.md       this file
 No feature folders, no `src/`, no routing. `index.html` is organised top to
 bottom as: meta and JSON-LD → `CONFIG` → `<style>` → markup → render `<script>`.
 
-**Home page order**: hero → projects (the featured project, `CONFIG.featured`,
-as a full-width card with its cover, text, a strip of its series and its
-links; the others in a row below) → selected work (one uniform grid, no
-project highlighted; the Survival of Kings cast sits after the other
-originals on purpose) → commissions band → about (bio beside the timeline) →
-contact. The timeline is not its own
+**Home page order** (since 31 Oct 2026, "the work first"): a short intro band
+(the title left; "I'm Frederico Guita…" and two buttons right) → selected
+work (the wall, still on the first screen: one uniform grid, no project
+highlighted; the Survival of Kings cast sits after the other originals on
+purpose) → projects (the featured project, `CONFIG.featured`, as a full-width
+card with its cover, text, a strip of its series and its links; the others in
+a row below) → commissions (text and the four formats beside the cast) →
+about (bio beside the timeline) → contact. The timeline is not its own
 section any more; its `id="timeline"` sits on the block inside About, so old
-`#timeline` links still land. `DESIGN.md` §5 has the reasoning.
+`#timeline` links still land. `DESIGN.md` §1 and §5 have the reasoning.
 
 **A project can be a series.** `CONFIG.projects[].src` is the cover: it is what
 the card on `index.html` shows and what unfurlers get as `og:image`. An optional
@@ -614,7 +613,8 @@ That is correct and matches the code: they sit on Royal or on the gallery
 scrim, neither of which changes with the theme, so a theme-following token
 would be wrong. Any *other* unbound fill is a bug.
 
-**⚠️ The Figma file predates the frog, the sky and the G logo (October 2026).**
+**⚠️ The Figma file predates every October 2026 change** (the frog, the sky,
+the G logo and the ink redesign of the 31st, with its two Japanese faces).
 It still holds the Royal blue variables and the Selo component. Until it is
 updated, trust it for type and layout only, never for colour or the logo.
 
@@ -697,8 +697,8 @@ by reading the diff and assuming."*
 
 **`node tools/verify.mjs` runs all of this.** It serves the folder, drives
 Chromium and exits 1 if anything fails, so it can gate a deploy. It needs no
-install: Playwright and Chromium are already on the machine, and it blocks the
-Google Fonts request so it works offline. `--rapido` skips the throttled CLS
+install: Playwright and Chromium are already on the machine, and the site
+makes no outside request (the fonts are in `fonts/`), so it works offline. `--rapido` skips the throttled CLS
 runs (the slow part); `--shop-aberto` also tests the shop with `shopOpen:true` (in `index.html` and `loja.html`),
 on a temporary copy.
 
@@ -715,14 +715,11 @@ The checks themselves, and why each one exists:
   `naturalWidth: 0` and pass by default.
 - **CLS is 0** on load. A scripted `openLb()` injects a shift with no
   `hadRecentInput` and will read as a false regression; measure without it.
-- **Contrast** against computed colours in both themes. Text over a picture
-  (the sky) is skipped there and measured in the pixels instead: the text is
-  made transparent, each line's box is photographed, and white is compared
-  with the 95th-percentile pixel behind it, day and night, at 1280 and 390px.
-  Tested against a removed veil.
-- **The characters never cover text**: each visible `.cut` box against every
-  text box, 390 to 1600px, on the home page and the shop. Tested against an
-  oversized archer.
+- **Contrast** against computed colours in both themes. (Text over a picture
+  would be skipped there and needs a pixel test; the one for the sky left with
+  the sky, see §6.)
+- **The intro title is always two lines**, EN and PT, 320 to 1600px: its
+  reserved height (and so the CLS, with the wall right under it) depends on it.
 - **EN/PT parity** across every `data-t` key.
 - **No horizontal overflow** — sweep widths, don't spot-check. The 621–743px
   band was broken for months and 390/768/1440 all looked fine.

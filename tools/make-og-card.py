@@ -14,9 +14,9 @@ PARA QUE SERVE
   cores, o mesmo tipo de letra e o mesmo selo do site, sem ser preciso abrir um
   editor de imagem.
 
-  As fontes sao descarregadas na altura e metidas dentro da pagina. Sem isso o
-  Chromium desenhava em Georgia, que e a reserva, e o cartao ficava com outra
-  letra que nao a do site.
+  As fontes sao as do proprio site (pasta fonts/, desde Out 2026 (3)), metidas
+  dentro da pagina em base64. Sem isso o Chromium desenhava com a letra de
+  reserva, e o cartao ficava com outra letra que nao a do site.
 
 QUANDO CORRER
   Quando mudares a arte do cartao, o nome, ou os factos que ele mostra.
@@ -35,46 +35,31 @@ import re
 import subprocess
 import sys
 import tempfile
-import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TOOLS = os.path.join(ROOT, "tools")
 TEMPLATE = os.path.join(TOOLS, "og-card.html")
 OUT = os.path.join(ROOT, "images", "og-card.jpg")
 
-FONT_CSS = ("https://fonts.googleapis.com/css2"
-            "?family=Playfair+Display:ital,wght@0,400;1,400&family=Inter:wght@400&display=swap")
-# o Google so devolve woff2 se pensar que somos um browser moderno
-UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
-      "(KHTML, like Gecko) Chrome/120.0 Safari/537.36")
-
-
-def fetch(url, binary=False):
-    req = urllib.request.Request(url, headers={"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        data = r.read()
-    return data if binary else data.decode("utf-8")
+FONTES = os.path.join(ROOT, "fonts")
+# as tres letras do site: (familia, peso, ficheiro)
+FACES = [("Shippori Mincho B1", 700, "shippori-mincho-b1-700-latin.woff2"),
+         ("Zen Kaku Gothic New", 400, "zen-kaku-gothic-new-400-latin.woff2"),
+         ("Zen Kaku Gothic New", 500, "zen-kaku-gothic-new-500-latin.woff2")]
 
 
 def embedded_fonts():
-    """Descarrega os subconjuntos latinos e devolve-os como @font-face base64."""
-    css = fetch(FONT_CSS)
+    """As letras do site (pasta fonts/) como @font-face em base64."""
     faces = []
-    for block in re.findall(r"@font-face\s*\{(.*?)\}", css, re.S):
-        rng = re.search(r"unicode-range:\s*([^;]+);", block)
-        # so o bloco 'latin'; os outros (cirilico, vietnamita) nao fazem falta
-        if not rng or "U+0000-00FF" not in rng.group(1):
+    for fam, peso, ficheiro in FACES:
+        caminho = os.path.join(FONTES, ficheiro)
+        if not os.path.exists(caminho):
+            print(f"  ! falta {ficheiro} — o cartao sai com a letra de reserva")
             continue
-        fam = re.search(r"font-family:\s*'([^']+)'", block).group(1)
-        style = re.search(r"font-style:\s*(\w+)", block).group(1)
-        weight = re.search(r"font-weight:\s*(\d+)", block).group(1)
-        url = re.search(r"url\((https://[^)]+)\)", block).group(1)
-        b64 = base64.b64encode(fetch(url, binary=True)).decode()
-        faces.append(f"@font-face{{font-family:'{fam}';font-style:{style};"
-                     f"font-weight:{weight};src:url(data:font/woff2;base64,{b64}) format('woff2')}}")
-        print(f"  fonte embebida: {fam} {style} {weight}")
-    if not faces:
-        print("  ! nao consegui as fontes — o cartao sai em Georgia")
+        b64 = base64.b64encode(open(caminho, "rb").read()).decode()
+        faces.append(f"@font-face{{font-family:'{fam}';font-weight:{peso};"
+                     f"src:url(data:font/woff2;base64,{b64}) format('woff2')}}")
+        print(f"  fonte embebida: {fam} {peso}")
     return "<style>" + "\n".join(faces) + "</style>"
 
 

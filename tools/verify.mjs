@@ -403,82 +403,28 @@ async function navegador(dir, etiqueta){
     await p.close();
   }
 
-  /* --- texto branco sobre o ceu (Out 2026) ---
-     O topo do index e a cabeca da loja tem texto branco por cima do ceu do
-     Survival of Kings, com um veu azul. O teste de cima salta tudo o que tem
-     background-image (a cor computada nao diz nada sobre uma imagem), por
-     isso este mede nos pixeis: tira a cor ao texto (e as linhas e bordas
-     brancas), fotografa a caixa de cada linha e compara o branco com o pixel
-     claro do que ficou por tras (percentil 95, para uma ave de 2px nao
-     decidir o teste). Dia e noite, desktop e telemovel. 4,5:1 ao texto
-     pequeno, 3:1 aos titulos (24px ou mais). Testado contra um veu tirado. */
+  /* --- a abertura: o titulo tem sempre duas linhas (Out 2026 (3)) ---
+     Desde o redesenho "a obra primeiro" a parede esta no primeiro ecra, logo
+     a seguir ao titulo. A reserva do titulo (2,04em) so e exacta se ele tiver
+     sempre duas linhas: com tres, o texto que chega do JS empurrava a parede
+     toda. O PT ("Ilustracao e design de personagens") e o mais comprido.
+     Varre-se a largura, nas duas linguas, com a letra final ja carregada.
+     (Os testes do ceu e das personagens recortadas sairam com eles.) */
   {
     const maus = [];
-    const alvos = { 'index.html': ['.hero h1', '.hero .tag', '.hero .btn:not(.fill)'],
-                    'loja.html':  ['.page-head .kicker', '.page-head h1', '.page-head .btn'] };
-    const lp = await nova(400);                       // a pagina que le os pixeis
-    const lum95 = png => lp.evaluate(async b64 => {
-      const img = new Image(); img.src = 'data:image/png;base64,' + b64; await img.decode();
-      const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
-      const g = c.getContext('2d'); g.drawImage(img, 0, 0);
-      const d = g.getImageData(0, 0, c.width, c.height).data, L = [];
-      const f = x => { x /= 255; return x <= 0.03928 ? x/12.92 : Math.pow((x+0.055)/1.055, 2.4); };
-      for (let i = 0; i < d.length; i += 4) L.push(0.2126*f(d[i]) + 0.7152*f(d[i+1]) + 0.0722*f(d[i+2]));
-      L.sort((a, b) => a - b); return L[Math.floor(L.length * .95)];
-    }, png.toString('base64'));
-    for (const [pag, sels] of Object.entries(alvos)) for (const w of [1280, 390]) for (const tema of ['light', 'dark']) {
+    for (const lq of ['', '?lang=pt']) for (const w of [320, 360, 390, 430, 620, 700, 780, 900, 980, 1024, 1180, 1280, 1440, 1600]) {
       const p = await nova(w);
-      await p.goto(base + pag, { waitUntil: 'networkidle' });
-      await p.evaluate(t => document.documentElement.setAttribute('data-theme', t), tema);
-      await p.addStyleTag({ content: '.hero *,.page-head *{color:transparent!important;border-color:transparent!important;outline:0!important} .hero h1::before,.page-head .kicker::before{display:none!important}' });
-      await p.waitForTimeout(700);
-      for (const sel of sels) {
-        const caixas = await p.evaluate(s => [...document.querySelectorAll(s)].filter(e => e.getClientRects().length).map(e => {
-          const r = e.getBoundingClientRect(); return { x: r.x, y: r.y, width: r.width, height: r.height, px: parseFloat(getComputedStyle(e).fontSize) }; }), sel);
-        if (!caixas.length) { maus.push(`${pag} ${sel}: nao existe`); continue; }
-        for (const c of caixas) {
-          const png = await p.screenshot({ clip: { x: c.x, y: c.y, width: c.width, height: c.height } });
-          const r = 1.05 / ((await lum95(png)) + 0.05), min = c.px >= 24 ? 3 : 4.5;
-          if (r < min) maus.push(`${pag} ${w}px ${tema} ${sel} ${r.toFixed(2)}<${min}`);
-        }
-      }
-      await p.close();
-    }
-    await lp.close();
-    chk(maus.length === 0, 'texto branco sobre o ceu passa o contraste, nos pixeis (index e loja, dia e noite, 1280 e 390)', maus.slice(0, 6).join('  '));
-  }
-
-  /* --- as personagens nunca tapam texto (Out 2026) ---
-     Os recortes do Survival of Kings (.cut: o cavaleiro, o rapaz, a arqueira)
-     ficam em celulas proprias ou num canto da faixa do ceu. Varre-se a
-     largura, porque o email do Contacto (uma linha so, ~560px) e os botoes da
-     loja aproximam-se deles a medida que o ecra encolhe: a caixa de cada
-     recorte visivel nao pode cruzar a caixa de nenhum texto. */
-  {
-    const maus = [];
-    for (const pag of ['index.html', 'loja.html']) for (const w of [390, 620, 700, 800, 980, 1024, 1280, 1440, 1600]) {
-      const p = await nova(w);
-      await p.goto(base + pag, { waitUntil: 'networkidle' });
-      await p.waitForTimeout(300);
+      await p.goto(base + 'index.html' + lq, { waitUntil: 'networkidle' });
+      await p.evaluate(() => document.fonts.ready);
       const r = await p.evaluate(() => {
-        const cruz = (a, b) => a.left < b.right - 1 && b.left < a.right - 1 && a.top < b.bottom - 1 && b.top < a.bottom - 1;
-        const cuts = [...document.querySelectorAll('.cut')].filter(c => getComputedStyle(c).display !== 'none')
-          .map(c => ({ n: c.className.split(' ')[1], r: c.getBoundingClientRect() }));
-        const out = [];
-        for (const el of document.querySelectorAll('body *')) {
-          if (el.closest('.cut,script,style')) continue;
-          if (![...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())) continue;
-          const cs = getComputedStyle(el); if (cs.visibility === 'hidden' || cs.display === 'none') continue;
-          for (const rr of el.getClientRects()) for (const c of cuts)
-            if (cruz(rr, c.r)) out.push(`${c.n} x ${el.tagName.toLowerCase()}.${String(el.className).split(' ')[0]}`);
-        }
-        return { n: cuts.length, out: [...new Set(out)] };
+        const h = document.querySelector('.hero h1');
+        const lh = parseFloat(getComputedStyle(h).lineHeight);
+        return { linhas: Math.round(h.getBoundingClientRect().height / lh) };
       });
-      if (pag === 'index.html' && r.n < 2) maus.push(`${pag} ${w}px: so ${r.n} recortes`);
-      r.out.forEach(x => maus.push(`${pag} ${w}px ${x}`));
+      if (r.linhas !== 2) maus.push(`${lq || 'en'} ${w}px: ${r.linhas} linhas`);
       await p.close();
     }
-    chk(maus.length === 0, 'as personagens recortadas nao tapam texto nenhum (index e loja, 390 a 1600px)', maus.slice(0, 6).join('  '));
+    chk(maus.length === 0, 'o titulo da abertura tem sempre duas linhas (EN e PT, 320 a 1600px)', maus.slice(0, 6).join('  '));
   }
 
   /* --- seletores sem alvo e afordancias falsas --- */
