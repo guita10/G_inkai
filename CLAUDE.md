@@ -446,6 +446,31 @@ CLAUDE.md       this file
                   or fonts, and never run it with --persist: DESIGN.md is the
                   design system, and a design-system/MASTER.md would be a
                   second one
+  design-taste-frontend/  "taste-skill" v2: art direction for web pages,
+                  a source linter and a real-browser inspector (Node 22, no
+                  install). From github.com/Leonxlnx/taste-skill at 12af471
+                  (2.1.5): its skills/taste-skill folder copied unchanged plus
+                  its MIT LICENSE (the scroll-scene files its SKILL.md names
+                  are missing upstream). From the repo root:
+                  `node .claude/skills/design-taste-frontend/scripts/lint.mjs
+                  index.html loja.html` and `.../scripts/inspect.mjs
+                  index.html`. The inspector needs CHROME_PATH, and a cloud
+                  session runs as root, where Chromium only starts with
+                  --no-sandbox: point CHROME_PATH at a two-line wrapper that
+                  adds it. Working files land in .taste-skill/, which git
+                  ignores. It ranks BELOW this file and DESIGN.md, and its
+                  house rules contradict decisions made here: it bans
+                  hairlines (§6 is built on them), a third typeface, small
+                  spaced capitals, kickers and every gradient but a scrim
+                  (the sky's veil is one, on purpose). So: never let it deal
+                  a direction, palette or type (if ever, only with --keep
+                  palette,type); never use assets.mjs to bring in found
+                  pictures (every picture here is Frede's, §9.5); never fill
+                  copy with its "sample details" (§9.5 again); and do not
+                  silence its findings with taste-skill-ignore comments. Use
+                  it for what it measures (type sizes, margins, empty
+                  screens, text at the screen edge) and for its critique
+                  rubric, then weigh each finding against §1 to §10
 ```
 
 No feature folders, no `src/`, no routing. `index.html` is organised top to

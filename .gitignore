@@ -13,3 +13,8 @@ skills-lock.json
 .claude/skills/*
 !.claude/skills/grill-me/
 !.claude/skills/ui-ux-pro-max/
+!.claude/skills/design-taste-frontend/
+
+# a pasta de trabalho da taste-skill (folhas de direccao, capturas do
+# inspector): fica so na maquina, nunca no repo nem no deploy
+.taste-skill/
