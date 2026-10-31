@@ -448,6 +448,39 @@ async function navegador(dir, etiqueta){
     chk(maus.length === 0, 'texto branco sobre o ceu passa o contraste, nos pixeis (index e loja, dia e noite, 1280 e 390)', maus.slice(0, 6).join('  '));
   }
 
+  /* --- as personagens nunca tapam texto (Out 2026) ---
+     Os recortes do Survival of Kings (.cut: o cavaleiro, o rapaz, a arqueira)
+     ficam em celulas proprias ou num canto da faixa do ceu. Varre-se a
+     largura, porque o email do Contacto (uma linha so, ~560px) e os botoes da
+     loja aproximam-se deles a medida que o ecra encolhe: a caixa de cada
+     recorte visivel nao pode cruzar a caixa de nenhum texto. */
+  {
+    const maus = [];
+    for (const pag of ['index.html', 'loja.html']) for (const w of [390, 620, 700, 800, 980, 1024, 1280, 1440, 1600]) {
+      const p = await nova(w);
+      await p.goto(base + pag, { waitUntil: 'networkidle' });
+      await p.waitForTimeout(300);
+      const r = await p.evaluate(() => {
+        const cruz = (a, b) => a.left < b.right - 1 && b.left < a.right - 1 && a.top < b.bottom - 1 && b.top < a.bottom - 1;
+        const cuts = [...document.querySelectorAll('.cut')].filter(c => getComputedStyle(c).display !== 'none')
+          .map(c => ({ n: c.className.split(' ')[1], r: c.getBoundingClientRect() }));
+        const out = [];
+        for (const el of document.querySelectorAll('body *')) {
+          if (el.closest('.cut,script,style')) continue;
+          if (![...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())) continue;
+          const cs = getComputedStyle(el); if (cs.visibility === 'hidden' || cs.display === 'none') continue;
+          for (const rr of el.getClientRects()) for (const c of cuts)
+            if (cruz(rr, c.r)) out.push(`${c.n} x ${el.tagName.toLowerCase()}.${String(el.className).split(' ')[0]}`);
+        }
+        return { n: cuts.length, out: [...new Set(out)] };
+      });
+      if (pag === 'index.html' && r.n < 2) maus.push(`${pag} ${w}px: so ${r.n} recortes`);
+      r.out.forEach(x => maus.push(`${pag} ${w}px ${x}`));
+      await p.close();
+    }
+    chk(maus.length === 0, 'as personagens recortadas nao tapam texto nenhum (index e loja, 390 a 1600px)', maus.slice(0, 6).join('  '));
+  }
+
   /* --- seletores sem alvo e afordancias falsas --- */
   for (const pag of ['index.html', 'loja.html']) {
     const p = await nova(1280);

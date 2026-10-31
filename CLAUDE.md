@@ -168,13 +168,16 @@ images/           70 full-size JPEG (1600px longest side: 37 artworks, 3 project
 images/thumb/     70 thumbnails (760px) + WebP
 images/merch/     four 800x800 shop-card photos (loja.html). Not artwork: dims.py
                   and make-webp.py only read images/ itself, so they skip it
-images/bg/        the two Survival of Kings originals used as backgrounds
-                  (Oct 2026): sky-900/1920 (.webp + .jpg) behind the hero and
-                  the shop's page head; cast-1000/1920 under the commissions;
-                  cast-night-* is the same file with only the outer white
-                  canvas made transparent, for the night theme (the characters
-                  and the grey plate are untouched). Not artwork in the
-                  gallery: dims.py and make-webp.py only read images/ itself
+images/bg/        Survival of Kings originals used as decoration (Oct 2026),
+                  not artwork in the gallery (dims.py and make-webp.py only
+                  read images/ itself):
+                  sky-900/1920 (.webp + .jpg): behind the hero and the shop's
+                    page head
+                  cast-cut-1000/1920: the seven, cut out by Frede (no
+                    background), under the commissions on both pages
+                  knight-1000, boy-1000, archer-900 (.webp) + a small .png
+                    each as the fallback: Frede's cut-outs, trimmed to the
+                    figure and nothing else changed
 images/frog-logo.svg
                   the logo: the frog, traced to vector, on a green coin. Used by
                   the bar and the social card. Not artwork; SVG, so dims.py and
@@ -319,14 +322,36 @@ the structural device. There is **no elevation shadow anywhere** — the only tw
 ring out of the timeline's upcoming-event dot. Do not introduce elevation,
 glassmorphism, or a card with a border *and* a shadow.
 
-**Two pictures are backgrounds, and only these two**: the Survival of Kings
-sky (the hero, the shop's page head) and cast (under the commissions, on the
-home page and the shop). They are CSS backgrounds, full-bleed by negative
-margin plus padding inside `.wrap`, with WebP through `image-set()` and a
-JPEG/PNG line before it as the fallback. The cast never sits behind text (the
-mock-up proved it unreadable); by day `background-blend-mode:multiply` melts
-its white canvas into `--void`, by night the `cast-night` file is used
-instead. Any text placed over a picture needs the veil and the pixel check in
+**Survival of Kings pictures are the decoration, and only these**: all CSS
+backgrounds (no `<img>`, no CONFIG entry: they are not the portfolio), WebP
+through `image-set()` with a JPEG/PNG line before it as the fallback.
+
+- **The sky** behind the hero and the shop's page head, full-bleed by negative
+  margin plus padding inside `.wrap`. Text over it is white, on the veil.
+- **The cast** (`cast-cut`, no background) under the commissions on both
+  pages, below the text, never behind it. One file for day and night.
+- **Three characters (`.cut`)**, each a decorative `<div aria-hidden>` whose
+  `::before` holds the drawing: the knight at the end of About (index), the
+  white-haired boy in Contact (index), the archer in the shop's sky band
+  (loja). The rules they follow:
+  - **Each rises from the side its drawing is cut on**: the knight is cut
+    left and bottom, so he sits flush with the screen's left edge
+    (`--bleed`); the boy is cut right and bottom, so the right edge; the
+    archer only at the bottom. Never flip or recrop a drawing to make it fit
+    elsewhere.
+  - **Each stands on a hairline**: the next section's border, the footer's,
+    or the bottom of the sky band. `#about` and `#contact` have no bottom
+    padding for that reason; the column beside the figure keeps it.
+  - **Never behind text.** The knight and the boy have their own grid cells;
+    the archer is the one absolute figure, in the band's right corner, and is
+    hidden at 620px and below. `verify.mjs` sweeps 390 to 1600px and fails if
+    any figure's box crosses any text box.
+  - `aspect-ratio` reserves each stage, so nothing shifts when it loads.
+  - **The entrance**: the drawing rises 14% out of its own stage (overflow
+    hidden) with the reveal curve, once, when the stage scrolls in (the
+    archer on page load). Under reduced motion it is simply there.
+
+Any text placed over a picture needs a veil and the pixel check in
 `verify.mjs`.
 
 **Radius is a documented two-value system**, and mixing outside it is a bug:
@@ -632,6 +657,9 @@ The checks themselves, and why each one exists:
   made transparent, each line's box is photographed, and white is compared
   with the 95th-percentile pixel behind it, day and night, at 1280 and 390px.
   Tested against a removed veil.
+- **The characters never cover text**: each visible `.cut` box against every
+  text box, 390 to 1600px, on the home page and the shop. Tested against an
+  oversized archer.
 - **EN/PT parity** across every `data-t` key.
 - **No horizontal overflow** — sweep widths, don't spot-check. The 621–743px
   band was broken for months and 390/768/1440 all looked fine.

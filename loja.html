@@ -498,26 +498,28 @@ h2{font-size:clamp(1.7rem,3.6vw,2.6rem);text-transform:uppercase;letter-spacing:
 .ask a{color:var(--sky-lift);text-decoration:none;border-bottom:1px solid var(--hair);transition:border-color .2s ease}
 .ask a:hover{border-color:var(--sky-lift)}
 /* Out 2026 (2): o elenco dos sete (Survival of Kings, original do Frede)
-   fecha as comissoes: personagens, que e o que se encomenda. Fica POR BAIXO
-   do texto, nunca atras dele: atras, a lista dos formatos lia-se mal
-   (experimentado na maqueta). O aspect-ratio reserva o espaco antes de a
-   imagem chegar, por isso nao salta nada.
-   De dia o branco da imagem funde-se com o fundo (multiply: branco x fundo =
-   fundo) e a peca assenta na pagina sem rectangulo nenhum. */
+   fecha as comissoes, por baixo do texto e nunca atras dele. O recorte sem
+   fundo serve de dia e de noite (ver o index). */
 #comissoes::after{
-  content:"";display:block;width:100%;aspect-ratio:1920/1358;margin-top:clamp(30px,5vw,60px);
-  background:url("images/bg/cast-1920.jpg") center/contain no-repeat var(--void);
-  background:image-set(url("images/bg/cast-1920.webp") type("image/webp"),url("images/bg/cast-1920.jpg") type("image/jpeg")) center/contain no-repeat var(--void);
-  background-blend-mode:multiply;
+  content:"";display:block;width:100%;aspect-ratio:5424/2778;margin-top:clamp(30px,5vw,60px);
+  background:url("images/bg/cast-cut-1000.png") center/contain no-repeat;
+  background:image-set(url("images/bg/cast-cut-1920.webp") type("image/webp"),url("images/bg/cast-cut-1000.png") type("image/png")) center/contain no-repeat;
 }
-/* de noite nao ha branco com que fundir (multiply sobre o azul escurecia a
-   peca toda). Usa-se outra versao do mesmo ficheiro: so o branco de FORA, o
-   que toca nas bordas, ficou transparente; as personagens e a placa cinzenta
-   ficam inteiras, e o nevoeiro dos pes esbate na noite como no original
-   esbate no branco. (Feita a partir do original, Out 2026.) */
-[data-theme="dark"] #comissoes::after{background-blend-mode:normal;background-color:transparent;
-  background-image:url("images/bg/cast-night-1000.png");
-  background-image:image-set(url("images/bg/cast-night-1920.webp") type("image/webp"),url("images/bg/cast-night-1000.png") type("image/png"))}
+/* a arqueira (Survival of Kings) de pe no fundo da faixa do ceu, a direita.
+   Esta cortada so em baixo, por isso assenta no fim da faixa. Fica fora do
+   caminho do texto (o titulo e os botoes estao a esquerda; o verify.mjs
+   confirma que nao se tocam de 621 a 1600px) e sai no telemovel, onde nao ha
+   lado para ela. A faixa cresce o suficiente para a ter inteira.
+   Entra uma vez, ao abrir a pagina: sobe de dentro do proprio palco. */
+.cut{position:absolute;overflow:hidden;pointer-events:none;bottom:0;
+  right:calc(max(0px, (100vw - 1240px) / 2) + 26px)}
+.cut::before{content:"";position:absolute;inset:0;background-size:contain;background-repeat:no-repeat;background-position:center bottom}
+.cut-archer{width:min(36vw,440px);aspect-ratio:3738/3867}
+.cut-archer::before{background-image:url("images/bg/archer-560.png");
+  background-image:image-set(url("images/bg/archer-900.webp") type("image/webp"),url("images/bg/archer-560.png") type("image/png"));
+  animation:sobe .9s cubic-bezier(.2,.7,.3,1) .15s both}
+@keyframes sobe{from{transform:translateY(14%);opacity:0}}
+.page-head{min-height:calc(min(36vw,440px) * 3867 / 3738);justify-content:center}
 
 footer{font-family:var(--f-ui);
   padding:26px 0 46px;border-top:1px solid var(--hair);display:flex;justify-content:space-between;
@@ -551,16 +553,18 @@ footer a:hover{color:var(--bone)}
     background:var(--veu),image-set(url("images/bg/sky-900.webp") type("image/webp"),url("images/bg/sky-900.jpg") type("image/jpeg")) center 88%/cover no-repeat}
   [data-theme="dark"] .page-head{--veu:linear-gradient(180deg,rgba(8,26,40,.86) 0%,rgba(8,26,40,.55) 100%)}
   /* o elenco mais leve no telemovel */
-  #comissoes::after{background-image:url("images/bg/cast-1000.jpg");
-    background-image:image-set(url("images/bg/cast-1000.webp") type("image/webp"),url("images/bg/cast-1000.jpg") type("image/jpeg"))}
-  [data-theme="dark"] #comissoes::after{background-image:url("images/bg/cast-night-1000.png");
-    background-image:image-set(url("images/bg/cast-night-1000.webp") type("image/webp"),url("images/bg/cast-night-1000.png") type("image/png"))}
+  #comissoes::after{background-image:url("images/bg/cast-cut-1000.png");
+    background-image:image-set(url("images/bg/cast-cut-1000.webp") type("image/webp"),url("images/bg/cast-cut-1000.png") type("image/png"))}
+  /* no telemovel o titulo e os botoes ocupam a largura toda: a arqueira sai */
+  .cut-archer{display:none}
+  .page-head{min-height:0}
   .brand b{display:none}          /* o selo chega; o nome nao cabe ao lado dos botoes */
 }
 /* §9.8 — sem efeitos nenhuns. A textura do grao fica: e parada. */
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   body,.knob,.btn,.back,.ask a,footer a,.opt select,.tirar{transition:none}
+  .cut-archer::before{animation:none}
   .btn:active,.knob:active{transform:none}
 }
 </style>
@@ -597,6 +601,8 @@ footer a:hover{color:var(--bone)}
       <a class="btn" href="#merch" id="jumpShop"></a>
       <a class="btn" href="#comissoes" id="jumpComm"></a>
     </nav>
+    <!-- a arqueira do Survival of Kings: decoracao, o desenho e um fundo no CSS -->
+    <div class="cut cut-archer" aria-hidden="true"></div>
   </div>
 
   <!-- MERCH — escondida enquanto CONFIG.shopOpen for false -->

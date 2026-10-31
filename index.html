@@ -884,7 +884,58 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 /* ================= ABOUT ================= */
 /* a bio a esquerda, o percurso a direita. start e nao center: as duas
    colunas tem alturas muito diferentes e centradas a mais curta flutuava. */
-.about{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(38px,6vw,80px);align-items:start}
+.about{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(38px,6vw,80px);align-items:start;
+  /* o cavaleiro por baixo da bio, na coluna da esquerda; o percurso ocupa a
+     direita toda. A seccao perde o padding de baixo para ele pisar o fio do
+     Contacto; o percurso guarda esse espaco como seu. */
+  grid-template-areas:"bio tl" "knight tl";grid-template-rows:auto 1fr}
+.about > :first-child{grid-area:bio}
+.about-tl{grid-area:tl;padding-bottom:clamp(56px,8vw,96px)}
+#about{padding-bottom:0}
+/* o Contacto: o texto a esquerda, o rapaz a direita, e o pe dele no fio do
+   rodape. A coluna do texto e a maior: o email, numa linha so, mede ~560px. */
+/* o texto fica em cima (com align-items:end descia e abria um buraco por
+   baixo do titulo); o rapaz e que desce ate ao fio, com o align-self dele */
+.contact-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:clamp(24px,4vw,56px);align-items:start}
+.contact-grid > :first-child{padding-bottom:clamp(56px,8vw,96px)}
+#contact{padding-bottom:0}
+
+/* ================= AS PERSONAGENS (Out 2026) =================
+   Recortes sem fundo do Survival of Kings, originais do Frede, ao longo da
+   pagina: o cavaleiro no fim do Sobre e o rapaz do cabelo branco no Contacto
+   (a arqueira esta na loja; o elenco, nas comissoes). Cada um nasce do lado
+   em que o desenho foi cortado: o cavaleiro esta cortado a esquerda e em
+   baixo, por isso sobe do canto de baixo a esquerda, encostado a borda do
+   ecra; o rapaz esta cortado a direita e em baixo, e sobe do canto oposto.
+   O pe de cada um assenta num fio (o border-top da seccao seguinte, ou do
+   rodape): o sistema desenha linhas, e eles pisam-nas.
+   Nunca ficam atras de texto: cada um tem a sua celula na grelha, e o
+   verify.mjs confirma-o de 390 a 1600px. O aspect-ratio reserva o espaco, por
+   isso nada salta quando a imagem chega.
+   --bleed e a distancia da coluna a borda do ecra: a margem do .wrap (26px)
+   mais o que sobra de cada lado acima dos 1240px.
+   A entrada: o desenho sobe de dentro do palco (overflow:hidden) quando o
+   palco entra no ecra, pela curva dos outros reveals. E rara (uma vez por
+   visita), por isso pode levar um pouco mais do que um botao. Sem
+   movimento, aparece parado (ver o bloco reduced-motion). */
+.cut{position:relative;overflow:hidden;pointer-events:none;
+  --bleed:calc(max(0px, (100vw - 1240px) / 2) + 26px)}
+.cut.rv{opacity:1;transform:none}        /* o palco fica; o desenho e que sobe */
+.cut::before{content:"";position:absolute;inset:0;background-size:contain;background-repeat:no-repeat;
+  transition:transform .9s cubic-bezier(.2,.7,.3,1),opacity .7s ease}
+.cut:not(.in)::before{transform:translateY(14%);opacity:0}
+/* o cavaleiro: cortado a esquerda, por isso encosta a borda esquerda do ecra */
+.cut-knight{grid-area:knight;align-self:end;aspect-ratio:3989/3279;
+  width:min(calc(100% + var(--bleed)), 640px);margin-left:calc(-1 * var(--bleed))}
+.cut-knight::before{background-position:left bottom;
+  background-image:url("images/bg/knight-600.png");
+  background-image:image-set(url("images/bg/knight-1000.webp") type("image/webp"),url("images/bg/knight-600.png") type("image/png"))}
+/* o rapaz: cortado a direita, encosta a borda direita, e olha para o email */
+.cut-boy{align-self:end;justify-self:end;aspect-ratio:3777/3745;
+  width:calc(100% + var(--bleed));max-width:calc(600px + var(--bleed));margin-right:calc(-1 * var(--bleed))}
+.cut-boy::before{background-position:right bottom;
+  background-image:url("images/bg/boy-600.png");
+  background-image:image-set(url("images/bg/boy-1000.webp") type("image/webp"),url("images/bg/boy-600.png") type("image/png"))}
 .about .body{font-family:var(--f-disp);font-size:1.28rem;line-height:1.6}
 .about .body p + p{margin-top:.85em}
 /* Esta e a unica caixa de texto da pagina SEM altura reservada, e e de
@@ -909,25 +960,15 @@ section{padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--hair)}
 .comm-band{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:clamp(30px,6vw,80px);align-items:start}
 /* Out 2026 (2): o elenco dos sete (Survival of Kings, original do Frede)
    fecha as comissoes: personagens, que e o que se encomenda. Fica POR BAIXO
-   do texto, nunca atras dele: atras, a lista dos formatos lia-se mal
-   (experimentado na maqueta). O aspect-ratio reserva o espaco antes de a
-   imagem chegar, por isso nao salta nada.
-   De dia o branco da imagem funde-se com o fundo (multiply: branco x fundo =
-   fundo) e a peca assenta na pagina sem rectangulo nenhum. */
+   do texto, nunca atras dele (atras, a lista dos formatos lia-se mal). Desde
+   que o Frede mandou o recorte sem fundo, e o mesmo ficheiro de dia e de
+   noite: sem multiply nem versao da noite. O aspect-ratio reserva o espaco
+   antes de a imagem chegar, por isso nao salta nada. */
 #comm::after{
-  content:"";display:block;width:100%;aspect-ratio:1920/1358;margin-top:clamp(30px,5vw,60px);
-  background:url("images/bg/cast-1920.jpg") center/contain no-repeat var(--void);
-  background:image-set(url("images/bg/cast-1920.webp") type("image/webp"),url("images/bg/cast-1920.jpg") type("image/jpeg")) center/contain no-repeat var(--void);
-  background-blend-mode:multiply;
+  content:"";display:block;width:100%;aspect-ratio:5424/2778;margin-top:clamp(30px,5vw,60px);
+  background:url("images/bg/cast-cut-1000.png") center/contain no-repeat;
+  background:image-set(url("images/bg/cast-cut-1920.webp") type("image/webp"),url("images/bg/cast-cut-1000.png") type("image/png")) center/contain no-repeat;
 }
-/* de noite nao ha branco com que fundir (multiply sobre o azul escurecia a
-   peca toda). Usa-se outra versao do mesmo ficheiro: so o branco de FORA, o
-   que toca nas bordas, ficou transparente; as personagens e a placa cinzenta
-   ficam inteiras, e o nevoeiro dos pes esbate na noite como no original
-   esbate no branco. (Feita a partir do original, Out 2026.) */
-[data-theme="dark"] #comm::after{background-blend-mode:normal;background-color:transparent;
-  background-image:url("images/bg/cast-night-1000.png");
-  background-image:image-set(url("images/bg/cast-night-1920.webp") type("image/webp"),url("images/bg/cast-night-1000.png") type("image/png"))}
 /* linhas, nao caixas: cada formato numa linha de cabelo, com o numero da casa */
 .comm-formats{list-style:none;border-top:1px solid var(--hair);counter-reset:f}
 .comm-formats li{display:flex;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid var(--hair);
@@ -1069,6 +1110,7 @@ footer{font-family:var(--f-ui);
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .rv{opacity:1;transform:none;transition:none}
+  .cut::before,.cut:not(.in)::before{transform:none;opacity:1;transition:none}
   .proj,.frame,.btn,.mail{transition:none}
   /* faltavam os controlos: knob (tema/idioma), chips de filtro e botoes da
      lightbox. Todos eram transicoes de cor, mas o .btn ao lado tambem so muda
@@ -1107,13 +1149,18 @@ footer{font-family:var(--f-ui);
   .proj-feat{min-height:calc(.56 * (min(1240px,100vw) - 52px))}
   .pf{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
   .pf-strip{grid-template-columns:repeat(4,minmax(0,1fr))}
-  .about{grid-template-columns:1fr;gap:38px}
+  .about{grid-template-columns:1fr;gap:38px;grid-template-areas:"bio" "tl" "knight";grid-template-rows:auto}
+  .about-tl{padding-bottom:0}
+  .cut-knight{width:min(calc(100% + var(--bleed)), 520px)}
+  /* 28px e nao menos: os links entram 20px mais abaixo (o .rv) e, com
+     10px, tocavam no rapaz durante a entrada */
+  .contact-grid{grid-template-columns:1fr;gap:28px}
+  .contact-grid > :first-child{padding-bottom:0}
+  .cut-boy{width:min(calc(100% + var(--bleed)), calc(480px + var(--bleed)))}
   .comm-band{grid-template-columns:1fr}
   /* o elenco mais leve no telemovel */
-  #comm::after{background-image:url("images/bg/cast-1000.jpg");
-    background-image:image-set(url("images/bg/cast-1000.webp") type("image/webp"),url("images/bg/cast-1000.jpg") type("image/jpeg"))}
-  [data-theme="dark"] #comm::after{background-image:url("images/bg/cast-night-1000.png");
-    background-image:image-set(url("images/bg/cast-night-1000.webp") type("image/webp"),url("images/bg/cast-night-1000.png") type("image/png"))}
+  #comm::after{background-image:url("images/bg/cast-cut-1000.png");
+    background-image:image-set(url("images/bg/cast-cut-1000.webp") type("image/webp"),url("images/bg/cast-cut-1000.png") type("image/png"))}
 }
 @media (max-width:620px){
   /* Em telemovel os projectos passam para uma fila que se arrasta de lado:
@@ -1309,6 +1356,8 @@ footer{font-family:var(--f-ui);
         <h3 class="about-tl-title" data-t="tlTitle"></h3>
         <div class="tl" id="tl"></div>
       </div>
+      <!-- o cavaleiro do Survival of Kings: decoracao, o desenho e um fundo no CSS -->
+      <div class="cut cut-knight rv" aria-hidden="true"></div>
     </div>
   </section>
 
@@ -1319,13 +1368,17 @@ footer{font-family:var(--f-ui);
         <h2 class="sec-title rv" data-t="contactTitle"></h2>
       </div>
     </div>
-    <div class="rv">
-      <p class="lede" style="margin-bottom:26px" data-t="contactBody"></p>
-      <div class="mail-row">
-        <a class="mail" id="mailLink" href="#"></a>
-        <button class="btn btn-sm" id="copyMail" type="button" data-t="copyEmail"></button>
+    <div class="contact-grid">
+      <div class="rv">
+        <p class="lede" style="margin-bottom:26px" data-t="contactBody"></p>
+        <div class="mail-row">
+          <a class="mail" id="mailLink" href="#"></a>
+          <button class="btn btn-sm" id="copyMail" type="button" data-t="copyEmail"></button>
+        </div>
+        <div class="c-links" id="cLinks"></div>
       </div>
-      <div class="c-links" id="cLinks"></div>
+      <!-- o rapaz do cabelo branco (Survival of Kings): decoracao, fundo no CSS -->
+      <div class="cut cut-boy rv" aria-hidden="true"></div>
     </div>
   </section>
 

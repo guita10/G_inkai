@@ -21,6 +21,13 @@ line-up of seven characters. The palette was measured off them, the sky opens
 the home page and the shop full-bleed, and the cast closes the commissions.
 Day is the default; a phone in dark mode gets the same sky at night.
 
+Three of the cast then walk into the layout as cut-outs (Frede's own, no
+background): the knight under the bio in About, the white-haired boy beside
+the email in Contact, the archer in the shop's sky band. Each rises from the
+edge its drawing is cut on and stands on one of the site's hairlines, like a
+figure stepping onto the ruled lines of a proof sheet. They are the only
+decoration besides the sky, and they never stand behind text.
+
 A cloud-white editorial field where the artwork is the only thing allowed to
 be loud. Off-white paper, one blue taken from the top of the sky and used like
 a stamp pad, and a great deal of air. The mood is a printer's proof sheet rather than a product page:
@@ -289,7 +296,9 @@ inert. Do not add it to Playfair and assume it took.
 - No gradient text on headlines.
 - No shadows. This system draws hairlines.
 - No custom cursors.
-- No overlapping or absolutely-stacked content.
+- No overlapping or absolutely-stacked content. (One exception, measured: the
+  archer stands in the corner of the shop's sky band, absolutely placed, and
+  `verify.mjs` fails the build if her box ever crosses text.)
 - No equal-width column groups — not three cards, not four tiers.
 - No centred hero.
 - No split section headers (title left, text right).
