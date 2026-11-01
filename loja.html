@@ -144,6 +144,9 @@ const CONFIG = {
     en: {
       navShop: "Shop", navComm: "Commissions",
       backHome: "Portfolio",
+      /* etiquetas para o leitor de ecra (data-ta), nas duas linguas: estavam
+         so em ingles na marcacao (critica do Impeccable, 1 Nov 2026) */
+      a11yLang: "Switch language", a11yTheme: "Switch theme", a11yJump: "On this page",
       commJump: "Commissions",
       commTitle: "Commissions",
       commOpen: "Open", commClosed: "Closed",
@@ -202,6 +205,7 @@ const CONFIG = {
     pt: {
       navShop: "Loja", navComm: "Comissões",
       backHome: "Portefólio",
+      a11yLang: "Mudar de língua", a11yTheme: "Mudar de tema", a11yJump: "Nesta página",
       commJump: "Comissões",
       commTitle: "Comissões",
       commOpen: "Abertas", commClosed: "Fechadas",
@@ -609,8 +613,8 @@ footer a:hover{color:var(--bone)}
     </a>
     <a class="back" id="back" href="index.html">← <span id="backLabel"></span></a>
     <div class="knobs">
-      <button class="knob" id="langTgl" aria-label="Switch language">PT</button>
-      <button class="knob" id="themeTgl" aria-label="Switch theme">◐</button>
+      <button class="knob" id="langTgl" aria-label="Switch language" data-ta="a11yLang">PT</button>
+      <button class="knob" id="themeTgl" aria-label="Switch theme" data-ta="a11yTheme">◐</button>
     </div>
   </div>
 </header>
@@ -628,7 +632,7 @@ footer a:hover{color:var(--bone)}
       <span class="badge" id="headBadge" hidden></span>
     </div>
     <p class="lede" id="shopIntro"></p>
-    <nav class="jump" id="jump" aria-label="On this page">
+    <nav class="jump" id="jump" aria-label="On this page" data-ta="a11yJump">
       <a class="btn" href="#comissoes" id="jumpComm"></a>
     </nav>
   </div>
@@ -868,6 +872,7 @@ function render(){
   const open = !!CONFIG.commissionsOpen;
   document.documentElement.lang = LANG;
   $('#langTgl').textContent = LANG === 'en' ? 'PT' : 'EN';
+  document.querySelectorAll('[data-ta]').forEach(el => { if(t[el.dataset.ta]) el.setAttribute('aria-label', t[el.dataset.ta]); });
   /* o regresso ao portefolio leva a lingua consigo */
   const home = LANG === 'pt' ? 'index.html?lang=pt' : 'index.html';
   $('#brand').href = home; $('#back').href = home;

@@ -259,6 +259,12 @@ const CONFIG = {
          inventado. Uma coisa a menos a competir com a obra. */
       heroRole: "Illustration and character design",
       heroPick: "Choose a piece", heroShow: "Show",
+      /* o que o leitor de ecra le nos controlos sem texto (aria-label) e a
+         ligacao de saltar: estavam escritos em ingles na marcacao e ficavam
+         em ingles na pagina em PT (critica do Impeccable, 1 Nov 2026). Os
+         elementos levam data-ta="chave"; o renderText() poe a etiqueta. */
+      a11ySkip: "Skip to work", a11yNav: "Main", a11yLang: "Switch language", a11yTheme: "Switch theme",
+      a11yFilters: "Filter gallery", a11yViewer: "Artwork viewer", a11yClose: "Close", a11yPrev: "Previous", a11yNext: "Next",
       ctaWork: "View work", ctaComm: "Commissions",
       navWork: "Work", navProjects: "Projects", navAbout: "About", navComm: "Commissions", navContact: "Contact",
       navMenu: "Menu",
@@ -304,7 +310,7 @@ const CONFIG = {
       commTitle: "Commissions",
       commOpen: "Open", commClosed: "Closed",
       commIntro: "Four formats, from a bust to a full character sheet. Tell me what you have in mind and I reply with the format, the price and the timeline.",
-      commSee: "See the four formats",
+      commCta: "Ask about a commission",
       tiers: {
         headshot: { name: "Headshot / Bust", desc: "Head and shoulders, fully rendered." },
         half:     { name: "Half body",       desc: "Waist-up illustration, fully rendered." },
@@ -316,6 +322,7 @@ const CONFIG = {
       contactBody: "For commissions, collabs or publishing, email is fastest. For everything else, Instagram.",
       footerNote: "Drawn & built by hand.",
       lightboxHint: "Esc to close · ← → to browse",
+      lightboxHintTouch: "Swipe to browse",
       lbOf: "of",
       placeholderNote: "placeholder, swap in /images",
       wallEmpty: "Nothing in this category yet.",
@@ -325,6 +332,8 @@ const CONFIG = {
     pt: {
       heroRole: "Ilustração e design de personagens",
       heroPick: "Escolhe uma peça", heroShow: "Mostrar",
+      a11ySkip: "Saltar para o trabalho", a11yNav: "Principal", a11yLang: "Mudar de língua", a11yTheme: "Mudar de tema",
+      a11yFilters: "Filtrar a galeria", a11yViewer: "Visualizador de obras", a11yClose: "Fechar", a11yPrev: "Anterior", a11yNext: "Seguinte",
       ctaWork: "Ver trabalho", ctaComm: "Comissões",
       navWork: "Trabalho", navProjects: "Projetos", navAbout: "Sobre", navComm: "Comissões", navContact: "Contacto",
       navMenu: "Menu",
@@ -359,7 +368,7 @@ const CONFIG = {
       commTitle: "Comissões",
       commOpen: "Abertas", commClosed: "Fechadas",
       commIntro: "Quatro formatos, do busto à character sheet completa. Diz-me o que tens em mente e respondo com o formato, o valor e o prazo.",
-      commSee: "Ver os quatro formatos",
+      commCta: "Pedir uma comissão",
       tiers: {
         headshot: { name: "Headshot / Busto",   desc: "Cabeça e ombros, totalmente renderizado." },
         half:     { name: "Meio corpo",         desc: "Ilustração da cintura para cima, totalmente renderizada." },
@@ -371,6 +380,7 @@ const CONFIG = {
       contactBody: "Para comissões, colaborações ou publicação, o email é o mais rápido. Para tudo o resto, Instagram.",
       footerNote: "Desenhado & construído à mão.",
       lightboxHint: "Esc para fechar · ← → para navegar",
+      lightboxHintTouch: "Desliza para navegar",
       lbOf: "de",
       placeholderNote: "placeholder, substituir em /images",
       wallEmpty: "Ainda não há nada nesta categoria.",
@@ -553,10 +563,12 @@ header{
    Ver tools/make-logo.py */
 .logo{width:34px;height:34px;flex:none;display:block}
 .brand b{font-family:var(--f-disp);font-weight:700;font-size:1.125rem;letter-spacing:0}
-.links{font-family:var(--f-ui);display:flex;gap:26px;margin-left:auto;font-size:.875rem;font-weight:500}
+/* o espaco entre links encolhe um pouco perto dos 781px (16 a 26px): com as
+   setas de "Comissoes" e "Loja" a barra cheia nao cabia logo acima dos 780 */
+.links{font-family:var(--f-ui);display:flex;gap:clamp(16px,2vw,26px);margin-left:auto;font-size:.875rem;font-weight:500}
 /* padding vertical: a area de toque e do proprio link (44px ou mais) */
 .links a{text-decoration:none;color:var(--bone-dim);transition:color .2s;position:relative;
-  display:inline-block;padding:16px 0;min-height:calc(32px + 1.6em)}
+  display:inline-block;padding:16px 0;min-height:calc(32px + 1.6em);white-space:nowrap}
 /* O atributo hidden vale-se do display:none do browser, mas o inline-block de
    cima ganha-lhe. Sem isto, o link da loja com shopOpen:false ficava sem texto
    mas a ocupar espaco na barra. Vale para as duas copias (barra e painel). */
@@ -760,11 +772,15 @@ section{padding:clamp(64px,9vw,128px) 0 0}
    moldura (1,25 vezes a largura de uma coluna) mais os espacos entre filas.
    --wall-rows e GERADO pelo tools/dims.py, a partir do numero de pecas que a
    parede mostra ao abrir (wallPreview). Nao o escrevas a mao — muda a parede
-   e corre o script. --wall-w e a largura do .wrap sem as margens. */
+   e corre o script. --wall-w e a largura do .wrap sem as margens.
+   --cap-h e a linha do titulo por baixo de cada moldura: zero com rato (o
+   titulo sobe por cima da obra no hover), 28px num ecra de toque (ver o
+   bloco (hover:none)); entra uma vez por fila. */
 .wall{
   --wall-w:calc(min(1400px,100vw) - 2 * var(--pad));
   --wall-rows:4;
-  min-height:calc(var(--wall-rows) * 1.25 * (var(--wall-w) - (var(--cols) - 1) * 12px) / var(--cols) + (var(--wall-rows) - 1) * 12px);
+  --cap-h:0px;
+  min-height:calc(var(--wall-rows) * (1.25 * (var(--wall-w) - (var(--cols) - 1) * 12px) / var(--cols) + var(--cap-h)) + (var(--wall-rows) - 1) * 12px);
 }
 /* O passe-partout (1 Nov 2026): uma margem igual a toda a volta, 4% da
    largura da moldura. Antes a obra 4:5 ia ate a borda da moldura e so as
@@ -964,6 +980,9 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
 .lb-pos{font-family:var(--f-ui);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;
   color:#9BA0AA;text-align:center;margin-top:7px;font-variant-numeric:tabular-nums}
 .lb-hint{color:#9BA0AA;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;margin-top:8px;text-align:center}
+/* a dica de toque ("Desliza para navegar") so aparece em ecras de toque,
+   no lugar da das teclas (ver o bloco (hover:none)) */
+.lb-hint-touch{display:none}
 .lb-btn{position:fixed;border:1px solid rgba(255,255,255,.22);background:transparent;color:#fff;cursor:pointer;width:44px;height:44px;border-radius:999px;
   font:400 1.2rem var(--f-ui);   /* idem: sem isto era Arial */
   transition:background .2s ease,border-color .2s ease,color .2s ease,transform .12s ease-out}
@@ -971,12 +990,13 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
 .lb-close{top:22px;right:22px}
 
 /* Resposta ao carregar: 0,97 em 120ms. A .frame fica de fora (num telemovel
-   rolar a parede comeca com um toque nela). As setas ja usam translateY(-50%)
-   para se centrarem, por isso repetem-no. */
-.btn:active,.chip:active,.knob:active,.lb-close:active,.mini:active{transform:scale(.97)}
-.lb-prev:active,.lb-next:active{transform:translateY(-50%) scale(.97)}
-.lb-prev{left:18px;top:50%;transform:translateY(-50%)}
-.lb-next{right:18px;top:50%;transform:translateY(-50%)}
+   rolar a parede comeca com um toque nela). As setas centram-se com
+   calc(50% - 22px), metade dos 44px, e nao com translateY(-50%): assim o
+   carregar e o mesmo scale de todos os botoes, e no telemovel descem para
+   o fundo sem transform nenhum para desfazer. */
+.btn:active,.chip:active,.knob:active,.lb-btn:active,.mini:active{transform:scale(.97)}
+.lb-prev{left:18px;top:calc(50% - 22px)}
+.lb-next{right:18px;top:calc(50% - 22px)}
 
 
 /* ================= VFX ================= */
@@ -985,14 +1005,19 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
 
 /* 1. TINTA — os titulos revelam-se como tinta a espalhar-se no papel */
 .sec-title.rv{opacity:1;transform:none}   /* o reveal do titulo e o clip-path, nao o fade */
+/* O corte vai para la da caixa da linha (-.2em em cima, -.3em em baixo,
+   -.1em dos lados): com line-height 1.08 a mincho desce abaixo da caixa, e
+   um inset(0) cortava as pernas do y, do p e do j ("Say hi", "Featured
+   projects", "Projetos em destaque"; a critica do Impeccable apanhou-o,
+   1 Nov 2026). O verify mede a caixa do texto contra o corte. */
 .sec-title{
-  clip-path:inset(0 100% 0 0);
+  clip-path:inset(-.2em 100% -.3em -.1em);
   transition:clip-path 1.1s cubic-bezier(.16,.84,.36,1);
 }
 /* quem dispara e o .head (que e .rv e nao esta cortado): o IntersectionObserver
    do Chromium conta o clip-path, e um titulo cortado a zero nunca "entrava". */
 .sec-title.in,
-.head.in .sec-title{clip-path:inset(0 0 0 0)}
+.head.in .sec-title{clip-path:inset(-.2em -.1em -.3em -.1em)}
 
 /* 2. BRILHO — atravessa os botoes cheios (so transform) */
 .btn.fill{position:relative;overflow:hidden}
@@ -1027,6 +1052,27 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
   .frame:hover img,.hero-art:hover img{transform:none}
   .btn.fill:hover::after{transform:translateX(-200%)}
   .btn.fill:hover{background:var(--sky);color:#FFFFFF;border-color:var(--sky)}
+  /* A lightbox no toque (critica do Impeccable, 1 Nov 2026): as setas
+     transparentes ficavam por cima da obra e desapareciam nas de fundo
+     branco (Angela). Descem para os cantos de baixo, cheias de tinta, como o
+     fechar; o toque nao fica preso no hover branco. E a dica fala do gesto,
+     nao das teclas. O bloco dos 620px repete as setas, para janelas
+     estreitas com rato. */
+  .lb-btn,.lb-btn:hover{background:#030407;border-color:rgba(255,255,255,.22);color:#fff}
+  .lb-prev,.lb-next{top:auto;bottom:max(22px, env(safe-area-inset-bottom))}
+  .lb-hint{display:none}
+  .lb-hint-touch{display:block}
+  /* A parede no toque (critica do Impeccable, 1 Nov 2026): sem hover, a
+     faixa do titulo nunca subia e a parede nao dizia o nome de nenhuma obra.
+     Aqui o papel (o 4:5, o passe-partout de 4%, o --raise) passa da moldura
+     para a imagem, e o titulo fica por baixo, numa linha de 20px (com "..."
+     se for comprido; o nome inteiro esta na lightbox). A linha tem altura
+     fixa (8 + 20 = o --cap-h de 28px), para a reserva da parede a contar. */
+  .wall{--cap-h:28px}
+  .frame{aspect-ratio:auto;padding:0;background:none;overflow:visible}
+  .frame img,.frame .ph{aspect-ratio:4/5;height:auto;padding:4%;background:var(--raise)}
+  .frame .meta{position:static;transform:none;transition:none;background:none;padding:0;margin-top:8px;color:var(--bone-dim)}
+  .frame .meta .t{font:500 .875rem/20px var(--f-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 }
 
 /* Respeitar quem pediu menos movimento — desliga tudo isto */
@@ -1052,8 +1098,7 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
   /* :nth-child(n) para igualar a especificidade das regras da cascata */
   .nav-panel.open a:nth-child(n){transition-delay:0s}
   .nav-toggle .bars::before,.nav-toggle .bars::after{transition:none}
-  .btn:active,.chip:active,.knob:active,.lb-close:active,.mini:active{transform:none}
-  .lb-prev:active,.lb-next:active{transform:translateY(-50%)}
+  .btn:active,.chip:active,.knob:active,.lb-btn:active,.mini:active{transform:none}
   /* a lightbox abre e fecha de uma vez, sem fade nem crescer */
   .lb,.lb.open,.lb-stage{transition:none}
 }
@@ -1096,6 +1141,10 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
   /* as seis molduras repartem a largura; a fila guarda a altura delas */
   .hero-mini{margin-top:16px;gap:8px;min-height:calc((100vw - 2 * var(--pad) - 40px) / 6 * 1.25)}
   .mini{width:calc((100% - 40px) / 6)}
+  /* as setas da lightbox nos cantos de baixo, cheias (igual ao bloco
+     (hover:none), para uma janela estreita com rato) */
+  .lb-btn{background:#030407}
+  .lb-prev,.lb-next{top:auto;bottom:max(22px, env(safe-area-inset-bottom))}
   .bar{min-height:64px;gap:12px}
   .logo{width:30px;height:30px}
   .brand{gap:10px}
@@ -1116,13 +1165,16 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
 @media (min-width:621px) and (max-width:780px){
   .bar{gap:12px;min-height:71px}
   .links{gap:clamp(8px,1.4vw,14px);font-size:.75rem}
+  /* na barra condensada as setas nao cabem: os dois links continuam a ir
+     para a loja, so sem a seta */
+  .links .seta{display:none}
   .knobs{margin-left:12px}
 }
 </style>
 </head>
 <body>
 
-<a class="skip" href="#work">Skip to work</a>
+<a class="skip" href="#work" data-t="a11ySkip">Skip to work</a>
 
 <!-- Todo o texto do site e escrito pelo JavaScript a partir do CONFIG. Sem JS
      a pagina ficaria completamente vazia — isto garante que pelo menos o nome
@@ -1143,22 +1195,27 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
       <img class="logo" src="images/logo.svg" alt="" width="36" height="36">
       <b id="brandName"></b>
     </a>
-    <nav class="links" aria-label="Main">
-      <a href="#projects" data-t="navProjects"></a>
+    <!-- a ordem da pagina (trabalho, projectos, sobre, contacto) e, no fim,
+         as duas que saem para o loja.html, com a seta das ligacoes internas.
+         "Comissoes" ia para a faixa desta pagina e o botao da abertura com o
+         mesmo nome ia para a loja: agora os dois vao para a loja, onde esta o
+         pedido por email (critica do Impeccable, decisao do Frede, 1 Nov 2026). -->
+    <nav class="links" aria-label="Main" data-ta="a11yNav">
       <a href="#work"     data-t="navWork"></a>
+      <a href="#projects" data-t="navProjects"></a>
+      <a href="#about"    data-t="navAbout"></a>
+      <a href="#contact"  data-t="navContact"></a>
+      <a href="loja.html#comissoes" data-loja="#comissoes"><span data-t="navComm"></span><span class="seta" aria-hidden="true"> →</span></a>
       <!-- data-shop-link e nao um id: o painel do menu movel clona estes
            links com cloneNode(true), que copia o id tal e qual. Com id havia
            dois elementos #navShop no documento, o querySelector so apanhava um
            e o outro ficava com a visibilidade trocada. O atributo permite
            tratar as duas copias de uma vez. -->
-      <a href="loja.html" data-loja="" data-t="navShop" data-shop-link hidden></a>
-      <a href="#comm"     data-t="navComm"></a>
-      <a href="#about"    data-t="navAbout"></a>
-      <a href="#contact"  data-t="navContact"></a>
+      <a href="loja.html" data-loja="" data-shop-link hidden><span data-t="navShop"></span><span class="seta" aria-hidden="true"> →</span></a>
     </nav>
     <div class="knobs">
-      <button class="knob" id="langTgl" aria-label="Switch language">PT</button>
-      <button class="knob" id="themeTgl" aria-label="Switch theme">◐</button>
+      <button class="knob" id="langTgl" aria-label="Switch language" data-ta="a11yLang">PT</button>
+      <button class="knob" id="themeTgl" aria-label="Switch theme" data-ta="a11yTheme">◐</button>
       <button class="knob nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navPanel">
         <span class="bars" aria-hidden="true"></span>
         <span class="sr-only" data-t="navMenu"></span>
@@ -1241,7 +1298,7 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
   <section id="work">
     <div class="head wall-bar rv">
       <h2 class="sec-title rv" data-t="galleryTitle"></h2>
-      <div class="filters" id="filters" role="group" aria-label="Filter gallery"></div>
+      <div class="filters" id="filters" role="group" aria-label="Filter gallery" data-ta="a11yFilters"></div>
       <span class="count" id="workCount" aria-live="polite" aria-atomic="true"></span>
     </div>
     <div class="wall" id="wall"></div>
@@ -1279,7 +1336,7 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
       <div>
         <p class="lede rv" data-t="commIntro" style="margin:0 0 30px"></p>
         <div class="row rv">
-          <a class="btn fill" href="loja.html#comissoes" data-loja="#comissoes"><span data-t="commSee"></span> →</a>
+          <a class="btn fill" href="loja.html#comissoes" data-loja="#comissoes"><span data-t="commCta"></span> →</a>
           <a class="btn" href="loja.html#merch" data-loja="#merch" data-shop-link hidden><span data-t="navShop"></span> →</a>
         </div>
         <!-- os quatro formatos, so os nomes (§9.4: nada de precos, fases ou
@@ -1339,15 +1396,16 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
 </main>
 
 <!-- LIGHTBOX -->
-<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Artwork viewer">
-  <button class="lb-btn lb-close" id="lbClose" aria-label="Close">×</button>
-  <button class="lb-btn lb-prev"  id="lbPrev"  aria-label="Previous">‹</button>
-  <button class="lb-btn lb-next"  id="lbNext"  aria-label="Next">›</button>
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Artwork viewer" data-ta="a11yViewer">
+  <button class="lb-btn lb-close" id="lbClose" aria-label="Close" data-ta="a11yClose">×</button>
+  <button class="lb-btn lb-prev"  id="lbPrev"  aria-label="Previous" data-ta="a11yPrev">‹</button>
+  <button class="lb-btn lb-next"  id="lbNext"  aria-label="Next" data-ta="a11yNext">›</button>
   <div>
     <div class="lb-stage" id="lbStage"></div>
     <p class="lb-cap" id="lbCap"></p>
     <p class="lb-pos" id="lbPos"></p>
     <p class="lb-hint" data-t="lightboxHint"></p>
+    <p class="lb-hint lb-hint-touch" data-t="lightboxHintTouch"></p>
   </div>
 </div>
 <script>
@@ -1557,6 +1615,8 @@ function renderHeroMini(){
 function renderText(){
   const t = T();
   $$('[data-t]').forEach(el => el.textContent = t[el.dataset.t] || '');
+  /* as etiquetas dos controlos sem texto, na lingua da pagina (data-ta) */
+  $$('[data-ta]').forEach(el => { if(t[el.dataset.ta]) el.setAttribute('aria-label', t[el.dataset.ta]); });
   $$('[data-ph]').forEach(el => el.textContent = t.placeholderNote);
   document.documentElement.lang = LANG;
   $('#langTgl').textContent = LANG === 'en' ? 'PT' : 'EN';

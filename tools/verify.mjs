@@ -162,7 +162,7 @@ function config(){
      index (foi assim que o projeto.html acumulou precos mortos). */
   const L = carrega('loja.html');
   const comuns = ['artistName', 'realName', 'email', 'instagram', 'commissionsOpen', 'tiers', 'shopOpen'];
-  const txt = ['commTitle', 'commOpen', 'commClosed', 'commIntro', 'navShop', 'navComm', 'tiers'];
+  const txt = ['commTitle', 'commOpen', 'commClosed', 'commIntro', 'navShop', 'navComm', 'commCta', 'tiers'];
   const dif = [...comuns.filter(k => !eq(A[k], L[k])),
     ...['en', 'pt'].flatMap(l => txt.filter(k => !eq(A.i18n[l][k], L.i18n[l][k])).map(k => `${l}.${k}`))];
   chk(dif.length === 0, 'loja.html e index.html dizem o mesmo nos campos que partilham', dif.join(' '));
@@ -545,6 +545,127 @@ async function navegador(dir, etiqueta){
       maus.join('  '));
   }
 
+  /* --- os titulos inteiros depois da tinta (1 Nov 2026, critica do Impeccable) ---
+     O titulo revela-se por um clip-path; com inset(0) o corte ficava na caixa
+     da linha (line-height 1.08) e a mincho desce abaixo dela: "Say hi" perdia
+     a perna do y, "Featured projects" a do p e a do j. Com a tinta ja
+     espalhada (sem transicao), a caixa do texto (ascendente + descendente)
+     tem de caber dentro do corte, em cima e em baixo, nas duas linguas. */
+  {
+    const maus = [];
+    for (const lq of ['', '?lang=pt']) for (const w of [390, 1440]) {
+      const p = await nova(w);
+      await p.goto(base + 'index.html' + lq, { waitUntil: 'networkidle' });
+      await p.evaluate(() => document.fonts.ready);
+      await p.addStyleTag({ content: '*{transition:none!important}' });
+      await p.evaluate(() => document.querySelectorAll('.head').forEach(h => h.classList.add('in')));
+      const r = await p.evaluate(() => [...document.querySelectorAll('.sec-title')].map(el => {
+        const cs = getComputedStyle(el), e = el.getBoundingClientRect(), q = document.createRange(); q.selectNodeContents(el);
+        const t = q.getBoundingClientRect(), m = cs.clipPath.match(/inset\(([^)]*)\)/);
+        if (!m) return null;
+        const v = m[1].trim().split(/\s+/).map(parseFloat), top = v[0], bottom = v[2] ?? v[0];
+        const fora = Math.max(t.bottom - (e.bottom - bottom), (e.top + top) - t.top);
+        return fora > 0.5 ? `"${el.textContent}" ${fora.toFixed(1)}px` : null;
+      }).filter(Boolean));
+      r.forEach(x => maus.push(`${lq || 'en'} ${w}px: ${x}`));
+      await p.close();
+    }
+    chk(maus.length === 0, 'os titulos das seccoes inteiros depois da tinta (o corte nao come as pernas das letras)', maus.slice(0, 6).join('  '));
+  }
+
+  /* --- o leitor de ecra na lingua da pagina (1 Nov 2026, critica do Impeccable) ---
+     As etiquetas dos controlos sem texto (aria-label) e a ligacao de saltar
+     estavam escritas em ingles na marcacao e ficavam em ingles na pagina em
+     PT. A paridade dos data-t nao as via. Agora: (1) na marcacao (fora dos
+     <script>), todo o aria-label leva data-ta e a ligacao de saltar leva
+     data-t; (2) com a pagina aberta em PT, cada etiqueta data-ta existe e e
+     diferente da inglesa. */
+  {
+    const maus = [];
+    for (const pag of ['index.html', 'loja.html', 'projeto.html']) {
+      const html = readFileSync(join(ROOT, pag), 'utf8').replace(/<script[\s\S]*?<\/script>/g, '').replace(/<style[\s\S]*?<\/style>/g, '');
+      for (const m of html.matchAll(/<[a-z][^>]*\saria-label="[^"]*"[^>]*>/g))
+        if (!/\sdata-ta="/.test(m[0])) maus.push(`${pag}: aria-label sem data-ta: ${m[0].slice(0, 70)}`);
+      for (const m of html.matchAll(/<a[^>]*class="skip"[^>]*>/g))
+        if (!/\sdata-t="/.test(m[0])) maus.push(`${pag}: a ligacao de saltar sem data-t`);
+    }
+    for (const pag of ['index.html', 'loja.html', 'projeto.html?p=sok']) {
+      const ler = async lang => {
+        const p = await nova(1280);
+        await p.goto(base + pag + (pag.includes('?') ? '&' : '?') + 'lang=' + lang, { waitUntil: 'networkidle' });
+        const r = await p.evaluate(() => ({ lang: document.documentElement.lang,
+          et: Object.fromEntries([...document.querySelectorAll('[data-ta]')].map(e => [e.dataset.ta, e.getAttribute('aria-label') || ''])),
+          skip: document.querySelector('a.skip')?.textContent || null }));
+        await p.close(); return r;
+      };
+      const en = await ler('en'), pt = await ler('pt');
+      if (pt.lang !== 'pt') maus.push(`${pag}: lang="${pt.lang}" com ?lang=pt`);
+      for (const [k, v] of Object.entries(pt.et))
+        if (!v || v === en.et[k]) maus.push(`${pag}: ${k} em PT "${v}" (EN "${en.et[k]}")`);
+      if (pt.skip !== null && (!pt.skip || pt.skip === en.skip)) maus.push(`${pag}: saltar "${pt.skip}"`);
+    }
+    chk(maus.length === 0, 'as etiquetas do leitor de ecra (aria-label) e a ligacao de saltar seguem a lingua da pagina', maus.slice(0, 6).join('  '));
+  }
+
+  /* --- a lightbox num telemovel (1 Nov 2026, critica do Impeccable) ---
+     As setas eram transparentes, a meio do ecra, e num telemovel ficavam por
+     cima da obra: nas de fundo branco (Angela) desapareciam. E a dica falava
+     de teclas. Num ecra de toque (e numa janela estreita), nenhuma seta, nem
+     o fechar, pode tapar a obra, e a dica visivel e a do gesto; com rato, a
+     das teclas. Abre-se a lightbox nas quatro primeiras obras da parede. */
+  {
+    const maus = [];
+    /* 820px com toque e um tablet: so a regra (hover:none) poe la as setas em
+       baixo (abaixo dos 621px o bloco dos 620 tambem as poe, e esconderia a falta) */
+    for (const [w, h, toque, lq] of [[390, 844, true, '?lang=pt'], [320, 640, true, ''], [820, 1180, true, ''], [1280, 800, false, '']]) {
+      const p = await nova(w, { viewport: { width: w, height: h }, hasTouch: toque, isMobile: toque });
+      await p.goto(base + 'index.html' + lq, { waitUntil: 'networkidle' });
+      await p.evaluate(() => document.querySelector('#work').scrollIntoView());
+      for (let i = 0; i < 4; i++) {
+        await p.locator('.frame').nth(i).click();
+        await p.waitForTimeout(400);
+        const r = await p.evaluate(() => {
+          const R = s => document.querySelector(s).getBoundingClientRect();
+          const art = R('#lbStage img'), sob = q => { const b = R(q); return !(b.right <= art.left || art.right <= b.left || b.bottom <= art.top || art.bottom <= b.top); };
+          const dicas = [...document.querySelectorAll('.lb-hint')].filter(e => getComputedStyle(e).display !== 'none').map(e => e.dataset.t);
+          return { cap: document.querySelector('#lbCap').textContent, tapa: ['#lbPrev', '#lbNext', '#lbClose'].filter(sob), dicas };
+        });
+        const tag = `${w}px ${toque ? 'toque' : 'rato'} "${r.cap}"`;
+        if (toque && r.tapa.length) maus.push(`${tag}: ${r.tapa.join(' ')} por cima da obra`);
+        const quer = toque ? 'lightboxHintTouch' : 'lightboxHint';
+        if (r.dicas.length !== 1 || r.dicas[0] !== quer) maus.push(`${tag}: dica ${r.dicas.join('+') || 'nenhuma'}`);
+        await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+      }
+      await p.close();
+    }
+    chk(maus.length === 0, 'a lightbox no telemovel: as setas e o fechar nunca tapam a obra, e a dica e a do gesto (a das teclas com rato)', maus.slice(0, 6).join('  '));
+  }
+
+  /* --- a parede num ecra de toque: o titulo por baixo (1 Nov 2026) ---
+     Sem hover, a faixa do titulo nunca subia e a parede nao dizia o nome de
+     nenhuma obra. Num ecra de toque, cada moldura visivel mostra o titulo por
+     baixo da obra, numa linha so (a reserva da parede conta 28px por fila), e
+     a reserva fica entre 95% e 100% da altura real (o mesmo alvo do resto). */
+  {
+    const maus = [];
+    for (const [w, h] of [[390, 844], [820, 1180]]) {
+      const p = await nova(w, { viewport: { width: w, height: h }, hasTouch: true, isMobile: true });
+      await p.goto(base + 'index.html', { waitUntil: 'networkidle' });
+      const reserva = await p.evaluate(() => parseFloat(getComputedStyle(document.querySelector('#wall')).minHeight));
+      await p.evaluate(async () => { const is = [...document.querySelectorAll('#wall img')]; is.forEach(i => i.loading = 'eager');
+        await Promise.all(is.map(i => i.decode().catch(() => {}))); });
+      const r = await p.evaluate(() => { const fr = [...document.querySelectorAll('#wall .frame')].filter(f => f.offsetParent);
+        return { real: document.querySelector('#wall').getBoundingClientRect().height,
+          maus: fr.map(f => { const im = f.querySelector('img, .ph').getBoundingClientRect(), m = f.querySelector('.meta'), mb = m.getBoundingClientRect();
+            const ok = getComputedStyle(m).transform === 'none' && mb.top >= im.bottom - 1 && Math.round(mb.height) === 20 && m.textContent.trim();
+            return ok ? null : `"${m.textContent}" ${Math.round(mb.height)}px`; }).filter(Boolean) }; });
+      r.maus.slice(0, 3).forEach(x => maus.push(`${w}px: ${x}`));
+      if (!(reserva <= r.real + 1 && reserva >= r.real * 0.95)) maus.push(`${w}px: reserva ${Math.round(reserva)} para ${Math.round(r.real)} reais`);
+      await p.close();
+    }
+    chk(maus.length === 0, 'a parede num ecra de toque: o titulo por baixo de cada obra, numa linha, e a reserva certa', maus.slice(0, 6).join('  '));
+  }
+
   /* --- seletores sem alvo e afordancias falsas --- */
   for (const pag of ['index.html', 'loja.html']) {
     const p = await nova(1280);
@@ -593,7 +714,10 @@ async function navegador(dir, etiqueta){
     await p.waitForTimeout(800);
     const t = await p.evaluate(() => [...document.querySelectorAll('h2.sec-title')]
       .filter(h => h.offsetParent)                 // ignora seccoes escondidas
-      .map(h => ({ t: h.textContent.trim(), abre: getComputedStyle(h).clipPath === 'inset(0px)' })));
+      /* aberto = o corte da direita ja nao esta nos 100% do inicio (desde
+         1 Nov 2026 o corte aberto vai para la da caixa: inset negativo) */
+      .map(h => { const v = (getComputedStyle(h).clipPath.match(/inset\(([^)]*)\)/) || [, ''])[1].trim().split(/\s+/);
+        const dir = v[1] ?? v[0]; return { t: h.textContent.trim(), abre: !!dir && !dir.includes('%') && parseFloat(dir) <= 0 }; }));
     const fechados = t.filter(x => !x.abre).map(x => x.t);
     chk(fechados.length === 0, 'todos os titulos de seccao visiveis se revelam',
       fechados.join(' ') || `${t.length} titulos`);

@@ -111,7 +111,7 @@ render `<script>` of `index.html` that build DOM nodes from `CONFIG`:
 | `artEl(item, full)` | an `<img>` with WebP/JPEG fallback, dimensions, srcset on the hero |
 | `frameEl(item, i)` | one wall tile (a 4:5 frame that opens the lightbox) |
 | `renderWall()` | the gallery wall, one tile per `CONFIG.artworks` entry |
-| `renderText()` | everything language-dependent: `[data-t]` text, filters, projects (including the wide card of the featured project, `CONFIG.featured`), tiers, timeline |
+| `renderText()` | everything language-dependent: `[data-t]` text, `[data-ta]` screen-reader labels (`aria-label` from a CONFIG key), filters, projects (including the wide card of the featured project, `CONFIG.featured`), tiers, timeline |
 | `openLb` / `drawLb` / `closeLb` / `stepLb` | the lightbox |
 | `observeReveals` / `stagger` | scroll reveals |
 | `trackCurrentSection()` | nav scroll-spy |
@@ -253,7 +253,7 @@ was **CLS 0.96**. The fix is reserving the space in CSS up front:
 | `.bar` | `73 / 71 / 64px` | per breakpoint; empty it is 54px. Its links reserve `32px + 1.6em` |
 | `.btn` | `44px`, line-height `20px` | also the minimum touch target; the px line-height makes it 48px with the fallback font and with Zen alike (with `normal` it grew 4px when the font arrived) |
 | `.filters` | `38px` / `84px` on phones | one row of chips / two |
-| `.wall` | a `calc()` | see below |
+| `.wall` | a `calc()` | see below; on touch screens it adds `--cap-h` (28px, the one-line title under each tile) once per row |
 
 The wall's reserve is a formula, not a constant, because the right height
 changes with viewport width. Since the September 2026 uniform grid every tile
@@ -420,7 +420,15 @@ Plus `(hover:none)` for touch screens, which is not a breakpoint: a tap sets
 `:hover` and it sticks, so there the hovers that move (the project card's
 lift, the art growing in its tile, the button sweep) are cancelled and a
 filled button stays filled. On the index it sits after the rules it cancels (same
-specificity, the last one wins).
+specificity, the last one wins). Since 1 Nov 2026 it also carries two layouts
+for touch: the wall's titles as a line under each tile (the mat moves to the
+image) and the lightbox arrows in the bottom corners, filled, with the
+"Swipe to browse" hint; the 620px block repeats the arrows for a narrow
+window with a mouse.
+
+**The section-title wipe clips past the line box** (`inset(-.2em -.1em
+-.3em -.1em)` when revealed): with `inset(0)` the mincho's descenders, which
+hang below a 1.08 line, were cut ("Say hi" lost the tail of its y).
 
 Type and spacing scale with `clamp()` rather than breakpoints wherever possible.
 
@@ -608,7 +616,13 @@ CLAUDE.md       this file
                   bounce curve is the seal's stamp (§6); on the source file
                   (not the rendered page) `#heroImg` "has no src" because the
                   intro's inline script fills it (§2), and the stripes are the
-                  placeholder plate for a missing artwork (§9.5)
+                  placeholder plate for a missing artwork (§9.5).
+                  Its critiques are archived in .impeccable/critique/
+                  (committed: `/impeccable polish` reads the last one). The
+                  first, 1 Nov 2026, scored the home page 26/36 and led to
+                  the fixes for the clipped titles, the English screen-reader
+                  labels on the PT page, the commission ask, the phone
+                  lightbox and the wall's titles on touch screens
 ```
 
 No feature folders, no `src/`, no routing. `index.html` is organised top to
@@ -673,7 +687,7 @@ fails if `merch`, `shop`, `shopDrop` or `merchCollection` reappear in
 The fields both pages read have to match, and `verify.mjs` checks them:
 `artistName`, `realName`, `email`, `instagram`, `commissionsOpen`, `tiers`,
 `shopOpen`, and the copy keys `commTitle`, `commOpen`, `commClosed`,
-`commIntro`, `navShop`, `navComm`, `tiers`. That is why launching the shop is
+`commIntro`, `navShop`, `navComm`, `commCta`, `tiers`. That is why launching the shop is
 `shopOpen:true` in **both** files. **The shop launched on 30 September 2026**
 with four products fulfilled by Printful (t-shirt, hoodie, art print, stickers).
 A merch entry with `hold: true` exists in Shopify but is not published, so its
@@ -862,6 +876,20 @@ The checks themselves, and why each one exists:
   and the choice; the labels exist in both languages. Tested against a
   planted bug (a swap that does nothing).
 - **EN/PT parity** across every `data-t` key.
+- **Screen-reader labels follow the language** (1 Nov 2026, from the
+  Impeccable critique): in the markup of the index, shop and project pages
+  every `aria-label` carries `data-ta` and the skip link a `data-t`; opened
+  with `?lang=pt`, every labelled control reads differently from EN. Nine
+  English labels had sat on the PT page unseen, because the parity check only
+  looked at `data-t`.
+- **Section titles whole after the ink wipe**, EN and PT, 390 and 1440px:
+  the text box (ascent and descent) fits inside the clip.
+- **The phone lightbox**: on a touch screen (390 and 320px, with touch on) no
+  arrow and no close button lies over the artwork, and the visible hint is
+  the gesture one; with a mouse at 1280px, the keyboard one.
+- **The wall on a touch screen** (390 and 820px): every visible tile has its
+  title under the art, on one 20px line, and the wall's reserve is 95–100%
+  of its real height.
 - **No horizontal overflow** — sweep widths, don't spot-check. The 621–743px
   band was broken for months and 390/768/1440 all looked fine.
 - **Reduced motion** — assert `transitionDuration` is `0s` and no `@keyframes`

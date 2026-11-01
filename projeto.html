@@ -302,8 +302,8 @@ footer{border-top:1px solid var(--hair);margin-top:72px;padding:24px 0 44px;font
     </a>
     <a class="back" id="back" href="index.html">← <span id="backLabel">All work</span></a>
     <div class="knobs">
-      <button class="knob" id="langTgl" aria-label="Switch language">PT</button>
-      <button class="knob" id="themeTgl" aria-label="Switch theme">◐</button>
+      <button class="knob" id="langTgl" aria-label="Switch language" data-ta="a11yLang">PT</button>
+      <button class="knob" id="themeTgl" aria-label="Switch theme" data-ta="a11yTheme">◐</button>
     </div>
   </div>
 </header>
@@ -502,6 +502,10 @@ document.getElementById('themeTgl').onclick = () => {
   r.dataset.theme = r.dataset.theme === 'light' ? 'dark' : 'light';
 };
 document.getElementById('backLabel').textContent = LANG === 'pt' ? 'Todo o trabalho' : 'All work';
+/* as etiquetas dos botoes sem texto (data-ta), como as palavras acima: o
+   CONFIG desta pagina so leva os projectos, por isso ficam aqui */
+const A11Y = { a11yLang: ['Switch language', 'Mudar de língua'], a11yTheme: ['Switch theme', 'Mudar de tema'] };
+document.querySelectorAll('[data-ta]').forEach(el => { const w = A11Y[el.dataset.ta]; if(w) el.setAttribute('aria-label', w[LANG === 'pt' ? 1 : 0]); });
 document.getElementById('footBack').textContent  = LANG === 'pt' ? '← Voltar ao portefólio' : '← Back to portfolio';
 document.getElementById('footL').textContent = `© ${new Date().getFullYear()} ${CONFIG.artistName} · ${CONFIG.realName}`;
 </script>

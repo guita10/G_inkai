@@ -123,10 +123,11 @@ these two was 457 KB of Japanese character slices the site never shows.
   Running text in full Bone; Bone Dim is for what is secondary. A new size
   needs a reason the table cannot give.
 
-  **The one exception is the name** in the intro, "Guita_Ink", up to
+  **The one exception is the name** in the intro, "Frederico Guita", up to
   `7.5rem` (about 120px at 1440px): it is the page's focal point, and its
-  size follows its column (`column / 5.1`; the name measures 4.83em in the
-  mincho) so it is always one line and never overflows.
+  size follows its column (`column / 5.1`; "Frederico" measures 4.65em in
+  the mincho and the whole name 7.48em) so it is always two lines,
+  "Frederico" over "Guita", and never overflows.
 - **Labels.** The few uppercase labels (badges, the timeline's month, the
   About meta line) are Zen 500 at 12px, `0.12–0.14em` tracking. Kickers above
   project titles are sentence case in Sky, 14px.
@@ -153,7 +154,8 @@ these two was 457 KB of Japanese character slices the site never shows.
   stamp bounces. Do not redraw, recolour or re-animate it.
 - **Buttons.** `2px` radius, near-square, printed. Outline buttons have a
   1px ink border and fill with ink on hover; the primary is a Sky fill with
-  Void text that turns to ink on hover (it never goes hollow). A light sweep
+  white text (`#FFFFFF`, 6.42:1) that turns to ink on hover (it never goes
+  hollow). A light sweep
   crosses the filled button on hover (`transform`, 650ms). **Every control
   answers a press** with `transform: scale(.97)` over 120ms; artwork tiles are
   the exception (a tile is for the eye, and on a phone a scroll starts with a
@@ -161,6 +163,13 @@ these two was 457 KB of Japanese character slices the site never shows.
 - **Header controls.** Language, theme and the mobile menu toggle share one
   44px circular control with a hairline border. 44px is the touch-target
   floor.
+- **Bar links.** In page order (Work, Projects, About, Contact), then the two
+  that leave for `loja.html`, "Commissions →" and "Shop →", with the internal
+  link arrow (since 1 November 2026: "Commissions" scrolled to the band on
+  this page while the intro's button of the same name opened the shop; both
+  now go to the shop's commission section, where the email ask is). The
+  commissions band's primary button says what it does: "Ask about a
+  commission →", the shop's own words.
 - **Mobile menu.** Below 621px the bar links give way to a toggle that opens a
   full-screen panel under the header, so the toggle doubles as close. Links
   cloned from the bar at boot; `aria-expanded`, focus trapped, Escape closes.
@@ -173,8 +182,19 @@ these two was 457 KB of Japanese character slices the site never shows.
   others did not). **Artwork is never cropped:** anything that is not 4:5 is
   fitted whole (`object-fit: contain`) on the mat, like a print. On hover the art
   grows 2% inside its frame and a caption band of ink slides up from the
-  bottom edge with the title. No numbers on the tiles (the lightbox keeps
-  them). Keyboard-operable: `role="button"`, Enter and Space.
+  bottom edge with the title. **On touch screens** (no hover) the mat moves to
+  the image and the title sits under it as a one-line label in Bone Dim, 14px
+  Zen 500, cut with "…" if long (the lightbox has it whole); the wall's
+  reserve counts the 28px line once per row. No numbers on the tiles (the
+  lightbox keeps them). Keyboard-operable: `role="button"`, Enter and Space.
+- **Lightbox controls.** 44px circles with a hairline, at mid-height on the
+  screen's sides with a mouse. On touch screens and below 621px they sit in
+  the bottom corners, filled with Void, because over the art they vanished on
+  white-ground pieces; the hint there names the gesture ("Swipe to browse")
+  instead of the keys.
+- **Screen-reader labels** follow the page's language like every other word:
+  controls without text carry `data-ta` with a CONFIG key, and the skip link
+  is a `data-t` key.
 - **Project cards.** The cover whole on the same 4:5 mat as the wall, with
   the same 4% margin (the box used to be nearly square, so the two tall
   covers filled 68% and 73% of it; now 84–89%). The three columns are equal,
@@ -270,6 +290,9 @@ these two was 457 KB of Japanese character slices the site never shows.
 - **The house curves.** `cubic-bezier(.2, .7, .3, 1)` for reveals and small
   UI motion, `cubic-bezier(.16, .84, .36, 1)` for the ink wipe on section
   titles (1.1s), `cubic-bezier(.2, 1.5, .4, 1)` reserved for the seal's stamp.
+  The wipe's clip reaches past the line box (`-.2em` above, `-.3em` below):
+  at line-height 1.08 the mincho's descenders hang below it, and an
+  `inset(0)` cut the tails off "Say hi" and "Featured projects".
 - **Reveals fire once, via `IntersectionObserver`.** Not one `window` scroll
   listener in the codebase.
 - **Transform and opacity only.** Transitions name their properties; never
