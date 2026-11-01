@@ -488,6 +488,58 @@ async function navegador(dir, etiqueta){
       maus.slice(0, 6).join('  '));
   }
 
+  /* --- o Flip (1 Nov 2026): as seis originais em pequeno trocam a obra da
+     abertura. Seis molduras, uma so escolhida e e a da obra grande; um
+     toque noutra troca a obra, a legenda ("titulo" e "n / 6") e a escolha;
+     as palavras existem nas duas linguas. --- */
+  {
+    const maus = [];
+    for (const lq of ['', '?lang=pt']) {
+      const p = await nova(1280);
+      await p.goto(base + 'index.html' + lq, { waitUntil: 'networkidle' });
+      const a = await p.evaluate(() => {
+        const minis = [...document.querySelectorAll('#heroMini .mini')];
+        const fig = document.querySelector('#heroArt');
+        const outro = minis.find(b => b.getAttribute('aria-pressed') !== 'true');
+        return { n: minis.length, escolhidas: minis.filter(b => b.getAttribute('aria-pressed') === 'true').map(b => b.dataset.idx),
+          idx: fig.dataset.idx, alvo: outro ? outro.dataset.idx : null, grupo: document.querySelector('#heroMini').getAttribute('aria-label'),
+          rotulos: minis.map(b => b.getAttribute('aria-label')) };
+      });
+      const tag = lq ? 'pt' : 'en';
+      if (a.n !== 6) maus.push(`${tag}: ${a.n} molduras`);
+      if (a.escolhidas.length !== 1 || a.escolhidas[0] !== a.idx) maus.push(`${tag}: escolhida ${a.escolhidas} vs obra ${a.idx}`);
+      const verbo = lq ? 'Mostrar ' : 'Show ';
+      if (!a.grupo || a.rotulos.some(r => !r || !r.startsWith(verbo))) maus.push(`${tag}: rotulos ${a.grupo} / ${a.rotulos[0]}`);
+      if (a.alvo !== null) {
+        await p.click(`#heroMini .mini[data-idx="${a.alvo}"]`);
+        await p.waitForFunction(i => document.querySelector('#heroArt').dataset.idx === i, a.alvo, { timeout: 4000 }).catch(() => {});
+        /* o browser escolhe o ficheiro do srcset um instante depois de o src
+           mudar: ate la o currentSrc vem vazio (o teste leu-o cedo demais na
+           primeira versao; era o teste, nao o site) */
+        await p.waitForFunction(() => { const i = document.querySelector('#heroImg');
+          const g = CONFIG.artworks[+document.querySelector('#heroArt').dataset.idx];
+          return i.currentSrc && i.currentSrc.includes(g.src.split('/').pop().replace(/\.jpe?g$/i, '')); }, null, { timeout: 4000 }).catch(() => {});
+        const d = await p.evaluate(() => {
+          const fig = document.querySelector('#heroArt'), g = CONFIG.artworks[+fig.dataset.idx];
+          const lista = CONFIG.heroArt.map(s => CONFIG.artworks.findIndex(x => x.src === s));
+          return { idx: fig.dataset.idx, src: document.querySelector('#heroImg').currentSrc,
+            stem: g.src.split('/').pop().replace(/\.jpe?g$/i, ''), cap: document.querySelector('#heroCap').textContent, label: g.label,
+            pos: document.querySelector('#heroPos').textContent, quer: `${lista.indexOf(+fig.dataset.idx) + 1} / ${lista.length}`,
+            escolhidas: [...document.querySelectorAll('#heroMini .mini[aria-pressed=true]')].map(b => b.dataset.idx) };
+        });
+        if (d.idx !== a.alvo) maus.push(`${tag}: o toque nao trocou a obra (${d.idx} em vez de ${a.alvo})`);
+        else {
+          if (!d.src.includes(d.stem)) maus.push(`${tag}: a imagem nao e a escolhida (${d.src.split('/').pop()})`);
+          if (d.cap !== d.label || d.pos !== d.quer) maus.push(`${tag}: legenda "${d.cap} ${d.pos}"`);
+          if (d.escolhidas.length !== 1 || d.escolhidas[0] !== a.alvo) maus.push(`${tag}: escolhida ${d.escolhidas}`);
+        }
+      }
+      await p.close();
+    }
+    chk(maus.length === 0, 'o Flip: seis molduras, uma escolhida, o toque troca a obra, a legenda e a escolha (EN e PT)',
+      maus.join('  '));
+  }
+
   /* --- seletores sem alvo e afordancias falsas --- */
   for (const pag of ['index.html', 'loja.html']) {
     const p = await nova(1280);

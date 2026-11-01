@@ -246,7 +246,8 @@ was **CLS 0.96**. The fix is reserving the space in CSS up front:
 | `.hero h1 .nm` | none | the name is written by the inline script before first paint; one line always (no spaces) at a size that follows its column (`column / 5.1`, the name is 4.83em wide) |
 | `.hero h1 .role` | `2.16em` | two lines at 1.08; `max-width:11em` keeps it from fitting on one, and no half is longer than 11em (the PT is the longest); `verify.mjs` sweeps 320 to 1600px in both languages, counting real text lines |
 | `.hero .tag` | `3.2em` / `4.8em` on tablets | two lines at 1.6 / three in the narrower tablet column |
-| `.hero-prova` | a fixed grid row, `36px + 3.2rem` | the two facts, one line each (14px on tablets so they stay on one). A fixed track, not `auto`: on a slow line the browser painted before the list arrived, and the line and buttons above jumped 87px when it did |
+| `.hero-info` | `min-height` of its whole content (24px + the line + 24 + the 48px button + 20 + the facts) | the block sits at the bottom of its row; on a slow line the browser painted after the line alone, and the buttons and facts arriving under it pushed it 119px up (one load in three). The facts (`.hero-prova`, `3.2em`) live in it since the Flip |
+| `.hero-mini` | a fixed grid row, `24px + 70px` (`20 + 70` on tablets; on phones a `min-height` of one row of six) | the six small frames are drawn by the render script at the end, so the row must not be born at zero. The facts sat in this row before the Flip and jumped 87px for exactly that reason |
 | `.hero-art` | `aspect-ratio:4/5` + a width from the screen's height (`--art-w`) | the picture is whole on the first screen at 1280×720, 1440×900 and 1920×1080; `verify.mjs` checks it |
 | `.hero` | `min-height` = the picture's height (`--art-w × 1.25`) + padding, two columns only | in one slow load out of two the browser painted before it read the `<figure>`: the grid was as tall as the text and the line and buttons dropped 240px when the picture arrived (0.03). Measured six times after the fix: 0.005–0.006 every time |
 | `.sec-title` | `1.08em` | one line |
@@ -589,8 +590,15 @@ with Distrito Manga", both worded as elsewhere in CONFIG) bottom left; on the
 right one of Frede's originals, whole, on its mat, as tall as the first
 screen allows, a different one each visit (the next in `CONFIG.heroArt`, kept
 in `localStorage`; only originals, never fan art or collabs, each with its
-WebP, all checked by `verify.mjs`). Two columns down to 621px, stacked on
-phones (name, line, buttons, picture, facts) → selected
+WebP, all checked by `verify.mjs`). **The Flip** (1 Nov 2026, chosen by
+Frede from four prototypes made with `/prototype`): under the facts, the
+same six originals as small frames; pointing at one (with a mouse), focusing
+it or tapping it swaps the big piece, instantly, with no animation (a gesture
+repeated many times in a row), but only once the new piece is decoded, so
+the mat never flashes empty. The first touch of the frames preloads all six.
+The chosen frame carries the `--hi` outline; the caption reads "title" and
+"n / 6". Two columns down to 621px, stacked on phones (name, line, buttons,
+facts, picture, frames) → selected
 work (the wall: one uniform grid, no project
 highlighted; the Survival of Kings cast sits after the other originals on
 purpose) → projects (the featured project, `CONFIG.featured`, as a full-width
@@ -810,6 +818,10 @@ The checks themselves, and why each one exists:
   on three.
 - **The intro picture is an original**: every `CONFIG.heroArt` entry is in
   `artworks` with `cat:"character"` and no `collab`, with both WebPs.
+- **The Flip**, EN and PT: six frames, exactly one chosen and it is the big
+  piece; a tap on another swaps the piece, the caption ("title", "n / 6")
+  and the choice; the labels exist in both languages. Tested against a
+  planted bug (a swap that does nothing).
 - **EN/PT parity** across every `data-t` key.
 - **No horizontal overflow** — sweep widths, don't spot-check. The 621–743px
   band was broken for months and 390/768/1440 all looked fine.

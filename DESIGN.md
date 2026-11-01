@@ -218,10 +218,15 @@ these two was 457 KB of Japanese character slices the site never shows.
   manga contest, 1st place", "A cover a month with Distrito Manga"). Right:
   one original from `CONFIG.heroArt`, on its 4:5 mat, as wide as the screen's
   height lets it be whole on the first screen (1280×720 to 1920×1080),
-  right-aligned to the margin, its title hanging underneath. A click opens it
-  in the lightbox. The next piece in the list on each visit. Two columns
-  down to 621px; stacked on phones: name, role, line, buttons, picture,
-  facts.
+  right-aligned to the margin, its title and "n / 6" hanging underneath. A
+  click opens it in the lightbox. The next piece in the list on each visit.
+  **Under the facts, the six originals as small frames** (the "Flip", chosen
+  by Frede from four prototypes): pointing at one, focusing it or tapping it
+  swaps the big piece. The swap is instant, never animated (it is repeated
+  many times in a row), and waits for the new piece to decode so the mat
+  never flashes empty. The chosen frame has the highlight outline (`--hi`).
+  Two columns down to 621px; stacked on phones: name, role, line, buttons,
+  facts, picture, frames.
 - **The shop's first screen:** the title with the drop's badge, the merch's
   sentence, a button down to the commissions, and the products straight
   after, so photos, names and prices are on the first screen. (It was the

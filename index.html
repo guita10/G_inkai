@@ -258,6 +258,7 @@ const CONFIG = {
          que ja era o texto da linha pequena por baixo — promovido, nao
          inventado. Uma coisa a menos a competir com a obra. */
       heroRole: "Illustration and character design",
+      heroPick: "Choose a piece", heroShow: "Show",
       proofContest: "Iberanime manga contest, 1st place",
       proofCovers: "A cover a month with Distrito Manga",
       tagline: "I'm Frederico Guita. I draw anime and manga-influenced characters and their worlds.",
@@ -326,6 +327,7 @@ const CONFIG = {
     },
     pt: {
       heroRole: "Ilustração e design de personagens",
+      heroPick: "Escolhe uma peça", heroShow: "Mostrar",
       proofContest: "Concurso de manga Iberanime, 1.º lugar",
       proofCovers: "Uma capa por mês com a Distrito Manga",
       tagline: "Sou o Frederico Guita. Desenho personagens e mundos de influência anime e manga.",
@@ -648,7 +650,11 @@ header{
    grande em cima a esquerda, a frase, os botoes e duas provas em baixo; a
    direita uma original do Frede, inteira, da altura do ecra, outra a cada
    visita (CONFIG.heroArt). A parede vem a seguir.
-   Duas colunas iguais (6/12 e 6/12, a mesma calha do resto do site). */
+   Duas colunas iguais (6/12 e 6/12, a mesma calha do resto do site).
+   1 Nov 2026 (4): "Flip", escolhido pelo Frede entre quatro prototipos (o
+   /prototype das skills do Emil). Por baixo da frase ficam as seis
+   originais em molduras pequenas: apontar, focar ou tocar numa troca a obra
+   grande, na hora. As provas subiram para baixo dos botoes. */
 /* A largura da obra (--art-w): a coluna, ou o que a altura do ecra deixa
    (menos a barra de 73px, o espaco de cima e de baixo e a legenda, ~185),
    o que for menor, nunca abaixo de 300px. A abertura guarda a altura da obra
@@ -660,7 +666,7 @@ header{
   --art-w:min((min(1400px,100vw) - 2 * var(--pad) - var(--gut)) / 2, max(300px, (100vh - 185px) * .8));
   --art-w:min((min(1400px,100vw) - 2 * var(--pad) - var(--gut)) / 2, max(300px, (100svh - 185px) * .8));
   display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-  grid-template-rows:auto 1fr calc(36px + 3.2rem);grid-template-areas:"nome arte" "info arte" "prova arte";
+  grid-template-rows:auto 1fr calc(24px + 70px);grid-template-areas:"nome arte" "info arte" "mini arte";
   column-gap:var(--gut);padding:var(--pt) 0 var(--pb);
   min-height:calc(var(--art-w) * 1.25 + var(--pt) + var(--pb))}
 /* O nome numa linha, sempre: "Guita_Ink" nao tem espacos, por isso nunca
@@ -680,15 +686,35 @@ header{
    reservadas (2,16em). O verify varre isto de 320 a 1600px nas duas linguas. */
 .hero h1 .role{display:block;font-size:clamp(1.5rem,3.2vw,2.8rem);line-height:1.08;letter-spacing:-.015em;
   max-width:11em;min-height:2.16em;margin-top:.45em}
-.hero-info{grid-area:info;align-self:end;padding-top:32px}
+/* A frase, os botoes e as provas: o bloco assenta no fundo da sua fila e
+   guarda a altura toda (24 de ar, a frase em duas linhas, 24, o botao de 48,
+   20, as provas em duas linhas). Sem isto, numa ligacao lenta o browser
+   pintava depois de ler so a frase; os botoes e as provas chegavam a seguir
+   e, como o bloco assenta no fundo, empurravam a frase 119px para cima
+   (CLS, uma carga em tres, 1 Nov 2026). */
+.hero-info{grid-area:info;align-self:end;padding-top:24px;
+  min-height:calc(24px + 3.2 * 1.125rem + 24px + 48px + 20px + 3.2rem)}
 .hero .tag{font-size:1.125rem;line-height:1.6;margin-bottom:24px;min-height:3.2em;max-width:32rem}
 /* duas provas, as duas tiradas da copia que ja existia (o percurso e a bio):
-   o concurso e a capa de todos os meses. A fila delas tem altura FIXA na
-   grelha (36px de ar e duas linhas), e nao auto: numa ligacao lenta o
-   browser pintava antes de ler a lista, a fila nascia com zero e, quando ela
-   chegava, a frase e os botoes subiam 87px (CLS, 1 Nov 2026). */
-.hero-prova{grid-area:prova;align-self:end;list-style:none;min-height:3.2em;
+   o concurso e a capa de todos os meses. Desde o Flip ficam por baixo dos
+   botoes, com as duas linhas reservadas (chegam do JS no fim). */
+.hero-prova{list-style:none;min-height:3.2em;margin-top:20px;
   font-size:1rem;line-height:1.6;color:var(--bone-dim)}
+/* As seis molduras pequenas (o Flip). A fila tem altura FIXA na grelha
+   (24px de ar e 70 de moldura), e nao auto: numa ligacao lenta o browser
+   pinta antes de o script do fim as desenhar, e uma fila que nascesse com
+   zero subia a frase e os botoes quando elas chegassem (foi o que as provas
+   fizeram, 87px, antes de terem esta fila: CLS, 1 Nov 2026).
+   Molduras sem raio, como as da parede; a escolhida leva o contorno do
+   destaque (--hi: lima a noite, cobalto de dia; o lima no claro desaparece). */
+.hero-mini{grid-area:mini;align-self:end;display:flex;gap:10px}
+.mini{flex:none;width:min(56px, calc((100% - 50px) / 6));aspect-ratio:4/5;padding:3px;border:0;border-radius:0;
+  background:var(--raise);cursor:pointer;outline:2px solid transparent;outline-offset:3px;
+  transition:outline-color .15s ease,transform .12s ease-out}
+.mini img{width:100%;height:100%;object-fit:contain}
+.mini:hover{outline-color:var(--hair)}
+.mini[aria-pressed="true"]{outline-color:var(--hi)}
+.mini:focus-visible{outline-color:var(--sky-lift)}
 /* A obra: 4:5 no passe-partout de 4%, como na parede. A largura sai da
    altura do ecra (menos a barra de 73px, o espaco de cima e de baixo, ~112),
    para caber inteira no primeiro ecra, e nunca passa da coluna. Encostada a
@@ -701,8 +727,10 @@ header{
 .hero-art img{width:100%;height:100%;object-fit:contain;transition:transform .5s cubic-bezier(.2,.7,.3,1)}
 .hero-art:hover img{transform:scale(1.02)}
 .hero-art:focus-visible{outline:2px solid var(--sky-lift);outline-offset:3px}
-.hero-cap{position:absolute;left:0;top:100%;padding-top:10px;font-family:var(--f-ui);
-  font-size:.875rem;color:var(--bone-dim);white-space:nowrap}
+/* a legenda: o titulo a esquerda, "3 / 6" a direita */
+.hero-cap{position:absolute;left:0;right:0;top:100%;padding-top:10px;font-family:var(--f-ui);
+  font-size:.875rem;color:var(--bone-dim);white-space:nowrap;display:flex;justify-content:space-between;gap:12px;
+  font-variant-numeric:tabular-nums}
 
 /* ================= SECTIONS ================= */
 /* sem fios entre seccoes: separam-se pelo espaco e pelo titulo */
@@ -949,7 +977,7 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
 /* Resposta ao carregar: 0,97 em 120ms. A .frame fica de fora (num telemovel
    rolar a parede comeca com um toque nela). As setas ja usam translateY(-50%)
    para se centrarem, por isso repetem-no. */
-.btn:active,.chip:active,.knob:active,.lb-close:active{transform:scale(.97)}
+.btn:active,.chip:active,.knob:active,.lb-close:active,.mini:active{transform:scale(.97)}
 .lb-prev:active,.lb-next:active{transform:translateY(-50%) scale(.97)}
 .lb-prev{left:18px;top:50%;transform:translateY(-50%)}
 .lb-next{right:18px;top:50%;transform:translateY(-50%)}
@@ -1020,7 +1048,7 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
   html{scroll-behavior:auto}
   .rv{opacity:1;transform:none;transition:none}
   .proj,.btn,.mail,.knob,.chip,.lb-btn{transition:none}
-  .frame img,.frame .meta,.hero-art img{transition:none}
+  .frame img,.frame .meta,.hero-art img,.mini{transition:none}
   .links a,.c-links a{transition:none}
   .tl-year{transition:none}
   body{transition:none}
@@ -1028,7 +1056,7 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
   /* :nth-child(n) para igualar a especificidade das regras da cascata */
   .nav-panel.open a:nth-child(n){transition-delay:0s}
   .nav-toggle .bars::before,.nav-toggle .bars::after{transition:none}
-  .btn:active,.chip:active,.knob:active,.lb-close:active{transform:none}
+  .btn:active,.chip:active,.knob:active,.lb-close:active,.mini:active{transform:none}
   .lb-prev:active,.lb-next:active{transform:translateY(-50%)}
   /* a lightbox abre e fecha de uma vez, sem fade nem crescer */
   .lb,.lb.open,.lb-stage{transition:none}
@@ -1041,7 +1069,8 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
      parte em tres linhas (reserva de tres) e as provas descem para 14px,
      para cada uma caber numa linha ate aos 621px. */
   .hero .tag{min-height:4.8em}
-  .hero{grid-template-rows:auto 1fr calc(36px + 2.8rem)}
+  .hero{grid-template-rows:auto 1fr calc(20px + 70px)}
+  .hero-info{min-height:calc(24px + 4.8 * 1.125rem + 24px + 48px + 20px + 3.2 * .875rem)}
   .hero-prova{font-size:.875rem}
   /* o titulo da parede numa linha, os filtros e a contagem na seguinte */
   .wall-bar{gap:12px 16px}
@@ -1069,13 +1098,16 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
   /* sem min-height: empilhada, a obra vem depois do texto e, se chegar
      tarde, aparece por baixo sem empurrar nada */
   .hero{grid-template-columns:minmax(0,1fr);grid-template-rows:none;
-    grid-template-areas:"nome" "info" "arte" "prova";padding-top:24px;min-height:0}
+    grid-template-areas:"nome" "info" "arte" "mini";padding-top:24px;min-height:0}
   .hero h1 .nm{font-size:min(7.5rem, calc((100vw - 2 * var(--pad)) / 5.1))}
-  .hero-info{padding-top:20px}
+  .hero-info{padding-top:20px;min-height:calc(20px + 3.2 * 1.125rem + 24px + 48px + 20px + 3.2rem)}
   .hero .tag{min-height:3.2em}
   .hero-art{justify-self:start;width:100%;margin-top:32px}
   .hero-cap{position:static}
-  .hero-prova{margin-top:24px;font-size:1rem}
+  .hero-prova{font-size:1rem}
+  /* as seis molduras repartem a largura; a fila guarda a altura delas */
+  .hero-mini{margin-top:16px;gap:8px;min-height:calc((100vw - 2 * var(--pad) - 40px) / 6 * 1.25)}
+  .mini{width:calc((100% - 40px) / 6)}
   .bar{min-height:64px;gap:12px}
   .logo{width:30px;height:30px}
   .brand{gap:10px}
@@ -1167,15 +1199,18 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
         <a class="btn fill" href="#work"><span data-t="ctaWork"></span> →</a>
         <a class="btn" href="loja.html#comissoes" data-loja="#comissoes"><span data-t="ctaComm"></span></a>
       </div>
+      <ul class="hero-prova">
+        <li data-t="proofContest"></li>
+        <li data-t="proofCovers"></li>
+      </ul>
     </div>
     <figure class="hero-art" id="heroArt" role="button" tabindex="0">
       <span class="mat"><picture><source id="heroWebp" type="image/webp"><img id="heroImg" width="1280" height="1600" alt="" fetchpriority="high" decoding="async"></picture></span>
-      <figcaption class="hero-cap" id="heroCap"></figcaption>
+      <figcaption class="hero-cap"><span id="heroCap"></span><span id="heroPos"></span></figcaption>
     </figure>
-    <ul class="hero-prova">
-      <li data-t="proofContest"></li>
-      <li data-t="proofCovers"></li>
-    </ul>
+    <!-- as seis originais em pequeno (o Flip): desenhadas pelo script do fim,
+         que tem as palavras nas duas linguas; a fila ja tem a altura delas -->
+    <div class="hero-mini" id="heroMini" role="group"></div>
     <script>
     /* A obra do topo: uma das originais do CONFIG.heroArt, outra a cada
        visita (a seguinte da lista; a primeira visita tira a sorte). Corre
@@ -1183,8 +1218,9 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
        o pedido sai logo. Fica DEPOIS de toda a marcacao da abertura, de
        proposito: numa ligacao lenta o browser pinta antes de correr um
        script, e as provas, que estavam depois dele, chegavam mais tarde e
-       subiam a frase e os botoes 87px (CLS, 1 Nov 2026). Se o localStorage falhar (janela privada), tira a
-       sorte sempre. O clique abre-a na lightbox (ver o script do fim). */
+       subiam a frase e os botoes 87px (CLS, 1 Nov 2026). Se o localStorage
+       falhar (janela privada), tira a sorte sempre. O clique abre-a na
+       lightbox, e as molduras pequenas trocam-na (ver o script do fim). */
     (function(){
       document.getElementById('heroName').textContent = CONFIG.artistName;
       var fig = document.getElementById('heroArt');
@@ -1207,6 +1243,7 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
       fig.setAttribute('aria-label', g.label);
       img.alt = g.label;
       document.getElementById('heroCap').textContent = g.label;
+      document.getElementById('heroPos').textContent = (k + 1) + ' / ' + lista.length;
       /* srcset antes de src, senao o browser pede os dois */
       webp.sizes = sizes; webp.srcset = w(thumb) + ' 608w, ' + w(full) + ' 1280w';
       img.sizes = sizes; img.srcset = thumb + ' 608w, ' + full + ' 1280w';
@@ -1469,7 +1506,70 @@ function applyFilter(){
   $('#wall').style.minHeight = activeCat === 'all' ? '' : '0px';
 }
 
-/* ---------- language-independent hero art ---------- */
+/* ---------- a abertura: as seis originais, uma de cada vez (o Flip) ----------
+   A troca e instantanea, sem animacao: e um gesto que se repete muitas vezes
+   seguidas (a regra do Emil: o que e frequente nao anima). Mas so troca
+   quando a obra nova ja esta descodificada, para nunca piscar o passe-partout
+   vazio; ate la fica a anterior. A moldura escolhida responde logo. */
+const heroList = () => (CONFIG.heroArt || []).map(s => CONFIG.artworks.findIndex(a => a.src === s)).filter(i => i >= 0);
+const heroSets = g => {
+  const full = srcOf(g.src), thumb = srcOf(g.src.replace(/^images\//, 'images/thumb/'));
+  const w = f => f.replace(/\.jpe?g$/i, '.webp');
+  return { full, jpg: `${thumb} 608w, ${full} 1280w`, webp: `${w(thumb)} 608w, ${w(full)} 1280w` };
+};
+/* um Image fora da pagina com o mesmo srcset e sizes escolhe o mesmo
+   ficheiro que o <picture>, por isso deixa-o em cache */
+const heroPreload = g => {
+  const s = heroSets(g), p = new Image();
+  p.sizes = $('#heroImg').sizes; p.srcset = WEBP_OK ? s.webp : s.jpg; p.src = s.full;
+  return p;
+};
+let heroPedido = 0, heroAquecido = false;
+function heroSwap(idx){
+  const fig = $('#heroArt');
+  if(!fig || fig.hidden) return;
+  $$('#heroMini .mini').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.idx === idx)));
+  if(+fig.dataset.idx === idx) return;
+  const g = CONFIG.artworks[idx], lista = heroList(), pedido = ++heroPedido;
+  const aplica = () => {
+    if(pedido !== heroPedido) return;          // entretanto escolheu-se outra
+    const s = heroSets(g), img = $('#heroImg'), src = $('#heroWebp');
+    if(src) src.srcset = s.webp;               // srcset antes de src
+    img.srcset = s.jpg; img.src = s.full; img.alt = g.label;
+    fig.dataset.idx = idx; fig.setAttribute('aria-label', g.label);
+    $('#heroCap').textContent = g.label;
+    $('#heroPos').textContent = `${lista.indexOf(idx) + 1} / ${lista.length}`;
+  };
+  const p = heroPreload(g);
+  (p.decode ? p.decode() : Promise.resolve()).then(aplica, aplica);
+}
+/* as molduras, nas duas linguas (o renderText volta a chamar isto) */
+function renderHeroMini(){
+  const box = $('#heroMini'), fig = $('#heroArt');
+  if(!box || !fig || fig.hidden){ if(box) box.hidden = true; return; }
+  const t = T(), atual = +fig.dataset.idx;
+  box.setAttribute('aria-label', t.heroPick);
+  box.innerHTML = heroList().map(i => {
+    const g = CONFIG.artworks[i], th = srcOf(g.src.replace(/^images\//, 'images/thumb/'));
+    const f = WEBP_OK ? th.replace(/\.jpe?g$/i, '.webp') : th;
+    return `<button class="mini" type="button" data-idx="${i}" aria-pressed="${i === atual}" aria-label="${t.heroShow} ${g.label}">`
+      + `<img src="${f}" width="608" height="760" alt="" loading="lazy" fetchpriority="low" decoding="async"></button>`;
+  }).join('');
+  /* apontar pre-visualiza (so com rato), focar e tocar escolhem */
+  const rato = matchMedia('(hover:hover)').matches;
+  $$('#heroMini .mini').forEach(b => {
+    const i = +b.dataset.idx;
+    b.onclick = () => heroSwap(i);
+    b.onfocus = () => heroSwap(i);
+    if(rato) b.onpointerenter = () => heroSwap(i);
+  });
+  /* a primeira vez que alguem chega as molduras, as seis obras grandes vao
+     para a cache, e dai em diante a troca e imediata */
+  const aquece = () => { if(heroAquecido) return; heroAquecido = true;
+    heroList().forEach(i => heroPreload(CONFIG.artworks[i])); };
+  box.onpointerenter = aquece; box.onfocusin = aquece;
+}
+
 /* ---------- everything language-dependent ---------- */
 function renderText(){
   const t = T();
@@ -1479,7 +1579,7 @@ function renderText(){
   $('#langTgl').textContent = LANG === 'en' ? 'PT' : 'EN';
   $('#brandName').textContent = CONFIG.artistName;
 
-  /* os tres factos do hero */
+  renderHeroMini();
 
   /* a bio, em paragrafos. Era um texto corrido so; em tres blocos le-se melhor
      e cada ideia fica com o seu espaco. */
