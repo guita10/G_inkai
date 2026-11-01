@@ -171,7 +171,7 @@ function config(){
      index (foi assim que o projeto.html acumulou precos mortos). */
   const L = carrega('loja.html');
   const comuns = ['artistName', 'realName', 'email', 'instagram', 'commissionsOpen', 'tiers', 'shopOpen'];
-  const txt = ['commTitle', 'commOpen', 'commClosed', 'commIntro', 'navShop', 'navComm', 'commCta', 'tiers'];
+  const txt = ['commTitle', 'commOpen', 'commClosed', 'commIntro', 'navShop', 'navComm', 'tiers'];
   const dif = [...comuns.filter(k => !eq(A[k], L[k])),
     ...['en', 'pt'].flatMap(l => txt.filter(k => !eq(A.i18n[l][k], L.i18n[l][k])).map(k => `${l}.${k}`))];
   chk(dif.length === 0, 'loja.html e index.html dizem o mesmo nos campos que partilham', dif.join(' '));
@@ -554,6 +554,43 @@ async function navegador(dir, etiqueta){
       maus.join('  '));
   }
 
+  /* --- o Flip nao troca a obra pelo caminho (1 Nov 2026, critica 2 do Impeccable) ---
+     Apontar numa moldura trocava a obra na hora, e as molduras estao em fila:
+     o caminho de uma ate a obra grande passava pela seguinte, que a trocava
+     (de 5 das 6). Agora so troca quando o ponteiro para (140ms). O rato anda
+     a uma velocidade normal (400ms ate ao centro da obra): a obra que se
+     escolheu ao parar numa moldura tem de ser a que la esta no fim. E as seis
+     sao uma so paragem do Tab, com as setas a andar entre elas. */
+  {
+    const maus = [];
+    const vai = async (p, x0, y0, x1, y1, ms) => { for (let k = 1; k <= 30; k++) {
+      await p.mouse.move(x0 + (x1 - x0) * k / 30, y0 + (y1 - y0) * k / 30); await p.waitForTimeout(ms / 30); } };
+    const p = await nova(1440, { viewport: { width: 1440, height: 900 } });
+    for (let n = 0; n < 6; n++) {
+      await p.goto(base + 'index.html', { waitUntil: 'networkidle' });
+      const f = await p.locator('#heroMini .mini').nth(n).boundingBox(), a = await p.locator('#heroArt').boundingBox();
+      await vai(p, 700, 400, f.x + f.width / 2, f.y + f.height / 2, 300); await p.waitForTimeout(600);
+      const quer = await p.evaluate(i => document.querySelectorAll('#heroMini .mini')[i].getAttribute('aria-pressed') === 'true'
+        ? document.querySelector('#heroCap').textContent : null, n);
+      if (!quer) { maus.push(`moldura ${n + 1}: parar nela nao a escolheu`); continue; }
+      await vai(p, f.x + f.width / 2, f.y + f.height / 2, a.x + a.width / 2, a.y + a.height / 2, 400); await p.waitForTimeout(600);
+      const tem = await p.evaluate(() => document.querySelector('#heroCap').textContent);
+      if (tem !== quer) maus.push(`moldura ${n + 1}: escolheu "${quer}", chegou a obra com "${tem}"`);
+    }
+    const r = await p.evaluate(() => [...document.querySelectorAll('#heroMini .mini')].filter(b => b.tabIndex === 0).length);
+    if (r !== 1) maus.push(`${r} molduras no Tab (quer 1)`);
+    await p.locator('#heroMini .mini[tabindex="0"]').focus();
+    const antes = await p.evaluate(() => document.querySelector('#heroArt').dataset.idx);
+    await p.keyboard.press('ArrowRight');
+    await p.waitForFunction(i => document.querySelector('#heroArt').dataset.idx !== i, antes, { timeout: 4000 }).catch(() => {});
+    const depois = await p.evaluate(() => ({ idx: document.querySelector('#heroArt').dataset.idx, foco: document.activeElement.dataset.idx,
+      um: [...document.querySelectorAll('#heroMini .mini')].filter(b => b.tabIndex === 0).map(b => b.dataset.idx) }));
+    if (depois.idx === antes || depois.foco !== depois.idx || depois.um.length !== 1 || depois.um[0] !== depois.idx)
+      maus.push(`seta: ${JSON.stringify({ antes, ...depois })}`);
+    await p.close();
+    chk(maus.length === 0, 'o Flip: o caminho do rato ate a obra nao a troca, e as molduras sao uma paragem do Tab com setas', maus.slice(0, 6).join('  '));
+  }
+
   /* --- os titulos inteiros depois da tinta (1 Nov 2026, critica do Impeccable) ---
      O titulo revela-se por um clip-path; com inset(0) o corte ficava na caixa
      da linha (line-height 1.08) e a mincho desce abaixo dela: "Say hi" perdia
@@ -616,6 +653,34 @@ async function navegador(dir, etiqueta){
     chk(maus.length === 0, 'as etiquetas do leitor de ecra (aria-label) e a ligacao de saltar seguem a lingua da pagina', maus.slice(0, 6).join('  '));
   }
 
+  /* --- o que o leitor de ecra diz no index (1 Nov 2026, critica 2 do Impeccable) ---
+     (1) cada cartao de projecto chama-se pelo titulo, nao pelo cartao inteiro
+     (o do baralho lia ~400 letras); (2) o titulo e a posicao da lightbox estao
+     numa regiao aria-live, para cada passo ser anunciado; (3) nenhuma seta
+     (→ ↗) de um link ou botao e lida em voz alta (aria-hidden); (4) o nome
+     falado do botao da lingua comeca pelo que ele mostra (WCAG 2.5.3). */
+  {
+    const maus = [];
+    for (const lq of ['', '?lang=pt']) {
+      const p = await nova(1280);
+      await p.goto(base + 'index.html' + lq, { waitUntil: 'networkidle' });
+      const r = await p.evaluate(() => ({
+        cartoes: [...document.querySelectorAll('#projGrid .proj')].map(a => ({ n: a.getAttribute('aria-label') || '', t: a.querySelector('h3')?.textContent || '' })),
+        live: !!document.querySelector('[aria-live] #lbCap') && !!document.querySelector('[aria-live] #lbPos'),
+        setas: [...document.querySelectorAll('a, button')].filter(e => e.getClientRects().length && /[→↗]/.test(e.textContent)
+          && !/[→↗]/.test([...e.querySelectorAll('[aria-hidden="true"]')].map(x => x.textContent).join(''))).map(e => e.textContent.trim()),
+        lingua: (() => { const b = document.querySelector('#langTgl'); return { v: b.textContent.trim(), n: b.getAttribute('aria-label') || '' }; })() }));
+      const tag = lq ? 'pt' : 'en';
+      for (const c of r.cartoes) if (!c.n.startsWith(c.t) || c.n.length > 120) maus.push(`${tag}: cartao "${c.n.slice(0, 50)}"`);
+      if (!r.cartoes.length) maus.push(`${tag}: sem cartoes de projecto`);
+      if (!r.live) maus.push(`${tag}: a legenda da lightbox fora de aria-live`);
+      r.setas.slice(0, 3).forEach(x => maus.push(`${tag}: seta lida em "${x}"`));
+      if (!r.lingua.n.startsWith(r.lingua.v)) maus.push(`${tag}: lingua mostra "${r.lingua.v}" e chama-se "${r.lingua.n}"`);
+      await p.close();
+    }
+    chk(maus.length === 0, 'o leitor de ecra no index: cartoes pelo titulo, lightbox anunciada, setas caladas, lingua com o que mostra', maus.slice(0, 6).join('  '));
+  }
+
   /* --- a lightbox num telemovel (1 Nov 2026, critica do Impeccable) ---
      As setas eram transparentes, a meio do ecra, e num telemovel ficavam por
      cima da obra: nas de fundo branco (Angela) desapareciam. E a dica falava
@@ -648,6 +713,33 @@ async function navegador(dir, etiqueta){
       await p.close();
     }
     chk(maus.length === 0, 'a lightbox no telemovel: as setas e o fechar nunca tapam a obra, e a dica e a do gesto (a das teclas com rato)', maus.slice(0, 6).join('  '));
+  }
+
+  /* --- o telemovel mais curto (1 Nov 2026, critica 2 do Impeccable) ---
+     Os tres cartoes pequenos dos projectos eram cada um uma capa a largura
+     da pagina (~3300px de seccao). Abaixo dos 621px: capa pequena a esquerda
+     (menos de metade do cartao), sem a descricao. E a contagem da parede
+     ("12 / 37") fica na linha do titulo, e os chips cabem nas duas linhas
+     que a reserva guarda (84px) dos 360 aos 620px, nas duas linguas. */
+  {
+    const maus = [];
+    for (const lq of ['', '?lang=pt']) for (const w of [360, 390, 430, 620]) {
+      const p = await nova(w, { viewport: { width: w, height: 844 }, hasTouch: true, isMobile: true });
+      await p.goto(base + 'index.html' + lq, { waitUntil: 'networkidle' });
+      const r = await p.evaluate(() => {
+        const cs = [...document.querySelectorAll('#projGrid .proj')].map(c => { const im = c.querySelector(':scope > img, :scope > .plate'), d = c.querySelector('p');
+          return { capa: im.getBoundingClientRect().width / c.getBoundingClientRect().width, desc: d ? getComputedStyle(d).display : 'none' }; });
+        const ti = document.querySelector('#work .sec-title').getBoundingClientRect(), co = document.querySelector('#workCount').getBoundingClientRect();
+        return { cs, filtros: document.querySelector('#filters').getBoundingClientRect().height,
+          linha: Math.abs((co.top + co.bottom) / 2 - (ti.top + ti.bottom) / 2) < 20 };
+      });
+      const tag = `${lq ? 'pt' : 'en'} ${w}px`;
+      r.cs.forEach((c, i) => { if (c.capa >= 0.5 || c.desc !== 'none') maus.push(`${tag}: cartao ${i + 1} capa ${Math.round(c.capa * 100)}% desc ${c.desc}`); });
+      if (r.filtros > 84.5) maus.push(`${tag}: chips com ${Math.round(r.filtros)}px (reserva 84)`);
+      if (!r.linha && !(lq && w < 390)) maus.push(`${tag}: a contagem fora da linha do titulo`);
+      await p.close();
+    }
+    chk(maus.length === 0, 'o telemovel: cartoes de projecto compactos, contagem ao lado do titulo, chips dentro da reserva', maus.slice(0, 6).join('  '));
   }
 
   /* --- a parede num ecra de toque: o titulo por baixo (1 Nov 2026) ---

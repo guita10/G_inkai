@@ -637,10 +637,14 @@ screen allows, a different one each visit (the next in `CONFIG.heroArt`, kept
 in `localStorage`; only originals, never fan art or collabs, each with its
 WebP, all checked by `verify.mjs`). **The Flip** (1 Nov 2026, chosen by
 Frede from four prototypes made with `/prototype`): under the buttons, the
-same six originals as small frames; pointing at one (with a mouse), focusing
-it or tapping it swaps the big piece, instantly, with no animation (a gesture
+same six originals as small frames; resting the mouse on one for 140ms,
+focusing it or tapping it swaps the big piece, with no animation (a gesture
 repeated many times in a row), but only once the new piece is decoded, so
-the mat never flashes empty. The first touch of the frames preloads all six.
+the mat never flashes empty. The 140ms pause came from the second critique
+(1 Nov 2026): with an instant swap on pointing, the way from a frame to the
+big picture crossed the next frame and swapped to it (from 5 of the 6), so
+a click opened the wrong piece. The six are one Tab stop (the chosen one,
+`role="toolbar"`), with the arrow keys, Home and End moving between them. The first touch of the frames preloads all six.
 The chosen frame carries the `--hi` outline; the caption reads "title" and
 "n / 6". **The only words of the intro are the name and what he does**
 (Frede, 1 Nov 2026, evening: "apenas manter Frederico Guita, Ilustração e
@@ -656,7 +660,12 @@ purpose; the opening twelve, `CONFIG.wallPreview`, never repeat the intro's
 six, which come right after them: Frede's choice after the Impeccable
 critique of 1 Nov 2026, checked by `verify.mjs`) → projects (the featured project, `CONFIG.featured`, as a full-width
 card with its cover, text, a strip of its series and its links; the others in
-a row below) → commissions (text and the four formats beside the cast) →
+a row below; on phones those three are compact, a small cover beside the
+kicker, title and link, the description left to the project page) →
+commissions (a short band beside the cast: title, OPEN badge, one sentence,
+"Formats and how to ask →" and "Shop →"; the four format names left the home
+page after the second critique, because they looked like links and repeated
+the shop) →
 about (bio beside the timeline) → contact. The timeline is not its own
 section any more; its `id="timeline"` sits on the block inside About, so old
 `#timeline` links still land. `DESIGN.md` §1 and §5 have the reasoning.
@@ -689,7 +698,9 @@ fails if `merch`, `shop`, `shopDrop` or `merchCollection` reappear in
 The fields both pages read have to match, and `verify.mjs` checks them:
 `artistName`, `realName`, `email`, `instagram`, `commissionsOpen`, `tiers`,
 `shopOpen`, and the copy keys `commTitle`, `commOpen`, `commClosed`,
-`commIntro`, `navShop`, `navComm`, `commCta`, `tiers`. That is why launching the shop is
+`commIntro`, `navShop`, `navComm`, `tiers`. (`commCta`, "Ask about a
+commission", is the shop's own email button; the home band's button is
+`commSee`, "Formats and how to ask", since it only takes you there.) That is why launching the shop is
 `shopOpen:true` in **both** files. **The shop launched on 30 September 2026**
 with four products fulfilled by Printful (t-shirt, hoodie, art print, stickers).
 A merch entry with `hold: true` exists in Shopify but is not published, so its
@@ -889,6 +900,16 @@ The checks themselves, and why each one exists:
 - **The phone lightbox**: on a touch screen (390 and 320px, with touch on) no
   arrow and no close button lies over the artwork, and the visible hint is
   the gesture one; with a mouse at 1280px, the keyboard one.
+- **The Flip's mouse path** (second critique, 1 Nov 2026): rest on each frame,
+  then move to the big picture at a normal speed (400ms): the piece chosen
+  must still be there. One Tab stop for the six; → moves and swaps.
+- **What a screen reader hears on the index**, EN and PT: each project card
+  named by its title, the lightbox's title and position in an `aria-live`
+  region, no `→`/`↗` read aloud, and the language button's name starting
+  with the letters it shows.
+- **The phone layout** (360–620px, touch, EN and PT): compact project cards
+  (cover under half the card, no description), the wall count beside its
+  title, the filter chips within their 84px reserve.
 - **The wall on a touch screen** (390 and 820px): every visible tile has its
   title under the art, on one 20px line, and the wall's reserve is 95–100%
   of its real height.

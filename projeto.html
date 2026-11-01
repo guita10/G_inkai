@@ -506,6 +506,8 @@ document.getElementById('backLabel').textContent = LANG === 'pt' ? 'Todo o traba
    CONFIG desta pagina so leva os projectos, por isso ficam aqui */
 const A11Y = { a11yLang: ['Switch language', 'Mudar de língua'], a11yTheme: ['Switch theme', 'Mudar de tema'] };
 document.querySelectorAll('[data-ta]').forEach(el => { const w = A11Y[el.dataset.ta]; if(w) el.setAttribute('aria-label', w[LANG === 'pt' ? 1 : 0]); });
+/* o nome falado comeca pelo que o botao mostra ("PT, Switch language") */
+tgl.setAttribute('aria-label', `${tgl.textContent}, ${A11Y.a11yLang[LANG === 'pt' ? 1 : 0]}`);
 document.getElementById('footBack').textContent  = LANG === 'pt' ? '← Voltar ao portefólio' : '← Back to portfolio';
 document.getElementById('footL').textContent = `© ${new Date().getFullYear()} ${CONFIG.artistName} · ${CONFIG.realName}`;
 </script>

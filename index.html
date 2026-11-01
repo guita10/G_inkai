@@ -318,7 +318,7 @@ const CONFIG = {
       commTitle: "Commissions",
       commOpen: "Open", commClosed: "Closed",
       commIntro: "Four formats, from a bust to a full character sheet. Tell me what you have in mind and I reply with the format, the price and the timeline.",
-      commCta: "Ask about a commission",
+      commSee: "Formats and how to ask",
       tiers: {
         headshot: { name: "Headshot / Bust", desc: "Head and shoulders, fully rendered." },
         half:     { name: "Half body",       desc: "Waist-up illustration, fully rendered." },
@@ -327,7 +327,7 @@ const CONFIG = {
       },
       navShop: "Shop",
       contactTitle: "Say hi",
-      contactBody: "For commissions, collabs or publishing, email is fastest. For everything else, Instagram.",
+      contactBody: "For commissions, use the button on the commissions page: the email starts with the brief already in it. For collabs or publishing, email is fastest; for everything else, Instagram.",
       footerNote: "Drawn & built by hand.",
       lightboxHint: "Esc to close · ← → to browse",
       lightboxHintTouch: "Swipe to browse",
@@ -376,7 +376,7 @@ const CONFIG = {
       commTitle: "Comissões",
       commOpen: "Abertas", commClosed: "Fechadas",
       commIntro: "Quatro formatos, do busto à character sheet completa. Diz-me o que tens em mente e respondo com o formato, o valor e o prazo.",
-      commCta: "Pedir uma comissão",
+      commSee: "Formatos e como pedir",
       tiers: {
         headshot: { name: "Headshot / Busto",   desc: "Cabeça e ombros, totalmente renderizado." },
         half:     { name: "Meio corpo",         desc: "Ilustração da cintura para cima, totalmente renderizada." },
@@ -385,7 +385,7 @@ const CONFIG = {
       },
       navShop: "Loja",
       contactTitle: "Diz olá",
-      contactBody: "Para comissões, colaborações ou publicação, o email é o mais rápido. Para tudo o resto, Instagram.",
+      contactBody: "Para comissões, usa o botão da página das comissões: o email já começa com o pedido escrito. Para colaborações ou publicação, o email é o mais rápido; para tudo o resto, Instagram.",
       footerNote: "Desenhado & construído à mão.",
       lightboxHint: "Esc para fechar · ← → para navegar",
       lightboxHintTouch: "Desliza para navegar",
@@ -899,9 +899,6 @@ section{padding:clamp(64px,9vw,128px) 0 0}
 .badge.closed{border:1px solid var(--hair);color:var(--bone-dim)}
 #comm .head{flex-direction:row;align-items:center;gap:16px}
 .comm-band{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--gut);align-items:center}
-/* linhas, nao caixas: cada formato numa linha de cabelo */
-.comm-formats{list-style:none;border-top:1px solid var(--hair);margin-top:34px}
-.comm-formats li{padding:16px 0;border-bottom:1px solid var(--hair);font-family:var(--f-disp);font-weight:700;font-size:1.5rem;line-height:1.2}
 /* o elenco: decoracao (um fundo, nao um <img>), o aspect-ratio guarda o lugar */
 .comm-art{aspect-ratio:5424/2778;
   background:url("images/bg/cast-cut-1000.png") center/contain no-repeat;
@@ -1118,7 +1115,14 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
   .hero{grid-template-rows:auto 1fr calc(20px + 70px)}
   /* o titulo da parede numa linha, os filtros e a contagem na seguinte */
   .wall-bar{gap:12px 16px}
-  .wall-bar .sec-title{flex-basis:100%}
+  /* o titulo e a contagem ("12 / 37") na mesma linha, os filtros por baixo
+     a largura toda. A contagem ficava a direita dos chips e, com os chips em
+     duas ou tres linhas, flutuava entre elas (critica 2 do Impeccable). Se
+     nao couber ao lado do titulo (PT a 360px), desce para uma linha so dela,
+     encostada a direita. */
+  .wall-bar .sec-title{flex:0 0 auto;max-width:100%}
+  .wall-bar .count{order:1;margin-left:auto}
+  .wall-bar .filters{order:2;flex-basis:100%}
   .pf{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
   .pf-strip{grid-template-columns:repeat(4,minmax(0,1fr))}
   .about{grid-template-columns:minmax(0,1fr);gap:48px}
@@ -1129,7 +1133,18 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
      pagina (1 Nov 2026). Eram uma fila que se arrastava de lado e saia ate a
      borda do ecra: o cartao seguinte aparecia cortado a 0px, com o texto
      encostado a borda, e lia-se como cortado e nao como "arrasta". */
-  .projects{grid-template-columns:minmax(0,1fr);gap:48px}
+  .projects{grid-template-columns:minmax(0,1fr);gap:28px}
+  /* Os tres cartoes pequenos em telemovel (critica 2 do Impeccable, 1 Nov
+     2026): a capa pequena a esquerda (o mesmo 4:5 com passe-partout, nunca
+     cortada), o kicker, o titulo e "Abrir projeto" a direita. A descricao
+     fica na pagina do projecto. Cada capa a largura da pagina fazia so a
+     seccao dos Projectos ter ~3300px, e as comissoes ficavam a 7 ecras. */
+  .proj{flex-direction:row;gap:16px;align-items:flex-start}
+  .proj > img,.proj > .plate{flex:none;width:36%}
+  .proj .body{padding:0;gap:6px}
+  .proj h3{font-size:1.125rem}
+  .proj p{display:none}
+  .proj .go{padding-top:6px}
   .pf{grid-template-columns:minmax(0,1fr)}
   /* a barra aos 320px: o "Guita_Ink" na mincho e mais largo do que era, e
      com as folgas de antes o ultimo botao saia 4px do ecra (o verify apanhou-o).
@@ -1248,8 +1263,8 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
     <h1><span class="nm" id="heroName"></span> <span class="role" data-t="heroRole"></span></h1>
     <div class="hero-info">
       <div class="row">
-        <a class="btn fill" href="#work"><span data-t="ctaWork"></span> →</a>
-        <a class="btn" href="loja.html#comissoes" data-loja="#comissoes"><span data-t="ctaComm"></span></a>
+        <a class="btn fill" href="#work"><span data-t="ctaWork"></span><span aria-hidden="true"> →</span></a>
+        <a class="btn" href="loja.html#comissoes" data-loja="#comissoes"><span data-t="ctaComm"></span><span aria-hidden="true"> →</span></a>
       </div>
     </div>
     <figure class="hero-art" id="heroArt" role="button" tabindex="0">
@@ -1258,7 +1273,7 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
     </figure>
     <!-- as seis originais em pequeno (o Flip): desenhadas pelo script do fim,
          que tem as palavras nas duas linguas; a fila ja tem a altura delas -->
-    <div class="hero-mini" id="heroMini" role="group"></div>
+    <div class="hero-mini" id="heroMini" role="toolbar"></div>
     <script>
     /* A obra do topo: uma das originais do CONFIG.heroArt, outra a cada
        visita (a seguinte da lista; a primeira visita tira a sorte). Corre
@@ -1344,12 +1359,13 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
       <div>
         <p class="lede rv" data-t="commIntro" style="margin:0 0 30px"></p>
         <div class="row rv">
-          <a class="btn fill" href="loja.html#comissoes" data-loja="#comissoes"><span data-t="commCta"></span> →</a>
-          <a class="btn" href="loja.html#merch" data-loja="#merch" data-shop-link hidden><span data-t="navShop"></span> →</a>
+          <a class="btn fill" href="loja.html#comissoes" data-loja="#comissoes"><span data-t="commSee"></span><span aria-hidden="true"> →</span></a>
+          <a class="btn" href="loja.html#merch" data-loja="#merch" data-shop-link hidden><span data-t="navShop"></span><span aria-hidden="true"> →</span></a>
         </div>
-        <!-- os quatro formatos, so os nomes (§9.4: nada de precos, fases ou
-             prazos): dizem o que ha antes de se sair da pagina -->
-        <ol class="comm-formats rv" id="commFormats"></ol>
+        <!-- Os quatro formatos sairam daqui (critica 2 do Impeccable, decisao
+             do Frede, 1 Nov 2026): pareciam ligacoes e nao eram, e repetiam a
+             loja, que os tem com a descricao e o pedido por email. A faixa diz
+             o que ha e manda para la; o botao diz para onde vai. -->
       </div>
       <!-- o elenco dos sete (Survival of Kings): decoracao, fundo no CSS -->
       <div class="comm-art rv" aria-hidden="true"></div>
@@ -1410,8 +1426,12 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
   <button class="lb-btn lb-next"  id="lbNext"  aria-label="Next" data-ta="a11yNext">›</button>
   <div>
     <div class="lb-stage" id="lbStage"></div>
-    <p class="lb-cap" id="lbCap"></p>
-    <p class="lb-pos" id="lbPos"></p>
+    <!-- o titulo e a posicao sao anunciados a cada passo (aria-live): sem
+         isto as setas mudavam de obra em silencio para o leitor de ecra -->
+    <div aria-live="polite" aria-atomic="true">
+      <p class="lb-cap" id="lbCap"></p>
+      <p class="lb-pos" id="lbPos"></p>
+    </div>
     <p class="lb-hint" data-t="lightboxHint"></p>
     <p class="lb-hint lb-hint-touch" data-t="lightboxHintTouch"></p>
   </div>
@@ -1577,7 +1597,9 @@ let heroPedido = 0, heroAquecido = false;
 function heroSwap(idx){
   const fig = $('#heroArt');
   if(!fig || fig.hidden) return;
-  $$('#heroMini .mini').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.idx === idx)));
+  /* a escolhida e a unica paragem do Tab no grupo (tabindex 0; as outras -1) */
+  $$('#heroMini .mini').forEach(b => { const on = +b.dataset.idx === idx;
+    b.setAttribute('aria-pressed', String(on)); b.tabIndex = on ? 0 : -1; });
   if(+fig.dataset.idx === idx) return;
   const g = CONFIG.artworks[idx], lista = heroList(), pedido = ++heroPedido;
   const aplica = () => {
@@ -1601,16 +1623,34 @@ function renderHeroMini(){
   box.innerHTML = heroList().map(i => {
     const g = CONFIG.artworks[i], th = srcOf(g.src.replace(/^images\//, 'images/thumb/'));
     const f = WEBP_OK ? th.replace(/\.jpe?g$/i, '.webp') : th;
-    return `<button class="mini" type="button" data-idx="${i}" aria-pressed="${i === atual}" aria-label="${t.heroShow} ${g.label}">`
+    return `<button class="mini" type="button" data-idx="${i}" aria-pressed="${i === atual}" tabindex="${i === atual ? 0 : -1}" aria-label="${t.heroShow} ${g.label}">`
       + `<img src="${f}" width="608" height="760" alt="" loading="lazy" fetchpriority="low" decoding="async"></button>`;
   }).join('');
-  /* apontar pre-visualiza (so com rato), focar e tocar escolhem */
+  /* Apontar pre-visualiza (so com rato), mas so quando o ponteiro PARA numa
+     moldura (140ms). As molduras estao em fila e o caminho de uma ate a obra
+     grande passava pela seguinte: trocava-a, e o clique abria a obra errada
+     (de 5 das 6 molduras; critica 2 do Impeccable, 1 Nov 2026). Atravessar a
+     velocidade normal nao chega aos 140ms. Tocar e o teclado escolhem na hora.
+     As seis sao uma so paragem do Tab (a escolhida); as setas, o Home e o End
+     andam entre elas, como numa barra de ferramentas. */
   const rato = matchMedia('(hover:hover)').matches;
-  $$('#heroMini .mini').forEach(b => {
+  const minis = [...$$('#heroMini .mini')];
+  let espera = 0;
+  minis.forEach((b, k) => {
     const i = +b.dataset.idx;
-    b.onclick = () => heroSwap(i);
+    b.onclick = () => { clearTimeout(espera); heroSwap(i); };
     b.onfocus = () => heroSwap(i);
-    if(rato) b.onpointerenter = () => heroSwap(i);
+    if(rato){
+      b.onpointerenter = () => { clearTimeout(espera); espera = setTimeout(() => heroSwap(i), 140); };
+      b.onpointerleave = () => clearTimeout(espera);
+    }
+    b.onkeydown = e => {
+      const passo = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+      const alvo = passo ? minis[(k + passo + minis.length) % minis.length]
+        : e.key === 'Home' ? minis[0] : e.key === 'End' ? minis[minis.length - 1] : null;
+      if(!alvo) return;
+      e.preventDefault(); alvo.focus();
+    };
   });
   /* a primeira vez que alguem chega as molduras, as seis obras grandes vao
      para a cache, e dai em diante a troca e imediata */
@@ -1628,6 +1668,9 @@ function renderText(){
   $$('[data-ph]').forEach(el => el.textContent = t.placeholderNote);
   document.documentElement.lang = LANG;
   $('#langTgl').textContent = LANG === 'en' ? 'PT' : 'EN';
+  /* o nome falado comeca pelo que o botao mostra ("PT, Switch language"):
+     quem usa a voz diz o que ve (WCAG 2.5.3) */
+  $('#langTgl').setAttribute('aria-label', `${$('#langTgl').textContent}, ${t.a11yLang}`);
   $('#brandName').textContent = CONFIG.artistName;
 
   renderHeroMini();
@@ -1677,8 +1720,9 @@ function renderText(){
     }
     const links = document.createElement('div');
     links.className = 'pf-links';
-    links.innerHTML = `<a class="btn fill" href="${href}">${t.openProject} →</a>`
-      + (fp.link && tp.link ? `<a class="btn" href="${fp.link}" target="_blank" rel="noopener">${tp.link} ↗</a>` : '');
+    /* as setas sao para os olhos: o leitor de ecra nao as le (aria-hidden) */
+    links.innerHTML = `<a class="btn fill" href="${href}">${t.openProject}<span aria-hidden="true"> →</span></a>`
+      + (fp.link && tp.link ? `<a class="btn" href="${fp.link}" target="_blank" rel="noopener">${tp.link}<span aria-hidden="true"> ↗</span></a>` : '');
     body.append(links);
     const card = document.createElement('article');
     card.className = 'pf rv';
@@ -1692,13 +1736,17 @@ function renderText(){
     const card = document.createElement('a');
     card.className = 'proj rv';
     card.href = projHref(p);
+    /* o nome do link e o titulo, nao o cartao inteiro: sem isto o leitor de
+       ecra lia a descricao toda (~400 letras no baralho; critica 2 do
+       Impeccable, 1 Nov 2026). Igual ao cartao grande. */
+    card.setAttribute('aria-label', `${tp.title} · ${t.openProject}`);
     /* sem target=_blank: e uma pagina do proprio site e ela ja traz o link de
        voltar. Abrir separadores por cima dos separadores de alguem e das
        coisas que so incomodam. */
     const body = document.createElement('div');
     body.className = 'body';
     body.innerHTML = `<span class="k">${tp.kicker}</span><h3>${tp.title}</h3><p>${tp.desc}</p>
-      <span class="go">${t.openProject} →</span>`;
+      <span class="go">${t.openProject}<span aria-hidden="true"> →</span></span>`;
     if(p.src){
       card.append(artEl(p), body);
     } else {
@@ -1762,7 +1810,6 @@ function renderText(){
   $$('[data-shop-link]').forEach(a => { a.hidden = !shopOn; });
   const lq = LANG === 'pt' ? '?lang=pt' : '';
   $$('[data-loja]').forEach(a => { a.href = `loja.html${lq}${a.dataset.loja}`; });
-  $('#commFormats').innerHTML = CONFIG.tiers.map(x => `<li>${t.tiers[x.key].name}</li>`).join('');
   const open = CONFIG.commissionsOpen;
   const badge = $('#commBadge');
   badge.textContent = open ? t.commOpen : t.commClosed;
@@ -1772,9 +1819,9 @@ function renderText(){
   $('#mailLink').textContent = CONFIG.email;
   $('#mailLink').href = 'mailto:' + CONFIG.email;
   $('#cLinks').innerHTML =
-    `<a href="${CONFIG.instagram}" target="_blank" rel="noopener">Instagram ↗</a>` +
+    `<a href="${CONFIG.instagram}" target="_blank" rel="noopener">Instagram<span aria-hidden="true"> ↗</span></a>` +
     CONFIG.otherLinks.map(l => l.url && l.url !== '#'
-      ? `<a href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`
+      ? `<a href="${l.url}" target="_blank" rel="noopener">${l.label}<span aria-hidden="true"> ↗</span></a>`
       /* sem destino real: texto simples, nao um link que nao vai a lado nenhum.
          Assim que puseres o url no CONFIG volta a ser link sozinho. */
       : `<span class="c-soon">${l.label}</span>`).join('');

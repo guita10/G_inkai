@@ -873,6 +873,8 @@ function render(){
   document.documentElement.lang = LANG;
   $('#langTgl').textContent = LANG === 'en' ? 'PT' : 'EN';
   document.querySelectorAll('[data-ta]').forEach(el => { if(t[el.dataset.ta]) el.setAttribute('aria-label', t[el.dataset.ta]); });
+  /* o nome falado comeca pelo que o botao mostra ("PT, Switch language") */
+  $('#langTgl').setAttribute('aria-label', `${$('#langTgl').textContent}, ${t.a11yLang}`);
   /* o regresso ao portefolio leva a lingua consigo */
   const home = LANG === 'pt' ? 'index.html?lang=pt' : 'index.html';
   $('#brand').href = home; $('#back').href = home;

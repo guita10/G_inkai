@@ -168,8 +168,11 @@ these two was 457 KB of Japanese character slices the site never shows.
   link arrow (since 1 November 2026: "Commissions" scrolled to the band on
   this page while the intro's button of the same name opened the shop; both
   now go to the shop's commission section, where the email ask is). The
-  commissions band's primary button says what it does: "Ask about a
-  commission →", the shop's own words.
+  commissions band's primary button names where it goes, "Formats and how
+  to ask →" (it was "Ask about a commission →", but it only moves to the
+  shop, where the real ask, the email with the brief, is the second click
+  under the same words). Arrows on links and buttons are for the eye:
+  `aria-hidden`, never read aloud.
 - **Mobile menu.** Below 621px the bar links give way to a toggle that opens a
   full-screen panel under the header, so the toggle doubles as close. Links
   cloned from the bar at boot; `aria-expanded`, focus trapped, Escape closes.
@@ -243,10 +246,13 @@ these two was 457 KB of Japanese character slices the site never shows.
   right-aligned to the margin, its title and "n / 6" hanging underneath. A
   click opens it in the lightbox. The next piece in the list on each visit.
   **Under the buttons, the six originals as small frames** (the "Flip", chosen
-  by Frede from four prototypes): pointing at one, focusing it or tapping it
-  swaps the big piece. The swap is instant, never animated (it is repeated
-  many times in a row), and waits for the new piece to decode so the mat
-  never flashes empty. The chosen frame has the highlight outline (`--hi`).
+  by Frede from four prototypes): resting the mouse on one for 140ms,
+  focusing it or tapping it swaps the big piece. Never animated (it is
+  repeated many times in a row), and it waits for the new piece to decode so
+  the mat never flashes empty. The pause is there because the way from a
+  frame to the big picture crosses the next frame: an instant swap on
+  pointing opened the wrong piece. One Tab stop for the six, arrow keys
+  between them. The chosen frame has the highlight outline (`--hi`).
   Two columns down to 621px; stacked on phones: name, role, buttons,
   picture, frames (the picture is whole on a 390×844 first screen).
 - **The shop's first screen:** the title with the drop's badge, the merch's
@@ -262,11 +268,16 @@ these two was 457 KB of Japanese character slices the site never shows.
   originals that are not up there, the three sketches and the three fan-art
   pieces that were already in it; the intro's six come right after.
 - **Projects:** the featured one full width, the other three in a row; below
-  620px they stack, one per row, each cover the page's width. (They were a
-  sideways strip that ran to the screen's edge, the next card cut at 0px,
-  which read as clipped rather than as "swipe".)
-- **Commissions:** text, buttons and the four formats left; the Survival of
-  Kings line-up right. Formats only (§7). In the shop the line-up sits right
+  620px they stack, one per row, compact: the cover small on the left (36%,
+  the same 4:5 mat), the kicker, title and "Open project →" on the right, the
+  description left to the project page. (They were a sideways strip that ran
+  to the screen's edge, then full-width covers that made the section ~3300px
+  on a phone; compact, it is half that.) Each card's link is named by its
+  title for screen readers, not by the whole card.
+- **Commissions:** on the home page a short band: title, OPEN badge, one
+  sentence and two buttons left, the Survival of Kings line-up right. The
+  four format names live in the shop only (on the home page they looked like
+  links and repeated the shop). Formats only, no terms (§7). In the shop the line-up sits right
   of the closing lines (the email note, the button, "Questions first?"), not
   under everything at full width, where it was ~680px tall and left the
   shop's last screen almost empty.
