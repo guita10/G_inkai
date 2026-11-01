@@ -6,7 +6,8 @@ PARA QUE SERVE
   O primeiro logotipo do site (3 de Setembro de 2026) foi um selo: o caracter
   墨 ("tinta"), branco, num quadrado de cantos redondos da cor da casa. Depois
   veio o sapo (Outubro) e um G numa moeda (fim de Outubro). A 31 de Outubro o
-  Frede pediu para voltar ao primeiro, com a cor do site (o azul #0E5CAB).
+  Frede pediu para voltar ao primeiro, com a cor do site. A 1 de Novembro a
+  cor voltou tambem a original: o Royal #2E45FF, a mesma do selo de Setembro.
 
   O selo de Setembro era texto: um <span>墨</span> com a letra dos titulos, que
   nao tem caracteres japoneses, por isso cada sistema desenhava o 墨 com a fonte
@@ -63,7 +64,7 @@ SVG_OUT = os.path.join(ROOT, "images", "logo.svg")
 BIG_OUT = os.path.join(ROOT, "tools", "logo-1024.png")
 PAGINAS = ["index.html", "projeto.html", "loja.html", "404.html"]
 
-COR = "#0E5CAB"         # o azul do site (o --sky do dia)
+COR = "#2E45FF"         # o Royal, o azul do site (o --sky do dia)
 TINTA = "#FFFFFF"       # o 墨
 LADO = 512              # o quadrado, em unidades do SVG
 RAIO = 0.26             # o raio dos cantos, em fraccao do lado (8px em 30)

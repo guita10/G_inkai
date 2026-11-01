@@ -41,7 +41,7 @@ once.
 | Dial | Value | Reading |
 | --- | --- | --- |
 | Density | **3** | Gallery airy. Section rhythm `clamp(64px, 9vw, 128px)`, body copy capped at `36rem`. The wall itself is dense on purpose: 12px between tiles. |
-| Variance | **5** | Asymmetric where text meets art (intro 1fr / 28rem, featured project 5 / 7, commissions 5 / 7); the wall is a calm uniform grid. |
+| Variance | **5** | Asymmetric where text meets art, all on one twelve-column reading with one gutter: intro 7 / 5, featured project 5 / 7, commissions 5 / 7, about 5 / 7; the wall is a calm uniform grid. |
 | Motion | **4** | Fluid CSS, few effects. |
 
 New screens hold these values.
@@ -50,7 +50,9 @@ New screens hold these values.
 
 ## 2. Color Palette & Roles
 
-Ink, paper and one blue. The blue has three token names (`--sky`,
+Ink, paper and one blue: **Royal `#2E45FF`**, the blue of the original site
+(September 2026, "Queen of Jacks blue"), back since 1 November 2026 at Frede's
+request after a month of `#0E5CAB`. The blue has three token names (`--sky`,
 `--sky-lift`, `--sky-raise`, kept from the sky era) so a tint can exist only
 where contrast against a surface demands it; today, in each theme, all three
 hold the same value. Treat them as one colour.
@@ -61,10 +63,10 @@ hold the same value. Treat them as one colour.
   art brings all the colour.
 - **Raise** (`#FFFFFF`) — the mats behind artwork and the shop's cards.
 - **Raise 2** (`#E7E6E1`) — inset panels, placeholder plates.
-- **Sky** (`#0E5CAB`) — the seal's blue, the single accent: filled buttons,
-  the active nav mark, kickers, links, the open badge, selection, focus.
-  5.93:1 on Void, 6.69:1 on Raise, 5.36:1 on Raise 2.
-- **Text on Sky is Void**: 5.93:1.
+- **Sky** (`#2E45FF`, Royal) — the seal's blue, the single accent: filled
+  buttons, the active nav mark, kickers, links, the open badge, selection,
+  focus. 5.45:1 on Void, 6.16:1 on Raise, 4.93:1 on Raise 2.
+- **Text on Sky is Void**: 5.45:1.
 - **Bone** (`#141414`) — the ink: headings and running text. 16.3:1.
 - **Bone Dim** (`#5C5B56`) — secondary only: captions, notes, metadata, the
   footer. 6.02 / 6.81 / 5.45:1.
@@ -74,12 +76,14 @@ hold the same value. Treat them as one colour.
 
 - **Void** `#121211` · **Raise** `#1B1B1A` · **Raise 2** `#242422` — the paper
   turned to ink.
-- **Sky** `#8DB6F2` — the same blue, lifted to read on the dark: 9.02:1 on
-  Void, 8.30:1 on Raise, 7.48:1 on Raise 2. Void on top of it: 9.02:1.
+- **Sky** `#7B8BFF` — Royal lifted to read on the dark (same hue; pure Royal
+  gives only 3.04:1 on Void, as the original site's `--royal-lift` knew):
+  6.23:1 on Void, 5.73:1 on Raise, 5.17:1 on Raise 2. Void on top of it:
+  6.23:1.
 - **Bone** `#EDEBE6` · **Bone Dim** `#9E9B94` (6.76 / 6.21 / 5.61:1) ·
   **Hair** `rgba(237,235,230,.12)`
 
-**The seal does not change with the theme.** It is `#0E5CAB` with a white 墨
+**The seal does not change with the theme.** It is Royal `#2E45FF` with a white 墨
 in the SVG, on day and night alike.
 
 **Fixed colours, on purpose.** The tile caption band (`#141414` with
@@ -98,12 +102,27 @@ these two was 457 KB of Japanese character slices the site never shows.
 
 - **Display — `Shippori Mincho B1` 700.** Headings, the wordmark, prices, the
   big email, timeline years, captions. Sentence case, tracking `-0.01em` to
-  `-0.025em`, line-height 1.02–1.08. The intro title runs up to `4.75rem`.
+  `-0.025em`, line-height 1.02–1.08 (1.15 for the 24px subtitles, which often
+  run to two lines). The intro title runs up to `4.75rem`.
 - **Text and UI — `Zen Kaku Gothic New` 400 / 500.** Running text at 400,
-  buttons, nav, chips and labels at 500. Line-height 1.65.
-- **Sizes are steps:** paragraphs `1rem` (16px) and leads `1.0625–1.1875rem`
-  in full Bone; buttons, links and notes `.875rem` (14px); labels never under
-  `.75rem` (12px). Bone Dim is for what is secondary.
+  buttons, nav, chips and labels at 500. Line-height 1.6.
+- **Seven sizes, and only seven** (since 1 November 2026; a measurement found
+  fifteen on the home page and fourteen in the shop, several almost equal:
+  51 / 45 / 40px titles, 25.6 / 24 / 20px subtitles, 19 / 18 / 17px text).
+  Desktop values; the top two scale down with `clamp()` on phones:
+
+  | Step | Size | Used by |
+  | --- | --- | --- |
+  | Display | up to `4.4rem` (70px) | the intro title, the shop and project titles, the big email |
+  | Heading | up to `2.8rem` (45px) | section titles and the featured project's title |
+  | Subtitle | `1.5rem` (24px) | card titles, timeline entries and years, the four commission formats, merch titles, prices, the bag |
+  | Lead | `1.125rem` (18px) | the intro line, the bio, the ledes, the wordmark |
+  | Body | `1rem` (16px) | running text, descriptions, tile captions |
+  | Small | `.875rem` (14px) | buttons, nav, chips, links, kickers, notes, footer |
+  | Label | `.75rem` (12px) | the spaced-capital labels; never smaller |
+
+  Running text in full Bone; Bone Dim is for what is secondary. A new size
+  needs a reason the table cannot give.
 - **Labels.** The few uppercase labels (badges, the timeline's month, the
   About meta line) are Zen 500 at 12px, `0.12–0.14em` tracking. Kickers above
   project titles are sentence case in Sky, 14px.
@@ -141,20 +160,32 @@ these two was 457 KB of Japanese character slices the site never shows.
 - **Mobile menu.** Below 621px the bar links give way to a toggle that opens a
   full-screen panel under the header, so the toggle doubles as close. Links
   cloned from the bar at boot; `aria-expanded`, focus trapped, Escape closes.
-- **Chips (filters).** `999px` radius, Zen 500 `.8125rem`, Bone Dim with a
+- **Chips (filters).** `999px` radius, Zen 500 `.875rem`, Bone Dim with a
   hairline until active, ink fill when active. `aria-pressed`.
 - **Frames (artwork tiles).** A 4:5 white mat (`Raise`), no border, no radius,
-  no shadow. **Artwork is never cropped:** anything that is not 4:5 is fitted
-  whole (`object-fit: contain`) on the mat, like a print. On hover the art
+  no shadow, with an even margin of 4% of its width on all four sides (a
+  passe-partout, since 1 November 2026: before it, 4:5 art ran to the frame's
+  edge while square art floated in bands, so some pieces looked framed and
+  others did not). **Artwork is never cropped:** anything that is not 4:5 is
+  fitted whole (`object-fit: contain`) on the mat, like a print. On hover the art
   grows 2% inside its frame and a caption band of ink slides up from the
   bottom edge with the title. No numbers on the tiles (the lightbox keeps
   them). Keyboard-operable: `role="button"`, Enter and Space.
-- **Project cards.** The cover whole on its white mat at one fixed height
-  (so the three titles line up), then the kicker, the title, the description
-  and "Open project →" on the paper. No box around them.
-- **Featured project.** Cover left (5 columns), text right (7): kicker,
-  title, description, a strip of the series and the links (the project's own
-  outbound link when it has one).
+- **Project cards.** The cover whole on the same 4:5 mat as the wall, with
+  the same 4% margin (the box used to be nearly square, so the two tall
+  covers filled 68% and 73% of it; now 84–89%). The three columns are equal,
+  so the three boxes are the same height and the titles line up. Then the
+  kicker, the title, the description and "Open project →" on the paper. No
+  box around them.
+- **Featured project.** Cover left (5 columns, on the same mat), text right
+  (7): kicker, title (at the section-title size, never larger than the
+  heading above it), description, a strip of the series and the links (the
+  project's own outbound link when it has one).
+- **Project page series.** A series of one proportion (the deck, Tokyo
+  Revengers, Survival of Kings) is a plain grid. A series of mixed
+  proportions (PAMP: 4:5, 16:9 and tall posters) is laid in rows of one
+  height, each piece as wide as its proportion asks (flex-grow proportional to
+  width/height). Never cropped, never banded.
 - **Lines that remain.** The bar's bottom edge, the footer's top, the
   commission formats list and the timeline's axis. Sections are separated by
   space and their heading, not by rules.
@@ -168,10 +199,16 @@ these two was 457 KB of Japanese character slices the site never shows.
 
 - Container `max-width: 1400px` (the wall wants the width), one side margin
   everywhere: `--pad: clamp(16px, 3vw, 40px)`.
+- **One gutter between columns:** `--gut: clamp(24px, 4vw, 64px)`, used by
+  the intro, the featured project, the project row, the commissions and the
+  about section (there were four different gaps). With the splits in twelfths
+  (7 / 5, 5 / 7, 4 / 4 / 4) the second columns land on the same grid: the
+  featured text, the commission cast and the timeline all start at one x.
 - **Home page order:** intro band → the wall (selected work) → projects →
   commissions → about (bio beside the timeline) → contact.
 - **The intro band:** the title left, the line "I'm Frederico Guita…" and the
-  two buttons right (`1fr / 28rem`); stacked under 980px. The title is always
+  two buttons right (7 / 5; the line has ~50 characters to a row); stacked
+  under 980px. The title is always
   exactly two lines (`max-width: 10.5em` and a size that follows the column),
   which keeps its reserved height exact; `verify.mjs` sweeps 320 to 1600px in
   both languages.
@@ -180,10 +217,17 @@ these two was 457 KB of Japanese character slices the site never shows.
   with the first `wallPreview` (12) pieces and a "See all N pieces" button; a
   filter always shows its whole category.
 - **Projects:** the featured one full width, the other three in a row; below
-  620px the row becomes a horizontal scroll-snap strip, each card 80% wide so
-  the next one peeks in.
+  620px they stack, one per row, each cover the page's width. (They were a
+  sideways strip that ran to the screen's edge, the next card cut at 0px,
+  which read as clipped rather than as "swipe".)
 - **Commissions:** text, buttons and the four formats left; the Survival of
-  Kings line-up right. Formats only (§7).
+  Kings line-up right. Formats only (§7). In the shop the line-up sits right
+  of the closing lines (the email note, the button, "Questions first?"), not
+  under everything at full width, where it was ~680px tall and left the
+  shop's last screen almost empty.
+- **About:** the bio left (5), the timeline right (7). The bio is capped at
+  `36rem` so it stays near 60 characters a line when the section goes to one
+  column on tablets.
 - **Reserved heights:** every string is written by JavaScript, so every box on
   the first screen reserves its height in CSS (the title, the line, the
   buttons, the wall bar, the filters, the wall). Measured CLS: 0.006 on a

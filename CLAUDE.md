@@ -38,9 +38,9 @@ transformation pipeline. Twelve tokens total.
   --void:#F2F1EE;         /* the paper (night: #121211) */
   --raise:#FFFFFF;        /* the mats behind artwork (night: #1B1B1A) */
   --raise-2:#E7E6E1;      /* (night: #242422) */
-  --sky:#0E5CAB;          /* the accent: the seal's blue (night: #8DB6F2) */
-  --sky-lift:#0E5CAB;     /* small text on --void */
-  --sky-raise:#0E5CAB;    /* small text on --raise */
+  --sky:#2E45FF;          /* the accent: Royal, the seal's blue (night: #7B8BFF) */
+  --sky-lift:#2E45FF;     /* small text on --void */
+  --sky-raise:#2E45FF;    /* small text on --raise */
   --bone:#141414;         /* the ink (night: #EDEBE6) */
   --bone-dim:#5C5B56;     /* (night: #9E9B94) */
   --hair:rgba(20,20,20,.12);
@@ -50,16 +50,19 @@ transformation pipeline. Twelve tokens total.
 }
 ```
 
-Plus one layout variable, `--pad` (the page's side margin,
-`clamp(16px,3vw,40px)`), which is not a colour or type token.
+Plus two layout variables, which are not colour or type tokens: `--pad` (the
+page's side margin, `clamp(16px,3vw,40px)`) and `--gut` (the one gutter
+between columns, `clamp(24px,4vw,64px)`, since 1 Nov 2026: there were four,
+and each section's second column started at a different x).
 
 **Ink on paper, and the work is the star** (31 October 2026, the third design
 that month). Frede asked for the whole site to be rethought, with one goal:
 the art was getting lost among sections, text and decoration. The page is now
 neutral paper, near-black ink and one blue, the blue of the 墨 seal (the first
-logo, back at the same time). The blue is the same `#0E5CAB` as the sky
-palette before it, so the seal, Shopify and the share card stay consistent;
-the token names `--sky*` are kept from that era. **Day is the default**; a
+logo, back at the same time). **Since 1 November 2026 that blue is Royal
+`#2E45FF`, the original site's**, at Frede's request ("keep the Royal blue of
+the original"); the seal, the favicons and the share card were redrawn with
+it. The token names `--sky*` are kept from the sky era. **Day is the default**; a
 one-line script at the top of each page sets `data-theme="dark"` when the
 phone prefers dark (at the top so a dark-mode phone never flashes day first).
 The toggle still overrides both ways; `404.html` uses a plain `@media`
@@ -67,10 +70,12 @@ instead.
 
 History, so old comments make sense: Royal blue `#2E45FF` (September) → the
 frog's green `#80AB5C` (early October) → the Survival of Kings sky (October)
-→ ink and paper (31 October). `--sky-lift` and `--sky-raise` are
-accessibility variants, not a palette; today they equal `--sky` in each
-theme. **Text on the accent is `var(--void)`** in both themes (5.93:1 day,
-9.02:1 night). The tile caption band and the lightbox keep fixed colours
+→ ink and paper with `#0E5CAB` (31 October) → the same, with Royal back (1
+November). At night pure Royal gives 3.04:1 on the dark paper, so night uses
+`#7B8BFF`, the same hue lifted (as the original's `--royal-lift` did).
+`--sky-lift` and `--sky-raise` are accessibility variants, not a palette;
+today they equal `--sky` in each theme. **Text on the accent is
+`var(--void)`** in both themes (5.45:1 day, 6.23:1 night). The tile caption band and the lightbox keep fixed colours
 (they sit on the artwork, not on the page). The measured ratios are in
 `DESIGN.md`.
 
@@ -151,7 +156,7 @@ nothing.
 | `make-webp.py` | regenerates the WebP derivatives |
 | `dims.py` | rewrites the `DIMS` map **and the wall's reserved height** in `index.html`, both from the real pixels |
 | `make-og-card.py` | redraws `images/og-card.jpg`, the 1200x630 social card |
-| `make-logo.py` | draws the logo: the 墨 seal (the site's first logo, back since 31 Oct 2026), the character's real outline from Shippori Mincho B1 ExtraBold, white on a rounded `#0E5CAB` square; writes `images/logo.svg`, the favicon in all four pages, and `tools/logo-1024.png` for use off the site. Needs `fonttools` and network for the full font (the site only serves its Latin subset, which has no 墨) |
+| `make-logo.py` | draws the logo: the 墨 seal (the site's first logo, back since 31 Oct 2026), the character's real outline from Shippori Mincho B1 ExtraBold, white on a rounded Royal `#2E45FF` square; writes `images/logo.svg`, the favicon in all four pages, and `tools/logo-1024.png` for use off the site. Needs `fonttools` and network for the full font (the site only serves its Latin subset, which has no 墨) |
 | `verify.mjs` | drives Chromium over the whole site and runs every check in §10 |
 
 `add-artwork.py` is the one to reach for. Adding art by hand means four steps and
@@ -182,7 +187,7 @@ images/bg/        Survival of Kings originals, not artwork in the gallery
                   (dims.py and make-webp.py only read images/ itself):
                   cast-cut-1000/1920: the seven, cut out by Frede (no
                     background), beside the commissions on the home page and
-                    under them in the shop. The one Survival of Kings picture
+                    beside their closing lines in the shop. The one Survival of Kings picture
                     still in the layout since 31 Oct 2026
                   sky-900/1920, knight, boy, archer: the sky and the three
                     cut-outs that framed the site in October. Out of the
@@ -246,7 +251,7 @@ the fold, where nothing needs a reserve.
 exactly 4:5; everything else is fitted whole with `object-fit:contain` and
 sits on the white `--raise` like a mat. `verify.mjs` accepts a tile only if its
 image either matches the frame's ratio or is `contain`; switching to `cover`
-is caught (tested against that planted bug). The covers in the row of project cards follow the same rule: one fixed height, the cover whole inside it (`contain`), so the three titles line up; `verify.mjs` checks both. Aim **1-5% under** the real height. Under-reserving settles by a few
+is caught (tested against that planted bug). The covers in the row of project cards follow the same rule: the same 4:5 box in three equal columns (so one height, and the three titles line up), the cover whole inside it (`contain`); `verify.mjs` checks both. Since 1 Nov 2026 every mat (wall tiles, project covers, the featured cover) has an even 4% margin on all sides, a passe-partout: before it, 4:5 art ran to the frame's edge while square art floated in bands. Padding in % counts from the width, so it is equal on the four sides, and with `border-box` the frame stays 4:5 outside: the wall reserve does not change. Aim **1-5% under** the real height. Under-reserving settles by a few
 pixels; over-reserving opens a gap that closes again, which counts just the
 same. Result after all of it, with the wall on the first screen: about 0.006
 throttled, 0 to 0.001 unthrottled.
@@ -301,7 +306,7 @@ Icons are four things, in order of preference:
    an `aria-label`.
 2. **The 墨 seal** — the site's first logo (3 September 2026), back since 31
    October 2026 at Frede's request, after the frog coin and the G coin: the
-   character 墨 ("ink") in white on a rounded square of the site's blue
+   character 墨 ("ink") in white on a rounded square of Royal `#2E45FF`
    (corners at ~26% of the side, as the original 30px square with an 8px
    radius). In September it was live text, so every system drew 墨 with
    whatever CJK font it had; now it is the real outline from Shippori Mincho
@@ -341,8 +346,9 @@ competed with the work: the Survival of Kings sky behind the hero and the
 shop's head, the three character cut-outs (`.cut`), the screentone that swept
 across tiles and the speed lines under the title. The one Survival of Kings
 picture left in the layout is the line-up of seven (`cast-cut`), beside the
-commissions on the home page (`.comm-art`) and under them in the shop
-(`#comissoes::after`): a CSS background, not an `<img>` and not in CONFIG,
+commissions on the home page (`.comm-art`) and beside the closing lines of
+the commissions in the shop (`.comm-art` in `.comm-foot`; it was a full-width
+`#comissoes::after` under everything, ~680px tall, until 1 Nov 2026): a CSS background, not an `<img>` and not in CONFIG,
 because it is decoration and not the portfolio, and because it shows exactly
 what a commission buys. It never sits behind text.
 
@@ -351,11 +357,15 @@ Any text placed over a picture needs a veil and a pixel check in
 put one back if text ever goes over a picture again). The tile caption is an
 opaque ink band, so the normal contrast test measures it.
 
-**Type sizes are steps** (late Oct 2026, after a taste-skill review measured
-running text at 13.8px in grey and 15 sizes on one page): paragraphs `1rem`
-in full `--bone`; buttons, links and notes `.875rem`; the spaced-capitals
-labels stay, never under `.75rem` (12px). `--bone-dim` is for what is
-secondary. `DESIGN.md` §3 has the detail.
+**Type sizes are seven steps** (late Oct 2026, after a taste-skill review
+measured running text at 13.8px in grey; tightened on 1 Nov 2026, when a
+measurement still found 15 sizes on the home page and 14 in the shop, several
+almost equal): display up to 70px (`4.4rem`), headings up to 45px
+(`2.8rem`), subtitles 24px (`1.5rem`), leads 18px (`1.125rem`), body 16px
+(`1rem`), small 14px (`.875rem`), labels 12px (`.75rem`, never smaller). Body
+line-height 1.6. Running text in full `--bone`; `--bone-dim` is for what is
+secondary. Adding a size needs a reason the table in `DESIGN.md` §3 cannot
+give.
 
 **Radius is a documented two-value system**, and mixing outside it is a bug:
 
