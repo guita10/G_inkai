@@ -129,6 +129,15 @@ function config(){
   const orfaos = usados.filter(k => !(k in A.i18n.en) || !(k in A.i18n.pt));
   chk(orfaos.length === 0, 'todos os data-t resolvem nas duas linguas', orfaos.join(' ') || `${usados.length} chaves`);
 
+  /* a parede abre sem repetir a abertura (1 Nov 2026, escolha do Frede apos a
+     critica do Impeccable): nenhuma das doze primeiras (wallPreview) e uma das
+     seis do CONFIG.heroArt. Antes, quatro das doze eram as mesmas pecas das
+     molduras logo acima. */
+  {
+    const rep = A.artworks.slice(0, A.wallPreview).filter(g => (A.heroArt || []).includes(g.src)).map(g => g.label);
+    chk(rep.length === 0, 'a parede abre sem repetir as obras da abertura', rep.join(', ') || `${A.wallPreview} obras ao abrir`);
+  }
+
   /* a obra grande da abertura (1 Nov 2026): so originais (nunca fan art nem
      colabs, §9.1 e §9.5: e a cara do site), cada uma na parede tambem (o
      clique abre-a na lightbox) e com o .webp grande e o da miniatura, porque

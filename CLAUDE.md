@@ -652,7 +652,9 @@ the seal; the buttons, the caption and the frames stay. Two columns down to
 is whole on a 390×844 first screen) → selected
 work (the wall: one uniform grid, no project
 highlighted; the Survival of Kings cast sits after the other originals on
-purpose) → projects (the featured project, `CONFIG.featured`, as a full-width
+purpose; the opening twelve, `CONFIG.wallPreview`, never repeat the intro's
+six, which come right after them: Frede's choice after the Impeccable
+critique of 1 Nov 2026, checked by `verify.mjs`) → projects (the featured project, `CONFIG.featured`, as a full-width
 card with its cover, text, a strip of its series and its links; the others in
 a row below) → commissions (text and the four formats beside the cast) →
 about (bio beside the timeline) → contact. The timeline is not its own

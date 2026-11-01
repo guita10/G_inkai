@@ -257,7 +257,10 @@ these two was 457 KB of Japanese character slices the site never shows.
 - **The wall:** a bar with the title, the filters and the count, then a
   uniform 4:5 grid, 3 columns on desktop, 2 below 980px, 12px gaps. It opens
   with the first `wallPreview` (12) pieces and a "See all N pieces" button; a
-  filter always shows its whole category.
+  filter always shows its whole category. The opening twelve never repeat the
+  intro's six (since 1 November 2026, Frede's choice after the critique): the
+  originals that are not up there, the three sketches and the three fan-art
+  pieces that were already in it; the intro's six come right after.
 - **Projects:** the featured one full width, the other three in a row; below
   620px they stack, one per row, each cover the page's width. (They were a
   sideways strip that ran to the screen's edge, the next card cut at 0px,
