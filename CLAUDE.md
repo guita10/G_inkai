@@ -26,24 +26,27 @@ dependency", "extract a component", or "run a build" is wrong for this repo.
 ## 1. Token definitions
 
 **Where:** one `:root` block at the top of the `<style>` in `index.html` (the
-day, the default), with a `[data-theme="dark"]` block overriding a subset (the
-night). `projeto.html`, `loja.html`
-and `404.html` carry their own copies.
+night, **the default since 1 Nov 2026**), with a `[data-theme="light"]` block
+overriding a subset (the day, on the ◐ toggle). `projeto.html`, `loja.html`
+and `404.html` carry their own copies (404 is always dark: it has no toggle).
 
 **Format:** plain CSS custom properties. No JSON, no Style Dictionary, no
-transformation pipeline. Twelve tokens total.
+transformation pipeline. Fourteen tokens total (twelve until the palette
+below added `--lime` and `--hi`).
 
 ```css
-:root{
-  --void:#F2F1EE;         /* the paper (night: #121211) */
-  --raise:#FFFFFF;        /* the mats behind artwork (night: #1B1B1A) */
-  --raise-2:#E7E6E1;      /* (night: #242422) */
-  --sky:#2E45FF;          /* the accent: Royal, the seal's blue (night: #7B8BFF) */
-  --sky-lift:#2E45FF;     /* small text on --void */
-  --sky-raise:#2E45FF;    /* small text on --raise */
-  --bone:#141414;         /* the ink (night: #EDEBE6) */
-  --bone-dim:#5C5B56;     /* (night: #9E9B94) */
-  --hair:rgba(20,20,20,.12);
+:root{                    /* the night, the default */
+  --void:#030407;         /* Midnight Black, the page (day: #F3F4F6) */
+  --raise:#0E1015;        /* the mats behind artwork, the cards (day: #FFFFFF) */
+  --raise-2:#181B21;      /* (day: #E6E8EC) */
+  --sky:#1558C9;          /* Electric Cobalt, FILLED: buttons, seal (both) */
+  --sky-lift:#6E9BF2;     /* cobalt as small text on --void (day: #1558C9) */
+  --sky-raise:#6E9BF2;    /* cobalt as small text on --raise (day: #1558C9) */
+  --bone:#EEF0F3;         /* the text (day: #030407) */
+  --bone-dim:#9BA0AA;     /* (day: #565B64) */
+  --hair:rgba(238,240,243,.13);
+  --lime:#D8F454;         /* Acid Lime, FILLED only: highlights (both) */
+  --hi:#D8F454;           /* highlight as a line or text (day: #1558C9) */
   --f-disp:'Shippori Mincho B1','Hiragino Mincho ProN','Yu Mincho',Georgia,serif;
   --f-body:'Zen Kaku Gothic New',system-ui,-apple-system,'Segoe UI',sans-serif;
   --f-ui:'Zen Kaku Gothic New',system-ui,-apple-system,'Segoe UI',sans-serif;
@@ -55,29 +58,37 @@ page's side margin, `clamp(16px,3vw,40px)`) and `--gut` (the one gutter
 between columns, `clamp(24px,4vw,64px)`, since 1 Nov 2026: there were four,
 and each section's second column started at a different x).
 
-**Ink on paper, and the work is the star** (31 October 2026, the third design
-that month). Frede asked for the whole site to be rethought, with one goal:
-the art was getting lost among sections, text and decoration. The page is now
-neutral paper, near-black ink and one blue, the blue of the 墨 seal (the first
-logo, back at the same time). **Since 1 November 2026 that blue is Royal
-`#2E45FF`, the original site's**, at Frede's request ("keep the Royal blue of
-the original"); the seal, the favicons and the share card were redrawn with
-it. The token names `--sky*` are kept from the sky era. **Day is the default**; a
-one-line script at the top of each page sets `data-theme="dark"` when the
-phone prefers dark (at the top so a dark-mode phone never flashes day first).
-The toggle still overrides both ways; `404.html` uses a plain `@media`
-instead.
+**Midnight Black, Electric Cobalt, Acid Lime** (1 November 2026, afternoon:
+Frede's palette card). `#030407` and `#1558C9` are the card's codes; the
+lime's code was cut off, and `#D8F454` is measured from its swatch (swap it
+in the four token blocks if Frede sends the exact one). **The site opens
+dark for everyone**: `<html data-theme="dark">` is in the markup and the old
+"dark if the phone prefers it" script is gone; the toggle flips to light
+and back (it does not remember). Cobalt replaced Royal everywhere, seal
+included.
+
+Each colour fails somewhere, so each has a job (ratios in `DESIGN.md` §2):
+
+- **Cobalt is for filling** (buttons, the seal, the upcoming dot), with
+  **`#FFFFFF` text on it** (6.42:1, both themes). As text on the black it
+  fails (3.19:1); small cobalt text uses `--sky-lift`/`--sky-raise`, lifted to
+  `#6E9BF2` at night.
+- **Lime is for filling** too (the active filter, the OPEN and DROP badges,
+  the timeline flag, the pre-order flag, selection), with **`#030407` text on
+  it** (16.58:1). On the light page as text or a thin line it disappears
+  (1.09:1), so it never is.
+- **`--hi` is the highlight as a line or text** (the big email, the
+  current-section mark, the upcoming year): lime at night, cobalt by day.
+- Text on an accent is therefore a fixed colour, no longer `var(--void)`
+  (that rule died with the light default: black on cobalt is 3.19:1).
 
 History, so old comments make sense: Royal blue `#2E45FF` (September) → the
 frog's green `#80AB5C` (early October) → the Survival of Kings sky (October)
-→ ink and paper with `#0E5CAB` (31 October) → the same, with Royal back (1
-November). At night pure Royal gives 3.04:1 on the dark paper, so night uses
-`#7B8BFF`, the same hue lifted (as the original's `--royal-lift` did).
-`--sky-lift` and `--sky-raise` are accessibility variants, not a palette;
-today they equal `--sky` in each theme. **Text on the accent is
-`var(--void)`** in both themes (5.45:1 day, 6.23:1 night). The tile caption band and the lightbox keep fixed colours
-(they sit on the artwork, not on the page). The measured ratios are in
-`DESIGN.md`.
+→ ink and paper with `#0E5CAB`, day by default (31 October) → the same with
+Royal back (1 November, morning) → Midnight Black / Electric Cobalt / Acid
+Lime, night by default (1 November, afternoon). The tile caption band
+(`#030407` / `#EEF0F3`) and the lightbox keep fixed colours (they sit on the
+artwork, not on the page).
 
 There is no spacing scale token. Spacing is written inline, usually as
 `clamp()`. Do not invent a scale and refactor to it.
@@ -160,7 +171,7 @@ nothing.
 | `make-webp.py` | regenerates the WebP derivatives |
 | `dims.py` | rewrites the `DIMS` map **and the wall's reserved height** in `index.html`, both from the real pixels |
 | `make-og-card.py` | redraws `images/og-card.jpg`, the 1200x630 social card |
-| `make-logo.py` | draws the logo: the 墨 seal (the site's first logo, back since 31 Oct 2026), the character's real outline from Shippori Mincho B1 ExtraBold, white on a rounded Royal `#2E45FF` square; writes `images/logo.svg`, the favicon in all four pages, and `tools/logo-1024.png` for use off the site. Needs `fonttools` and network for the full font (the site only serves its Latin subset, which has no 墨) |
+| `make-logo.py` | draws the logo: the 墨 seal (the site's first logo, back since 31 Oct 2026), the character's real outline from Shippori Mincho B1 ExtraBold, white on a rounded Electric Cobalt `#1558C9` square; writes `images/logo.svg`, the favicon in all four pages, and `tools/logo-1024.png` for use off the site. Needs `fonttools` and network for the full font (the site only serves its Latin subset, which has no 墨) |
 | `verify.mjs` | drives Chromium over the whole site and runs every check in §10 |
 
 `add-artwork.py` is the one to reach for. Adding art by hand means four steps and
@@ -324,7 +335,7 @@ Icons are four things, in order of preference:
    an `aria-label`.
 2. **The 墨 seal** — the site's first logo (3 September 2026), back since 31
    October 2026 at Frede's request, after the frog coin and the G coin: the
-   character 墨 ("ink") in white on a rounded square of Royal `#2E45FF`
+   character 墨 ("ink") in white on a rounded square of Electric Cobalt `#1558C9`
    (corners at ~26% of the side, as the original 30px square with an 8px
    radius). In September it was live text, so every system drew 墨 with
    whatever CJK font it had; now it is the real outline from Shippori Mincho
@@ -351,7 +362,7 @@ didn't and fell through to the browser default, rendering in Arial.
 One `<style>` block per file. Plain selectors, no methodology, no preprocessor.
 
 **Space and tone, few lines** (since 31 Oct 2026). Sections are separated by
-space and their heading, not by rules, and the art sits on white mats with no
+space and their heading, not by rules, and the art sits on mats (near-black at night, white by day) with no
 border. `1px solid var(--hair)` survives only where it carries structure: the
 bar's bottom edge, the footer's top, the commission formats list, the
 timeline's axis and the shop's bag. There is **no elevation shadow anywhere**:
@@ -460,9 +471,11 @@ comissoes/      the commission system; nothing here is served
 marca/          the brand sheet for printers and collaborators; not served
   Guita_Ink-brand-sheet.pdf  one A4 page: the frog coin, the palette (HEX,
                   RGB, approximate CMYK), the three faces, the rules
-  ⚠️ both predate the ink redesign (31 Oct 2026): they still show the frog
-                  coin, the frog green and the old faces. Redo them with the
-                  ink palette, the two Japanese faces and images/logo.svg.
+  ⚠️ both predate the ink redesign (31 Oct 2026) and the palette of
+                  1 Nov 2026: they still show the frog coin, the frog green
+                  and the old faces. Redo them with Midnight Black, Electric
+                  Cobalt and Acid Lime (§1), the two Japanese faces and
+                  images/logo.svg.
   brand-sheet.tpl.html  its source. The fonts (Google Fonts woff2, base64)
                   and the logo SVG are pasted in at /*FONTS*/ and /*LOGO*/,
                   then Chromium prints it to A4 (it was made with the old
@@ -649,7 +662,8 @@ That is correct and matches the code: they sit on Royal or on the gallery
 scrim, neither of which changes with the theme, so a theme-following token
 would be wrong. Any *other* unbound fill is a bug.
 
-**⚠️ The Figma file predates every October 2026 change** (the frog, the sky,
+**⚠️ The Figma file predates every October and November 2026 change, the
+Midnight Black / Electric Cobalt / Acid Lime palette included** (the frog, the sky,
 the G logo and the ink redesign of the 31st, with its two Japanese faces).
 It still holds the Royal blue variables and the Selo component. Until it is
 updated, trust it for type and layout only, never for colour or the logo.
@@ -751,6 +765,8 @@ The checks themselves, and why each one exists:
   `naturalWidth: 0` and pass by default.
 - **CLS is 0** on load, on the home page and in the shop. A scripted `openLb()` injects a shift with no
   `hadRecentInput` and will read as a false regression; measure without it.
+- **The site opens dark**: all four pages load on Midnight Black `#030407`
+  without touching the toggle, even with the system set to light.
 - **Contrast** against computed colours in both themes. (Text over a picture
   would be skipped there and needs a pixel test; the one for the sky left with
   the sky, see §6.)

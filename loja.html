@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<script>/* o tema, antes de pintar: o dia e o tema por omissao, a noite so com o
-   telemovel em modo escuro (Out 2026, o ceu). Aqui no topo para quem esta em
-   modo escuro nao ver o dia a piscar antes da noite. */
-if(matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme = 'dark';
+<script>/* o tema: desde 1 Nov 2026 (3) o site abre ESCURO para toda a gente (a
+   paleta Midnight Black / Electric Cobalt / Acid Lime). O data-theme="dark"
+   ja vem no <html>; o claro e so no botao ◐. Antes o dia era o tema por
+   omissao e este script punha a noite a quem tinha o telemovel em escuro. */
 /* ha JavaScript: o que fica por baixo do merch espera por ele (ver .js) */
 document.documentElement.classList.add('js');</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +21,7 @@ document.documentElement.classList.add('js');</script>
 <meta property="og:image" content="https://guitaink.com/images/og-card.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://guitaink.com/loja.html">
-<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
 <!-- AS LETRAS vivem no site (pasta fonts/): ver o index.html -->
 <link rel="preload" href="fonts/shippori-mincho-b1-700-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/zen-kaku-gothic-new-400-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -274,36 +274,39 @@ const CONFIG = {
   unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 
 /* ================= TOKENS — copia dos do index.html ================= */
-/* Out 2026 (3): tinta sobre papel, o azul do selo como unica cor (ver o index) */
+/* 1 Nov 2026 (3): Midnight Black, Electric Cobalt e Acid Lime; abre escuro.
+   Os papeis e os contrastes estao explicados no index. */
 :root{
-  --void:#F2F1EE;         /* o papel */
-  --raise:#FFFFFF;
-  --raise-2:#E7E6E1;
-  --sky:#2E45FF;          /* o azul do selo; texto POR CIMA dele e o --void (5,45:1) */
-  --sky-lift:#2E45FF;     /* 5,45:1 sobre --void */
-  --sky-raise:#2E45FF;    /* 6,16:1 sobre --raise */
-  --bone:#141414;         /* a tinta */
-  --bone-dim:#5C5B56;
-  --hair:rgba(20,20,20,.12);
+  color-scheme:dark;       /* barras de scroll e menus nativos no escuro */
+  --void:#030407;         /* Midnight Black, o fundo */
+  --raise:#0E1015;        /* os passe-partouts das obras e os cartoes */
+  --raise-2:#181B21;
+  --sky:#1558C9;          /* Electric Cobalt: preencher (texto por cima: #FFFFFF) */
+  --sky-lift:#6E9BF2;     /* o cobalto como texto sobre --void */
+  --sky-raise:#6E9BF2;    /* idem sobre --raise */
+  --bone:#EEF0F3;         /* o texto */
+  --bone-dim:#9BA0AA;
+  --hair:rgba(238,240,243,.13);
+  --lime:#D8F454;         /* Acid Lime: preencher (texto por cima: #030407) */
+  --hi:#D8F454;           /* o destaque como linha ou texto */
   --f-disp:'Shippori Mincho B1','Hiragino Mincho ProN','Yu Mincho',Georgia,serif;
   --f-body:'Zen Kaku Gothic New',system-ui,-apple-system,'Segoe UI',sans-serif;
   --f-ui:'Zen Kaku Gothic New',system-ui,-apple-system,'Segoe UI',sans-serif;
   --pad:clamp(16px,3vw,40px);
   --gut:clamp(24px,4vw,64px);   /* a calha entre colunas, a mesma do index */
-  color-scheme:light;      /* os menus nativos dos <select> seguem o tema */
 }
-/* a noite (ver o index) */
-[data-theme="dark"]{
-  color-scheme:dark;
-  --void:#121211;
-  --raise:#1B1B1A;
-  --raise-2:#242422;
-  --sky:#7B8BFF;          /* 6,23:1 sobre --void */
-  --sky-lift:#7B8BFF;
-  --sky-raise:#7B8BFF;
-  --bone:#EDEBE6;
-  --bone-dim:#9E9B94;
-  --hair:rgba(237,235,230,.12);
+/* o dia: so pelo botao ◐ */
+[data-theme="light"]{
+  color-scheme:light;
+  --void:#F3F4F6;
+  --raise:#FFFFFF;
+  --raise-2:#E6E8EC;
+  --sky-lift:#1558C9;
+  --sky-raise:#1558C9;
+  --bone:#030407;         /* o Midnight Black passa a tinta */
+  --bone-dim:#565B64;
+  --hair:rgba(3,4,7,.12);
+  --hi:#1558C9;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -316,7 +319,7 @@ body{
   transition:background .4s ease,color .4s ease;overflow-x:hidden;
 }
 a{color:inherit}
-::selection{background:var(--sky);color:var(--void)}
+::selection{background:var(--lime);color:#030407}
 :focus-visible{outline:2px solid var(--sky-lift);outline-offset:3px}
 .wrap{max-width:1400px;margin:0 auto;padding:0 var(--pad);position:relative;z-index:1}
 /* film grain — a mesma textura do index */
@@ -409,7 +412,7 @@ h2{font-size:clamp(1.8rem,3.2vw,2.8rem);letter-spacing:-.015em;min-height:1.08em
    o preco 30, o total 32, o cesto 22. */
 .lede{color:var(--bone);max-width:36rem;font-size:1.125rem;margin-bottom:34px}
 .badge{font-family:var(--f-ui);font-size:.75rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:7px 14px;border-radius:999px}
-.badge.open{background:var(--sky);color:var(--void)}
+.badge.open{background:var(--lime);color:#030407}   /* o lima, preto por cima: 16,58:1 */
 .badge.closed{border:1px solid var(--hair);color:var(--bone-dim)}
 .row{display:flex;gap:12px;flex-wrap:wrap}
 
@@ -420,7 +423,7 @@ h2{font-size:clamp(1.8rem,3.2vw,2.8rem);letter-spacing:-.015em;min-height:1.08em
   transition:background .25s ease,border-color .25s ease,color .25s ease,transform .12s ease-out;
 }
 .btn:hover{background:var(--bone);color:var(--void)}
-.btn.fill{background:var(--sky);border-color:var(--sky);color:var(--void)}
+.btn.fill{background:var(--sky);border-color:var(--sky);color:#FFFFFF}   /* branco no cobalto: 6,42:1 */
 .btn.fill:hover{background:var(--bone);border-color:var(--bone);color:var(--void)}
 
 /* ---- merch: desde que se compra aqui (30 Set 2026) os cartoes ja nao sao
@@ -460,7 +463,7 @@ h2{font-size:clamp(1.8rem,3.2vw,2.8rem);letter-spacing:-.015em;min-height:1.08em
 .price .u{font-size:.875rem}
 .flag{
   position:absolute;top:12px;left:12px;z-index:2;font-family:var(--f-ui);font-size:.75rem;
-  letter-spacing:.16em;text-transform:uppercase;color:var(--void);background:var(--sky);
+  letter-spacing:.16em;text-transform:uppercase;color:#030407;background:var(--lime);
   padding:3px 9px;border-radius:999px;
 }
 
@@ -580,7 +583,7 @@ footer a:hover{color:var(--bone)}
 /* Ecras de toque: o toque liga o :hover e ele fica preso. O botao cheio
    ("Pagar", "Perguntar") ficava oco depois de tocado. Aqui fica cheio. */
 @media (hover:none){
-  .btn.fill:hover{background:var(--sky);color:var(--void);border-color:var(--sky)}
+  .btn.fill:hover{background:var(--sky);color:#FFFFFF;border-color:var(--sky)}
 }
 /* §9.8 — sem efeitos nenhuns. A textura do grao fica: e parada. */
 @media (prefers-reduced-motion:reduce){

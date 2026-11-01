@@ -14,12 +14,13 @@
 
 ## 1. Visual Theme & Atmosphere
 
-**Since 31 October 2026 the site is ink on paper, and the work is the star.**
+**Since 31 October 2026 the work is the star** (and since 1 November it is
+shown on Midnight Black: see §2).
 Frede asked for the whole design to be rethought, with one aim: the art had
 been getting lost among sections, text and decoration. At the same time the
 first logo the site ever had, the 墨 seal ("ink"), came back.
 
-So the page is a quiet sheet of paper with one blue stamp on it. The intro is
+So the page is a black wall with a cobalt stamp and one lime highlight. The intro is
 a poster (since 1 November 2026, after Frede found the first version's
 landing too weak): the name, large, with what he does under it; one of his
 originals, whole and as tall as the screen, beside it; a different piece on
@@ -30,8 +31,8 @@ picture beside the commissions, because it is exactly what a commission buys.
 
 Type does the structure: a Japanese mincho for headings (its serifs come from
 the brush) and a quiet gothic for everything else. Separation comes from space
-and from the white of the mats, not from boxes or rules. A faint film grain
-sits over the paper.
+and from the tone of the mats, not from boxes or rules. A faint film grain
+sits over the page.
 
 Motion is restrained. The seal stamps once, titles wipe in like ink, artwork
 grows 2% under the cursor. Nothing moves on scroll except reveals that happen
@@ -51,46 +52,42 @@ New screens hold these values.
 
 ## 2. Color Palette & Roles
 
-Ink, paper and one blue: **Royal `#2E45FF`**, the blue of the original site
-(September 2026, "Queen of Jacks blue"), back since 1 November 2026 at Frede's
-request after a month of `#0E5CAB`. The blue has three token names (`--sky`,
-`--sky-lift`, `--sky-raise`, kept from the sky era) so a tint can exist only
-where contrast against a surface demands it; today, in each theme, all three
-hold the same value. Treat them as one colour.
+**Three colours, from Frede's palette card (1 November 2026):** Midnight Black
+`#030407`, Electric Cobalt `#1558C9` and Acid Lime `#D8F454` (the lime's code
+was cut off on the card; `#D8F454` is measured from its swatch and changes in
+one place per page). **The site opens dark**, for everyone: the black is the
+page and the light theme lives on the ◐ toggle. Cobalt replaced the Royal
+`#2E45FF` of that morning everywhere, the seal included.
 
-### Day (default)
+Each colour has a job, because each fails somewhere:
 
-- **Void** (`#F2F1EE`) — the paper. Neutral: neither cream nor blue, so the
-  art brings all the colour.
-- **Raise** (`#FFFFFF`) — the mats behind artwork and the shop's cards.
-- **Raise 2** (`#E7E6E1`) — inset panels, placeholder plates.
-- **Sky** (`#2E45FF`, Royal) — the seal's blue, the single accent: filled
-  buttons, the active nav mark, kickers, links, the open badge, selection,
-  focus. 5.45:1 on Void, 6.16:1 on Raise, 4.93:1 on Raise 2.
-- **Text on Sky is Void**: 5.45:1.
-- **Bone** (`#141414`) — the ink: headings and running text. 16.3:1.
-- **Bone Dim** (`#5C5B56`) — secondary only: captions, notes, metadata, the
-  footer. 6.02 / 6.81 / 5.45:1.
-- **Hair** (`rgba(20,20,20,.12)`) — the few rules that remain (see §4).
+| Role | Token | Night (default) | Day (toggle) | Rule |
+| --- | --- | --- | --- | --- |
+| Page | `--void` | `#030407` Midnight Black | `#F3F4F6` | |
+| Mats and cards | `--raise` / `--raise-2` | `#0E1015` / `#181B21` | `#FFFFFF` / `#E6E8EC` | the art sits on `--raise` |
+| Text | `--bone` | `#EEF0F3` (17.96:1) | `#030407` (18.63:1) | running text always in full Bone |
+| Secondary text | `--bone-dim` | `#9BA0AA` (7.81 / 7.25 / 6.57:1) | `#565B64` (6.20 / 6.83 / 5.56:1) | captions, notes, metadata |
+| Lines | `--hair` | `rgba(238,240,243,.13)` | `rgba(3,4,7,.12)` | the few rules left (§4) |
+| Cobalt, filled | `--sky` | `#1558C9` | `#1558C9` | buttons, the seal, the upcoming dot. **Text on it is `#FFFFFF`** (6.42:1). As text on the black it fails (3.19:1), so it never is |
+| Cobalt, as text | `--sky-lift`, `--sky-raise` | `#6E9BF2` (7.45 / 6.92 / 6.27:1) | `#1558C9` (5.83 / 6.42 / 5.23:1) | kickers, venues, links, prices, focus |
+| Lime, filled | `--lime` | `#D8F454` | `#D8F454` | the active filter, the OPEN and DROP badges, the timeline flag, selection. **Text on it is `#030407`** (16.58:1). On the light page as text or a line it disappears (1.09:1), so it never is |
+| Highlight line or text | `--hi` | `#D8F454` lime (16.58:1) | `#1558C9` cobalt (5.83:1) | the big email, the current-section mark, the upcoming year |
 
-### Night (`[data-theme="dark"]`, phones in dark mode)
+Lime is the highlight: keep it to the few things that are "here, now". An
+accent in ten places means nothing.
 
-- **Void** `#121211` · **Raise** `#1B1B1A` · **Raise 2** `#242422` — the paper
-  turned to ink.
-- **Sky** `#7B8BFF` — Royal lifted to read on the dark (same hue; pure Royal
-  gives only 3.04:1 on Void, as the original site's `--royal-lift` knew):
-  6.23:1 on Void, 5.73:1 on Raise, 5.17:1 on Raise 2. Void on top of it:
-  6.23:1.
-- **Bone** `#EDEBE6` · **Bone Dim** `#9E9B94` (6.76 / 6.21 / 5.61:1) ·
-  **Hair** `rgba(237,235,230,.12)`
+**The seal does not change with the theme.** It is cobalt `#1558C9` with a
+white 墨 in the SVG, on night and day alike.
 
-**The seal does not change with the theme.** It is Royal `#2E45FF` with a white 墨
-in the SVG, on day and night alike.
+**Fixed colours, on purpose.** The tile caption band (`#030407` with
+`#EEF0F3`, 17.96:1), text on cobalt (`#FFFFFF`), text on lime (`#030407`) and
+the lightbox (`rgba(3,4,7,.96)` with `#EEF0F3` and `#9BA0AA`) do not follow
+the theme: they sit on the artwork or on a colour that is the same in both.
 
-**Fixed colours, on purpose.** The tile caption band (`#141414` with
-`#F2F1EE` text, 16.3:1) and the lightbox (`rgba(10,10,10,.96)` with `#F2F1EE`
-and `#9E9B94`) sit on the artwork, not on the page, so they do not follow the
-theme.
+History: Royal `#2E45FF` (September) → the frog's green (early October) → the
+Survival of Kings sky (October) → ink on paper with `#0E5CAB` (31 October) →
+Royal again (1 November, morning) → Midnight Black, Electric Cobalt and Acid
+Lime, dark by default (1 November, afternoon).
 
 ---
 
@@ -169,7 +166,7 @@ these two was 457 KB of Japanese character slices the site never shows.
   cloned from the bar at boot; `aria-expanded`, focus trapped, Escape closes.
 - **Chips (filters).** `999px` radius, Zen 500 `.875rem`, Bone Dim with a
   hairline until active, ink fill when active. `aria-pressed`.
-- **Frames (artwork tiles).** A 4:5 white mat (`Raise`), no border, no radius,
+- **Frames (artwork tiles).** A 4:5 mat (`Raise`: near-black at night, white by day), no border, no radius,
   no shadow, with an even margin of 4% of its width on all four sides (a
   passe-partout, since 1 November 2026: before it, 4:5 art ran to the frame's
   edge while square art floated in bands, so some pieces looked framed and

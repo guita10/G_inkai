@@ -358,6 +358,22 @@ async function navegador(dir, etiqueta){
     await p.close();
   }
 
+  /* --- o site abre escuro (1 Nov 2026): a paleta do Frede, Midnight Black,
+     Electric Cobalt e Acid Lime. Sem tocar no botao do tema, as quatro paginas
+     abrem no #030407, e o claro so aparece pelo botao. --- */
+  {
+    const maus = [];
+    for (const pag of ['index.html', 'projeto.html?p=sok', 'loja.html', '404.html']) {
+      const p = await nova(1280, { colorScheme: 'light' });   // nem um telemovel em claro muda isto
+      await p.goto(base + pag, { waitUntil: 'networkidle' });
+      const fundo = await p.evaluate(() => getComputedStyle(document.body).backgroundColor);
+      if (fundo !== 'rgb(3, 4, 7)') maus.push(`${pag}: ${fundo}`);
+      await p.close();
+    }
+    chk(maus.length === 0, 'as quatro paginas abrem no Midnight Black (#030407), mesmo com o sistema em claro',
+      maus.join('  '));
+  }
+
   /* --- reduced-motion: pela DURACAO, nunca pela propriedade --- */
   {
     const fugas = {};
