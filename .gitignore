@@ -14,6 +14,23 @@ skills-lock.json
 !.claude/skills/grill-me/
 !.claude/skills/ui-ux-pro-max/
 !.claude/skills/design-taste-frontend/
+# installed by: npx skills add emilkowalski/skill --skill '*' --agent claude-code --copy -y
+!.claude/skills/animate/
+!.claude/skills/animate-expo/
+!.claude/skills/animation-performance/
+!.claude/skills/animation-vocabulary/
+!.claude/skills/apple-design/
+!.claude/skills/ask-sonner/
+!.claude/skills/break-ui/
+!.claude/skills/emil-design-eng/
+!.claude/skills/find-animation-opportunities/
+!.claude/skills/improve-animations/
+!.claude/skills/mobile-native/
+!.claude/skills/pick-ui-library/
+!.claude/skills/prototype/
+!.claude/skills/remove-animations/
+!.claude/skills/review-animations/
+!.claude/skills/write-swift/
 
 # a pasta de trabalho da taste-skill (folhas de direccao, capturas do
 # inspector): fica so na maquina, nunca no repo nem no deploy

@@ -543,6 +543,39 @@ CLAUDE.md       this file
                   it for what it measures (type sizes, margins, empty
                   screens, text at the screen edge) and for its critique
                   rubric, then weigh each finding against §1 to §10
+  emil skills/    sixteen folders, one per skill, from
+                  github.com/emilkowalski/skill at a81dbca (28 Oct 2026),
+                  installed 1 Nov 2026 with `npx skills add emilkowalski/skill
+                  --skill '*' --agent claude-code --copy -y`: copied
+                  unchanged (checked byte for byte against upstream) plus its
+                  MIT LICENSE in each folder. Markdown only, no scripts. The
+                  installer also writes skills-lock.json at the root, which
+                  git ignores. Each folder has its own exception in
+                  .gitignore. They rank BELOW this file and DESIGN.md.
+                  Useful here:
+                    animate, review-animations, improve-animations,
+                    find-animation-opportunities, remove-animations,
+                    animation-performance, animation-vocabulary: motion,
+                    within §6 (only transform and opacity, the house
+                    curves, every effect off under reduced motion, no
+                    scroll listeners)
+                    emil-design-eng: the same philosophy as the user-level
+                    anthropic-skills:emil-design-eng; reviews in its
+                    Before / After / Why table
+                    apple-design, mobile-native: touch, springs, the phone
+                    (mobile-native's sticky-hover and 100vh notes match §6)
+                    break-ui: worst-case data for a component. Never leave
+                    its "Demo data / Worst case" toggle in a page, and never
+                    put its fake data in CONFIG (§9.5)
+                    prototype: variants behind a picker, to choose from; the
+                    picker never ships, the chosen one is rebuilt in the
+                    house style
+                  Not for this site (kept because the package installs
+                  whole): animate-expo (React Native), write-swift (Swift),
+                  ask-sonner (a React toast library), pick-ui-library (it
+                  picks libraries, and §3 forbids adding any).
+                  review-animations, prototype and pick-ui-library only run
+                  when typed as /commands (disable-model-invocation upstream)
 ```
 
 No feature folders, no `src/`, no routing. `index.html` is organised top to
