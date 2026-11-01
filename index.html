@@ -259,9 +259,6 @@ const CONFIG = {
          inventado. Uma coisa a menos a competir com a obra. */
       heroRole: "Illustration and character design",
       heroPick: "Choose a piece", heroShow: "Show",
-      proofContest: "Iberanime manga contest, 1st place",
-      proofCovers: "A cover a month with Distrito Manga",
-      tagline: "I'm Frederico Guita. I draw anime and manga-influenced characters and their worlds.",
       ctaWork: "View work", ctaComm: "Commissions",
       navWork: "Work", navProjects: "Projects", navAbout: "About", navComm: "Commissions", navContact: "Contact",
       navMenu: "Menu",
@@ -328,9 +325,6 @@ const CONFIG = {
     pt: {
       heroRole: "Ilustração e design de personagens",
       heroPick: "Escolhe uma peça", heroShow: "Mostrar",
-      proofContest: "Concurso de manga Iberanime, 1.º lugar",
-      proofCovers: "Uma capa por mês com a Distrito Manga",
-      tagline: "Sou o Frederico Guita. Desenho personagens e mundos de influência anime e manga.",
       ctaWork: "Ver trabalho", ctaComm: "Comissões",
       navWork: "Trabalho", navProjects: "Projetos", navAbout: "Sobre", navComm: "Comissões", navContact: "Contacto",
       navMenu: "Menu",
@@ -654,7 +648,13 @@ header{
    1 Nov 2026 (4): "Flip", escolhido pelo Frede entre quatro prototipos (o
    /prototype das skills do Emil). Por baixo da frase ficam as seis
    originais em molduras pequenas: apontar, focar ou tocar numa troca a obra
-   grande, na hora. As provas subiram para baixo dos botoes. */
+   grande, na hora. As provas subiram para baixo dos botoes.
+   1 Nov 2026 (5): so o nome e o que faz. A pedido do Frede, as unicas
+   palavras da abertura sao "Frederico Guita" e "Ilustracao e design de
+   personagens": sairam a frase ("Sou o Frederico Guita...") e as duas
+   provas. O nome grande passou a ser o nome dele, nao a marca (a marca,
+   Guita_Ink, continua na barra, ao lado do selo). Ficam os dois botoes, a
+   obra com a legenda e as molduras. */
 /* A largura da obra (--art-w): a coluna, ou o que a altura do ecra deixa
    (menos a barra de 73px, o espaco de cima e de baixo e a legenda, ~185),
    o que for menor, nunca abaixo de 300px. A abertura guarda a altura da obra
@@ -669,15 +669,18 @@ header{
   grid-template-rows:auto 1fr calc(24px + 70px);grid-template-areas:"nome arte" "info arte" "mini arte";
   column-gap:var(--gut);padding:var(--pt) 0 var(--pb);
   min-height:calc(var(--art-w) * 1.25 + var(--pt) + var(--pb))}
-/* O nome numa linha, sempre: "Guita_Ink" nao tem espacos, por isso nunca
-   parte, e o tamanho segue a largura da coluna (o nome mede 4,83em na
-   mincho; dividir a coluna por 5,1 deixa ~5% de folga). E o unico tipo
-   acima do degrau dos 70px, de proposito: e o nome. Escrito logo pelo
-   script da abertura, nao pelo do fim, por isso nao precisa de reserva. */
+/* O nome em duas linhas, sempre: "Frederico" em cima, "Guita" em baixo.
+   O tamanho segue a largura da coluna: "Frederico" mede 4,65em na mincho e
+   a coluna e 5,1em, por isso cabe com ~9% de folga, e o nome todo (7,48em)
+   nunca cabe numa linha, por isso parte sempre no espaco. Ficou do tamanho
+   que tinha o "Guita_Ink" (4,84em); numa linha so teria de encolher um
+   terco. E o unico tipo acima do degrau dos 70px, de proposito: e o nome.
+   Escrito logo pelo script da abertura, nao pelo do fim, por isso nao
+   precisa de reserva (o min-height das duas linhas fica como guarda). */
 .hero h1{grid-area:nome;align-self:start}
 .hero h1 .nm{display:block;
   font-size:min(7.5rem, calc((min(1400px,100vw) - 2 * var(--pad) - var(--gut)) / 10.2));
-  line-height:1;letter-spacing:-.02em;white-space:nowrap;margin-top:-.08em;min-height:1em}
+  line-height:1;letter-spacing:-.02em;margin-top:-.08em;min-height:2em}
 /* o que faz, logo por baixo do nome, no degrau dos titulos de seccao: e a
    primeira pergunta de quem chega a pagina de uma pessoa ("quem e, o que
    faz"). Sempre duas linhas: o max-width de 11em nao deixa caber numa, e
@@ -686,20 +689,13 @@ header{
    reservadas (2,16em). O verify varre isto de 320 a 1600px nas duas linguas. */
 .hero h1 .role{display:block;font-size:clamp(1.5rem,3.2vw,2.8rem);line-height:1.08;letter-spacing:-.015em;
   max-width:11em;min-height:2.16em;margin-top:.45em}
-/* A frase, os botoes e as provas: o bloco assenta no fundo da sua fila e
-   guarda a altura toda (24 de ar, a frase em duas linhas, 24, o botao de 48,
-   20, as provas em duas linhas). Sem isto, numa ligacao lenta o browser
-   pintava depois de ler so a frase; os botoes e as provas chegavam a seguir
-   e, como o bloco assenta no fundo, empurravam a frase 119px para cima
-   (CLS, uma carga em tres, 1 Nov 2026). */
-.hero-info{grid-area:info;align-self:end;padding-top:24px;
-  min-height:calc(24px + 3.2 * 1.125rem + 24px + 48px + 20px + 3.2rem)}
-.hero .tag{font-size:1.125rem;line-height:1.6;margin-bottom:24px;min-height:3.2em;max-width:32rem}
-/* duas provas, as duas tiradas da copia que ja existia (o percurso e a bio):
-   o concurso e a capa de todos os meses. Desde o Flip ficam por baixo dos
-   botoes, com as duas linhas reservadas (chegam do JS no fim). */
-.hero-prova{list-style:none;min-height:3.2em;margin-top:20px;
-  font-size:1rem;line-height:1.6;color:var(--bone-dim)}
+/* Os dois botoes: o bloco assenta no fundo da sua fila, logo acima das
+   molduras. Ja nao leva a frase nem as provas (1 Nov 2026 (5)); guarda a
+   altura do que tem (24 de ar e o botao de 48), que e a mesma com e sem
+   letra: os botoes estao na marcacao e o line-height de 20px fixa-os.
+   Quando tinha a frase e as provas, que chegavam do JS no fim, sem a
+   reserva empurravam tudo 119px para cima (CLS, 1 Nov 2026). */
+.hero-info{grid-area:info;align-self:end;padding-top:24px;min-height:calc(24px + 48px)}
 /* As seis molduras pequenas (o Flip). A fila tem altura FIXA na grelha
    (24px de ar e 70 de moldura), e nao auto: numa ligacao lenta o browser
    pinta antes de o script do fim as desenhar, e uma fila que nascesse com
@@ -719,7 +715,7 @@ header{
    altura do ecra (menos a barra de 73px, o espaco de cima e de baixo, ~112),
    para caber inteira no primeiro ecra, e nunca passa da coluna. Encostada a
    direita, a margem da pagina. A legenda fica pendurada por baixo, no
-   espaco de baixo da abertura, para a base da obra alinhar com as provas. */
+   espaco de baixo da abertura, para a base da obra alinhar com as molduras. */
 .hero-art{grid-area:arte;justify-self:end;align-self:start;position:relative;margin:0;cursor:zoom-in;
   width:min(100%, var(--art-w))}
 .hero-art .mat{display:block;aspect-ratio:4/5;padding:4%;background:var(--raise);overflow:hidden}
@@ -1065,13 +1061,8 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
 /* ================= RESPONSIVE ================= */
 @media (max-width:980px){
   .wall{--cols:2;--wall-rows:6}
-  /* tablet: a abertura continua em duas colunas, mais estreitas. A frase
-     parte em tres linhas (reserva de tres) e as provas descem para 14px,
-     para cada uma caber numa linha ate aos 621px. */
-  .hero .tag{min-height:4.8em}
+  /* tablet: a abertura continua em duas colunas, mais estreitas */
   .hero{grid-template-rows:auto 1fr calc(20px + 70px)}
-  .hero-info{min-height:calc(24px + 4.8 * 1.125rem + 24px + 48px + 20px + 3.2 * .875rem)}
-  .hero-prova{font-size:.875rem}
   /* o titulo da parede numa linha, os filtros e a contagem na seguinte */
   .wall-bar{gap:12px 16px}
   .wall-bar .sec-title{flex-basis:100%}
@@ -1091,20 +1082,17 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
      com as folgas de antes o ultimo botao saia 4px do ecra (o verify apanhou-o).
      O selo desce para 30px, o nome e as folgas apertam; os botoes guardam os
      44px de alvo de toque. */
-  /* a abertura empilha: o nome, a frase e os botoes, a obra, as provas. O
-     nome segue a largura da pagina inteira; a legenda volta ao fluxo, por
-     baixo da obra. A frase volta a reserva de duas linhas: abaixo de 380px
-     tem tres, como sempre teve. */
+  /* a abertura empilha: o nome, o que faz e os botoes, a obra, as
+     molduras. O nome segue a largura da pagina inteira; a legenda volta ao
+     fluxo, por baixo da obra. */
   /* sem min-height: empilhada, a obra vem depois do texto e, se chegar
      tarde, aparece por baixo sem empurrar nada */
   .hero{grid-template-columns:minmax(0,1fr);grid-template-rows:none;
     grid-template-areas:"nome" "info" "arte" "mini";padding-top:24px;min-height:0}
   .hero h1 .nm{font-size:min(7.5rem, calc((100vw - 2 * var(--pad)) / 5.1))}
-  .hero-info{padding-top:20px;min-height:calc(20px + 3.2 * 1.125rem + 24px + 48px + 20px + 3.2rem)}
-  .hero .tag{min-height:3.2em}
+  .hero-info{padding-top:20px;min-height:calc(20px + 48px)}
   .hero-art{justify-self:start;width:100%;margin-top:32px}
   .hero-cap{position:static}
-  .hero-prova{font-size:1rem}
   /* as seis molduras repartem a largura; a fila guarda a altura delas */
   .hero-mini{margin-top:16px;gap:8px;min-height:calc((100vw - 2 * var(--pad) - 40px) / 6 * 1.25)}
   .mini{width:calc((100% - 40px) / 6)}
@@ -1194,15 +1182,10 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
   <div class="hero">
     <h1><span class="nm" id="heroName"></span> <span class="role" data-t="heroRole"></span></h1>
     <div class="hero-info">
-      <p class="tag" data-t="tagline"></p>
       <div class="row">
         <a class="btn fill" href="#work"><span data-t="ctaWork"></span> →</a>
         <a class="btn" href="loja.html#comissoes" data-loja="#comissoes"><span data-t="ctaComm"></span></a>
       </div>
-      <ul class="hero-prova">
-        <li data-t="proofContest"></li>
-        <li data-t="proofCovers"></li>
-      </ul>
     </div>
     <figure class="hero-art" id="heroArt" role="button" tabindex="0">
       <span class="mat"><picture><source id="heroWebp" type="image/webp"><img id="heroImg" width="1280" height="1600" alt="" fetchpriority="high" decoding="async"></picture></span>
@@ -1222,7 +1205,7 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
        falhar (janela privada), tira a sorte sempre. O clique abre-a na
        lightbox, e as molduras pequenas trocam-na (ver o script do fim). */
     (function(){
-      document.getElementById('heroName').textContent = CONFIG.artistName;
+      document.getElementById('heroName').textContent = CONFIG.realName;
       var fig = document.getElementById('heroArt');
       var lista = (CONFIG.heroArt || []).map(function(src){
         for(var j = 0; j < CONFIG.artworks.length; j++) if(CONFIG.artworks[j].src === src) return j;

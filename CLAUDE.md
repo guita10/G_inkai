@@ -121,7 +121,7 @@ render `<script>` of `index.html` that build DOM nodes from `CONFIG`:
 Boot is four calls at the bottom of the file, in order (`renderHeroArt()`
 went with the hero artwork, October 2026). **The intro's name and big picture
 are not written by the boot**: since 1 Nov 2026 a small inline script right
-after the intro's markup fills `#heroName` from `CONFIG.artistName` and picks
+after the intro's markup fills `#heroName` from `CONFIG.realName` and picks
 the piece from `CONFIG.heroArt`, so the browser requests the image while it
 is still reading the page (it is the largest thing on the first screen). The
 click that opens that piece in the lightbox is wired in the render script.
@@ -243,10 +243,9 @@ was **CLS 0.96**. The fix is reserving the space in CSS up front:
 
 | Element | Reserve | Why that number |
 | --- | --- | --- |
-| `.hero h1 .nm` | none | the name is written by the inline script before first paint; one line always (no spaces) at a size that follows its column (`column / 5.1`, the name is 4.83em wide) |
+| `.hero h1 .nm` | none (a `2em` min-height as a guard) | the name ("Frederico Guita", `CONFIG.realName`) is written by the inline script before first paint; always two lines, "Frederico" over "Guita", at a size that follows its column (`column / 5.1`: "Frederico" is 4.65em wide, so it fits, and the whole name is 7.48em, so it never fits on one line) |
 | `.hero h1 .role` | `2.16em` | two lines at 1.08; `max-width:11em` keeps it from fitting on one, and no half is longer than 11em (the PT is the longest); `verify.mjs` sweeps 320 to 1600px in both languages, counting real text lines |
-| `.hero .tag` | `3.2em` / `4.8em` on tablets | two lines at 1.6 / three in the narrower tablet column |
-| `.hero-info` | `min-height` of its whole content (24px + the line + 24 + the 48px button + 20 + the facts) | the block sits at the bottom of its row; on a slow line the browser painted after the line alone, and the buttons and facts arriving under it pushed it 119px up (one load in three). The facts (`.hero-prova`, `3.2em`) live in it since the Flip |
+| `.hero-info` | `min-height:calc(24px + 48px)` (20 + 48 on phones) | it holds only the two buttons since the evening of 1 Nov 2026, and they are in the markup with a fixed 48px height, so this is a guard. When it also held the sentence and the facts, which came from the script at the end, they pushed it 119px up on a slow line (one load in three) until its whole height was reserved |
 | `.hero-mini` | a fixed grid row, `24px + 70px` (`20 + 70` on tablets; on phones a `min-height` of one row of six) | the six small frames are drawn by the render script at the end, so the row must not be born at zero. The facts sat in this row before the Flip and jumped 87px for exactly that reason |
 | `.hero-art` | `aspect-ratio:4/5` + a width from the screen's height (`--art-w`) | the picture is whole on the first screen at 1280×720, 1440×900 and 1920×1080; `verify.mjs` checks it |
 | `.hero` | `min-height` = the picture's height (`--art-w × 1.25`) + padding, two columns only | in one slow load out of two the browser painted before it read the `<figure>`: the grid was as tall as the text and the line and buttons dropped 240px when the picture arrived (0.03). Measured six times after the fix: 0.005–0.006 every time |
@@ -583,22 +582,27 @@ No feature folders, no `src/`, no routing. `index.html` is organised top to
 bottom as: meta and JSON-LD → `CONFIG` → `<style>` → markup → render `<script>`.
 
 **Home page order** (since 31 Oct 2026, "the work first"): the intro, which
-since 1 Nov 2026 is a poster: "Guita_Ink" large with "Illustration and
-character design" under it, top left; "I'm Frederico Guita…", the two
-buttons and two facts ("Iberanime manga contest, 1st place", "A cover a month
-with Distrito Manga", both worded as elsewhere in CONFIG) bottom left; on the
+since 1 Nov 2026 is a poster: "Frederico Guita" large, on two lines, with
+"Illustration and character design" under it, top left; the two buttons
+bottom left; on the
 right one of Frede's originals, whole, on its mat, as tall as the first
 screen allows, a different one each visit (the next in `CONFIG.heroArt`, kept
 in `localStorage`; only originals, never fan art or collabs, each with its
 WebP, all checked by `verify.mjs`). **The Flip** (1 Nov 2026, chosen by
-Frede from four prototypes made with `/prototype`): under the facts, the
+Frede from four prototypes made with `/prototype`): under the buttons, the
 same six originals as small frames; pointing at one (with a mouse), focusing
 it or tapping it swaps the big piece, instantly, with no animation (a gesture
 repeated many times in a row), but only once the new piece is decoded, so
 the mat never flashes empty. The first touch of the frames preloads all six.
 The chosen frame carries the `--hi` outline; the caption reads "title" and
-"n / 6". Two columns down to 621px, stacked on phones (name, line, buttons,
-facts, picture, frames) → selected
+"n / 6". **The only words of the intro are the name and what he does**
+(Frede, 1 Nov 2026, evening: "apenas manter Frederico Guita, Ilustração e
+design de personagens"): the big name was "Guita_Ink" until then, and the
+sentence "I'm Frederico Guita…" and the two facts (the Iberanime contest,
+the Distrito Manga covers) left with it. The brand stays in the bar, beside
+the seal; the buttons, the caption and the frames stay. Two columns down to
+621px, stacked on phones (name, role, buttons, picture, frames; the picture
+is whole on a 390×844 first screen) → selected
 work (the wall: one uniform grid, no project
 highlighted; the Survival of Kings cast sits after the other originals on
 purpose) → projects (the featured project, `CONFIG.featured`, as a full-width
@@ -811,11 +815,13 @@ The checks themselves, and why each one exists:
 - **Contrast** against computed colours in both themes. (Text over a picture
   would be skipped there and needs a pixel test; the one for the sky left with
   the sky, see §6.)
-- **The intro**, EN and PT, 320 to 1600px: the name on one line and inside
-  its column, the role line ("Illustration and character design") on exactly
-  two (its reserve depends on it), and the picture whole on a laptop's first
-  screen. Tested against planted bugs: a name too big, a role on one line and
-  on three.
+- **The intro**, EN and PT, 320 to 1600px: the name is `CONFIG.realName`,
+  on exactly two lines (counted in the text, not the box, which reserves two)
+  and inside its column, the role line ("Illustration and character design")
+  on exactly two (its reserve depends on it), and the picture whole on a
+  laptop's first screen. Tested against planted bugs: a name too big, a name
+  on one line, the brand instead of the name, a role on one line and on
+  three.
 - **The intro picture is an original**: every `CONFIG.heroArt` entry is in
   `artworks` with `cat:"character"` and no `collab`, with both WebPs.
 - **The Flip**, EN and PT: six frames, exactly one chosen and it is the big

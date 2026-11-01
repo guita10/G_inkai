@@ -442,11 +442,15 @@ async function navegador(dir, etiqueta){
     await p.close();
   }
 
-  /* --- a abertura: o nome numa linha, o que faz em duas (1 Nov 2026) ---
-     O nome ("Guita_Ink") nao tem espacos e o tamanho segue a coluna: nunca
-     parte, mas podia passar da coluna e ir por baixo da obra. A linha de
+  /* --- a abertura: o nome em duas linhas, o que faz em duas (1 Nov 2026) ---
+     O nome e o nome proprio (CONFIG.realName, "Frederico Guita", desde o
+     pedido do Frede de so deixar o nome e o que faz): "Frederico" em cima,
+     "Guita" em baixo, sempre duas linhas, com o tamanho a seguir a coluna,
+     que podia empurrar "Frederico" para fora dela e por baixo da obra. As
+     linhas contam-se no texto, nao na caixa: a caixa guarda duas linhas
+     (min-height) e esconderia um nome que coubesse numa. A linha de
      baixo ("Ilustracao e design de personagens") tem duas linhas reservadas,
-     por isso tem de ter sempre duas (com tres empurrava a frase e a obra no
+     por isso tem de ter sempre duas (com tres empurrava os botoes e a obra no
      telemovel). E a obra da abertura cabe inteira no primeiro ecra dos
      portateis. Varre-se a largura, nas duas linguas, com a letra ja carregada.
      (Substitui o teste do titulo de duas linhas, que saiu com ele.) */
@@ -462,16 +466,17 @@ async function navegador(dir, etiqueta){
         const n = nm.getBoundingClientRect(), lr = parseFloat(getComputedStyle(role).lineHeight);
         const rng = document.createRange(); rng.selectNodeContents(nm);
         const texto = rng.getBoundingClientRect();
-        return { nome: nm.textContent, linhasNome: Math.round(n.height / parseFloat(getComputedStyle(nm).lineHeight)),
+        const linhas = (el, lh) => { const q = document.createRange(); q.selectNodeContents(el);
+          return new Set([...q.getClientRects()].filter(x => x.width > 1).map(x => Math.round(x.top / lh))).size; };
+        return { nome: nm.textContent, quer: CONFIG.realName, linhasNome: linhas(nm, parseFloat(getComputedStyle(nm).lineHeight)),
           fora: Math.round(texto.right - Math.max(col.right, n.right)),
           /* linhas do texto, nao da caixa: a reserva de duas linhas escondia
              um texto que coubesse numa (testado com um bug plantado) */
-          linhasRole: (() => { const q = document.createRange(); q.selectNodeContents(role);
-            return new Set([...q.getClientRects()].filter(x => x.width > 1).map(x => Math.round(x.top / lr))).size; })() };
+          linhasRole: linhas(role, lr) };
       });
       const tag = `${lq || 'en'} ${w}px`;
-      if (r.nome !== 'Guita_Ink') maus.push(`${tag}: nome "${r.nome}"`);
-      if (r.linhasNome !== 1) maus.push(`${tag}: nome em ${r.linhasNome} linhas`);
+      if (!r.quer || r.nome !== r.quer) maus.push(`${tag}: nome "${r.nome}" (quer "${r.quer}")`);
+      if (r.linhasNome !== 2) maus.push(`${tag}: nome em ${r.linhasNome} linhas`);
       if (r.fora > 1) maus.push(`${tag}: nome sai ${r.fora}px da coluna`);
       if (r.linhasRole !== 2) maus.push(`${tag}: "o que faz" em ${r.linhasRole} linhas`);
       await p.close();
@@ -484,7 +489,7 @@ async function navegador(dir, etiqueta){
       if (r.fundo > h || !r.dentro) maus.push(`${w}x${h}: a obra acaba em ${r.fundo}px`);
       await p.close();
     }
-    chk(maus.length === 0, 'a abertura: o nome numa linha dentro da coluna, o que faz em duas, a obra inteira no primeiro ecra',
+    chk(maus.length === 0, 'a abertura: o nome em duas linhas dentro da coluna, o que faz em duas, a obra inteira no primeiro ecra',
       maus.slice(0, 6).join('  '));
   }
 

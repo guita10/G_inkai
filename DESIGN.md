@@ -210,23 +210,25 @@ these two was 457 KB of Japanese character slices the site never shows.
   featured text, the commission cast and the timeline all start at one x.
 - **Home page order:** the intro → the wall (selected work) → projects →
   commissions → about (bio beside the timeline) → contact.
-- **The intro (a poster):** two equal columns. Left, top: "Guita_Ink" (one
-  line, sized by its column) and "Illustration and character design" at the
-  heading size, always two lines (`max-width: 11em`; its reserve depends on
-  it). Left, bottom: "I'm Frederico Guita…", the two buttons and two facts in
-  Bone Dim, taken word for word from the timeline and the bio ("Iberanime
-  manga contest, 1st place", "A cover a month with Distrito Manga"). Right:
+- **The intro (a poster):** two equal columns. Its only words are the name
+  and what he does (Frede's request, 1 Nov 2026). Left, top: "Frederico
+  Guita" (always two lines, "Frederico" over "Guita", sized by its column so
+  it keeps the size the brand had there; on one line it would shrink by a
+  third and sit barely above the role) and "Illustration and character
+  design" at the heading size, always two lines (`max-width: 11em`; its
+  reserve depends on it). The brand, Guita_Ink, stays in the bar beside the
+  seal. Left, bottom: the two buttons. Right:
   one original from `CONFIG.heroArt`, on its 4:5 mat, as wide as the screen's
   height lets it be whole on the first screen (1280×720 to 1920×1080),
   right-aligned to the margin, its title and "n / 6" hanging underneath. A
   click opens it in the lightbox. The next piece in the list on each visit.
-  **Under the facts, the six originals as small frames** (the "Flip", chosen
+  **Under the buttons, the six originals as small frames** (the "Flip", chosen
   by Frede from four prototypes): pointing at one, focusing it or tapping it
   swaps the big piece. The swap is instant, never animated (it is repeated
   many times in a row), and waits for the new piece to decode so the mat
   never flashes empty. The chosen frame has the highlight outline (`--hi`).
-  Two columns down to 621px; stacked on phones: name, role, line, buttons,
-  facts, picture, frames.
+  Two columns down to 621px; stacked on phones: name, role, buttons,
+  picture, frames (the picture is whole on a 390×844 first screen).
 - **The shop's first screen:** the title with the drop's badge, the merch's
   sentence, a button down to the commissions, and the products straight
   after, so photos, names and prices are on the first screen. (It was the
@@ -249,8 +251,8 @@ these two was 457 KB of Japanese character slices the site never shows.
   `36rem` so it stays near 60 characters a line when the section goes to one
   column on tablets.
 - **Reserved heights:** every string is written by JavaScript, so every box on
-  the first screen reserves its height in CSS (the role line, the sentence,
-  the buttons, the facts, the picture; the wall bar, the filters and the wall
+  the first screen reserves its height in CSS (the role line,
+  the buttons, the picture; the wall bar, the filters and the wall
   for links that land on it). The name and the picture are set by a small
   script right after the intro's markup, before the first paint. In the shop
   everything below the merch stays invisible until the cards are drawn (it
