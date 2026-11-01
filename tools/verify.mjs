@@ -129,6 +129,26 @@ function config(){
   const orfaos = usados.filter(k => !(k in A.i18n.en) || !(k in A.i18n.pt));
   chk(orfaos.length === 0, 'todos os data-t resolvem nas duas linguas', orfaos.join(' ') || `${usados.length} chaves`);
 
+  /* a obra grande da abertura (1 Nov 2026): so originais (nunca fan art nem
+     colabs, §9.1 e §9.5: e a cara do site), cada uma na parede tambem (o
+     clique abre-a na lightbox) e com o .webp grande e o da miniatura, porque
+     o <picture> da abertura pede o .webp sem perguntar se existe. */
+  {
+    const maus = [];
+    const lista = A.heroArt || [];
+    if (!lista.length) maus.push('heroArt vazio');
+    for (const src of lista) {
+      const g = A.artworks.find(a => a.src === src);
+      if (!g) { maus.push(`${src}: nao esta no artworks`); continue; }
+      if (g.cat !== 'character' || g.collab) maus.push(`${src}: nao e original (${g.cat}${g.collab ? ', collab' : ''})`);
+      const w = src.replace(/\.jpe?g$/i, '.webp');
+      for (const f of [src, w, w.replace(/^images\//, 'images/thumb/')])
+        if (!existsSync(join(ROOT, f))) maus.push(`falta ${f}`);
+    }
+    chk(maus.length === 0, 'a obra da abertura e sempre uma original, com o .webp grande e pequeno',
+      maus.join(' ') || `${lista.length} obras`);
+  }
+
   // projeto.html so guarda a fatia que le, e essa tem de bater certo
   const fatia = ['artistName', 'realName', 'projects', 'i18n'];
   const extra = Object.keys(B).filter(k => !fatia.includes(k));
@@ -222,16 +242,19 @@ async function navegador(dir, etiqueta){
 
   tit(`3. Browser ${etiqueta} — layout e comportamento`);
 
-  /* --- CLS sem travao --- */
-  {
+  /* --- CLS sem travao ---
+     Na loja tambem desde 1 Nov 2026: o merch passou para o primeiro ecra, e
+     numa ligacao lenta as comissoes pintavam-se primeiro e eram empurradas
+     um ecra para baixo quando os cartoes chegavam (0,61). */
+  for (const pag of ['index.html', 'loja.html']) {
     const p = await nova(1440);
     await p.addInitScript(() => { window.__cls = 0;
       new PerformanceObserver(l => { for (const e of l.getEntries()) if (!e.hadRecentInput) window.__cls += e.value; })
         .observe({ type: 'layout-shift', buffered: true }); });
-    await p.goto(base + 'index.html', { waitUntil: 'networkidle' });
+    await p.goto(base + pag, { waitUntil: 'networkidle' });
     await p.waitForTimeout(1500);
     const cls = await p.evaluate(() => window.__cls);
-    chk(cls < 0.01, 'CLS sem travao abaixo de 0,01', cls.toFixed(4));
+    chk(cls < 0.01, `CLS sem travao abaixo de 0,01, ${pag}`, cls.toFixed(4));
     await p.close();
   }
 
@@ -239,7 +262,7 @@ async function navegador(dir, etiqueta){
      Tres e nao uma de proposito: o salto de 0,33 que o order:-1 causava so
      aparecia em cerca de uma carga em tres, consoante o momento do primeiro
      desenho. Uma volta so nao prova nada. */
-  if (!RAPIDO) {
+  if (!RAPIDO) for (const pag of ['index.html', 'loja.html']) {
     const vals = [];
     for (let i = 0; i < 3; i++) {
       const p = await nova(1440);
@@ -251,12 +274,12 @@ async function navegador(dir, etiqueta){
       await cdp.send('Network.setCacheDisabled', { cacheDisabled: true });
       await cdp.send('Network.emulateNetworkConditions',
         { offline: false, latency: 400, downloadThroughput: 400 * 1024 / 8, uploadThroughput: 400 * 1024 / 8 });
-      await p.goto(base + 'index.html', { waitUntil: 'load' });
+      await p.goto(base + pag, { waitUntil: 'load' });
       await p.waitForTimeout(4000);
       vals.push(await p.evaluate(() => window.__cls));
       await p.close();
     }
-    chk(Math.max(...vals) < 0.05, 'CLS travado a 400 kbps, tres voltas',
+    chk(Math.max(...vals) < 0.05, `CLS travado a 400 kbps, tres voltas, ${pag}`,
       vals.map(v => v.toFixed(4)).join(' / '));
   }
 
@@ -403,28 +426,50 @@ async function navegador(dir, etiqueta){
     await p.close();
   }
 
-  /* --- a abertura: o titulo tem sempre duas linhas (Out 2026 (3)) ---
-     Desde o redesenho "a obra primeiro" a parede esta no primeiro ecra, logo
-     a seguir ao titulo. A reserva do titulo (2,04em) so e exacta se ele tiver
-     sempre duas linhas: com tres, o texto que chega do JS empurrava a parede
-     toda. O PT ("Ilustracao e design de personagens") e o mais comprido.
-     Varre-se a largura, nas duas linguas, com a letra final ja carregada.
-     (Os testes do ceu e das personagens recortadas sairam com eles.) */
+  /* --- a abertura: o nome numa linha, o que faz em duas (1 Nov 2026) ---
+     O nome ("Guita_Ink") nao tem espacos e o tamanho segue a coluna: nunca
+     parte, mas podia passar da coluna e ir por baixo da obra. A linha de
+     baixo ("Ilustracao e design de personagens") tem duas linhas reservadas,
+     por isso tem de ter sempre duas (com tres empurrava a frase e a obra no
+     telemovel). E a obra da abertura cabe inteira no primeiro ecra dos
+     portateis. Varre-se a largura, nas duas linguas, com a letra ja carregada.
+     (Substitui o teste do titulo de duas linhas, que saiu com ele.) */
   {
     const maus = [];
-    for (const lq of ['', '?lang=pt']) for (const w of [320, 360, 390, 430, 620, 700, 780, 900, 980, 1024, 1180, 1280, 1440, 1600]) {
+    for (const lq of ['', '?lang=pt']) for (const w of [320, 360, 390, 430, 620, 640, 700, 780, 900, 980, 1024, 1180, 1280, 1440, 1600]) {
       const p = await nova(w);
       await p.goto(base + 'index.html' + lq, { waitUntil: 'networkidle' });
       await p.evaluate(() => document.fonts.ready);
       const r = await p.evaluate(() => {
-        const h = document.querySelector('.hero h1');
-        const lh = parseFloat(getComputedStyle(h).lineHeight);
-        return { linhas: Math.round(h.getBoundingClientRect().height / lh) };
+        const nm = document.querySelector('.hero h1 .nm'), role = document.querySelector('.hero h1 .role');
+        const col = document.querySelector('.hero-info').getBoundingClientRect();
+        const n = nm.getBoundingClientRect(), lr = parseFloat(getComputedStyle(role).lineHeight);
+        const rng = document.createRange(); rng.selectNodeContents(nm);
+        const texto = rng.getBoundingClientRect();
+        return { nome: nm.textContent, linhasNome: Math.round(n.height / parseFloat(getComputedStyle(nm).lineHeight)),
+          fora: Math.round(texto.right - Math.max(col.right, n.right)),
+          /* linhas do texto, nao da caixa: a reserva de duas linhas escondia
+             um texto que coubesse numa (testado com um bug plantado) */
+          linhasRole: (() => { const q = document.createRange(); q.selectNodeContents(role);
+            return new Set([...q.getClientRects()].filter(x => x.width > 1).map(x => Math.round(x.top / lr))).size; })() };
       });
-      if (r.linhas !== 2) maus.push(`${lq || 'en'} ${w}px: ${r.linhas} linhas`);
+      const tag = `${lq || 'en'} ${w}px`;
+      if (r.nome !== 'Guita_Ink') maus.push(`${tag}: nome "${r.nome}"`);
+      if (r.linhasNome !== 1) maus.push(`${tag}: nome em ${r.linhasNome} linhas`);
+      if (r.fora > 1) maus.push(`${tag}: nome sai ${r.fora}px da coluna`);
+      if (r.linhasRole !== 2) maus.push(`${tag}: "o que faz" em ${r.linhasRole} linhas`);
       await p.close();
     }
-    chk(maus.length === 0, 'o titulo da abertura tem sempre duas linhas (EN e PT, 320 a 1600px)', maus.slice(0, 6).join('  '));
+    for (const [w, h] of [[1280, 720], [1440, 900], [1920, 1080]]) {
+      const p = await nova(w, { viewport: { width: w, height: h } });
+      await p.goto(base + 'index.html', { waitUntil: 'networkidle' });
+      const r = await p.evaluate(() => { const m = document.querySelector('.hero-art .mat').getBoundingClientRect();
+        return { fundo: Math.round(m.bottom), dentro: m.right <= innerWidth && m.width > 250 }; });
+      if (r.fundo > h || !r.dentro) maus.push(`${w}x${h}: a obra acaba em ${r.fundo}px`);
+      await p.close();
+    }
+    chk(maus.length === 0, 'a abertura: o nome numa linha dentro da coluna, o que faz em duas, a obra inteira no primeiro ecra',
+      maus.slice(0, 6).join('  '));
   }
 
   /* --- seletores sem alvo e afordancias falsas --- */

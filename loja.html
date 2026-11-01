@@ -5,7 +5,9 @@
 <script>/* o tema, antes de pintar: o dia e o tema por omissao, a noite so com o
    telemovel em modo escuro (Out 2026, o ceu). Aqui no topo para quem esta em
    modo escuro nao ver o dia a piscar antes da noite. */
-if(matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme = 'dark';</script>
+if(matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme = 'dark';
+/* ha JavaScript: o que fica por baixo do merch espera por ele (ver .js) */
+document.documentElement.classList.add('js');</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shop · Guita_Ink</title>
 <meta name="robots" content="index,follow">
@@ -142,7 +144,7 @@ const CONFIG = {
     en: {
       navShop: "Shop", navComm: "Commissions",
       backHome: "Portfolio",
-      shopJump: "Merch", commJump: "Commissions",
+      commJump: "Commissions",
       commTitle: "Commissions",
       commOpen: "Open", commClosed: "Closed",
       commIntro: "Four formats, from a bust to a full character sheet. Tell me what you have in mind and I reply with the format, the price and the timeline.",
@@ -200,7 +202,7 @@ const CONFIG = {
     pt: {
       navShop: "Loja", navComm: "Comissões",
       backHome: "Portefólio",
-      shopJump: "Merch", commJump: "Comissões",
+      commJump: "Comissões",
       commTitle: "Comissões",
       commOpen: "Abertas", commClosed: "Fechadas",
       commIntro: "Quatro formatos, do busto à character sheet completa. Diz-me o que tens em mente e respondo com o formato, o valor e o prazo.",
@@ -341,8 +343,10 @@ header{
    aqui — o carimbo e a entrada do site, nao de cada pagina. */
 .logo{width:34px;height:34px;flex:none;display:block}
 .brand b{font-family:var(--f-disp);font-weight:700;font-size:1.125rem;letter-spacing:0}
+/* min-width: o rotulo ("Portfolio") chega do JS; sem lugar guardado o link
+   crescia para a esquerda a frente de quem estava a ler (CLS) */
 .back{font-family:var(--f-ui);font-size:.875rem;font-weight:500;color:var(--bone-dim);text-decoration:none;
-  margin-left:auto;padding:12px 0;transition:color .2s ease}
+  margin-left:auto;padding:12px 0;transition:color .2s ease;min-width:6em}
 .back:hover{color:var(--bone)}
 .knobs{display:flex;gap:8px}
 .knob{
@@ -355,14 +359,39 @@ header{
 .knob:hover{border-color:var(--bone);color:var(--bone)}
 
 /* ================= CABECA DA PAGINA =================
-   Out 2026 (3): o ceu e a arqueira sairam com o redesenho "a obra primeiro".
-   A cabeca e o titulo grande no papel e os dois atalhos; o merch vem logo a
-   seguir. O titulo vem do JS: a caixa guarda uma linha. */
-.page-head{padding:clamp(40px,6vw,88px) 0 clamp(8px,1.5vw,16px);display:flex;flex-direction:column;gap:18px;align-items:flex-start}
+   1 Nov 2026 (2): o primeiro ecra da loja era o titulo "Loja", dois botoes e
+   papel vazio; o merch so comecava aos 570px, e repetia "Merch" e a mesma
+   frase num titulo seu. Agora a cabeca e a do merch: o titulo com a
+   etiqueta do drop, a frase do que se vende, e um botao para as comissoes
+   do lado direito. Os produtos vem logo a seguir, com fotos, nomes e precos
+   ainda no primeiro ecra.
+   Antes do lancamento (shopOpen:false) e so o titulo "Comissoes" com a
+   etiqueta Aberto/Fechado, como antes.
+   O titulo e a frase vem do JS: as caixas guardam uma linha e duas (tres no
+   telemovel). */
+/* o botao fica por baixo da frase, encostado a esquerda: o rotulo chega do
+   JS e, a direita, crescia para a esquerda e mexia-se (o CLS apanhava) */
+.page-head{padding:clamp(24px,3vw,40px) 0 0}
+.ph-titulo{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.page-head .lede{margin:14px 0 0;min-height:3.2em}
+.page-head .jump{margin-top:20px}
+/* a etiqueta do drop vem vazia do HTML (o nome do drop esta no CONFIG): sem
+   isto via-se uma pilula azul sem texto ate o script chegar */
+.badge:empty{display:none}
 /* 1 Nov 2026: no degrau do titulo do index (70px). Estava a 90px, o maior
    tipo do site inteiro, numa palavra de quatro letras. */
 h1{font-size:clamp(2.5rem,6vw,4.4rem);line-height:1.02;letter-spacing:-.025em;min-height:1.02em}
 .jump{display:flex;gap:10px;flex-wrap:wrap}
+/* o merch segue a cabeca de perto: e a continuacao do primeiro ecra */
+#merch{padding-top:clamp(28px,3vw,40px)}
+/* Ate o script desenhar os cartoes, a grelha do merch tem altura zero, e o
+   cesto, as comissoes e o elenco pintavam-se no primeiro ecra para logo a
+   seguir serem empurrados um ecra para baixo: numa ligacao lenta isso media
+   0,61 de CLS (1 Nov 2026). Agora ficam invisiveis ate o render() acabar.
+   visibility e nao display: o lugar e o mesmo, so nao se ve, e um elemento
+   invisivel que se mexe nao conta. Sem JavaScript a classe .js nao existe e
+   tudo aparece. */
+.js:not(.pronto) #merchGrid ~ *,.js:not(.pronto) #comissoes,.js:not(.pronto) footer{visibility:hidden}
 
 /* ================= SECCOES ================= */
 section{padding:clamp(56px,8vw,104px) 0 0}
@@ -386,7 +415,7 @@ h2{font-size:clamp(1.8rem,3.2vw,2.8rem);letter-spacing:-.015em;min-height:1.08em
 
 .btn{
   display:inline-flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;
-  font:500 .875rem var(--f-ui);letter-spacing:.01em;padding:13px 24px;border-radius:2px;
+  font:500 .875rem/20px var(--f-ui);letter-spacing:.01em;padding:13px 24px;border-radius:2px;   /* 20px: 48 de altura com qualquer letra (ver o index) */
   min-height:44px;border:1px solid var(--bone);color:var(--bone);background:transparent;
   transition:background .25s ease,border-color .25s ease,color .25s ease,transform .12s ease-out;
 }
@@ -532,6 +561,7 @@ footer a:hover{color:var(--bone)}
   .comm-foot{grid-template-columns:minmax(0,1fr)}
 }
 @media (max-width:620px){
+  .page-head .lede{min-height:4.8em}
   .merch{gap:12px}
   .merch-card .body{padding:14px}
   .merch-card h3{font-size:1.125rem}
@@ -584,22 +614,26 @@ footer a:hover{color:var(--bone)}
 
 <main>
 <div class="wrap">
+  <!-- A CABECA (1 Nov 2026 (2)): e a cabeca do merch. O HTML vem ja no estado
+       da loja aberta (aberta desde 30 Set 2026); com shopOpen:false o JS
+       esconde a frase, o drop, o atalho e o merch, e mostra a etiqueta das
+       comissoes. -->
   <div class="page-head">
-    <h1 id="pageTitle"></h1>
-    <span class="badge" id="headBadge" hidden></span>
-    <nav class="jump" id="jump" aria-label="On this page" hidden>
-      <a class="btn" href="#merch" id="jumpShop"></a>
+    <div class="ph-titulo">
+      <h1 id="pageTitle"></h1>
+      <span class="badge open" id="dropBadge"></span>
+      <span class="badge" id="headBadge" hidden></span>
+    </div>
+    <p class="lede" id="shopIntro"></p>
+    <nav class="jump" id="jump" aria-label="On this page">
       <a class="btn" href="#comissoes" id="jumpComm"></a>
     </nav>
   </div>
 
-  <!-- MERCH — escondida enquanto CONFIG.shopOpen for false -->
-  <section id="merch" hidden>
-    <div class="head">
-      <h2 id="merchTitle"></h2>
-      <span class="badge open" id="dropBadge"></span>
-    </div>
-    <p class="lede" id="shopIntro"></p>
+  <!-- MERCH — escondida enquanto CONFIG.shopOpen for false. O titulo e so
+       para leitores de ecra: quem ve, ve o da cabeca. -->
+  <section id="merch" aria-labelledby="merchTitle">
+    <h2 class="sr-only" id="merchTitle"></h2>
     <div class="merch" id="merchGrid"></div>
     <!-- O CESTO — vive nesta pagina; so o pagamento e no Shopify -->
     <div class="cesto" id="cesto">
@@ -842,8 +876,8 @@ function render(){
   $('#pageTitle').textContent = titulo;
   document.title = `${titulo} · Guita_Ink`;
   $('#jump').hidden = !shopOn;
-  $('#jumpShop').textContent = t.shopJump;
-  $('#jumpComm').textContent = t.commJump;
+  $('#shopIntro').hidden = !shopOn;
+  $('#jumpComm').textContent = `${t.commJump} →`;
   $('#commHead').hidden = !shopOn;
   document.body.classList.toggle('so-comissoes', !shopOn);
   const hb = $('#headBadge');
@@ -855,12 +889,11 @@ function render(){
      O botao vai a coleccao merch e nao a /collections/all, que misturaria
      merch com comissoes. */
   $('#merch').hidden = !shopOn;
+  /* a etiqueta do drop fica vazia (e por isso escondida) com a loja fechada */
+  $('#dropBadge').textContent = shopOn ? (CONFIG.shopDrop || '') : '';
   if(shopOn){
     const merchColl = `${CONFIG.shop}/collections/${CONFIG.merchCollection}`;
     $('#merchTitle').textContent = t.merchTitle;
-    const db = $('#dropBadge');
-    db.textContent = CONFIG.shopDrop || '';
-    db.hidden = !CONFIG.shopDrop;
     $('#shopIntro').textContent = t.shopIntro;
     $('#shopAll').href = merchColl;
     $('#shopAllLabel').textContent = t.shopAll;
@@ -940,6 +973,9 @@ function render(){
   $('#footIg').href = CONFIG.instagram;
   $('#footLrLabel').textContent = t.footComplaints;
   $('#footLr').href = CONFIG.livroReclamacoes;
+  /* os cartoes ja estao desenhados: o cesto, as comissoes e o rodape podem
+     aparecer (ver .js:not(.pronto) no CSS) */
+  document.documentElement.classList.add('pronto');
 }
 
 render();

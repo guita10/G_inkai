@@ -108,8 +108,12 @@ render `<script>` of `index.html` that build DOM nodes from `CONFIG`:
 | `syncStructuredData()` | writes JSON-LD from `CONFIG` |
 
 Boot is four calls at the bottom of the file, in order (`renderHeroArt()`
-went with the hero artwork, October 2026; the hero is now a short band of
-text, and the wall right under it is the first picture):
+went with the hero artwork, October 2026). **The intro's name and big picture
+are not written by the boot**: since 1 Nov 2026 a small inline script right
+after the intro's markup fills `#heroName` from `CONFIG.artistName` and picks
+the piece from `CONFIG.heroArt`, so the browser requests the image while it
+is still reading the page (it is the largest thing on the first screen). The
+click that opens that piece in the lightbox is wired in the render script.
 
 ```js
 renderWall();
@@ -228,13 +232,16 @@ was **CLS 0.96**. The fix is reserving the space in CSS up front:
 
 | Element | Reserve | Why that number |
 | --- | --- | --- |
-| `.hero h1` | `2.04em` | two lines at line-height 1.02 |
-| `.hero h1` | `max-width:10.5em` + a size that follows its column | never one line, never three (the PT title is the longest); `verify.mjs` sweeps 320 to 1600px in both languages |
-| `.hero .tag` | `3.2em` | two lines at 1.6 |
+| `.hero h1 .nm` | none | the name is written by the inline script before first paint; one line always (no spaces) at a size that follows its column (`column / 5.1`, the name is 4.83em wide) |
+| `.hero h1 .role` | `2.16em` | two lines at 1.08; `max-width:11em` keeps it from fitting on one, and no half is longer than 11em (the PT is the longest); `verify.mjs` sweeps 320 to 1600px in both languages, counting real text lines |
+| `.hero .tag` | `3.2em` / `4.8em` on tablets | two lines at 1.6 / three in the narrower tablet column |
+| `.hero-prova` | a fixed grid row, `36px + 3.2rem` | the two facts, one line each (14px on tablets so they stay on one). A fixed track, not `auto`: on a slow line the browser painted before the list arrived, and the line and buttons above jumped 87px when it did |
+| `.hero-art` | `aspect-ratio:4/5` + a width from the screen's height (`--art-w`) | the picture is whole on the first screen at 1280×720, 1440×900 and 1920×1080; `verify.mjs` checks it |
+| `.hero` | `min-height` = the picture's height (`--art-w × 1.25`) + padding, two columns only | in one slow load out of two the browser painted before it read the `<figure>`: the grid was as tall as the text and the line and buttons dropped 240px when the picture arrived (0.03). Measured six times after the fix: 0.005–0.006 every time |
 | `.sec-title` | `1.08em` | one line |
-| `.bar` | `73 / 71 / 64px` | per breakpoint; empty it is 54px |
-| `.btn` | `44px` | also the minimum touch target |
-| `.filters` | `38px` / `84px` on phones | one row of chips / two; the wall bar is on the first screen |
+| `.bar` | `73 / 71 / 64px` | per breakpoint; empty it is 54px. Its links reserve `32px + 1.6em` |
+| `.btn` | `44px`, line-height `20px` | also the minimum touch target; the px line-height makes it 48px with the fallback font and with Zen alike (with `normal` it grew 4px when the font arrived) |
+| `.filters` | `38px` / `84px` on phones | one row of chips / two |
 | `.wall` | a `calc()` | see below |
 
 The wall's reserve is a formula, not a constant, because the right height
@@ -243,9 +250,20 @@ is 4:5, so the height is simply rows × (1.25 × one column's width) + the gaps
 between rows, and the CSS stores only the row count (`--wall-rows`, three
 places: 3, 2 and 2 columns, 12px gaps, the width from `--pad`). The wall
 opens with the first `CONFIG.wallPreview` pieces (12); the rest appear on a
-click, which is user input and does not count as layout shift. Since the ink
-redesign the wall is on the first screen and the projects come after it, below
-the fold, where nothing needs a reserve.
+click, which is user input and does not count as layout shift. Since 1 Nov
+2026 the intro fills the first screen and the wall starts below the fold; the
+reserves stay, because `#work` links land straight on it.
+
+**The shop starts in its open state.** Its HTML used to start with the merch
+hidden; the script at the end revealed it, and on a 400 kbps line the
+commissions and the cast painted first and were shoved a whole screen down:
+**CLS 0.61**. Since 1 Nov 2026 the markup is the open shop (open since 30
+Sep), the head line reserves its lines, and everything after the merch grid
+(the bag, the commissions, the footer) is `visibility:hidden` until
+`render()` adds `.pronto` to `<html>` (a moving invisible element does not
+count; without JavaScript the `.js` class is never set and nothing is
+hidden). Measured: 0.003 on a slow line, desktop; 0.0095 on a phone.
+`verify.mjs` measures the shop's CLS too, fast and throttled.
 
 **Uniform tiles never crop.** Tiles are 4:5 because most wall pieces are
 exactly 4:5; everything else is fitted whole with `object-fit:contain` and
@@ -517,9 +535,17 @@ CLAUDE.md       this file
 No feature folders, no `src/`, no routing. `index.html` is organised top to
 bottom as: meta and JSON-LD → `CONFIG` → `<style>` → markup → render `<script>`.
 
-**Home page order** (since 31 Oct 2026, "the work first"): a short intro band
-(the title left; "I'm Frederico Guita…" and two buttons right) → selected
-work (the wall, still on the first screen: one uniform grid, no project
+**Home page order** (since 31 Oct 2026, "the work first"): the intro, which
+since 1 Nov 2026 is a poster: "Guita_Ink" large with "Illustration and
+character design" under it, top left; "I'm Frederico Guita…", the two
+buttons and two facts ("Iberanime manga contest, 1st place", "A cover a month
+with Distrito Manga", both worded as elsewhere in CONFIG) bottom left; on the
+right one of Frede's originals, whole, on its mat, as tall as the first
+screen allows, a different one each visit (the next in `CONFIG.heroArt`, kept
+in `localStorage`; only originals, never fan art or collabs, each with its
+WebP, all checked by `verify.mjs`). Two columns down to 621px, stacked on
+phones (name, line, buttons, picture, facts) → selected
+work (the wall: one uniform grid, no project
 highlighted; the Survival of Kings cast sits after the other originals on
 purpose) → projects (the featured project, `CONFIG.featured`, as a full-width
 card with its cover, text, a strip of its series and its links; the others in
@@ -723,13 +749,18 @@ The checks themselves, and why each one exists:
 - **No tile is cropped** — compare each `img.naturalWidth/naturalHeight` against
   its rendered box. **Force lazy images to load first**, or most of them report
   `naturalWidth: 0` and pass by default.
-- **CLS is 0** on load. A scripted `openLb()` injects a shift with no
+- **CLS is 0** on load, on the home page and in the shop. A scripted `openLb()` injects a shift with no
   `hadRecentInput` and will read as a false regression; measure without it.
 - **Contrast** against computed colours in both themes. (Text over a picture
   would be skipped there and needs a pixel test; the one for the sky left with
   the sky, see §6.)
-- **The intro title is always two lines**, EN and PT, 320 to 1600px: its
-  reserved height (and so the CLS, with the wall right under it) depends on it.
+- **The intro**, EN and PT, 320 to 1600px: the name on one line and inside
+  its column, the role line ("Illustration and character design") on exactly
+  two (its reserve depends on it), and the picture whole on a laptop's first
+  screen. Tested against planted bugs: a name too big, a role on one line and
+  on three.
+- **The intro picture is an original**: every `CONFIG.heroArt` entry is in
+  `artworks` with `cat:"character"` and no `collab`, with both WebPs.
 - **EN/PT parity** across every `data-t` key.
 - **No horizontal overflow** — sweep widths, don't spot-check. The 621–743px
   band was broken for months and 390/768/1440 all looked fine.

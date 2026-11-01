@@ -149,9 +149,15 @@ const CONFIG = {
      destaca: e uma grelha igual para todas as pecas (pedido do Frede, Set
      2026). Para tirar o destaque, featured: "". */
   featured: "sok",
-  /* hero: a obra do topo saiu em Out 2026 (a OC 01 continua na parede).
-     Desde 31 Out o topo e uma faixa curta de texto e a parede vem logo a
-     seguir: a primeira imagem da pagina e a primeira obra desta lista. */
+  /* A obra grande da abertura (1 Nov 2026 (2)): uma destas, outra a cada
+     visita. So originais do Frede (cat "character", nunca fan art nem
+     colabs), e de preferencia 4:5, que enchem a moldura de ponta a ponta. Cada
+     uma tem de estar tambem no artworks (o clique abre-a na lightbox) e ter o
+     .webp grande e o da miniatura; o verify confirma as tres coisas. */
+  heroArt: [
+    "images/oc-2.jpg", "images/the-witch.jpg", "images/geisha.jpg",
+    "images/oc.jpg", "images/silen.jpg", "images/spain.jpg",
+  ],
   artworks: [
     { src: "images/angela.jpg",                label: "Angela",                    ratio: "34", cat: "character" },
     { src: "images/mira-starborn.jpg",         label: "Mira Starborn",             ratio: "11", cat: "character" },
@@ -251,7 +257,9 @@ const CONFIG = {
       /* O "Ink first" saiu por decisao do Frede. O h1 passa a ser o que ele faz,
          que ja era o texto da linha pequena por baixo — promovido, nao
          inventado. Uma coisa a menos a competir com a obra. */
-      heroTitle: "Illustration and character design",
+      heroRole: "Illustration and character design",
+      proofContest: "Iberanime manga contest, 1st place",
+      proofCovers: "A cover a month with Distrito Manga",
       tagline: "I'm Frederico Guita. I draw anime and manga-influenced characters and their worlds.",
       ctaWork: "View work", ctaComm: "Commissions",
       navWork: "Work", navProjects: "Projects", navAbout: "About", navComm: "Commissions", navContact: "Contact",
@@ -317,7 +325,9 @@ const CONFIG = {
       copyEmail: "Copy address", copied: "Copied",
     },
     pt: {
-      heroTitle: "Ilustração e design de personagens",
+      heroRole: "Ilustração e design de personagens",
+      proofContest: "Concurso de manga Iberanime, 1.º lugar",
+      proofCovers: "Uma capa por mês com a Distrito Manga",
       tagline: "Sou o Frederico Guita. Desenho personagens e mundos de influência anime e manga.",
       ctaWork: "Ver trabalho", ctaComm: "Comissões",
       navWork: "Trabalho", navProjects: "Projetos", navAbout: "Sobre", navComm: "Comissões", navContact: "Contacto",
@@ -537,7 +547,7 @@ header{
 .links{font-family:var(--f-ui);display:flex;gap:26px;margin-left:auto;font-size:.875rem;font-weight:500}
 /* padding vertical: a area de toque e do proprio link (44px ou mais) */
 .links a{text-decoration:none;color:var(--bone-dim);transition:color .2s;position:relative;
-  display:inline-block;padding:16px 0;min-height:51px}
+  display:inline-block;padding:16px 0;min-height:calc(32px + 1.6em)}
 /* O atributo hidden vale-se do display:none do browser, mas o inline-block de
    cima ganha-lhe. Sem isto, o link da loja com shopOpen:false ficava sem texto
    mas a ocupar espaco na barra. Vale para as duas copias (barra e painel). */
@@ -603,9 +613,11 @@ header{
 /* ================= BUTTONS ================= */
 .btn{
   display:inline-flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;
-  font:500 .875rem var(--f-ui);letter-spacing:.01em;padding:13px 24px;border-radius:2px;
+  font:500 .875rem/20px var(--f-ui);letter-spacing:.01em;padding:13px 24px;border-radius:2px;
   /* 44px: a altura com o rotulo la dentro (vazio tinha 28 e crescia quando o
-     JS escrevia o texto) e o alvo tactil minimo, as duas coisas */
+     JS escrevia o texto) e o alvo tactil minimo, as duas coisas. A
+     entrelinha em px (20, 48px no total): com "normal" o botao tinha 44px
+     com a letra de reserva e 48 com o Zen, e crescia 4px quando ela chegava. */
   min-height:44px;
   border:1px solid var(--bone);color:var(--bone);background:transparent;
   transition:background .25s ease,border-color .25s ease,color .25s ease,transform .12s ease-out;
@@ -617,21 +629,67 @@ header{
 .row{display:flex;gap:12px;flex-wrap:wrap}
 
 /* ================= A ABERTURA =================
-   Out 2026 (3): a obra e a estrela. O ceu que abria a pagina saiu; o topo e
-   agora uma faixa curta de texto (o titulo a esquerda; quem e e os botoes a
-   direita), e a parede comeca logo a seguir, ainda no primeiro ecra: num
-   portatil de 1440x900 ve-se mais de meia fila de obras sem rolar.
-   O titulo tem sempre duas linhas: o max-width em em impede-o de caber numa,
-   e o tamanho acompanha a largura da coluna para nunca partir em tres (o
-   "Ilustracao e design de personagens" do PT e o mais comprido). Assim a
-   reserva de 2,04em e exacta.
-   1 Nov 2026: as colunas em doze avos, 7 e 5. A frase ficava em 28rem fixos,
-   ~42 caracteres por linha; com 5/12 tem ~50 (45 a 75 e o que se le bem). */
-.hero{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:var(--gut);
-  align-items:end;padding:clamp(36px,6vw,88px) 0 clamp(32px,4vw,56px)}
-.hero h1{font-size:clamp(2.5rem,6vw - 1rem,4.75rem);line-height:1.02;letter-spacing:-.025em;
-  max-width:10.5em;min-height:2.04em}
-.hero .tag{font-size:1.125rem;line-height:1.6;margin-bottom:24px;min-height:3.2em}
+   1 Nov 2026 (2): o nome e uma obra. O topo era uma faixa de texto com um
+   titulo generico ("Ilustracao e design de personagens"), o nome so em letra
+   pequena e a arte a comecar a meio do ecra. Agora, como um cartaz: o nome
+   grande em cima a esquerda, a frase, os botoes e duas provas em baixo; a
+   direita uma original do Frede, inteira, da altura do ecra, outra a cada
+   visita (CONFIG.heroArt). A parede vem a seguir.
+   Duas colunas iguais (6/12 e 6/12, a mesma calha do resto do site). */
+/* A largura da obra (--art-w): a coluna, ou o que a altura do ecra deixa
+   (menos a barra de 73px, o espaco de cima e de baixo e a legenda, ~185),
+   o que for menor, nunca abaixo de 300px. A abertura guarda a altura da obra
+   no min-height: numa ligacao lenta o browser pintava, uma vez em cada duas,
+   antes de ler a <figure>; a grelha ficava da altura do texto, a frase e os
+   botoes logo abaixo do nome, e desciam 240px quando a obra chegava (CLS,
+   1 Nov 2026). */
+.hero{--pt:clamp(24px,3vw,40px);--pb:clamp(40px,4vw,56px);
+  --art-w:min((min(1400px,100vw) - 2 * var(--pad) - var(--gut)) / 2, max(300px, (100vh - 185px) * .8));
+  --art-w:min((min(1400px,100vw) - 2 * var(--pad) - var(--gut)) / 2, max(300px, (100svh - 185px) * .8));
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  grid-template-rows:auto 1fr calc(36px + 3.2rem);grid-template-areas:"nome arte" "info arte" "prova arte";
+  column-gap:var(--gut);padding:var(--pt) 0 var(--pb);
+  min-height:calc(var(--art-w) * 1.25 + var(--pt) + var(--pb))}
+/* O nome numa linha, sempre: "Guita_Ink" nao tem espacos, por isso nunca
+   parte, e o tamanho segue a largura da coluna (o nome mede 4,83em na
+   mincho; dividir a coluna por 5,1 deixa ~5% de folga). E o unico tipo
+   acima do degrau dos 70px, de proposito: e o nome. Escrito logo pelo
+   script da abertura, nao pelo do fim, por isso nao precisa de reserva. */
+.hero h1{grid-area:nome;align-self:start}
+.hero h1 .nm{display:block;
+  font-size:min(7.5rem, calc((min(1400px,100vw) - 2 * var(--pad) - var(--gut)) / 10.2));
+  line-height:1;letter-spacing:-.02em;white-space:nowrap;margin-top:-.08em;min-height:1em}
+/* o que faz, logo por baixo do nome, no degrau dos titulos de seccao: e a
+   primeira pergunta de quem chega a pagina de uma pessoa ("quem e, o que
+   faz"). Sempre duas linhas: o max-width de 11em nao deixa caber numa, e
+   nenhuma metade passa de 11em (o PT "Ilustracao e design / de personagens"
+   e o mais comprido). Vem do JS no fim, por isso as duas linhas ficam
+   reservadas (2,16em). O verify varre isto de 320 a 1600px nas duas linguas. */
+.hero h1 .role{display:block;font-size:clamp(1.5rem,3.2vw,2.8rem);line-height:1.08;letter-spacing:-.015em;
+  max-width:11em;min-height:2.16em;margin-top:.45em}
+.hero-info{grid-area:info;align-self:end;padding-top:32px}
+.hero .tag{font-size:1.125rem;line-height:1.6;margin-bottom:24px;min-height:3.2em;max-width:32rem}
+/* duas provas, as duas tiradas da copia que ja existia (o percurso e a bio):
+   o concurso e a capa de todos os meses. A fila delas tem altura FIXA na
+   grelha (36px de ar e duas linhas), e nao auto: numa ligacao lenta o
+   browser pintava antes de ler a lista, a fila nascia com zero e, quando ela
+   chegava, a frase e os botoes subiam 87px (CLS, 1 Nov 2026). */
+.hero-prova{grid-area:prova;align-self:end;list-style:none;min-height:3.2em;
+  font-size:1rem;line-height:1.6;color:var(--bone-dim)}
+/* A obra: 4:5 no passe-partout de 4%, como na parede. A largura sai da
+   altura do ecra (menos a barra de 73px, o espaco de cima e de baixo, ~112),
+   para caber inteira no primeiro ecra, e nunca passa da coluna. Encostada a
+   direita, a margem da pagina. A legenda fica pendurada por baixo, no
+   espaco de baixo da abertura, para a base da obra alinhar com as provas. */
+.hero-art{grid-area:arte;justify-self:end;align-self:start;position:relative;margin:0;cursor:zoom-in;
+  width:min(100%, var(--art-w))}
+.hero-art .mat{display:block;aspect-ratio:4/5;padding:4%;background:var(--raise);overflow:hidden}
+.hero-art picture{display:block;width:100%;height:100%}
+.hero-art img{width:100%;height:100%;object-fit:contain;transition:transform .5s cubic-bezier(.2,.7,.3,1)}
+.hero-art:hover img{transform:scale(1.02)}
+.hero-art:focus-visible{outline:2px solid var(--sky-lift);outline-offset:3px}
+.hero-cap{position:absolute;left:0;top:100%;padding-top:10px;font-family:var(--f-ui);
+  font-size:.875rem;color:var(--bone-dim);white-space:nowrap}
 
 /* ================= SECTIONS ================= */
 /* sem fios entre seccoes: separam-se pelo espaco e pelo titulo */
@@ -640,10 +698,9 @@ section{padding:clamp(64px,9vw,128px) 0 0}
 .count{font-family:var(--f-ui);font-size:.875rem;color:var(--bone-dim);font-variant-numeric:tabular-nums;white-space:nowrap}
 
 /* ================= A PAREDE =================
-   A parede vem logo a seguir a abertura, sem fio nem espaco grande: e a
-   continuacao do primeiro ecra. Na barra de cima o titulo, os filtros e a
-   contagem, numa linha no desktop. */
-#work{padding-top:0}
+   Desde 1 Nov 2026 (2) a abertura ocupa o primeiro ecra (o nome e uma
+   obra), por isso a parede leva o espaco normal de seccao. Na barra de cima
+   o titulo, os filtros e a contagem, numa linha no desktop. */
 .wall-bar{flex-direction:row;flex-wrap:wrap;align-items:center;gap:14px 28px;margin-bottom:18px}
 /* os filtros sao escritos pelo JS e estao no primeiro ecra: a altura de uma
    fila de botoes fica reservada (duas filas no telemovel, mais abaixo) */
@@ -929,7 +986,7 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
    brilho) e o botao cheio nao muda de cor. Depois das regras que anula. */
 @media (hover:none){
   .proj:hover{transform:none}
-  .frame:hover img{transform:none}
+  .frame:hover img,.hero-art:hover img{transform:none}
   .btn.fill:hover::after{transform:translateX(-200%)}
   .btn.fill:hover{background:var(--sky);color:var(--void);border-color:var(--sky)}
 }
@@ -949,7 +1006,7 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
   html{scroll-behavior:auto}
   .rv{opacity:1;transform:none;transition:none}
   .proj,.btn,.mail,.knob,.chip,.lb-btn{transition:none}
-  .frame img,.frame .meta{transition:none}
+  .frame img,.frame .meta,.hero-art img{transition:none}
   .links a,.c-links a{transition:none}
   .tl-year{transition:none}
   body{transition:none}
@@ -966,11 +1023,12 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
 /* ================= RESPONSIVE ================= */
 @media (max-width:980px){
   .wall{--cols:2;--wall-rows:6}
-  /* a abertura empilha: o titulo, por baixo a frase e os botoes. O titulo
-     cresce com a largura do ecra mas nunca parte em tres linhas. */
-  .hero{grid-template-columns:minmax(0,1fr);align-items:start;gap:20px}
-  .hero h1{font-size:clamp(1.75rem,8.6vw,4.4rem)}
-  .hero .tag{max-width:34rem}
+  /* tablet: a abertura continua em duas colunas, mais estreitas. A frase
+     parte em tres linhas (reserva de tres) e as provas descem para 14px,
+     para cada uma caber numa linha ate aos 621px. */
+  .hero .tag{min-height:4.8em}
+  .hero{grid-template-rows:auto 1fr calc(36px + 2.8rem)}
+  .hero-prova{font-size:.875rem}
   /* o titulo da parede numa linha, os filtros e a contagem na seguinte */
   .wall-bar{gap:12px 16px}
   .wall-bar .sec-title{flex-basis:100%}
@@ -990,6 +1048,20 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
      com as folgas de antes o ultimo botao saia 4px do ecra (o verify apanhou-o).
      O selo desce para 30px, o nome e as folgas apertam; os botoes guardam os
      44px de alvo de toque. */
+  /* a abertura empilha: o nome, a frase e os botoes, a obra, as provas. O
+     nome segue a largura da pagina inteira; a legenda volta ao fluxo, por
+     baixo da obra. A frase volta a reserva de duas linhas: abaixo de 380px
+     tem tres, como sempre teve. */
+  /* sem min-height: empilhada, a obra vem depois do texto e, se chegar
+     tarde, aparece por baixo sem empurrar nada */
+  .hero{grid-template-columns:minmax(0,1fr);grid-template-rows:none;
+    grid-template-areas:"nome" "info" "arte" "prova";padding-top:24px;min-height:0}
+  .hero h1 .nm{font-size:min(7.5rem, calc((100vw - 2 * var(--pad)) / 5.1))}
+  .hero-info{padding-top:20px}
+  .hero .tag{min-height:3.2em}
+  .hero-art{justify-self:start;width:100%;margin-top:32px}
+  .hero-cap{position:static}
+  .hero-prova{margin-top:24px;font-size:1rem}
   .bar{min-height:64px;gap:12px}
   .logo{width:30px;height:30px}
   .brand{gap:10px}
@@ -1070,18 +1142,64 @@ footer{font-family:var(--f-ui);margin-top:clamp(64px,9vw,128px);
 <main id="top">
 <div class="wrap">
 
-  <!-- A ABERTURA (Out 2026 (3), "a obra primeiro"): uma faixa curta de texto,
-       e a parede logo a seguir, ainda no primeiro ecra. O ceu que aqui estava
-       saiu; o elenco do Survival of Kings continua nas comissoes. -->
+  <!-- A ABERTURA (1 Nov 2026 (2)): o nome e uma obra. O nome e a obra sao
+       escritos pelo script logo a seguir (nao pelo do fim do ficheiro), para
+       o browser pedir a imagem enquanto ainda le a pagina. -->
   <div class="hero">
-    <h1 data-t="heroTitle"></h1>
-    <div>
+    <h1><span class="nm" id="heroName"></span> <span class="role" data-t="heroRole"></span></h1>
+    <div class="hero-info">
       <p class="tag" data-t="tagline"></p>
       <div class="row">
         <a class="btn fill" href="#work"><span data-t="ctaWork"></span> →</a>
         <a class="btn" href="loja.html#comissoes" data-loja="#comissoes"><span data-t="ctaComm"></span></a>
       </div>
     </div>
+    <figure class="hero-art" id="heroArt" role="button" tabindex="0">
+      <span class="mat"><picture><source id="heroWebp" type="image/webp"><img id="heroImg" width="1280" height="1600" alt="" fetchpriority="high" decoding="async"></picture></span>
+      <figcaption class="hero-cap" id="heroCap"></figcaption>
+    </figure>
+    <ul class="hero-prova">
+      <li data-t="proofContest"></li>
+      <li data-t="proofCovers"></li>
+    </ul>
+    <script>
+    /* A obra do topo: uma das originais do CONFIG.heroArt, outra a cada
+       visita (a seguinte da lista; a primeira visita tira a sorte). Corre
+       aqui e nao no fim: a imagem e a maior coisa do primeiro ecra, e assim
+       o pedido sai logo. Fica DEPOIS de toda a marcacao da abertura, de
+       proposito: numa ligacao lenta o browser pinta antes de correr um
+       script, e as provas, que estavam depois dele, chegavam mais tarde e
+       subiam a frase e os botoes 87px (CLS, 1 Nov 2026). Se o localStorage falhar (janela privada), tira a
+       sorte sempre. O clique abre-a na lightbox (ver o script do fim). */
+    (function(){
+      document.getElementById('heroName').textContent = CONFIG.artistName;
+      var fig = document.getElementById('heroArt');
+      var lista = (CONFIG.heroArt || []).map(function(src){
+        for(var j = 0; j < CONFIG.artworks.length; j++) if(CONFIG.artworks[j].src === src) return j;
+        return -1; }).filter(function(j){ return j >= 0; });
+      if(!lista.length){ fig.hidden = true; return; }
+      var k = Math.floor(Math.random() * lista.length);
+      try {
+        var ult = localStorage.getItem('gi-hero');
+        if(ult !== null && +ult >= 0) k = (+ult + 1) % lista.length;
+        localStorage.setItem('gi-hero', String(k));
+      } catch(e){}
+      var g = CONFIG.artworks[lista[k]], base = CONFIG.imageBase || '';
+      var full = base + g.src, thumb = base + g.src.replace(/^images\//, 'images/thumb/');
+      var w = function(f){ return f.replace(/\.jpe?g$/i, '.webp'); };
+      var img = document.getElementById('heroImg'), webp = document.getElementById('heroWebp');
+      var sizes = '(max-width:980px) min(calc(100vw - 32px), 30rem), 46vw';
+      fig.dataset.idx = lista[k];
+      fig.setAttribute('aria-label', g.label);
+      img.alt = g.label;
+      document.getElementById('heroCap').textContent = g.label;
+      /* srcset antes de src, senao o browser pede os dois */
+      webp.sizes = sizes; webp.srcset = w(thumb) + ' 608w, ' + w(full) + ' 1280w';
+      img.sizes = sizes; img.srcset = thumb + ' 608w, ' + full + ' 1280w';
+      img.onerror = function(){ img.onerror = null; webp.remove(); img.srcset = thumb + ' 608w, ' + full + ' 1280w'; };
+      img.src = full;
+    })();
+    </script>
   </div>
 
   <!-- WORK — logo a seguir a abertura: o titulo, os filtros e a contagem numa
@@ -1551,6 +1669,14 @@ $('#wallMore').onclick = () => {
   const f = $$('#wall .frame')[preview];
   if(f) f.focus({ preventScroll: true });
 };
+/* a obra da abertura abre na lightbox, como uma moldura da parede (o script
+   da abertura guardou em data-idx qual e) */
+(() => {
+  const f = $('#heroArt'); if(!f || f.hidden || f.dataset.idx === undefined) return;
+  const abre = () => openLb(+f.dataset.idx);
+  f.onclick = abre;
+  f.onkeydown = e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); abre(); } };
+})();
 $('#lbClose').onclick = closeLb;
 $('#lbPrev').onclick  = () => stepLb(-1);
 $('#lbNext').onclick  = () => stepLb(1);

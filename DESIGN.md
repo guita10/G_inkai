@@ -20,9 +20,10 @@ been getting lost among sections, text and decoration. At the same time the
 first logo the site ever had, the 墨 seal ("ink"), came back.
 
 So the page is a quiet sheet of paper with one blue stamp on it. The intro is
-a short band of type, and the gallery starts straight after it, still on the
-first screen: on a 1440×900 laptop more than half a row of artwork shows
-before any scrolling. Nothing decorative stands between the visitor and the
+a poster (since 1 November 2026, after Frede found the first version's
+landing too weak): the name, large, with what he does under it; one of his
+originals, whole and as tall as the screen, beside it; a different piece on
+each visit. The gallery follows. Nothing decorative stands between the visitor and the
 work. The Survival of Kings sky and the three character cut-outs that framed
 the site in October left the layout; the line-up of seven stays, as the
 picture beside the commissions, because it is exactly what a commission buys.
@@ -41,7 +42,7 @@ once.
 | Dial | Value | Reading |
 | --- | --- | --- |
 | Density | **3** | Gallery airy. Section rhythm `clamp(64px, 9vw, 128px)`, body copy capped at `36rem`. The wall itself is dense on purpose: 12px between tiles. |
-| Variance | **5** | Asymmetric where text meets art, all on one twelve-column reading with one gutter: intro 7 / 5, featured project 5 / 7, commissions 5 / 7, about 5 / 7; the wall is a calm uniform grid. |
+| Variance | **5** | Asymmetric where text meets art, all on one twelve-column reading with one gutter: intro 6 / 6 (the name and lines left, the picture right), featured project 5 / 7, commissions 5 / 7, about 5 / 7; the wall is a calm uniform grid. |
 | Motion | **4** | Fluid CSS, few effects. |
 
 New screens hold these values.
@@ -103,7 +104,8 @@ these two was 457 KB of Japanese character slices the site never shows.
 - **Display — `Shippori Mincho B1` 700.** Headings, the wordmark, prices, the
   big email, timeline years, captions. Sentence case, tracking `-0.01em` to
   `-0.025em`, line-height 1.02–1.08 (1.15 for the 24px subtitles, which often
-  run to two lines). The intro title runs up to `4.75rem`.
+  run to two lines). The name in the intro is the one size above the scale
+  (see below).
 - **Text and UI — `Zen Kaku Gothic New` 400 / 500.** Running text at 400,
   buttons, nav, chips and labels at 500. Line-height 1.6.
 - **Seven sizes, and only seven** (since 1 November 2026; a measurement found
@@ -123,6 +125,11 @@ these two was 457 KB of Japanese character slices the site never shows.
 
   Running text in full Bone; Bone Dim is for what is secondary. A new size
   needs a reason the table cannot give.
+
+  **The one exception is the name** in the intro, "Guita_Ink", up to
+  `7.5rem` (about 120px at 1440px): it is the page's focal point, and its
+  size follows its column (`column / 5.1`; the name measures 4.83em in the
+  mincho) so it is always one line and never overflows.
 - **Labels.** The few uppercase labels (badges, the timeline's month, the
   About meta line) are Zen 500 at 12px, `0.12–0.14em` tracking. Kickers above
   project titles are sentence case in Sky, 14px.
@@ -202,16 +209,27 @@ these two was 457 KB of Japanese character slices the site never shows.
 - **One gutter between columns:** `--gut: clamp(24px, 4vw, 64px)`, used by
   the intro, the featured project, the project row, the commissions and the
   about section (there were four different gaps). With the splits in twelfths
-  (7 / 5, 5 / 7, 4 / 4 / 4) the second columns land on the same grid: the
+  (6 / 6, 5 / 7, 4 / 4 / 4) the second columns land on the same grid: the
   featured text, the commission cast and the timeline all start at one x.
-- **Home page order:** intro band → the wall (selected work) → projects →
+- **Home page order:** the intro → the wall (selected work) → projects →
   commissions → about (bio beside the timeline) → contact.
-- **The intro band:** the title left, the line "I'm Frederico Guita…" and the
-  two buttons right (7 / 5; the line has ~50 characters to a row); stacked
-  under 980px. The title is always
-  exactly two lines (`max-width: 10.5em` and a size that follows the column),
-  which keeps its reserved height exact; `verify.mjs` sweeps 320 to 1600px in
-  both languages.
+- **The intro (a poster):** two equal columns. Left, top: "Guita_Ink" (one
+  line, sized by its column) and "Illustration and character design" at the
+  heading size, always two lines (`max-width: 11em`; its reserve depends on
+  it). Left, bottom: "I'm Frederico Guita…", the two buttons and two facts in
+  Bone Dim, taken word for word from the timeline and the bio ("Iberanime
+  manga contest, 1st place", "A cover a month with Distrito Manga"). Right:
+  one original from `CONFIG.heroArt`, on its 4:5 mat, as wide as the screen's
+  height lets it be whole on the first screen (1280×720 to 1920×1080),
+  right-aligned to the margin, its title hanging underneath. A click opens it
+  in the lightbox. The next piece in the list on each visit. Two columns
+  down to 621px; stacked on phones: name, role, line, buttons, picture,
+  facts.
+- **The shop's first screen:** the title with the drop's badge, the merch's
+  sentence, a button down to the commissions, and the products straight
+  after, so photos, names and prices are on the first screen. (It was the
+  title, two buttons and paper, with the merch from 570px down, repeating
+  "Merch" and the sentence under its own heading.)
 - **The wall:** a bar with the title, the filters and the count, then a
   uniform 4:5 grid, 3 columns on desktop, 2 below 980px, 12px gaps. It opens
   with the first `wallPreview` (12) pieces and a "See all N pieces" button; a
@@ -229,9 +247,13 @@ these two was 457 KB of Japanese character slices the site never shows.
   `36rem` so it stays near 60 characters a line when the section goes to one
   column on tablets.
 - **Reserved heights:** every string is written by JavaScript, so every box on
-  the first screen reserves its height in CSS (the title, the line, the
-  buttons, the wall bar, the filters, the wall). Measured CLS: 0.006 on a
-  400 kbps line.
+  the first screen reserves its height in CSS (the role line, the sentence,
+  the buttons, the facts, the picture; the wall bar, the filters and the wall
+  for links that land on it). The name and the picture are set by a small
+  script right after the intro's markup, before the first paint. In the shop
+  everything below the merch stays invisible until the cards are drawn (it
+  used to be shoved a screen down: 0.61 on a slow line). Measured CLS on a
+  400 kbps line: about 0.006 on the home page, 0.003 in the shop.
 - **Responsive:** 980px (grids to one or two columns), 780 to 621px (the nav
   condenses so the bar still fits), 620px (mobile menu), plus
   `prefers-reduced-motion` and `hover: none`. Type scales with `clamp()`. No
