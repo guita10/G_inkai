@@ -576,6 +576,39 @@ CLAUDE.md       this file
                   picks libraries, and §3 forbids adding any).
                   review-animations, prototype and pick-ui-library only run
                   when typed as /commands (disable-model-invocation upstream)
+  impeccable/     Impeccable (impeccable.style, Paul Bakaus, Apache 2.0, its
+                  LICENSE and NOTICE beside it): one skill, /impeccable, with
+                  sub-commands (critique, audit, polish, typeset, layout,
+                  quieter, bolder, animate…) and a design detector. Installed
+                  1 Nov 2026 by copying the Claude Code build from
+                  github.com/pbakaus/impeccable at e89e3ad (v4.8.0) unchanged,
+                  plus its four agents in .claude/agents/impeccable-*.md: the
+                  official `npx impeccable install` downloads its bundle from
+                  impeccable.style, which the cloud session's network does not
+                  reach (Nothing was installed). The engine is a binary that
+                  scripts/impeccable downloads once from the project's GitHub
+                  releases into ~/.impeccable/bin, checked against
+                  engine-checksums.txt. It ranks BELOW this file and DESIGN.md
+                  (it reads DESIGN.md as the incumbent system, and its own
+                  rules say a refinement preserves it). Never run
+                  `/impeccable document` (it regenerates DESIGN.md from the
+                  code, replacing the hand-kept reasoning) or `extract` (it
+                  pulls tokens and components into a design system, §1 and §2).
+                  `/impeccable init` writes a PRODUCT.md after asking Frede
+                  questions; §9 outranks anything in it. The automatic design
+                  hook (a check after every edit and a 30s pass at the end of
+                  each turn) is NOT installed: it would live in
+                  .claude/settings.json and run in every session; turn it on
+                  only if Frede asks. The detector by hand, from the repo root:
+                  `.claude/skills/impeccable/scripts/impeccable detect
+                  http://127.0.0.1:<port>/index.html` on a served page (needs
+                  CHROME_PATH, with --no-sandbox as for the taste-skill). On
+                  install day it found 0 problems on the rendered home and
+                  shop, and three notes that are decisions, not bugs: the
+                  bounce curve is the seal's stamp (§6); on the source file
+                  (not the rendered page) `#heroImg` "has no src" because the
+                  intro's inline script fills it (§2), and the stripes are the
+                  placeholder plate for a missing artwork (§9.5)
 ```
 
 No feature folders, no `src/`, no routing. `index.html` is organised top to

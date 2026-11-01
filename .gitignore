@@ -31,7 +31,38 @@ skills-lock.json
 !.claude/skills/remove-animations/
 !.claude/skills/review-animations/
 !.claude/skills/write-swift/
+# Impeccable (impeccable.style), installed 1 Nov 2026: copied from
+# github.com/pbakaus/impeccable at e89e3ad (its .claude build, v4.8.0), because
+# `npx impeccable install` downloads from impeccable.style, which the cloud
+# session's network does not reach. The skill and its four agents.
+!.claude/skills/impeccable/
+!.claude/agents/
+.claude/agents/*
+!.claude/agents/impeccable-*.md
 
 # a pasta de trabalho da taste-skill (folhas de direccao, capturas do
 # inspector): fica so na maquina, nunca no repo nem no deploy
 .taste-skill/
+
+# Impeccable's working files (the list from its README): caches, screenshots,
+# review rounds and per-person settings stay on the machine. Its shared files
+# (.impeccable/config.json and the like) would be committed.
+# impeccable-ignore-start
+**/.impeccable/config.local.json
+**/.impeccable/hook.cache.json
+**/.impeccable/hook.pending.json
+**/.impeccable/*.png
+**/.impeccable/review/
+**/.impeccable/questions/
+**/.impeccable/live/server.json
+**/.impeccable/live/sessions/
+**/.impeccable/live/previews/
+**/.impeccable/live/annotations/
+**/.impeccable/live/cache/
+**/.impeccable/live/manual-edit-apply-transaction.json
+**/.impeccable/live/manual-edit-events.jsonl
+**/.impeccable/live/manual-edit-evidence/
+**/.impeccable/live/pending-manual-edits.json
+**/.impeccable/live/deferred-svelte-component-accepts.json
+**/.impeccable/live/*.png
+# impeccable-ignore-end
