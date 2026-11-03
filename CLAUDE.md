@@ -623,6 +623,68 @@ CLAUDE.md       this file
                   the fixes for the clipped titles, the English screen-reader
                   labels on the PT page, the commission ask, the phone
                   lightbox and the wall's titles on touch screens
+  Superpowers     fifteen folders, one per skill (brainstorming, writing-
+                  plans, executing-plans, subagent-driven-development,
+                  dispatching-parallel-agents, test-driven-development,
+                  systematic-debugging, verification-before-completion,
+                  requesting-code-review, receiving-code-review,
+                  using-git-worktrees, finishing-a-development-branch,
+                  writing-skills, diagnosing-superpowers, using-superpowers),
+                  from github.com/obra/superpowers at 2ce8aa1 (v7.0.1, Jesse
+                  Vincent, MIT), installed 3 Nov 2026: its skills/ folder
+                  copied unchanged (checked with diff -r) plus its LICENSE in
+                  each folder. The official install is `/plugin install
+                  superpowers@claude-plugins-official`, a plugin kept in the
+                  user's own Claude settings, which a cloud container loses
+                  when it ends; copied here, every session has them. Each
+                  folder has its own exception in .gitignore. A workflow
+                  more than a toolbox: ask what is wanted (brainstorming),
+                  write a plan, build it test first, review, finish the
+                  branch. Their text names each other `superpowers:<name>`;
+                  here they are plain `<name>`. **Its SessionStart hook is
+                  NOT installed** (as with Impeccable's): it pastes
+                  using-superpowers ("if there is even a 1% chance a skill
+                  applies, you MUST invoke it") into the start of every
+                  session; without it the skills load by their
+                  descriptions. Turn it on only if Frede asks. They rank
+                  BELOW this file and DESIGN.md (using-superpowers says so
+                  itself: CLAUDE.md takes precedence over skills), and a few
+                  of their defaults do not fit this repo:
+                    test-driven-development: the tests are tools/verify.mjs,
+                    and §10 already works this way (write the check, watch
+                    it fail on a bug planted on purpose, then fix). Never
+                    add a test framework or a package.json for it (§3), and
+                    its "delete code written before the test" applies to
+                    new code in the task, never to what is already here
+                    systematic-debugging, verification-before-completion:
+                    fit as they are (§10: "suspect the harness before the
+                    site", evidence before saying done)
+                    brainstorming, writing-plans: their documents go in
+                    docs/superpowers/specs/ and docs/superpowers/plans/,
+                    committed; nothing there is served (the deploy zip
+                    holds only the four pages, robots, the sitemap, images/
+                    and fonts/). Brainstorming's visual companion is a
+                    local server with a localhost link, which Frede cannot
+                    open from a cloud session (show him screenshots or an
+                    artifact instead), and its page loads a logo from
+                    primeradiant.com to count users: set
+                    SUPERPOWERS_DISABLE_TELEMETRY=1 if it is ever used
+                    using-git-worktrees: not in a cloud session. The work
+                    stays on the session's own branch; no worktree, no new
+                    branch
+                    finishing-a-development-branch: never merge into main
+                    locally and never "discard" work without asking. The
+                    branch goes to GitHub as a pull request, and Frede
+                    merges it
+                    subagent-driven-development, dispatching-parallel-
+                    agents: each task goes to a fresh agent, which costs
+                    more; only when Frede asks for that way of working
+                    diagnosing-superpowers: it reads the session's
+                    transcript, which holds Frede's email and the shop's
+                    details. Never file an issue on obra/superpowers or
+                    hand out its bundle unless he asks for it
+                  Their working folder, .superpowers/ (plan workspaces,
+                  brainstorm sessions), is ignored by git
 ```
 
 No feature folders, no `src/`, no routing. `index.html` is organised top to

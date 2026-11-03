@@ -39,6 +39,27 @@ skills-lock.json
 !.claude/agents/
 .claude/agents/*
 !.claude/agents/impeccable-*.md
+# Superpowers (github.com/obra/superpowers), installed 3 Nov 2026: its 15
+# skills copied from 2ce8aa1 (v7.0.1), because the official install is a
+# plugin in the user's own Claude settings, which a cloud container loses
+# when it ends. Its SessionStart hook is not installed.
+!.claude/skills/brainstorming/
+!.claude/skills/diagnosing-superpowers/
+!.claude/skills/dispatching-parallel-agents/
+!.claude/skills/executing-plans/
+!.claude/skills/finishing-a-development-branch/
+!.claude/skills/receiving-code-review/
+!.claude/skills/requesting-code-review/
+!.claude/skills/subagent-driven-development/
+!.claude/skills/systematic-debugging/
+!.claude/skills/test-driven-development/
+!.claude/skills/using-git-worktrees/
+!.claude/skills/using-superpowers/
+!.claude/skills/verification-before-completion/
+!.claude/skills/writing-plans/
+!.claude/skills/writing-skills/
+# its working folder (plan workspaces, brainstorm sessions): machine only
+.superpowers/
 
 # a pasta de trabalho da taste-skill (folhas de direccao, capturas do
 # inspector): fica so na maquina, nunca no repo nem no deploy
