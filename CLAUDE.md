@@ -1020,3 +1020,16 @@ a future session finds them.
   drawing. Shown as a muted loop with a poster frame, it would fit the bio's
   "line before colour". Needs the clip from Frede; never a stock or found
   video (§9.5). Reduced motion shows the poster only (§9.8).
+- **Portfolio, projects and shop "the way I picture it"** (parked 6 Nov
+  2026). Frede asked for "a page to work as my art portfolio that also
+  shows my projects and works as merchandise store". The site already does
+  all three (the wall and the projects on `index.html`, each project on
+  `projeto.html`, the merch and the bag on `loja.html`); asked what is
+  missing, he said it "doesn't do the way you picture it", then parked it
+  before describing his picture. Nothing was built or decided. Start by
+  asking him to walk through it as a visitor (what they see first, what he
+  wants them to end up doing), because the answer decides the job: the
+  order of the sections, one page instead of three, or the look. One page
+  would undo the split of 1 Nov 2026, when the merch moved to `loja.html`
+  and `verify.mjs` began failing if it reappears in `index.html` (§7); say
+  so before building it. Use the brainstorming skill (§7, Superpowers).
