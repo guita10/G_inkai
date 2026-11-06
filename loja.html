@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<script>/* o tema: desde 1 Nov 2026 (3) o site abre ESCURO para toda a gente (a
+   paleta Midnight Black / Electric Cobalt / Acid Lime). O data-theme="dark"
+   ja vem no <html>; o claro e so no botao ◐. Antes o dia era o tema por
+   omissao e este script punha a noite a quem tinha o telemovel em escuro. */
+/* ha JavaScript: o que fica por baixo do merch espera por ele (ver .js) */
+document.documentElement.classList.add('js');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop · Guita_Ink</title>
+<meta name="robots" content="index,follow">
+<!-- Sem precos na description: o que o Google imprime nos resultados sai daqui
+     e do JSON-LD, e as comissoes nao levam numero em lado nenhum (§9.4). -->
+<meta name="description" content="Guita_Ink · commissions and merch. Four commission formats, from a bust to a full character sheet, and prints made from original art.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Shop · Guita_Ink">
+<meta property="og:description" content="Guita_Ink · commissions and merch. Four commission formats, from a bust to a full character sheet, and prints made from original art.">
+<meta property="og:url" content="https://guitaink.com/loja.html">
+<meta property="og:image" content="https://guitaink.com/images/og-card.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://guitaink.com/loja.html">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<!-- AS LETRAS vivem no site (pasta fonts/): ver o index.html -->
+<link rel="preload" href="fonts/shippori-mincho-b1-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/zen-kaku-gothic-new-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+<script>
+/* ================================================================
+   ████  CONFIG — a loja e as comissoes  ████
+   Esta pagina e o sitio onde se vende: o merch e as comissoes. Tudo o
+   que so ela usa vive AQUI e em mais lado nenhum (os produtos, os
+   textos da loja, o email-modelo do pedido de comissao).
+   Os campos que o index.html TAMBEM le tem de ser iguais nos dois
+   ficheiros — o tools/verify.mjs falha se nao forem:
+     artistName, realName, email, instagram, shop, commissionsOpen,
+     tiers, shopOpen, e nos textos commTitle, commOpen, commClosed,
+     commIntro, navShop, navComm e tiers.
+   ================================================================ */
+const CONFIG = {
+
+  /* ---------- IDENTIDADE ---------- */
+  artistName: "Guita_Ink",
+  realName: "Frederico Guita",
+  email: "frederico@guitaink.com",
+  instagram: "https://www.instagram.com/guita_ink",
+  shop: "https://xqms3c-zk.myshopify.com",              // Shopify: so o checkout
+  /* Obrigatorio para quem vende online em Portugal: acesso visivel ao Livro
+     de Reclamacoes Eletronico no site. Vai no rodape, ao lado do Instagram. */
+  livroReclamacoes: "https://www.livroreclamacoes.pt/Inicio/",
+
+  /* ---------- COMISSOES ----------
+     §9.4: aqui ficam os QUATRO FORMATOS e mais nada. Nenhum preco, nenhuma
+     fase, nenhum prazo, nenhum link para a loja. O numero vai por email,
+     com o PDF. Os precos vivem em dois sitios, e so dois:
+        1. o produto no Shopify        2. Guita_Ink_Comissoes_PT.pdf (Drive)
+     O `handle` fica porque e ele que da o link da loja no email de aceitacao.
+     Fechar comissoes continua a ser DOIS gestos: commissionsOpen:false aqui E
+     no index.html, e os produtos do Shopify em rascunho. */
+  commissionsOpen: true,
+  tiers: [
+    { key: "headshot", handle: "commission-headshot-bust" },
+    { key: "half",     handle: "commission-half-body" },
+    { key: "full",     handle: "commission-full-body" },
+    { key: "sheet",    handle: "commission-character-sheet" },
+  ],
+
+  /* ---------- MERCH ----------
+     ⚠️ LANCAMENTO: shopOpen:false esconde a seccao merch desta pagina E o
+        link "Loja" do menu do index. Ate la esta pagina so mostra as
+        comissoes. No dia do lancamento sao TRES gestos, e a ordem importa:
+        1. no Shopify, os produtos Merch a Activo E publicados na "Loja online"
+        2. no Shopify, a coleccao "Merch — Guita_Ink" publicada na "Loja online"
+        3. shopOpen:true AQUI E no index.html — por ultimo, com 1 e 2 feitos.
+           O verify.mjs falha se os dois ficheiros nao disserem o mesmo.
+        ACTIVO NAO E PUBLICADO. Os quatro produtos de comissao estiveram Activos
+        durante dois meses e ninguem os conseguia abrir, porque nunca tinham
+        sido publicados na Loja online. Confirma nos dois sitios: estado
+        "Activo" E o canal "Loja online" marcado, na ficha de cada produto.
+        Fechar e o inverso, pela ordem contraria — senao as pessoas caem numa
+        coleccao vazia.
+     handle: o handle do produto no Shopify. Ja nao e o link do cartao (desde
+        30 Set 2026 compra-se aqui, com o cesto), mas fica como referencia.
+     src: foto do produto, opcional. Vazio → placa tipografica.
+     opts + variants: o CESTO. Compra-se nesta pagina; o botao "Finalizar
+        compra" leva ao checkout do Shopify ja com o cesto dentro, por um link
+        do tipo  loja/cart/ID:QTD,ID:QTD  (cart permalink). Por isso cada
+        variante (desenho x cor x tamanho) precisa do seu ID do Shopify:
+        - opts: as opcoes, NA MESMA ORDEM do Shopify. `pick: true` = o
+          visitante tem de escolher (o tamanho), nao ha valor por defeito.
+        - variants: os IDs por ordem cartesiana: a primeira opcao muda mais
+          devagar, a ultima mais depressa (Queen/Black/S, Queen/Black/M, ...).
+          E a ordem em que o Shopify os lista.
+        ⚠️ Os IDs sao COPIAS do Shopify (tirados a 30 Set 2026). Se a Printful
+        voltar a sincronizar um produto e o Shopify lhe der IDs novos, estes
+        deixam de funcionar: o checkout abre sem esse artigo. Depois de mexer
+        num produto na Printful, pede os IDs de novo. O verify.mjs confere que
+        ha um ID por combinacao, sem repetidos, mas nao ve o Shopify.
+     NOTA: ao contrario das comissoes, estes precos estao na pagina. Uma
+        comissao e orcamento e o numero vai por email (§9.4); um print a 18€ e
+        preco de prateleira. Se alguma vez puseres um src aqui, lembra-te do
+        §9.1: fan art nao se vende, nem como print nem como autocolante. */
+  shopOpen: true,                                       // lancada a 30 Set 2026
+  shopDrop: "Drop 01",
+  merchCollection: "merch-guita_ink",
+  merch: [                                              // sincronizado com o Shopify, 30 Set 2026 (publicados)
+    /* a roupa do Drop 01 primeiro: t-shirt e hoodie, os tres desenhos, preto
+       ou branco, S a XL. Impressa pela Printful por encomenda. Hoodie:
+       Gildan 18500 (o hoodie base da Printful), 45 EUR: custa ~20 EUR, ganha
+       um pouco mais do que a t-shirt por venda. */
+    { key: "tee",     price: "30", unit: "€", from: false, handle: "t-shirt-drop-01", plate: "衣", src: "images/merch/tshirt.jpg",   w: 800, h: 800,
+      opts: [ { k: "design", v: ["Queen", "Monk", "Sumo"] }, { k: "colour", v: ["Black", "White"] }, { k: "size", v: ["S", "M", "L", "XL"], pick: true } ],
+      variants: [
+        /* Queen · Black (S M L XL) */ "60968526479694", "60968526512462", "60968526545230", "60968526577998",
+        /* Queen · White (S M L XL) */ "60968526610766", "60968526643534", "60968526676302", "60968526709070",
+        /* Monk · Black (S M L XL) */  "60968526741838", "60968526774606", "60968526807374", "60968526840142",
+        /* Monk · White (S M L XL) */  "60968526872910", "60968526905678", "60968526938446", "60968526971214",
+        /* Sumo · Black (S M L XL) */  "60968527003982", "60968527036750", "60968527069518", "60968527102286",
+        /* Sumo · White (S M L XL) */  "60968527135054", "60968527167822", "60968527200590", "60968527233358",
+      ] },
+    { key: "hoodie",  price: "45", unit: "€", from: false, handle: "hoodie-drop-01",  plate: "帽", src: "images/merch/hoodie.jpg",   w: 800, h: 800,
+      opts: [ { k: "design", v: ["Queen", "Monk", "Sumo"] }, { k: "colour", v: ["Black", "White"] }, { k: "size", v: ["S", "M", "L", "XL"], pick: true } ],
+      variants: [
+        /* Queen · Black (S M L XL) */ "60968527331662", "60968527364430", "60968527397198", "60968527429966",
+        /* Queen · White (S M L XL) */ "60968527462734", "60968527495502", "60968527528270", "60968527561038",
+        /* Monk · Black (S M L XL) */  "60968527593806", "60968527626574", "60968527659342", "60968527692110",
+        /* Monk · White (S M L XL) */  "60968527724878", "60968527757646", "60968527790414", "60968527823182",
+        /* Sumo · Black (S M L XL) */  "60968527855950", "60968527888718", "60968527921486", "60968527954254",
+        /* Sumo · White (S M L XL) */  "60968527987022", "60968528019790", "60968528052558", "60968528085326",
+      ] },
+    { key: "print",   price: "18", unit: "€", from: false, handle: "art-print-drop-01", plate: "版", src: "images/merch/print.jpg",    w: 800, h: 800,  // so A4 (Set 2026): em A3 os ficheiros dao ~214 DPI
+      opts: [ { k: "design", v: ["OC 01", "OC 02", "OC 03"] }, { k: "size", v: ["A4"] } ],
+      variants: [ "60968458518862", "60968458551630", "60968458584398" ] },
+    { key: "limited", price: "45", unit: "€", from: false, handle: "limited-edition-a3-drop-01", plate: "限", hold: true },
+    { key: "sticker", price: "4",  unit: "€", from: false, handle: "stickers-drop-01", plate: "貼", src: "images/merch/stickers.jpg", w: 800, h: 800,
+      opts: [ { k: "design", v: ["Queen", "Monk", "Sumo"] }, { k: "finish", v: ["Matte"] } ],
+      variants: [ "60968458649934", "60968458682702", "60968458715470" ] },
+    { key: "acrylic", price: "12", unit: "€", from: false, handle: "acrylic-keychain-drop-01-pre-order", plate: "鍵", preorder: true, hold: true },
+  ],
+
+  /* ---------- TEXTOS (EN / PT) ---------- */
+  i18n: {
+    en: {
+      navShop: "Shop", navComm: "Commissions",
+      backHome: "Portfolio",
+      /* etiquetas para o leitor de ecra (data-ta), nas duas linguas: estavam
+         so em ingles na marcacao (critica do Impeccable, 1 Nov 2026) */
+      a11yLang: "Switch language", a11yTheme: "Switch theme", a11yJump: "On this page",
+      commJump: "Commissions",
+      commTitle: "Commissions",
+      commOpen: "Open", commClosed: "Closed",
+      commIntro: "Four formats, from a bust to a full character sheet. Tell me what you have in mind and I reply with the format, the price and the timeline.",
+      commNote: "Prices and the full process go by email, with a short guide of how we work together.",
+      tiers: {
+        headshot: { name: "Headshot / Bust", desc: "Head and shoulders, fully rendered." },
+        half:     { name: "Half body",       desc: "Waist-up illustration, fully rendered." },
+        full:     { name: "Full body",       desc: "Complete character, fully rendered." },
+        sheet:    { name: "Character sheet", desc: "Turnarounds, expressions and detail callouts. Final quote depends on the number of views." },
+      },
+      commCta: "Ask about a commission",
+      shopTitle: "Shop",
+      merchTitle: "Merch",
+      shopIntro: "Clothing, prints, stickers and small things made from original Guita_Ink art. Released in drops.",
+      shopAll: "See the whole shop",
+      shopPreorder: "Pre-order",
+      fromPrefix: "From",
+      merchItems: {
+        tee:     { name: "T-shirt",         desc: "Unisex, printed on the front. Black or white, S to XL." },
+        hoodie:  { name: "Hoodie",          desc: "Unisex, printed on the front. Black or white, S to XL." },
+        print:   { name: "Art print",       desc: "A4, heavyweight matte paper. Three original portraits." },
+        limited: { name: "Limited edition", desc: "A3, signed and numbered. 50 copies of each design, never reprinted." },
+        sticker: { name: "Stickers",        desc: "Vinyl, cut around the character." },
+        acrylic: { name: "Acrylic keychain", desc: "Double-sided clear acrylic. Made once the batch fills." },
+      },
+      /* o cesto */
+      optNames: { design: "Design", colour: "Colour", size: "Size", finish: "Finish" },
+      optValues: {},                                   // em ingles os valores ficam como no Shopify
+      pickOne: "Choose",
+      pickMissing: "Choose every option first.",
+      addToBag: "Add to bag",
+      added: "Added",
+      addedLive: "added to the bag",
+      bagShort: "Bag",
+      bagTitle: "Your bag",
+      bagEmpty: "Nothing here yet. Choose a size and add something above.",
+      bagTotal: "Total",
+      bagShipping: "Shipping is calculated at checkout.",
+      checkout: "Checkout",
+      checkoutNote: "Payment happens on Shopify's secure checkout, with this bag already in it.",
+      qtyLess: "One less", qtyMore: "One more", remove: "Remove",
+      mailSubject: "Commission request",
+      mailBody: "Hi Frede,\n\n"
+        + "Format (bust / half body / full body / character sheet): \n"
+        + "Character: \n"
+        + "Reference links: \n"
+        + "Pose or framing you have in mind: \n"
+        + "Colours or mood: \n"
+        + "Any date you need it by: \n"
+        + "Commercial use (yes / no): \n\n"
+        + "Thanks,\n",
+      questions: "Questions first? Write to",
+      footComplaints: "Complaints book",
+    },
+    pt: {
+      navShop: "Loja", navComm: "Comissões",
+      backHome: "Portefólio",
+      a11yLang: "Mudar de língua", a11yTheme: "Mudar de tema", a11yJump: "Nesta página",
+      commJump: "Comissões",
+      commTitle: "Comissões",
+      commOpen: "Abertas", commClosed: "Fechadas",
+      commIntro: "Quatro formatos, do busto à character sheet completa. Diz-me o que tens em mente e respondo com o formato, o valor e o prazo.",
+      commNote: "Os valores e o processo completo seguem por email, com um guia curto de como vamos trabalhar.",
+      tiers: {
+        headshot: { name: "Headshot / Busto",   desc: "Cabeça e ombros, totalmente renderizado." },
+        half:     { name: "Meio corpo",         desc: "Ilustração da cintura para cima, totalmente renderizada." },
+        full:     { name: "Corpo inteiro",      desc: "Personagem completa, totalmente renderizada." },
+        sheet:    { name: "Character sheet",    desc: "Turnarounds, expressões e detalhes. Orçamento final depende do número de vistas." },
+      },
+      commCta: "Pedir uma comissão",
+      shopTitle: "Loja",
+      merchTitle: "Merch",
+      shopIntro: "Roupa, prints, autocolantes e pequenas coisas feitas a partir da arte original Guita_Ink. Sai em drops.",
+      shopAll: "Ver a loja toda",
+      shopPreorder: "Pré-venda",
+      fromPrefix: "Desde",
+      merchItems: {
+        tee:     { name: "T-shirt",            desc: "Unissexo, estampada à frente. Preta ou branca, do S ao XL." },
+        hoodie:  { name: "Sweat com capuz",    desc: "Unissexo, estampada à frente. Preta ou branca, do S ao XL." },
+        print:   { name: "Print",              desc: "A4, papel mate de gramagem alta. Três retratos originais." },
+        limited: { name: "Edição limitada",    desc: "A3, assinada e numerada. 50 exemplares de cada desenho, sem reimpressão." },
+        sticker: { name: "Autocolantes",       desc: "Vinil, recortado à volta da personagem." },
+        acrylic: { name: "Porta-chaves acrílico", desc: "Acrílico transparente, dupla face. Produzido quando o lote fecha." },
+      },
+      /* o cesto */
+      optNames: { design: "Desenho", colour: "Cor", size: "Tamanho", finish: "Acabamento" },
+      optValues: { Black: "Preto", White: "Branco", Matte: "Mate" },
+      pickOne: "Escolhe",
+      pickMissing: "Escolhe primeiro todas as opções.",
+      addToBag: "Adicionar ao cesto",
+      added: "Adicionado",
+      addedLive: "adicionado ao cesto",
+      bagShort: "Cesto",
+      bagTitle: "O teu cesto",
+      bagEmpty: "Ainda está vazio. Escolhe o tamanho e junta alguma coisa acima.",
+      bagTotal: "Total",
+      bagShipping: "Os portes são calculados no pagamento.",
+      checkout: "Finalizar compra",
+      checkoutNote: "O pagamento é feito na página segura do Shopify, já com este cesto.",
+      qtyLess: "Menos um", qtyMore: "Mais um", remove: "Remover",
+      mailSubject: "Pedido de comissão",
+      mailBody: "Olá Frede,\n\n"
+        + "Formato (busto / meio corpo / corpo inteiro / character sheet): \n"
+        + "Personagem: \n"
+        + "Links de referência: \n"
+        + "Pose ou enquadramento que imaginas: \n"
+        + "Cores ou ambiente: \n"
+        + "Alguma data a cumprir: \n"
+        + "Uso comercial (sim / não): \n\n"
+        + "Obrigado,\n",
+      questions: "Dúvidas antes? Escreve para",
+      footComplaints: "Livro de Reclamações",
+    },
+  },
+};
+</script>
+
+<style>
+/* ================= AS LETRAS — as mesmas do index.html ================= */
+@font-face{font-family:'Shippori Mincho B1';font-style:normal;font-weight:700;font-display:swap;
+  src:url("fonts/shippori-mincho-b1-700-latin.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Zen Kaku Gothic New';font-style:normal;font-weight:400;font-display:swap;
+  src:url("fonts/zen-kaku-gothic-new-400-latin.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Zen Kaku Gothic New';font-style:normal;font-weight:500;font-display:swap;
+  src:url("fonts/zen-kaku-gothic-new-500-latin.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+/* ================= TOKENS — copia dos do index.html ================= */
+/* 1 Nov 2026 (3): Midnight Black, Electric Cobalt e Acid Lime; abre escuro.
+   Os papeis e os contrastes estao explicados no index. */
+:root{
+  color-scheme:dark;       /* barras de scroll e menus nativos no escuro */
+  --void:#030407;         /* Midnight Black, o fundo */
+  --raise:#0E1015;        /* os passe-partouts das obras e os cartoes */
+  --raise-2:#181B21;
+  --sky:#1558C9;          /* Electric Cobalt: preencher (texto por cima: #FFFFFF) */
+  --sky-lift:#6E9BF2;     /* o cobalto como texto sobre --void */
+  --sky-raise:#6E9BF2;    /* idem sobre --raise */
+  --bone:#EEF0F3;         /* o texto */
+  --bone-dim:#9BA0AA;
+  --hair:rgba(238,240,243,.13);
+  --lime:#D8F454;         /* Acid Lime: preencher (texto por cima: #030407) */
+  --hi:#D8F454;           /* o destaque como linha ou texto */
+  --f-disp:'Shippori Mincho B1','Hiragino Mincho ProN','Yu Mincho',Georgia,serif;
+  --f-body:'Zen Kaku Gothic New',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-ui:'Zen Kaku Gothic New',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --pad:clamp(16px,3vw,40px);
+  --gut:clamp(24px,4vw,64px);   /* a calha entre colunas, a mesma do index */
+}
+/* o dia: so pelo botao ◐ */
+[data-theme="light"]{
+  color-scheme:light;
+  --void:#F3F4F6;
+  --raise:#FFFFFF;
+  --raise-2:#E6E8EC;
+  --sky-lift:#1558C9;
+  --sky-raise:#1558C9;
+  --bone:#030407;         /* o Midnight Black passa a tinta */
+  --bone-dim:#565B64;
+  --hair:rgba(3,4,7,.12);
+  --hi:#1558C9;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+/* o atributo hidden tem de ganhar aos display:flex das classes daqui */
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--f-body);background:var(--void);color:var(--bone);
+  line-height:1.6;font-weight:400;-webkit-font-smoothing:antialiased;
+  transition:background .4s ease,color .4s ease;overflow-x:hidden;
+}
+a{color:inherit}
+::selection{background:var(--lime);color:#030407}
+:focus-visible{outline:2px solid var(--sky-lift);outline-offset:3px}
+.wrap{max-width:1400px;margin:0 auto;padding:0 var(--pad);position:relative;z-index:1}
+/* film grain — a mesma textura do index */
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/><feColorMatrix type='saturate' values='0'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='.16'/></svg>");
+}
+header,main,footer{position:relative;z-index:1}
+h1,h2,h3{font-family:var(--f-disp);font-weight:700;line-height:1.08;letter-spacing:-.01em;text-wrap:balance}
+h3{line-height:1.15}
+p{text-wrap:pretty}
+
+/* ================= BARRA ================= */
+header{
+  position:sticky;top:0;z-index:60;
+  background:color-mix(in srgb,var(--void) 86%,transparent);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--hair);
+}
+/* padding-block: o padding:10px 0 de antes anulava as margens do .wrap e a
+   marca colava-se a borda do ecra (ver o mesmo no index) */
+.bar{display:flex;align-items:center;gap:18px;padding-block:10px;min-height:65px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+/* o selo 墨 (tools/make-logo.py): igual ao do index, sem animacao nenhuma
+   aqui — o carimbo e a entrada do site, nao de cada pagina. */
+.logo{width:34px;height:34px;flex:none;display:block}
+.brand b{font-family:var(--f-disp);font-weight:700;font-size:1.125rem;letter-spacing:0}
+/* min-width: o rotulo ("Portfolio") chega do JS; sem lugar guardado o link
+   crescia para a esquerda a frente de quem estava a ler (CLS) */
+.back{font-family:var(--f-ui);font-size:.875rem;font-weight:500;color:var(--bone-dim);text-decoration:none;
+  margin-left:auto;padding:12px 0;transition:color .2s ease;min-width:6em}
+.back:hover{color:var(--bone)}
+.knobs{display:flex;gap:8px}
+.knob{
+  height:44px;min-width:44px;padding:0 14px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--hair);background:transparent;color:var(--bone-dim);
+  /* o atalho font: define tambem a familia — um glifo sem ela cai no Arial */
+  font:500 .75rem/1 var(--f-ui);letter-spacing:.1em;
+  transition:border-color .2s ease,color .2s ease,transform .12s ease-out;
+}
+.knob:hover{border-color:var(--bone);color:var(--bone)}
+
+/* ================= CABECA DA PAGINA =================
+   1 Nov 2026 (2): o primeiro ecra da loja era o titulo "Loja", dois botoes e
+   papel vazio; o merch so comecava aos 570px, e repetia "Merch" e a mesma
+   frase num titulo seu. Agora a cabeca e a do merch: o titulo com a
+   etiqueta do drop, a frase do que se vende, e um botao para as comissoes
+   do lado direito. Os produtos vem logo a seguir, com fotos, nomes e precos
+   ainda no primeiro ecra.
+   Antes do lancamento (shopOpen:false) e so o titulo "Comissoes" com a
+   etiqueta Aberto/Fechado, como antes.
+   O titulo e a frase vem do JS: as caixas guardam uma linha e duas (tres no
+   telemovel). */
+/* o botao fica por baixo da frase, encostado a esquerda: o rotulo chega do
+   JS e, a direita, crescia para a esquerda e mexia-se (o CLS apanhava) */
+.page-head{padding:clamp(24px,3vw,40px) 0 0}
+.ph-titulo{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.page-head .lede{margin:14px 0 0;min-height:3.2em}
+.page-head .jump{margin-top:20px}
+/* a etiqueta do drop vem vazia do HTML (o nome do drop esta no CONFIG): sem
+   isto via-se uma pilula azul sem texto ate o script chegar */
+.badge:empty{display:none}
+/* 1 Nov 2026: no degrau do titulo do index (70px). Estava a 90px, o maior
+   tipo do site inteiro, numa palavra de quatro letras. */
+h1{font-size:clamp(2.5rem,6vw,4.4rem);line-height:1.02;letter-spacing:-.025em;min-height:1.02em}
+.jump{display:flex;gap:10px;flex-wrap:wrap}
+/* o merch segue a cabeca de perto: e a continuacao do primeiro ecra */
+#merch{padding-top:clamp(28px,3vw,40px)}
+/* Ate o script desenhar os cartoes, a grelha do merch tem altura zero, e o
+   cesto, as comissoes e o elenco pintavam-se no primeiro ecra para logo a
+   seguir serem empurrados um ecra para baixo: numa ligacao lenta isso media
+   0,61 de CLS (1 Nov 2026). Agora ficam invisiveis ate o render() acabar.
+   visibility e nao display: o lugar e o mesmo, so nao se ve, e um elemento
+   invisivel que se mexe nao conta. Sem JavaScript a classe .js nao existe e
+   tudo aparece. */
+.js:not(.pronto) #merchGrid ~ *,.js:not(.pronto) #comissoes,.js:not(.pronto) footer{visibility:hidden}
+
+/* ================= SECCOES ================= */
+section{padding:clamp(56px,8vw,104px) 0 0}
+/* antes do lancamento as comissoes sao a pagina toda: seguem logo o titulo,
+   sem o traco e o espaco de uma seccao nova, senao abria-se um buraco */
+.so-comissoes #comissoes{padding-top:0}
+.head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+h2{font-size:clamp(1.8rem,3.2vw,2.8rem);letter-spacing:-.015em;min-height:1.08em}
+/* Tamanhos (Out 2026): os mesmos degraus do index. Paragrafos a 16px na tinta
+   inteira, controlos e notas a 14px, rotulos em versaletes nunca abaixo de
+   12px. Antes a descricao do produto estava a 11px e "Tamanho" a 9px, na
+   pagina onde se le antes de comprar.
+   1 Nov 2026: os sete degraus do index (70 / 45 / 24 / 18 / 16 / 14 / 12).
+   Havia catorze tamanhos nesta pagina: os formatos tinham dois (21 e 18px),
+   o preco 30, o total 32, o cesto 22. */
+.lede{color:var(--bone);max-width:36rem;font-size:1.125rem;margin-bottom:34px}
+.badge{font-family:var(--f-ui);font-size:.75rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:7px 14px;border-radius:999px}
+.badge.open{background:var(--lime);color:#030407}   /* o lima, preto por cima: 16,58:1 */
+.badge.closed{border:1px solid var(--hair);color:var(--bone-dim)}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+
+.btn{
+  display:inline-flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;
+  font:500 .875rem/20px var(--f-ui);letter-spacing:.01em;padding:13px 24px;border-radius:2px;   /* 20px: 48 de altura com qualquer letra (ver o index) */
+  min-height:44px;border:1px solid var(--bone);color:var(--bone);background:transparent;
+  transition:background .25s ease,border-color .25s ease,color .25s ease,transform .12s ease-out;
+}
+.btn:hover{background:var(--bone);color:var(--void)}
+.btn.fill{background:var(--sky);border-color:var(--sky);color:#FFFFFF}   /* branco no cobalto: 6,42:1 */
+.btn.fill:hover{background:var(--bone);border-color:var(--bone);color:var(--void)}
+
+/* ---- merch: desde que se compra aqui (30 Set 2026) os cartoes ja nao sao
+   links: tem as opcoes e o botao do cesto dentro, e um <select> nao pode
+   viver dentro de um <a>. Por isso perderam o hover de levantar; quem
+   responde ao toque e o botao. ---- */
+/* quatro por linha: no lancamento (Set 2026) estao quatro cartoes a vista
+   (os dois em hold nao aparecem), uma linha certa; em tablet e telemovel
+   passam a duas, 2x2. Se voltarem a ser seis, tres por linha. */
+/* minmax(0,1fr) e nao 1fr: com 1fr a coluna nunca encolhe abaixo do conteudo
+   mais largo, e um <select> com "Escolhe" empurrava o cartao para fora dos
+   320px. */
+.merch{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;margin-bottom:30px}
+.merch-card{
+  color:inherit;background:var(--raise);
+  display:flex;flex-direction:column;
+}
+.merch-card .art{position:relative;overflow:hidden}
+/* a placa ou, quando houver, a foto do produto: ocupa a largura do cartao.
+   A etiqueta de pre-venda fica de fora, senao esticava de lado a lado. */
+.merch-card .art > :not(.flag){width:100%;height:auto}
+.plate{
+  aspect-ratio:1/1;display:grid;place-items:center;background:var(--raise-2);position:relative;overflow:hidden;
+}
+.plate::after{content:"";position:absolute;inset:0;background-image:radial-gradient(var(--sky) 1px,transparent 1.4px);background-size:16px 16px;opacity:.16}
+.plate span{font-family:var(--f-disp);font-size:clamp(2.4rem,5vw,3.4rem);color:var(--sky-lift);z-index:1}
+.merch-card .body{padding:20px;display:flex;flex-direction:column;gap:8px;flex:1}
+.merch-card h3{font-size:1.5rem}
+.merch-card p{font-size:1rem;color:var(--bone)}
+/* as opcoes e o botao assentam no fundo do cartao: numa linha de quatro os
+   botoes ficam todos a mesma altura, tenha o produto uma caixa ou tres */
+.merch-card .body > .opts{margin-top:auto}
+/* --sky-raise e nao --sky-lift: o cartao e --raise, nao o fundo da pagina */
+.price{font-family:var(--f-disp);color:var(--sky-raise);display:flex;align-items:baseline;gap:3px}
+.price .from{font-family:var(--f-body);font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-dim);margin-right:5px}
+.price .n{font-size:1.5rem;line-height:1}
+.price .u{font-size:.875rem}
+.flag{
+  position:absolute;top:12px;left:12px;z-index:2;font-family:var(--f-ui);font-size:.75rem;
+  letter-spacing:.16em;text-transform:uppercase;color:#030407;background:var(--lime);
+  padding:3px 9px;border-radius:999px;
+}
+
+/* ---- as opcoes do cartao (desenho, cor, tamanho) e o botao do cesto.
+   <select> nativo de proposito: e acessivel de raiz e no telemovel abre a
+   roda do sistema. So se estiliza a caixa. ---- */
+/* 96px: com tres caixas lado a lado cortava-se "Queen" e "Choose"; assim
+   ficam duas por linha e o tamanho desce para a seguinte */
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;margin-top:6px}
+.opt{display:flex;flex-direction:column;gap:4px;min-width:0}
+.opt span{font-family:var(--f-ui);font-size:.75rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--bone-dim)}
+.opt select{
+  width:100%;min-width:0;min-height:44px;padding:0 8px;border-radius:2px;cursor:pointer;
+  border:1px solid var(--hair);background:var(--void);color:var(--bone);
+  font:400 .875rem var(--f-ui);transition:border-color .2s ease;
+}
+.opt select:hover{border-color:var(--bone)}
+.opt select[aria-invalid="true"]{border-color:var(--sky-raise)}
+.merch-card .add{width:100%;justify-content:center;margin-top:6px}
+/* a mensagem por baixo do botao ("escolhe o tamanho"): linha reservada, para
+   o cartao nao crescer quando ela aparece */
+.card-msg{font-family:var(--f-ui);font-size:.875rem;color:var(--sky-raise);min-height:1.2em;line-height:1.2}
+
+/* ---- o cesto: linhas, nao caixas, como o resto do site ---- */
+.cesto{border-top:1px solid var(--hair);padding-top:28px;margin:10px 0 34px;scroll-margin-top:90px}
+.cesto h3{font-size:1.5rem;margin-bottom:14px}
+.cesto-vazio{color:var(--bone-dim);font-size:1rem}
+.linhas{list-style:none}
+.linha{display:grid;grid-template-columns:1fr auto auto;gap:10px 18px;align-items:center;
+  padding:14px 0;border-bottom:1px solid var(--hair)}
+.linha b{font-family:var(--f-disp);font-weight:700;font-size:1.125rem;display:block}
+.linha small{font-family:var(--f-ui);font-size:.875rem;color:var(--bone-dim)}
+.qtd{display:flex;align-items:center;gap:6px}
+.qtd output{font-family:var(--f-ui);font-size:.875rem;min-width:1.6em;text-align:center}
+.linha .knob{padding:0;font-size:1rem}
+.linha-fim{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.linha-fim .p{font-family:var(--f-disp);color:var(--sky-lift);font-size:1.125rem}
+.tirar{font:400 .875rem var(--f-ui);color:var(--bone-dim);background:none;border:0;cursor:pointer;
+  padding:8px 0;text-decoration:underline;text-underline-offset:3px;transition:color .2s ease}
+.tirar:hover{color:var(--bone)}
+.cesto-fim{display:flex;flex-direction:column;align-items:flex-start;gap:12px;margin-top:20px}
+.total{font-family:var(--f-ui);font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-dim);display:flex;align-items:baseline;gap:12px}
+.total b{font-family:var(--f-disp);font-weight:700;font-size:1.5rem;letter-spacing:0;color:var(--bone)}
+.nota{font-size:.875rem;color:var(--bone-dim)}
+/* o atalho do cesto: fixo no canto, so aparece com o cesto cheio e o cesto
+   fora do ecra. Fixo nao empurra nada, por isso nao conta para o CLS. */
+.cesto-fab{position:fixed;right:16px;bottom:16px;z-index:70}
+/* Out 2026: aparecia do nada. E a prova de que alguma coisa entrou no cesto,
+   por isso agora sobe 8px e acende em 200ms quando aparece (o [hidden] sai).
+   Sem @starting-style aparece de uma vez, como antes. */
+.cesto-fab{transition:background .25s ease,border-color .25s ease,color .25s ease,
+  transform .2s cubic-bezier(.2,.7,.3,1),opacity .2s cubic-bezier(.2,.7,.3,1)}
+@starting-style{.cesto-fab{opacity:0;transform:translateY(8px)}}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---- comissoes: os quatro formatos. O primeiro (o mais acessivel) leva a
+   celula maior para haver um ponto de entrada; linhas, nao caixas.
+   1 Nov 2026: o titulo do primeiro era tambem maior (21 contra 18px), dois
+   tamanhos quase iguais lado a lado. Agora os quatro a 24px; a celula mais
+   larga chega para marcar a entrada. ---- */
+.tiers{display:grid;grid-template-columns:1.55fr 1fr 1fr 1fr;gap:1px;background:var(--hair);border:1px solid var(--hair);margin-bottom:30px}
+.tier{background:var(--void);padding:28px 22px;display:flex;flex-direction:column;gap:10px}
+.tier:first-child{padding:28px 26px}
+.tier h3{font-size:1.5rem}
+.tier p{font-size:1rem;color:var(--bone)}
+/* a nota e uma frase inteira, nao um rotulo: em versaletes espacejadas a
+   12px tinha 84 caracteres por linha e lia-se mal. Agora e texto a 14px. */
+.comm-note{font-size:.875rem;color:var(--bone-dim);margin-bottom:24px;max-width:36rem}
+.ask{margin-top:24px;font-size:1rem;color:var(--bone-dim)}
+.ask a{color:var(--sky-lift);text-decoration:none;border-bottom:1px solid var(--hair);transition:border-color .2s ease}
+.ask a:hover{border-color:var(--sky-lift)}
+/* Out 2026 (2): o elenco dos sete (Survival of Kings, original do Frede)
+   fecha as comissoes, ao lado do texto e nunca atras dele. O recorte sem
+   fundo serve de dia e de noite (ver o index).
+   1 Nov 2026: estava por baixo de tudo, a largura toda (~680px de altura no
+   desktop), e as tres linhas de cima ficavam sozinhas a esquerda com a
+   direita vazia: entre o ultimo texto e o rodape ia quase um ecra inteiro.
+   Agora fica a direita dessas linhas, 5/12 e 7/12, como no index. */
+.comm-foot{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--gut);align-items:center}
+.comm-art{aspect-ratio:5424/2778;
+  background:url("images/bg/cast-cut-1000.png") center/contain no-repeat;
+  background:image-set(url("images/bg/cast-cut-1920.webp") type("image/webp"),url("images/bg/cast-cut-1000.png") type("image/png")) center/contain no-repeat;
+}
+footer{font-family:var(--f-ui);
+  margin-top:clamp(56px,8vw,104px);padding:24px 0 44px;border-top:1px solid var(--hair);display:flex;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;font-size:.875rem;color:var(--bone-dim)}
+footer a{text-decoration:none;transition:color .2s ease}
+footer a:hover{color:var(--bone)}
+.foot-links{display:flex;flex-wrap:wrap;gap:16px 22px}
+
+/* toda a coisa que se carrega responde ao toque */
+.btn:active,.knob:active{transform:scale(.97)}
+
+@media (max-width:980px){
+  .merch{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tiers{grid-template-columns:repeat(2,1fr)}
+  /* o elenco desce para baixo do texto */
+  .comm-foot{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:620px){
+  .page-head .lede{min-height:4.8em}
+  .merch{gap:12px}
+  .merch-card .body{padding:14px}
+  .merch-card h3{font-size:1.125rem}
+  .merch-card p{font-size:.875rem}
+  /* no telemovel o nome da linha fica sozinho em cima; quantidade e preco por baixo */
+  .linha{grid-template-columns:1fr auto}
+  .linha > div:first-child{grid-column:1 / -1}
+  .tiers{grid-template-columns:1fr}
+  /* o elenco mais leve no telemovel */
+  .comm-art{background-image:url("images/bg/cast-cut-1000.png");
+    background-image:image-set(url("images/bg/cast-cut-1000.webp") type("image/webp"),url("images/bg/cast-cut-1000.png") type("image/png"))}
+  .bar{gap:12px}
+  .logo{width:30px;height:30px}
+  .brand b{display:none}          /* o selo chega; o nome nao cabe ao lado dos botoes */
+}
+/* Ecras de toque: o toque liga o :hover e ele fica preso. O botao cheio
+   ("Pagar", "Perguntar") ficava oco depois de tocado. Aqui fica cheio. */
+@media (hover:none){
+  .btn.fill:hover{background:var(--sky);color:#FFFFFF;border-color:var(--sky)}
+}
+/* §9.8 — sem efeitos nenhuns. A textura do grao fica: e parada. */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  body,.knob,.btn,.back,.ask a,footer a,.opt select,.tirar,.cesto-fab{transition:none}
+  .btn:active,.knob:active{transform:none}
+}
+</style>
+</head>
+<body>
+<noscript>
+  <div class="wrap" style="padding:28px 26px">
+    <p><b>Guita_Ink</b>, Frederico Guita · Commissions / Comissões</p>
+    <p><a href="mailto:frederico@guitaink.com">frederico@guitaink.com</a></p>
+  </div>
+</noscript>
+
+<header>
+  <div class="wrap bar">
+    <a class="brand" id="brand" href="index.html">
+      <img class="logo" src="images/logo.svg" alt="" width="36" height="36">
+      <b>Guita_Ink</b>
+    </a>
+    <a class="back" id="back" href="index.html">← <span id="backLabel"></span></a>
+    <div class="knobs">
+      <button class="knob" id="langTgl" aria-label="Switch language" data-ta="a11yLang">PT</button>
+      <button class="knob" id="themeTgl" aria-label="Switch theme" data-ta="a11yTheme">◐</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+  <!-- A CABECA (1 Nov 2026 (2)): e a cabeca do merch. O HTML vem ja no estado
+       da loja aberta (aberta desde 30 Set 2026); com shopOpen:false o JS
+       esconde a frase, o drop, o atalho e o merch, e mostra a etiqueta das
+       comissoes. -->
+  <div class="page-head">
+    <div class="ph-titulo">
+      <h1 id="pageTitle"></h1>
+      <span class="badge open" id="dropBadge"></span>
+      <span class="badge" id="headBadge" hidden></span>
+    </div>
+    <p class="lede" id="shopIntro"></p>
+    <nav class="jump" id="jump" aria-label="On this page" data-ta="a11yJump">
+      <a class="btn" href="#comissoes" id="jumpComm"></a>
+    </nav>
+  </div>
+
+  <!-- MERCH — escondida enquanto CONFIG.shopOpen for false. O titulo e so
+       para leitores de ecra: quem ve, ve o da cabeca. -->
+  <section id="merch" aria-labelledby="merchTitle">
+    <h2 class="sr-only" id="merchTitle"></h2>
+    <div class="merch" id="merchGrid"></div>
+    <!-- O CESTO — vive nesta pagina; so o pagamento e no Shopify -->
+    <div class="cesto" id="cesto">
+      <h3 id="cestoTitle"></h3>
+      <p class="cesto-vazio" id="cestoVazio"></p>
+      <ul class="linhas" id="linhas"></ul>
+      <div class="cesto-fim" id="cestoFim" hidden>
+        <p class="total"><span id="totalLabel"></span> <b id="total"></b></p>
+        <p class="nota" id="portes"></p>
+        <a class="btn fill" id="pagar" href="#"><span id="pagarLabel"></span> ↗</a>
+        <p class="nota" id="pagarNota"></p>
+      </div>
+    </div>
+    <div class="row">
+      <a class="btn" id="shopAll" href="#" target="_blank" rel="noopener"><span id="shopAllLabel"></span> ↗</a>
+    </div>
+    <p class="sr-only" id="aviso" aria-live="polite"></p>
+  </section>
+
+  <!-- COMISSOES — quatro formatos, sem precos (§9.4) -->
+  <section id="comissoes">
+    <div class="head" id="commHead">
+      <h2 id="commTitle"></h2>
+      <span class="badge" id="commBadge"></span>
+    </div>
+    <p class="lede" id="commIntro"></p>
+    <div class="tiers" id="tiers"></div>
+    <div class="comm-foot">
+      <div>
+        <p class="comm-note" id="commNote"></p>
+        <div class="row">
+          <a class="btn fill" id="commCta" href="#"><span id="commCtaLabel"></span> →</a>
+        </div>
+        <p class="ask"><span id="askLabel"></span> <a id="askMail" href="#"></a></p>
+      </div>
+      <div class="comm-art" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <a class="btn fill cesto-fab" id="cestoFab" href="#cesto" hidden></a>
+
+  <footer>
+    <span id="footL"></span>
+    <span class="foot-links">
+      <a id="footLr" href="#" target="_blank" rel="noopener"><span id="footLrLabel"></span> ↗</a>
+      <a id="footIg" href="#" target="_blank" rel="noopener">Instagram ↗</a>
+    </span>
+  </footer>
+</div>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+/* A lingua: primeiro a que veio no link do index (?lang=pt), senao a do
+   browser — a mesma regra do index. Assim quem mudou para PT la nao cai em
+   EN aqui. */
+const pedida = new URLSearchParams(location.search).get('lang');
+let LANG = (pedida === 'pt' || pedida === 'en') ? pedida
+  : ((navigator.language || 'en').toLowerCase().startsWith('pt') ? 'pt' : 'en');
+
+/* ================= O CESTO =================
+   Compra-se nesta pagina: escolhe-se desenho, cor e tamanho, junta-se ao
+   cesto, e "Finalizar compra" abre o checkout do Shopify ja com tudo dentro,
+   por um cart permalink:  <loja>/cart/ID:QTD,ID:QTD
+   So o pagamento sai daqui (o Shopify nao deixa pagar noutro sitio, e e a
+   encomenda dele que a Printful recebe). Nao ha pedido nenhum ao Shopify ate
+   ao clique: a pagina continua a abrir por file:// e sem rede. */
+
+/* cada ID de variante → o produto e os valores escolhidos. Os IDs estao no
+   CONFIG por ordem cartesiana: a ultima opcao muda mais depressa. */
+const VARIANTES = {};
+CONFIG.merch.forEach(m => {
+  if(!m.variants || m.hold) return;
+  m.variants.forEach((id, i) => {
+    const valores = [];
+    for(let o = m.opts.length - 1, r = i; o >= 0; o--){
+      const n = m.opts[o].v.length;
+      valores[o] = m.opts[o].v[r % n]; r = Math.floor(r / n);
+    }
+    VARIANTES[id] = { m, valores };
+  });
+});
+function idDe(m, escolhas){
+  let i = 0;
+  m.opts.forEach((o, k) => { i = i * o.v.length + o.v.indexOf(escolhas[k]); });
+  return m.variants[i];
+}
+
+/* guarda-se no browser de quem visita, para o cesto sobreviver a um recarregar
+   ou a uma volta ao portefolio. Dois dias e esquece: quem volta uma semana
+   depois de comprar nao deve encontrar o cesto antigo. Tudo em try/catch:
+   numa janela privada o localStorage pode nao existir, e o cesto funciona
+   na mesma, so nao fica guardado. */
+const CHAVE = 'gi-cesto', VALIDADE = 2 * 864e5;
+let cesto = (() => {
+  try {
+    const g = JSON.parse(localStorage.getItem(CHAVE) || 'null');
+    if(!g || Date.now() - g.t > VALIDADE) return [];
+    /* so IDs que o CONFIG ainda conhece: se um produto saiu, sai do cesto */
+    return g.itens.filter(x => VARIANTES[x.id] && x.q > 0).map(x => ({ id: x.id, q: Math.min(x.q, 10) }));
+  } catch(e){ return []; }
+})();
+function guarda(){
+  try { localStorage.setItem(CHAVE, JSON.stringify({ t: Date.now(), itens: cesto })); } catch(e){}
+}
+function junta(id){
+  const l = cesto.find(x => x.id === id);
+  if(l) l.q = Math.min(l.q + 1, 10); else cesto.push({ id, q: 1 });
+  guarda(); desenhaCesto();
+}
+function muda(id, d){
+  const l = cesto.find(x => x.id === id);
+  if(!l) return;
+  l.q = Math.min(l.q + d, 10);
+  if(l.q < 1) cesto = cesto.filter(x => x !== l);
+  guarda(); desenhaCesto();
+}
+/* o link do checkout: exposto para o verify.mjs o poder conferir */
+const linkCheckout = () => `${CONFIG.shop}/cart/` + cesto.map(x => `${x.id}:${x.q}`).join(',');
+
+const nomeValor = (t, v) => t.optValues[v] || v;
+const descreve = (t, id) => VARIANTES[id].valores.map(v => nomeValor(t, v)).join(' / ');
+
+/* as opcoes de um cartao: um <select> por opcao com mais do que um valor
+   (A4 e Mate sao unicos, nao ha nada a escolher) e o botao do cesto */
+function opcoes(m, t){
+  const box = document.createElement('div');
+  box.className = 'opts';
+  const selects = m.opts.map(o => {
+    if(o.v.length < 2) return null;
+    const lab = document.createElement('label');
+    lab.className = 'opt';
+    const s = document.createElement('select');
+    /* o tamanho nao tem valor por defeito: um "S" escolhido por omissao e uma
+       t-shirt do tamanho errado a caminho de alguem */
+    s.innerHTML = (o.pick ? `<option value="" disabled selected>${t.pickOne}</option>` : '')
+      + o.v.map(v => `<option value="${v}">${nomeValor(t, v)}</option>`).join('');
+    s.onchange = () => { s.removeAttribute('aria-invalid'); msg.textContent = ''; };
+    const sp = document.createElement('span');
+    sp.textContent = t.optNames[o.k] || o.k;
+    lab.append(sp, s); box.append(lab);
+    return s;
+  });
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'btn add';
+  btn.textContent = t.addToBag;
+  const msg = document.createElement('p');
+  msg.className = 'card-msg';
+  msg.setAttribute('role', 'status');
+  let volta;
+  btn.onclick = () => {
+    const faltam = selects.filter(s => s && !s.value);
+    if(faltam.length){
+      faltam.forEach(s => s.setAttribute('aria-invalid', 'true'));
+      msg.textContent = t.pickMissing;
+      faltam[0].focus();
+      return;
+    }
+    const id = idDe(m, m.opts.map((o, k) => selects[k] ? selects[k].value : o.v[0]));
+    junta(id);
+    const tt = CONFIG.i18n[LANG];
+    $('#aviso').textContent = `${tt.merchItems[m.key].name}, ${descreve(tt, id)}: ${tt.addedLive}`;
+    btn.textContent = tt.added;
+    clearTimeout(volta);
+    volta = setTimeout(() => { btn.textContent = CONFIG.i18n[LANG].addToBag; }, 1600);
+  };
+  if(!box.children.length) return [btn, msg];
+  return [box, btn, msg];
+}
+
+function desenhaCesto(){
+  const t = CONFIG.i18n[LANG];
+  const n = cesto.reduce((a, x) => a + x.q, 0);
+  const total = cesto.reduce((a, x) => a + x.q * Number(VARIANTES[x.id].m.price), 0);
+  const unid = (CONFIG.merch[0] && CONFIG.merch[0].unit) || '€';
+  $('#cestoTitle').textContent = t.bagTitle;
+  $('#cestoVazio').textContent = t.bagEmpty;
+  $('#cestoVazio').hidden = n > 0;
+  $('#cestoFim').hidden = n === 0;
+  const ul = $('#linhas'); ul.innerHTML = '';
+  cesto.forEach(x => {
+    const { m } = VARIANTES[x.id];
+    const li = document.createElement('li');
+    li.className = 'linha';
+    li.dataset.id = x.id;
+    li.innerHTML = `<div><b>${t.merchItems[m.key].name}</b><small>${descreve(t, x.id)}</small></div>
+      <div class="qtd">
+        <button type="button" class="knob menos" aria-label="${t.qtyLess}">−</button>
+        <output aria-live="polite">${x.q}</output>
+        <button type="button" class="knob mais" aria-label="${t.qtyMore}"${x.q >= 10 ? ' disabled' : ''}>+</button>
+      </div>
+      <div class="linha-fim"><span class="p">${x.q * Number(m.price)}${m.unit || ''}</span>
+        <button type="button" class="tirar">${t.remove}</button></div>`;
+    li.querySelector('.menos').onclick = () => muda(x.id, -1);
+    li.querySelector('.mais').onclick = () => muda(x.id, +1);
+    li.querySelector('.tirar').onclick = () => muda(x.id, -x.q);
+    ul.append(li);
+  });
+  $('#totalLabel').textContent = t.bagTotal;
+  $('#total').textContent = `${total}${unid}`;
+  $('#portes').textContent = t.bagShipping;
+  $('#pagar').href = n ? linkCheckout() : '#';
+  $('#pagarLabel').textContent = t.checkout;
+  $('#pagarNota').textContent = t.checkoutNote;
+  const fab = $('#cestoFab');
+  fab.textContent = `${t.bagShort} · ${n} · ${total}${unid} ↓`;
+  fab.setAttribute('aria-label', `${t.bagShort}: ${n}, ${t.bagTotal} ${total}${unid}`);
+  fab.dataset.cheio = n > 0 ? '1' : '';
+  mostraFab();
+}
+
+/* o atalho no canto so aparece com o cesto cheio E o cesto fora do ecra;
+   quem ja esta a olhar para ele nao precisa do atalho. IntersectionObserver
+   e nao um listener de scroll (§6). */
+let cestoAVista = false;
+function mostraFab(){
+  const fab = $('#cestoFab');
+  fab.hidden = !fab.dataset.cheio || cestoAVista || $('#merch').hidden;
+}
+if('IntersectionObserver' in window){
+  new IntersectionObserver(es => { cestoAVista = es[0].isIntersecting; mostraFab(); })
+    .observe($('#cesto'));
+}
+
+function render(){
+  const t = CONFIG.i18n[LANG];
+  const shopOn = !!CONFIG.shopOpen;
+  const open = !!CONFIG.commissionsOpen;
+  document.documentElement.lang = LANG;
+  $('#langTgl').textContent = LANG === 'en' ? 'PT' : 'EN';
+  document.querySelectorAll('[data-ta]').forEach(el => { if(t[el.dataset.ta]) el.setAttribute('aria-label', t[el.dataset.ta]); });
+  /* o nome falado comeca pelo que o botao mostra ("PT, Switch language") */
+  $('#langTgl').setAttribute('aria-label', `${$('#langTgl').textContent}, ${t.a11yLang}`);
+  /* o regresso ao portefolio leva a lingua consigo */
+  const home = LANG === 'pt' ? 'index.html?lang=pt' : 'index.html';
+  $('#brand').href = home; $('#back').href = home;
+  $('#backLabel').textContent = t.backHome;
+
+  /* Antes do lancamento a pagina e so das comissoes: o titulo diz isso e o
+     cabecalho da seccao sai, para nao repetir "Comissoes" duas vezes. */
+  const titulo = shopOn ? t.shopTitle : t.commTitle;
+  $('#pageTitle').textContent = titulo;
+  document.title = `${titulo} · Guita_Ink`;
+  $('#jump').hidden = !shopOn;
+  $('#shopIntro').hidden = !shopOn;
+  $('#jumpComm').textContent = `${t.commJump} →`;
+  $('#commHead').hidden = !shopOn;
+  document.body.classList.toggle('so-comissoes', !shopOn);
+  const hb = $('#headBadge');
+  hb.hidden = shopOn;
+  hb.textContent = open ? t.commOpen : t.commClosed;
+  hb.className = 'badge ' + (open ? 'open' : 'closed');
+
+  /* ---- merch ----
+     O botao vai a coleccao merch e nao a /collections/all, que misturaria
+     merch com comissoes. */
+  $('#merch').hidden = !shopOn;
+  /* a etiqueta do drop fica vazia (e por isso escondida) com a loja fechada */
+  $('#dropBadge').textContent = shopOn ? (CONFIG.shopDrop || '') : '';
+  if(shopOn){
+    const merchColl = `${CONFIG.shop}/collections/${CONFIG.merchCollection}`;
+    $('#merchTitle').textContent = t.merchTitle;
+    $('#shopIntro').textContent = t.shopIntro;
+    $('#shopAll').href = merchColl;
+    $('#shopAllLabel').textContent = t.shopAll;
+    const mg = $('#merchGrid'); mg.innerHTML = '';
+    CONFIG.merch.forEach(m => {
+      const tm = t.merchItems[m.key];
+      /* hold: true = o produto existe no Shopify mas nao esta publicado, por
+         isso o cartao nao aparece (senao ia para o checkout um artigo que nao se
+         pode comprar).
+         Set 2026: a edicao limitada espera por originais maiores (as A3 dao
+         ~200 DPI) e o porta-chaves por um fornecedor. Tirar o hold e publicar
+         o produto no Shopify, as duas coisas juntas. */
+      if(!tm || m.hold) return;
+      const card = document.createElement('article');
+      card.className = 'merch-card';
+      card.dataset.key = m.key;
+      const art = document.createElement('div');
+      art.className = 'art';
+      if(m.src){
+        const img = document.createElement('img');
+        /* largura e altura antes do src: o browser reserva o quadrado antes de
+           a foto chegar e os cartoes nao saltam (as fotos sao 800x800). */
+        if(m.w && m.h){ img.width = m.w; img.height = m.h; }
+        img.src = m.src; img.alt = tm.name; img.loading = 'lazy'; img.decoding = 'async';
+        art.append(img);
+      } else {
+        /* sem foto do produto, a placa tipografica. Nunca uma ilustracao que
+           nao seja do produto (§9.5). */
+        const plate = document.createElement('div');
+        plate.className = 'plate';
+        plate.setAttribute('aria-hidden', 'true');
+        plate.innerHTML = `<span>${m.plate || ''}</span>`;
+        art.append(plate);
+      }
+      if(m.preorder){
+        const f = document.createElement('span');
+        f.className = 'flag';
+        f.textContent = t.shopPreorder;
+        art.append(f);
+      }
+      const from = m.from ? `<span class="from">${t.fromPrefix}</span>` : '';
+      const body = document.createElement('div');
+      body.className = 'body';
+      body.innerHTML = `<h3>${tm.name}</h3><p>${tm.desc}</p>
+        <span class="price">${from}<span class="n">${m.price}</span><span class="u">${m.unit || ''}</span></span>`;
+      if(m.variants) body.append(...opcoes(m, t));
+      card.append(art, body);
+      mg.append(card);
+    });
+    desenhaCesto();
+  }
+
+  /* ---- comissoes ---- */
+  $('#commTitle').textContent = t.commTitle;
+  const badge = $('#commBadge');
+  badge.textContent = open ? t.commOpen : t.commClosed;
+  badge.className = 'badge ' + (open ? 'open' : 'closed');
+  $('#commIntro').textContent = t.commIntro;
+  $('#commNote').textContent = t.commNote;
+  /* Os cartoes nao sao links: sem preco na pagina, mandar alguem para o
+     produto era mostrar-lhe o preco na mesma. A conversa comeca no email. */
+  $('#tiers').innerHTML = CONFIG.tiers.map(x => {
+    const tt = t.tiers[x.key];
+    return `<div class="tier"><h3>${tt.name}</h3><p>${tt.desc}</p></div>`;
+  }).join('');
+  /* O email ja leva as perguntas cujas respostas preciso antes de dar um
+     valor — as mesmas do PDF de onboarding. */
+  $('#commCta').href = `mailto:${CONFIG.email}`
+    + `?subject=${encodeURIComponent(t.mailSubject)}`
+    + `&body=${encodeURIComponent(t.mailBody)}`;
+  $('#commCtaLabel').textContent = t.commCta;
+  $('#askLabel').textContent = t.questions;
+  $('#askMail').textContent = CONFIG.email;
+  $('#askMail').href = 'mailto:' + CONFIG.email;
+
+  $('#footL').textContent = `© ${new Date().getFullYear()} ${CONFIG.artistName} · ${CONFIG.realName}`;
+  $('#footIg').href = CONFIG.instagram;
+  $('#footLrLabel').textContent = t.footComplaints;
+  $('#footLr').href = CONFIG.livroReclamacoes;
+  /* os cartoes ja estao desenhados: o cesto, as comissoes e o rodape podem
+     aparecer (ver .js:not(.pronto) no CSS) */
+  document.documentElement.classList.add('pronto');
+}
+
+render();
+$('#langTgl').onclick = () => { LANG = LANG === 'en' ? 'pt' : 'en'; render(); };
+$('#themeTgl').onclick = () => {
+  const r = document.documentElement;
+  r.dataset.theme = r.dataset.theme === 'light' ? 'dark' : 'light';
+};
+</script>
+</body>
+</html>
