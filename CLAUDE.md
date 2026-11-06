@@ -360,10 +360,37 @@ the saved file after. A fresh cloud container's system Pillow is broken
 --break-system-packages --ignore-installed Pillow numpy` fixes it. Then the
 usual path: `add-artwork.py` (a name already on the site is replaced, which
 is how a corrected re-upload works), the `CONFIG` lines, `dims.py`,
-`verify.mjs`, commit, zip. **Still to agree with Frede** before this runs
-on its own: where the title comes from (the proposal: the file name, as
-he writes it), where a new piece sits on the wall, and whether the folders
-are checked on a schedule or when he asks.
+`verify.mjs`, commit, zip.
+
+**Only when Frede says so** (6 Nov 2026: "Only when I say"). No scheduled
+task, no check at the start of a session: the folders are read when he
+asks ("atualiza o site com o Drive", "update the site from Drive", or
+words to that effect). The rules, proposed on 6 Nov 2026 and left as they
+were by him:
+
+- **New or changed** is decided by `tools/drive-importados.json`: each
+  imported Drive file's id with its `modifiedTime`. A file whose id is not
+  there is new; one whose `modifiedTime` differs was re-uploaded and
+  replaces its picture. Everything else is skipped. Write the entries after
+  `verify.mjs` passes, in the same commit as the pictures.
+- **The title is the file name** as he writes it, without the extension,
+  underscores read as spaces, trimmed ("Kon, Chainsaw Man.png" → "Kon,
+  Chainsaw Man", "Shocked_.png" → "Shocked"). One title in both languages,
+  like every other piece. Never write a title from what the picture shows
+  (§9.5); if a name is a camera or app default (`IMG_6211`, `Ilustração sem
+  título`), import nothing from that file and ask him for the title.
+- **Its place on the wall**: an original or a sketch (including a collab
+  original) goes after the last of the intro's six originals (today Spain),
+  before Clair and the Survival of Kings cast; one whose title names
+  Survival of Kings goes after the cast; fan art (including a collab fan
+  art) goes at the end of the list. Never into the opening twelve
+  (`wallPreview`) or into `heroArt` unless he asks: those were his choices.
+- **Projects**: a picture in `Projetos/<project>` goes at the end of that
+  project's `gallery`, with the same title rule, and through
+  `add-artwork.py --slug proj-<key>-<n>` like the series already there.
+- Then `dims.py`, `verify.mjs`, the sitemap's `lastmod`, commit, push, and
+  the zip; tell him which pictures went in, with their titles and places,
+  before he drags the zip to Netlify.
 
 ---
 
@@ -547,6 +574,9 @@ tools/          all run by hand, none part of the deploy
                   not served
   og-card.html    the social card's layout; not served, just the mould
   verify.mjs      runs §10 against a real browser; exit 1 if anything fails
+  drive-importados.json  which Google Drive files are already on the site
+                  (id and modifiedTime), so an import only brings what is
+                  new or re-uploaded (§4)
 DESIGN.md       the design system in semantic form
 CLAUDE.md       this file
 .claude/skills/ skills for Claude sessions; not served
