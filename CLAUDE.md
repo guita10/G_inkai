@@ -322,6 +322,49 @@ Blackbeard clubs.
 
 No CDN. No image service. Netlify serves the files as they are.
 
+**New art arrives through Google Drive** (6 Nov 2026, Frede's request: "when
+I upload the images to them you can update them in the site"). In the Drive
+of `frederico@guitaink.com` (the account the Google Drive connector uses),
+inside the folder `Site [Imagens]` (`1kA7eF_8nnlcFzTwj33uC9OHHTNnlqweh`),
+each subfolder is a place on the site. **The folder is Frede's word on the
+category** (§9.1): never move a picture to another category because of what
+it looks like.
+
+| Drive folder | id | On the site |
+| --- | --- | --- |
+| `Design de personagens` | `1NT7HmnOgBDF3b_LSIlZe_y6eMC7ONZrc` | `cat:"character"` |
+| `Fan art` | `1AkCHsXty3qh4Ok77XaNKkI694nkEldpq` | `cat:"fanart"` |
+| `Esboços` | `1PuioU6u0mryHTpu-OUWVPvwqKyVNeYso` | `cat:"sketches"` |
+| `Colaborações/Originais` | `1F886x9w6mhuegt2B7n_a22Cs502rH7He` | `cat:"character", collab:true` |
+| `Colaborações/Fan art` | `1jCjVYH6vKq0lpZ_mumpw2QTCisgyJlq8` | `cat:"fanart", collab:true` |
+| `Projetos/Survival of Kings` | `1leX-PlIdeYHtpXl6ApPztSJgM4MyZ7nK` | the `sok` project's `gallery` |
+| `Projetos/Tokyo Revengers` | `1WjNVXK7gzKa7_vsJjQc7EiqdJjhwjhbp` | the `tr` project's `gallery` |
+| `Projetos/PAMP` | `1i5Cx9fkAsDVDc9-B0bLJX8rJMyDI69BE` | the `pamp` project's `gallery` |
+| `Projetos/One Piece Deck` | `1TYBFrstwThbw8_M_fQ72_GX6nM30phXM` | the `deck` project's `gallery` (fan art, §9.1) |
+
+`Colaborações` (`1uAPosE-JsJgVAvFYGIiLC3Mo1QbULhxo`) and `Projetos`
+(`1b_M9U5Qw9Z-iqBO3asZykudWIhMe5QH8`) only hold their subfolders: a collab
+is still an original or fan art (§9.1), so it needs both. The 28 PNGs loose
+at the top of `Site [Imagens]` are the August 2026 originals, already on
+the site: never import them again. Frede's other Drive folders
+(`Capas_TokyoRevengers`, `Survival of Kings`, `Deck OP` at the root) are his
+own and are not read.
+
+How a picture comes across (tested 6 Nov 2026 on a 5.8 MB PNG, byte for
+byte): `download_file_content` is too big for the conversation, so the
+harness saves it to a file in the session's tool-results folder; its
+`content` field is base64 (`jq -r .content <file> | base64 -d > <name>`).
+Decode each into an empty scratch folder, never into the repo, and delete
+the saved file after. A fresh cloud container's system Pillow is broken
+(`cannot import name '_imaging'`); `python3 -m pip install
+--break-system-packages --ignore-installed Pillow numpy` fixes it. Then the
+usual path: `add-artwork.py` (a name already on the site is replaced, which
+is how a corrected re-upload works), the `CONFIG` lines, `dims.py`,
+`verify.mjs`, commit, zip. **Still to agree with Frede** before this runs
+on its own: where the title comes from (the proposal: the file name, as
+he writes it), where a new piece sits on the wall, and whether the folders
+are checked on a schedule or when he asks.
+
 ---
 
 ## 5. Icon system
