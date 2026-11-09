@@ -98,53 +98,48 @@ sempre que aceitas um trabalho.
 Dois quadros desenham o mesmo processo, Draft 0 a Final, com as aprovações
 e os pagamentos: **Guita_Ink — Processo de Comissões** (o fluxo, com um
 guia rápido ao lado) e **Guita_Ink — Fluxo de Comissões** (o fluxo, com o
-guia de onboarding ao lado). Foram feitos na conta Miro da LOA-D
-(`frederico.guita@loa-d.com`), que era a do conector do Miro.
+guia de onboarding ao lado).
 
-**A mudar para a conta `frederico@guitaink.com`** (pedido do Frede, 9 Nov
-2026, "adapt this miro boards to the miro account for
-frederico@guitaink.com"). Ficou decidido:
+**Vivem na conta Miro `frederico@guitaink.com`** desde 9 Nov 2026 (pedido
+do Frede: "adapt this miro boards to the miro account for
+frederico@guitaink.com"):
 
-- O Claude recria os dois quadros na conta guitaink, tal como estão, com
-  duas mudanças: o endereço do site, `guita-ink.netlify.app` →
-  `guitaink.com`, e a regra do esboço (abaixo).
-- Para isso o conector do Miro tem de estar com a conta guitaink
-  (claude.ai/customize/connectors, e depois uma sessão nova). Confirmar
-  antes de criar: `user_search_organization_users("frederico")` tem de
-  devolver o email `@guitaink.com`, não `@loa-d.com`.
-- A cópia de onde se recriam está no Drive da conta guitaink, na pasta
-  **Miro — cópia dos quadros de comissões**
-  (`1OXHb5wVQ0ZCjCcsRgVoS5P4Ncoq-zQuC`), já com as duas mudanças:
+| Quadro | Endereço |
+| --- | --- |
+| Guita_Ink — Processo de Comissões | https://miro.com/app/board/uXjVEQQWN9Q=/ |
+| Guita_Ink — Fluxo de Comissões | https://miro.com/app/board/uXjVEQX-DnU=/ |
 
-  | Ficheiro | id no Drive | Quadro original (LOA-D) |
-  | --- | --- | --- |
-  | `Guita_Ink — Processo de Comissões.svg` | `1JajVZFppw14YJArYevkdHkbRjQNYwPwX` | `uXjVH3hIfwM=` |
-  | `Guita_Ink — Fluxo de Comissões.svg` | `1_hPEPKeP70M--eaojy-7jZ4SusMxtw8q` | `uXjVH3hiiVY=` |
+Foram feitos primeiro na conta Miro da LOA-D (`frederico.guita@loa-d.com`,
+quadros `uXjVH3hIfwM=` e `uXjVH3hiiVY=`), que era a do conector do Miro, e
+recriados na conta guitaink pelo Claude a partir de uma cópia lida dos
+originais. O que mudou ao recriar:
 
-  É o SVG que o `canvas_read_as_svg` do Miro devolve (sem os
-  `data-miro-id`), conferido byte a byte contra os quadros. Recria-se com
-  `canvas_create_from_svg`, depois de ler o `canvas_get_canvas_composer_skill`,
-  num quadro novo com o mesmo nome. As descrições dos originais: "Fluxo de
-  trabalho das comissões Guita_Ink: Draft 0 → Draft 1 → Draft 2 → Final,
-  com pontos de pagamento e aprovação." e "Fluxo de trabalho das comissões
-  Guita_Ink — Draft 0 → Final, com pontos de aprovação e pagamento."
-- Os quadros têm os preços: por isso a cópia vive no Drive e não neste
-  repositório.
-- Depois de o Frede ver os quadros novos, os originais na LOA-D e a pasta
-  do Drive são dele para apagar. O Claude não apaga nenhum sem ele dizer.
+- O endereço do site: `guita-ink.netlify.app` → `guitaink.com`.
+- **Ajustar o esboço no Draft 0 não conta como revisão** (Frede, 9 Nov
+  2026). Os dois quadros discordavam: "sem custo" no Processo, "conta como
+  revisão" no Fluxo. No Fluxo, a caixa do ajuste recebe as três respostas
+  "NÃO" (esboço, lineart e cor), e nos dois quadros as do lineart e da cor
+  contam como revisão; por isso a caixa passou a dizer "Ajuste (no esboço
+  não conta como revisão; no lineart e na cor, conta)".
+- **O PDF de onboarding é `Guita_Ink_Comissoes_PT.pdf`** (Frede, 9 Nov
+  2026). O Fluxo dizia `Guia_Comissao_GuitaInk.pdf`.
+- O fluxograma é feito de formas simples do Miro (losango para as
+  decisões, retângulo arredondado para o início e o fim, paralelogramo para
+  os pagamentos, retângulos tracejados para os grupos), nas mesmas posições,
+  cores e textos. Os originais usavam as formas de fluxograma do Miro, que
+  a conta guitaink não tem: o Miro recusou-as.
+- Na tabela do guia rápido (Processo), "Draft 0", "Draft 1"… perderam o
+  negrito: as células de uma tabela do Miro só levam texto simples.
 
-**Ajustar o esboço no Draft 0 não conta como revisão** (Frede, 9 Nov
-2026). Os dois quadros discordavam: "sem custo" no Processo, "conta como
-revisão" no Fluxo. No Fluxo, a caixa do ajuste recebe as três respostas
-"NÃO" (esboço, lineart e cor), e nos dois quadros as do lineart e da cor
-contam como revisão; por isso a caixa passou a dizer "Ajuste (no esboço não
-conta como revisão; no lineart e na cor, conta)". Na cópia do Drive o
-ficheiro é novo; o anterior foi para o lixo do Drive.
+Os quadros têm os preços: por isso nada deles está neste repositório. A
+cópia de onde foram recriados ficou no Drive da conta guitaink, na pasta
+**Miro — cópia dos quadros de comissões**
+(`1OXHb5wVQ0ZCjCcsRgVoS5P4Ncoq-zQuC`); com os quadros feitos, já não é
+precisa (a do Fluxo ainda tem o nome antigo do PDF). Essa pasta e os
+originais na LOA-D são do Frede para apagar; o Claude não apaga nenhum sem
+ele dizer.
 
-Duas coisas em que os quadros ainda não batem certo, por decidir pelo Frede
-(a cópia leva-as como estão):
-
-- O nome do PDF de onboarding: `Guita_Ink_Comissoes_PT.pdf` num,
-  `Guia_Comissao_GuitaInk.pdf` no outro.
-- Onde vivem os preços: o guia rápido diz quatro sítios (o quadro, o PDF, os
-  Termos no Notion, o Shopify); a secção 1 acima diz dois.
+Uma coisa em que os quadros ainda não batem certo, por decidir pelo Frede
+(está como estava): onde vivem os preços. O guia rápido diz quatro sítios
+(o quadro, o PDF, os Termos no Notion, o Shopify); a secção 1 acima diz
+dois.
