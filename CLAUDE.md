@@ -544,7 +544,10 @@ sitemap.xml     six URLs; update lastmod when content changes
 images/         + images/thumb/, images/merch/, images/bg/ (Survival of Kings)
 fonts/          the three font files (Latin subsets) + OFL licences
 comissoes/      the commission system; nothing here is served
-  README.md       how site, Notion and email fit together
+  README.md       how site, Notion and email fit together; and the two
+                  Miro boards of the process, moving from the LOA-D Miro
+                  account to frederico@guitaink.com (9 Nov 2026): where
+                  their copy is and how a session rebuilds them
   email-onboarding.md  the acceptance email, PT and EN
 marca/          the brand sheet for printers and collaborators; not served
   Guita_Ink-brand-sheet.pdf  one A4 page: the frog coin, the palette (HEX,
