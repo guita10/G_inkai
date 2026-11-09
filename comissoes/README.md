@@ -130,16 +130,16 @@ originais. O que mudou ao recriar:
   a conta guitaink não tem: o Miro recusou-as.
 - Na tabela do guia rápido (Processo), "Draft 0", "Draft 1"… perderam o
   negrito: as células de uma tabela do Miro só levam texto simples.
+- **Os quadros não têm preços** (Frede, 9 Nov 2026: "Prices are only in
+  Shopify and the PDF"). No Processo, a lista "Produtos e preços" passou a
+  "Formatos" (os quatro nomes) e a nota da sincronização diz dois sítios em
+  vez de quatro; no Fluxo, a tabela de formatos perdeu a coluna "Preço".
+  Cada um tem a linha "Os preços estão no Shopify e no
+  `Guita_Ink_Comissoes_PT.pdf`, e só aí."
 
-Os quadros têm os preços: por isso nada deles está neste repositório. A
-cópia de onde foram recriados ficou no Drive da conta guitaink, na pasta
+A cópia de onde foram recriados ficou no Drive da conta guitaink, na pasta
 **Miro — cópia dos quadros de comissões**
 (`1OXHb5wVQ0ZCjCcsRgVoS5P4Ncoq-zQuC`); com os quadros feitos, já não é
-precisa (a do Fluxo ainda tem o nome antigo do PDF). Essa pasta e os
-originais na LOA-D são do Frede para apagar; o Claude não apaga nenhum sem
-ele dizer.
-
-Uma coisa em que os quadros ainda não batem certo, por decidir pelo Frede
-(está como estava): onde vivem os preços. O guia rápido diz quatro sítios
-(o quadro, o PDF, os Termos no Notion, o Shopify); a secção 1 acima diz
-dois.
+precisa, e ainda tem os preços e o nome antigo do PDF. Essa pasta e os
+originais na LOA-D (também com os preços) são do Frede para apagar; o
+Claude não apaga nenhum sem ele dizer.
