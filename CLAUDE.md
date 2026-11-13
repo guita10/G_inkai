@@ -580,6 +580,12 @@ tools/          all run by hand, none part of the deploy
   drive-importados.json  which Google Drive files are already on the site
                   (id and modifiedTime), so an import only brings what is
                   new or re-uploaded (§4)
+docs/           nothing here is served (not in the deploy zip)
+  mapa/           the site as a graphify map (13 Nov 2026, Frede's request):
+                  mapa-do-site.html opens in any browser, offline; graph.json
+                  answers `graphify query/path/explain`; relatorio.md is the
+                  summary. A snapshot: it does not update itself. Its README
+                  says what it covers, what it leaves out and how to redo it
 DESIGN.md       the design system in semantic form
 CLAUDE.md       this file
 .claude/skills/ skills for Claude sessions; not served
