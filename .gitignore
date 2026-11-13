@@ -1,0 +1,89 @@
+__pycache__/
+*.pyc
+.DS_Store
+
+# installed by: npx skills add Leonxlnx/taste-skill
+.agents/
+skills-lock.json
+
+# .claude stays ignored (skills installed locally), except the skills
+# committed so every cloud session has them
+.claude/*
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/grill-me/
+!.claude/skills/ui-ux-pro-max/
+!.claude/skills/design-taste-frontend/
+# installed by: npx skills add emilkowalski/skill --skill '*' --agent claude-code --copy -y
+!.claude/skills/animate/
+!.claude/skills/animate-expo/
+!.claude/skills/animation-performance/
+!.claude/skills/animation-vocabulary/
+!.claude/skills/apple-design/
+!.claude/skills/ask-sonner/
+!.claude/skills/break-ui/
+!.claude/skills/emil-design-eng/
+!.claude/skills/find-animation-opportunities/
+!.claude/skills/improve-animations/
+!.claude/skills/mobile-native/
+!.claude/skills/pick-ui-library/
+!.claude/skills/prototype/
+!.claude/skills/remove-animations/
+!.claude/skills/review-animations/
+!.claude/skills/write-swift/
+# Impeccable (impeccable.style), installed 1 Nov 2026: copied from
+# github.com/pbakaus/impeccable at e89e3ad (its .claude build, v4.8.0), because
+# `npx impeccable install` downloads from impeccable.style, which the cloud
+# session's network does not reach. The skill and its four agents.
+!.claude/skills/impeccable/
+!.claude/agents/
+.claude/agents/*
+!.claude/agents/impeccable-*.md
+# Superpowers (github.com/obra/superpowers), installed 3 Nov 2026: its 15
+# skills copied from 2ce8aa1 (v7.0.1), because the official install is a
+# plugin in the user's own Claude settings, which a cloud container loses
+# when it ends. Its SessionStart hook is not installed.
+!.claude/skills/brainstorming/
+!.claude/skills/diagnosing-superpowers/
+!.claude/skills/dispatching-parallel-agents/
+!.claude/skills/executing-plans/
+!.claude/skills/finishing-a-development-branch/
+!.claude/skills/receiving-code-review/
+!.claude/skills/requesting-code-review/
+!.claude/skills/subagent-driven-development/
+!.claude/skills/systematic-debugging/
+!.claude/skills/test-driven-development/
+!.claude/skills/using-git-worktrees/
+!.claude/skills/using-superpowers/
+!.claude/skills/verification-before-completion/
+!.claude/skills/writing-plans/
+!.claude/skills/writing-skills/
+# its working folder (plan workspaces, brainstorm sessions): machine only
+.superpowers/
+
+# a pasta de trabalho da taste-skill (folhas de direccao, capturas do
+# inspector): fica so na maquina, nunca no repo nem no deploy
+.taste-skill/
+
+# Impeccable's working files (the list from its README): caches, screenshots,
+# review rounds and per-person settings stay on the machine. Its shared files
+# (.impeccable/config.json and the like) would be committed.
+# impeccable-ignore-start
+**/.impeccable/config.local.json
+**/.impeccable/hook.cache.json
+**/.impeccable/hook.pending.json
+**/.impeccable/*.png
+**/.impeccable/review/
+**/.impeccable/questions/
+**/.impeccable/live/server.json
+**/.impeccable/live/sessions/
+**/.impeccable/live/previews/
+**/.impeccable/live/annotations/
+**/.impeccable/live/cache/
+**/.impeccable/live/manual-edit-apply-transaction.json
+**/.impeccable/live/manual-edit-events.jsonl
+**/.impeccable/live/manual-edit-evidence/
+**/.impeccable/live/pending-manual-edits.json
+**/.impeccable/live/deferred-svelte-component-accepts.json
+**/.impeccable/live/*.png
+# impeccable-ignore-end
