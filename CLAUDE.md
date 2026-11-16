@@ -586,6 +586,41 @@ docs/           nothing here is served (not in the deploy zip)
                   answers `graphify query/path/explain`; relatorio.md is the
                   summary. A snapshot: it does not update itself. Its README
                   says what it covers, what it leaves out and how to redo it
+novo/           a SECOND, new version of the site, built from scratch beside
+                the current one (15 Nov 2026, Frede: "Review and create a new
+                entire site from scratch and inspired by the current one but
+                do this separately... be creative but maintain the same
+                information"). NOT live, not in the deploy zip, and nothing in
+                the root depends on it. Whether it replaces the current site
+                is Frede's decision and has not been made. Its README.md (in
+                Portuguese) explains it to him; the short version:
+                  the idea: a split stage. On wide screens half the screen is
+                  a mat where one piece is always shown whole (the Flip of
+                  1 Nov taken site-wide); below 1060px it is one column.
+                  From the taste-skill's "split-stage" direction, with its
+                  found pictures, cover crops, text over art, marquee and
+                  contact form taken out (§9.5 and "art is never cropped")
+                  another architecture: one dados.js (the CONFIG), one
+                  site.css, one site.js, shared by the three pages; each
+                  section draws itself as the parser passes it, so there are
+                  no height reserves. §1 to §8 and §10 of this file describe
+                  the CURRENT site, not novo/. §9 applies to both
+                  the content is a copy: while both exist the current site is
+                  the source. After changing it run, from the root,
+                  `node novo/tools/copia-dados.cjs` and
+                  `python3 novo/tools/imagens.py` (mini/ thumbnails and
+                  dims.js). novo/images and novo/fonts are symlinks to the
+                  root folders, never copies
+                  `node novo/tools/verify.mjs` is its own test run (the same
+                  checks as §10 in the new shape, plus one that fails if any
+                  field or text differs from the current site). `--rapido`,
+                  `--so 3,6` for parts, `--pasta X` to test a copy
+                  three things in it are Frede's to confirm: a short shop
+                  shelf with prices on the home page (the merch left the
+                  home page on 1 Nov 2026, §7), where focus lands after the
+                  viewer closes, and the phone menu starting at 820px
+                Never deploy it, and never fold it into the root, unless he
+                asks.
 DESIGN.md       the design system in semantic form
 CLAUDE.md       this file
 .claude/skills/ skills for Claude sessions; not served
