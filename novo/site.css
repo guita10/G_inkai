@@ -86,7 +86,7 @@ ul,ol{list-style:none}
 .bar{position:sticky;top:0;z-index:30;height:var(--bar);display:grid;grid-template-columns:minmax(0,46fr) minmax(0,54fr)}
 .bar-a,.bar-b{display:flex;align-items:center;min-width:0}
 .bar-a{background:var(--void);padding-inline:var(--pad);border-bottom:1px solid var(--hair)}
-.bar-b{background:var(--raise);padding-inline:clamp(16px,3vw,48px);justify-content:flex-end;gap:4px}
+.bar-b{background:var(--raise);padding-inline:8px calc(var(--pad) - 10px);justify-content:flex-end;gap:4px}
 .brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--f-disp);font-weight:700;font-size:1.125rem;line-height:1;min-height:44px}
 .brand img{width:30px;height:30px}
 .nav{display:flex;align-items:center;gap:2px;min-width:0}
@@ -102,8 +102,9 @@ ul,ol{list-style:none}
 .menu-btn{display:none;padding-inline:14px}
 
 /* ================= AS DUAS METADES ================= */
-.shell{display:grid;grid-template-columns:minmax(0,46fr) minmax(0,54fr);align-items:start;
-  background:linear-gradient(to right,var(--void) 46%,var(--raise) 46%)}
+.shell{display:grid;grid-template-columns:minmax(0,46fr) minmax(0,54fr);align-items:start;position:relative}
+/* o palco so e lido no fim da pagina; ate la o sitio dele ja tem a cor certa */
+.shell::before{content:"";position:absolute;inset:0 0 0 46%;background:var(--raise)}
 .col{min-width:0;padding-inline:var(--pad);background:var(--void)}
 main>section{padding-block:clamp(56px,9vh,104px)}
 main>section~section{padding-top:0}      /* "~" e nao "+": entre duas seccoes ha o <script> que a desenha */
@@ -113,15 +114,17 @@ main>section[hidden]{display:none}
 /* ---- o palco ---- */
 .stage{position:sticky;top:var(--bar);height:calc(100svh - var(--bar));background:var(--raise);
   display:grid;grid-template-rows:minmax(0,1fr) auto;min-width:0}
-.stage-art{position:relative;margin:clamp(14px,3.2vh,40px) clamp(16px,3vw,48px) 0;cursor:zoom-in;border-radius:2px}
+.stage-art{position:relative;margin:clamp(14px,3.2vh,40px) var(--pad) 0;cursor:zoom-in;border-radius:2px}
 .stage-art:disabled{cursor:default}
 .stage-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .4s ease}
 .stage-art img.on{opacity:1}
 .stage.now .stage-art img{transition:none}
 .stage-art img.deco{object-position:50% 100%}
 .stage-art img.seal{inset:30%;width:40%;height:40%}
+.stage-art img.seal.on{animation:carimbo .5s cubic-bezier(.2,1.5,.4,1)}
+@keyframes carimbo{from{transform:scale(.86) rotate(-5deg)}}
 .stage-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;
-  padding:12px clamp(16px,3vw,48px) 16px;font-size:.875rem;min-height:56px}
+  padding:12px var(--pad) 16px;font-size:.875rem;min-height:56px}
 .stage-cap{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .stage-n{color:var(--bone-dim);white-space:nowrap}
 .plate{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:12px;
@@ -230,7 +233,7 @@ a.row:hover .row-a span{text-decoration:underline;text-decoration-color:var(--hi
 .tl-row.up .tl-date{color:var(--hi)}
 
 /* ================= CONTACTO ================= */
-.mail{font-family:var(--f-disp);font-weight:700;font-size:clamp(1.5rem,2.9vw,2.4rem);line-height:1.15;color:var(--hi);
+.mail{font-family:var(--f-disp);font-weight:700;font-size:clamp(1.5rem,2.9vw,2.8rem);line-height:1.15;color:var(--hi);
   text-decoration:none;display:inline-block;margin:14px 0 0;padding-block:9px;overflow-wrap:anywhere}
 .mail:hover{text-decoration:underline;text-underline-offset:6px}
 .cells{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:18px}
@@ -246,7 +249,9 @@ a.row:hover .row-a span{text-decoration:underline;text-decoration-color:var(--hi
 .foot-menu a{font-family:var(--f-disp);font-weight:700;font-size:1.5rem;line-height:1.2;text-decoration:none;padding-block:8px}
 .foot-menu a:hover{color:var(--hi)}
 .foot-note{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 24px;font-size:.875rem;color:var(--bone-dim)}
-.fim{display:block;height:1px}                     /* o ponto que diz ao site.js que o fundo da pagina esta a vista */
+/* o ponto que diz ao site.js que o fundo da pagina esta a vista (fora do fluxo, para nao empurrar a nota) */
+.foot{position:relative}
+.fim{position:absolute;left:0;bottom:0;width:1px;height:1px}
 .foot-note a{color:inherit;text-underline-offset:4px}
 .foot-links{justify-content:flex-start;margin-bottom:10px}
 .foot-links a{padding-block:11px}
@@ -347,7 +352,7 @@ main>#lojaHead{padding-bottom:clamp(24px,4vh,40px)}
   .comm-art{display:block;width:100%;aspect-ratio:1000/433;background:url("images/bg/cast-cut-1000.webp") center bottom/contain no-repeat;margin-top:24px}
   .fab{left:auto;right:var(--pad)}
   .foot{min-height:0;display:block}
-  .shell{background:none}
+  .shell::before{display:none}
 }
 @media (min-width:621px) and (max-width:1059px){
   .col{max-width:720px;margin-inline:auto;width:100%}
