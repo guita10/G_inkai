@@ -597,6 +597,17 @@ novo/           a SECOND, new version of the site, built from scratch beside
                   the idea: a split stage. On wide screens half the screen is
                   a mat where one piece is always shown whole (the Flip of
                   1 Nov taken site-wide); below 1060px it is one column.
+                  ONE PAGE PER PART since 17 Nov 2026 (Frede: "different
+                  pages instead of an infinite scroll"): index.html (the
+                  intro and the six pieces, then the footer menu),
+                  trabalho.html (the wall), projetos.html, projeto.html?p=,
+                  loja.html (merch and bag only), comissoes.html (the four
+                  formats; its footer carries the Livro de Reclamações too),
+                  sobre.html (letter, timeline, contact). The old anchors
+                  (index.html#work, #projects, #comm, #about, #timeline,
+                  #contact, loja.html#comissoes, the live site's too) forward
+                  to the new page, in site.js; each page's <html> carries
+                  data-page and data-titulo (the tab title's i18n key)
                   From the taste-skill's "split-stage" direction, with its
                   found pictures, cover crops, text over art, marquee and
                   contact form taken out (§9.5 and "art is never cropped")
@@ -615,10 +626,9 @@ novo/           a SECOND, new version of the site, built from scratch beside
                   checks as §10 in the new shape, plus one that fails if any
                   field or text differs from the current site). `--rapido`,
                   `--so 3,6` for parts, `--pasta X` to test a copy
-                  three things in it are Frede's to confirm: a short shop
-                  shelf with prices on the home page (the merch left the
-                  home page on 1 Nov 2026, §7), where focus lands after the
-                  viewer closes, and the phone menu starting at 820px
+                  two things in it are Frede's to confirm: where focus lands
+                  after the viewer closes, and the phone menu starting at
+                  820px (the home page's shop shelf left with the page split)
                 Never deploy it, and never fold it into the root, unless he
                 asks.
 DESIGN.md       the design system in semantic form

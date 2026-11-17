@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- O SITE NOVO (Nov 2026), feito de raiz ao lado do atual. Esta pagina e so
-     a ordem das seccoes: o que nelas se le vem do dados.js (CONFIG), o aspeto
-     vem do site.css, e quem as desenha e o site.js. O tema abre escuro para
-     toda a gente (data-theme="dark" aqui em cima); o claro e no botao ◐. -->
-
-<!-- ============ SEO ============ igual ao site atual -->
+<!-- O SITE NOVO (Nov 2026), feito de raiz ao lado do atual. Desde 17 Nov 2026
+     e uma pagina por parte (pedido do Frede: "different pages instead of an
+     infinite scroll"): Inicio, Trabalho, Projetos, Loja, Comissoes, Sobre.
+     Cada pagina e so a ordem das suas seccoes: o que nelas se le vem do
+     dados.js (CONFIG), o aspeto do site.css, e quem as desenha e o site.js.
+     O tema abre escuro para toda a gente; o claro e no botao ◐. -->
+<!-- O INICIO: o nome, o que faz, e as seis pecas. O resto esta nas outras paginas. -->
 <title>Guita_Ink · Illustration Portfolio</title>
 <meta name="description" content="Guita_Ink · anime and manga-influenced illustration: original characters, fan art, covers and studies. Commissions open.">
 <meta property="og:title" content="Guita_Ink · Illustration Portfolio">
@@ -24,7 +25,7 @@
 <link rel="canonical" href="https://guitaink.com/">
 <!-- Dados estruturados para o Google. Os quatro formatos nao levam preco (os
      precos so existem no Shopify e no PDF). O site.js reescreve esta lista a
-     partir do CONFIG e junta a galeria, sem ofertas: a fan art nunca se vende. -->
+     partir do CONFIG. A galeria (sem ofertas) vai na pagina do trabalho. -->
 <script type="application/ld+json" id="ldPerson">
 {
   "@context":"https://schema.org",
@@ -59,7 +60,7 @@
 <script src="site.js"></script>
 </head>
 <body>
-<a class="skip" href="#work" data-t="a11ySkip">Skip to work</a>
+<a class="skip" href="#main" data-t="a11ySkipContent">Skip to content</a>
 <noscript>
   <p style="padding:24px"><b>Guita_Ink</b>, Frederico Guita · Illustration and character design / Ilustração e design de personagens ·
   <a href="mailto:frederico@guitaink.com">frederico@guitaink.com</a></p>
@@ -81,8 +82,8 @@
   </div>
   <div class="intro-foot">
     <div class="cta">
-      <a class="btn fill" href="#work" data-t="ctaWork"></a>
-      <a class="btn line" href="#comm" data-t="ctaComm"></a>
+      <a class="btn fill" href="trabalho.html" data-go="trabalho.html" data-t="ctaWork"></a>
+      <a class="btn line" href="comissoes.html" data-go="comissoes.html" data-t="ctaComm"></a>
     </div>
     <figure class="hero-m" id="heroM"></figure>
     <p class="hero-cap" id="heroCap"></p>
@@ -90,77 +91,6 @@
   </div>
 </section>
 <script>GI.r('intro')</script>
-
-<!-- A PAREDE: todas as obras, pela ordem do CONFIG.artworks -->
-<section id="work" data-sec="work" aria-labelledby="workT">
-  <div class="sec-head">
-    <h2 class="sec-title" id="workT" data-t="galleryTitle"></h2>
-    <span class="count num" id="count"></span>
-  </div>
-  <div class="chips filters" id="filters" role="group" data-ta="a11yFilters"></div>
-  <div class="sheet wall" id="wall"></div>
-  <button class="btn line more" id="more" type="button"></button>
-  <p class="empty" id="wallEmpty" data-t="wallEmpty" hidden></p>
-</section>
-<script>GI.r('work')</script>
-
-<!-- OS PROJETOS: o destacado (CONFIG.featured) primeiro; cada um com a sua serie -->
-<section id="projects" data-sec="projects" aria-labelledby="projT">
-  <div class="sec-head"><h2 class="sec-title" id="projT" data-t="projectsTitle"></h2></div>
-  <div class="projs" id="projs"></div>
-</section>
-<script>GI.r('projects')</script>
-
-<!-- A LOJA, em resumo: o que ha e quanto custa. Compra-se na pagina da loja.
-     So merch de originais (a fan art nunca se vende). -->
-<section id="shop" data-sec="shop" aria-labelledby="shopT">
-  <div class="sec-head">
-    <h2 class="sec-title" id="shopT" data-t="shopTitle"></h2>
-    <span class="badge" id="shopDrop"></span>
-  </div>
-  <p class="lead" data-t="shopIntro"></p>
-  <div class="rows shelf" id="shopRows"></div>
-  <p class="links"><a class="tl" href="loja.html" data-go="loja.html"><span data-t="navShop"></span><span aria-hidden="true"> →</span></a></p>
-</section>
-<script>GI.r('shop')</script>
-
-<!-- COMISSOES: so o caminho. Os quatro formatos e o pedido estao na loja.
-     Aqui nao ha precos, prazos nem condicoes (seccao 9.4 do CLAUDE.md). -->
-<section id="comm" data-sec="comm" aria-labelledby="commT">
-  <div class="sec-head">
-    <h2 class="sec-title" id="commT" data-t="commTitle"></h2>
-    <span class="badge" id="commBadge"></span>
-  </div>
-  <p class="lead" data-t="commIntro"></p>
-  <div class="cta after">
-    <a class="btn fill" href="loja.html#comissoes" data-go="loja.html#comissoes"><span data-t="commSee"></span><span aria-hidden="true"> →</span></a>
-  </div>
-  <div class="comm-art" aria-hidden="true"></div>
-</section>
-<script>GI.r('comm')</script>
-
-<!-- SOBRE: a carta, na primeira pessoa, e o percurso (id="timeline" para os
-     links antigos continuarem a chegar aqui) -->
-<section id="about" data-sec="about" aria-labelledby="aboutT">
-  <div class="sec-head"><h2 class="sec-title" id="aboutT" data-t="aboutTitle"></h2></div>
-  <div class="letter" id="letter"></div>
-  <p class="sign" data-t="aboutMeta"></p>
-  <div class="tl-block" id="timeline">
-    <h3 class="sub" data-t="tlTitle"></h3>
-    <ol id="tl"></ol>
-  </div>
-</section>
-<script>GI.r('about')</script>
-
-<!-- CONTACTO -->
-<section id="contact" data-sec="contact" aria-labelledby="contactT">
-  <div class="sec-head"><h2 class="sec-title" id="contactT" data-t="contactTitle"></h2></div>
-  <p class="lead" data-t="contactBody"></p>
-  <a class="mail" id="mail" href="mailto:frederico@guitaink.com"></a>
-  <div><button class="tl copy" id="copy" type="button" data-t="copyEmail"></button></div>
-  <div class="cells" id="cells"></div>
-</section>
-<script>GI.r('contact')</script>
 
 </main>
 <footer class="foot" id="foot" data-sec="foot"></footer>

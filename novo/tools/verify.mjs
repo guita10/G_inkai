@@ -59,7 +59,13 @@ const le = f => readFileSync(join(PASTA, f), 'utf8');
 const carrega = f => { const w = {}; new Function('window', le(f))(w); return w; };
 const CONFIG = carrega('dados.js').CONFIG, DIMS = carrega('dims.js').DIMS;
 const chave = src => src.split('/').pop().replace(/\.\w+$/, '');
-const PAGINAS = ['index.html', 'projeto.html', 'loja.html'];
+/* as paginas (o 404 a parte). Desde 17 Nov 2026 uma por parte do site. */
+const PAGINAS = ['index.html', 'trabalho.html', 'projetos.html', 'loja.html', 'comissoes.html', 'sobre.html', 'projeto.html'];
+/* cada pagina com o endereco com que se abre e o caminho da barra que a marca */
+const SITIO = [['index.html', ''], ['trabalho.html', 'work'], ['projetos.html', 'projects'], ['loja.html', 'shop'],
+  ['comissoes.html', 'comm'], ['sobre.html', 'about'], ['projeto.html?p=sok', 'projects']];
+const NAVALVO = { work: 'trabalho.html', projects: 'projetos.html', shop: 'loja.html', comm: 'comissoes.html', about: 'sobre.html', contact: 'sobre.html#contact' };
+const comLingua = (u, l) => u + (u.includes('?') ? '&' : '?') + 'lang=' + l;
 const CHAVES = CONFIG.projects.map(p => p.key);
 const VISIVEIS = CONFIG.merch.filter(m => !m.hold && m.src);
 
@@ -159,7 +165,9 @@ function estatico() {
   chk(!fora.length, 'nenhuma pagina carrega ficheiros de outro servidor', fora.slice(0, 3).join(', '));
   for (const f of ['robots.txt', 'sitemap.xml']) chk(existsSync(join(PASTA, f)), `${f} existe`);
   const urls = [...le('sitemap.xml').matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
-  chk(urls.length === 2 + CHAVES.length && CHAVES.every(k => urls.some(u => u.endsWith('projeto.html?p=' + k))), 'sitemap: a inicial, a loja e uma pagina por projeto', `${urls.length} enderecos`);
+  const seis = ['', 'trabalho.html', 'projetos.html', 'loja.html', 'comissoes.html', 'sobre.html'];
+  chk(urls.length === seis.length + CHAVES.length && seis.every(p => urls.includes('https://guitaink.com/' + p)) && CHAVES.every(k => urls.some(u => u.endsWith('projeto.html?p=' + k))),
+    'sitemap: as seis paginas e uma por projeto', `${urls.length} enderecos`);
 }
 
 /* ============================================================ o servidor */
@@ -259,7 +267,7 @@ async function mesmaInformacao() {
   chk(igual(velho.index.artworks.map(a => a.src), CONFIG.artworks.map(a => a.src)), 'as mesmas obras, pela mesma ordem', `${CONFIG.artworks.length}`);
   /* e o que aparece escrito: cada texto do site atual tem de se ler algures no novo */
   for (const l of ['en', 'pt']) {
-    const novo = (await Promise.all(['index.html', 'loja.html', ...CHAVES.map(k => 'projeto.html?p=' + k)].map(async u => {
+    const novo = (await Promise.all([...PAGINAS.filter(p => p !== 'projeto.html'), ...CHAVES.map(k => 'projeto.html?p=' + k)].map(async u => {
       const pg = await pagina(u + (u.includes('?') ? '&' : '?') + 'lang=' + l);
       const t = await textoTodo(pg); await pg.fecha(); return t;
     }))).join('\n').replace(/\s+/g, ' ');
@@ -279,35 +287,83 @@ async function mesmaInformacao() {
   }
 }
 
-/* ============================================================ 3. a pagina inicial */
+/* ============================================================ 3. as paginas */
 async function inicial() {
-  tit('3. A pagina inicial');
+  tit('3. As paginas: o inicio, o trabalho, os projetos, o sobre');
+
+  /* em todas as paginas, nas duas linguas */
+  const TIT = { 'trabalho.html': 'galleryTitle', 'projetos.html': 'projectsTitle', 'loja.html': 'shopTitle', 'comissoes.html': 'commTitle', 'sobre.html': 'aboutTitle' };
+  for (const l of ['en', 'pt']) {
+    const erros = [], fora = [], travessoes = [], setas = [], linguas = [], titulos = [], barras = [];
+    for (const [url, caminho] of SITIO) {
+      const pg = await pagina(comLingua(url, l));
+      pg.erros.forEach(e => erros.push(`${url}: ${e}`));
+      pg.pedidos.filter(u => !u.startsWith(base) && !u.startsWith('data:')).forEach(u => fora.push(`${url}: ${u}`));
+      if ((await textoTodo(pg)).includes('—')) travessoes.push(url);
+      const r = await pg.evaluate(() => {
+        const maus = [];
+        const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        while (w.nextNode()) { const n = w.currentNode; if (/[→↗←]/.test(n.textContent) && !n.parentElement.closest('[aria-hidden="true"],script') && n.parentElement.id !== 'vHint') maus.push(n.textContent.trim()); }
+        document.querySelectorAll('[aria-label]').forEach(e => { if (/[→↗←]/.test(e.getAttribute('aria-label'))) maus.push(e.getAttribute('aria-label')); });
+        const b = document.querySelector('#lang');
+        return { setas: maus, lang: document.documentElement.lang, botao: [b.textContent, b.getAttribute('aria-label')], titulo: document.title, h1: document.querySelectorAll('h1').length,
+          nav: [...document.querySelectorAll('#nav a')].map(a => [a.dataset.nav, a.getAttribute('href'), a.getAttribute('aria-current')]) };
+      });
+      r.setas.forEach(x => setas.push(`${url}: ${x}`));
+      if (r.lang !== l || !r.botao[1].startsWith(r.botao[0])) linguas.push(url);
+      const meu = url.split('?')[0];
+      const esperado = TIT[meu] ? `${CONFIG.i18n[l][TIT[meu]]} · ${CONFIG.artistName}`
+        : meu === 'projeto.html' ? `${CONFIG.i18n[l].projects[CHAVES[0]].title} · ${CONFIG.artistName}` : 'Guita_Ink · Illustration Portfolio';
+      if (r.titulo !== esperado) titulos.push(`${url}: "${r.titulo}"`);
+      if (r.nav.length !== 6 || r.h1 !== 1) barras.push(`${url}: ${r.nav.length} caminhos, ${r.h1} h1`);
+      for (const [id, href, cur] of r.nav) {
+        const [f, a] = NAVALVO[id].split('#');
+        const alvo = f === meu ? '#' + (a || 'main') : `${f}?lang=${l}${a ? '#' + a : ''}`;
+        if (href !== alvo) barras.push(`${url} ${id}: ${href}`);
+        if ((cur === 'true') !== (id === caminho)) barras.push(`${url}: ${id} ${cur === 'true' ? 'marcado' : 'por marcar'}`);
+      }
+      await pg.fecha();
+    }
+    chk(!erros.length, `${l}: sem erros na consola em nenhuma pagina`, erros.slice(0, 2).join(' | ') || `${SITIO.length} paginas`);
+    chk(!fora.length, `${l}: nenhuma pagina faz um pedido a outro servidor`, fora.slice(0, 2).join(', '));
+    chk(!travessoes.length, `${l}: nenhum travessao no que se le ou ouve`, travessoes.join(', '));
+    chk(!setas.length, `${l}: nenhuma seta lida em voz alta`, setas.slice(0, 3).join(' | '));
+    chk(!linguas.length, `${l}: <html lang="${l}"> em todas, e o botao da lingua diz as letras que mostra`, linguas.join(', '));
+    chk(!titulos.length, `${l}: cada separador com o titulo da sua pagina, na lingua escolhida`, titulos.slice(0, 3).join(' | '));
+    chk(!barras.length, `${l}: em cada pagina a barra leva as seis paginas, com a lingua, e marca a sua`, barras.slice(0, 4).join(' | '));
+  }
+
+  /* o inicio: o nome, o que faz, as seis; e curto */
   for (const l of ['en', 'pt']) {
     const pg = await pagina('index.html?lang=' + l);
-    chk(!pg.erros.length, `${l}: sem erros na consola`, pg.erros.slice(0, 2).join(' | '));
-    const foraDaqui = pg.pedidos.filter(u => !u.startsWith(base) && !u.startsWith('data:'));
-    chk(!foraDaqui.length, `${l}: nenhum pedido a outro servidor`, foraDaqui.slice(0, 2).join(', ') || `${pg.pedidos.length} pedidos`);
-    const t = await textoTodo(pg);
-    chk(!t.includes('—'), `${l}: nenhum travessao no que se le ou ouve`);
-    /* setas so para os olhos: nenhuma lida em voz alta */
-    const setas = await pg.evaluate(() => {
-      const maus = [];
-      const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-      while (w.nextNode()) { const n = w.currentNode; if (/[→↗←]/.test(n.textContent) && !n.parentElement.closest('[aria-hidden="true"],script') && n.parentElement.id !== 'vHint') maus.push(n.textContent.trim()); }
-      document.querySelectorAll('[aria-label]').forEach(e => { if (/[→↗←]/.test(e.getAttribute('aria-label'))) maus.push(e.getAttribute('aria-label')); });
-      return maus;
-    });
-    chk(!setas.length, `${l}: nenhuma seta lida em voz alta`, setas.slice(0, 3).join(' | '));
     const nome = await pg.evaluate(() => { const h = document.querySelector('#heroName'), tops = new Set();
       const w = document.createTreeWalker(h, NodeFilter.SHOW_TEXT);
       while (w.nextNode()) { const r = document.createRange(); r.selectNodeContents(w.currentNode); [...r.getClientRects()].forEach(x => tops.add(Math.round(x.top))); }
       return { falado: h.getAttribute('aria-label'), linhas: tops.size, cabe: h.scrollWidth <= h.clientWidth + 1 }; });
     chk(nome.falado === CONFIG.realName && nome.linhas === 2 && nome.cabe, `${l}: o nome e "${CONFIG.realName}", em duas linhas`, `${nome.linhas} linhas`);
     chk((await pg.textContent('.role')) === CONFIG.i18n[l].heroRole, `${l}: por baixo, o que ele faz`);
-    const lg = await pg.evaluate(() => { const b = document.querySelector('#lang'); return [b.textContent, b.getAttribute('aria-label'), document.documentElement.lang]; });
-    chk(lg[1].startsWith(lg[0]) && lg[2] === l, `${l}: o botao da lingua diz as letras que mostra; <html lang="${l}">`, lg[1]);
+    const r = await pg.evaluate(() => ({ alto: document.documentElement.scrollHeight / innerHeight, secs: [...document.querySelectorAll('main > section')].map(s => s.id),
+      bot: [...document.querySelectorAll('.intro .cta a')].map(a => a.getAttribute('href')), menu: document.querySelectorAll('.foot-menu a').length }));
+    chk(igual(r.secs, ['intro']) && r.alto <= 2 && r.menu === 6, `${l}: o inicio e curto: a abertura, e o rodape com as seis paginas`, `${r.alto.toFixed(1)} ecras`);
+    chk(igual(r.bot, [`trabalho.html?lang=${l}`, `comissoes.html?lang=${l}`]), `${l}: os dois botoes da abertura levam ao trabalho e as comissoes`, r.bot.join(', '));
     await pg.fecha();
   }
+
+  /* os enderecos antigos (de quando isto era uma pagina so) levam a pagina nova */
+  const antigos = [['index.html?lang=pt#work', 'trabalho.html', ''], ['index.html#projects', 'projetos.html', ''], ['index.html#shop', 'loja.html', ''],
+    ['index.html#comm', 'comissoes.html', ''], ['index.html#about', 'sobre.html', ''], ['index.html#timeline', 'sobre.html', '#timeline'],
+    ['index.html#contact', 'sobre.html', '#contact'], ['loja.html?lang=en#comissoes', 'comissoes.html', '']];
+  const mausA = [];
+  for (const [de, para, ancora] of antigos) {
+    const ctx = await browser.newContext();
+    const pg = await ctx.newPage();
+    try { await pg.goto(base + de, { waitUntil: 'networkidle' }); } catch (e) {}
+    await pg.waitForLoadState('networkidle').catch(() => {}); await espera(pg, 150);
+    const u = new URL(pg.url()), q = (de.match(/\?[^#]*/) || [''])[0];
+    if (!u.pathname.endsWith('/' + para) || u.hash !== ancora || u.search !== q) mausA.push(`${de} → ${u.pathname.split('/').pop()}${u.search}${u.hash}`);
+    await ctx.close();
+  }
+  chk(!mausA.length, 'os enderecos antigos (index.html#work, loja.html#comissoes...) levam a pagina nova, com a lingua', mausA.join(' | ') || `${antigos.length} enderecos`);
 
   /* o Flip e o palco, com rato */
   const pg = await pagina('index.html?lang=en');
@@ -336,6 +392,14 @@ async function inicial() {
   await pg.keyboard.press('Home'); await espera(pg, 120);
   const t1 = await palco(pg); await pg.keyboard.press('ArrowRight'); await espera(pg, 120); const t2 = await palco(pg);
   chk(t1.k === seis[0].k && t2.k === seis[1].k && (await pg.evaluate(() => document.activeElement.classList.contains('fr'))), 'Flip: com o teclado, Home vai a primeira e a seta passa a seguinte', `${t1.cap}, depois ${t2.cap}`);
+  await carregaTudo(pg); let rc = await recortes(pg);
+  chk(!rc.maus.length && !rc.partidas.length, 'inicio: nenhuma imagem cortada ou em falta', [...rc.maus, ...rc.partidas].slice(0, 4).join(', ') || `${rc.n} imagens a vista`);
+  await pg.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' })); await espera(pg, 700);
+  chk((await palco(pg)).kind === 'seal', 'inicio: no fundo, o palco mostra o selo');
+  const ldP = await pg.evaluate(() => [document.querySelector('#ldPerson').textContent, !!document.querySelector('#ldGallery')]);
+  const pessoa = JSON.parse(ldP[0]);
+  chk(pessoa.makesOffer.length === CONFIG.tiers.length && !/price/i.test(ldP[0]) && !ldP[1], 'JSON-LD do inicio: a pessoa e os quatro formatos, sem preco');
+  await pg.fecha();
 
   /* a peca inteira no primeiro ecra */
   for (const vp of [{ width: 1280, height: 720 }, { width: 1440, height: 900 }, { width: 1920, height: 1080 }, { width: 1060, height: 700 }]) {
@@ -346,64 +410,73 @@ async function inicial() {
     await q.fecha();
   }
 
-  /* as seccoes e o palco */
-  await pg.setViewportSize({ width: 1440, height: 900 });
-  const marca = () => pg.evaluate(() => (document.querySelector('#nav a[aria-current="true"]') || { dataset: {} }).dataset.nav || '');
-  await vaiA(pg, '#work'); let s = await palco(pg);
-  chk((await marca()) === 'work' && s.k === chave(CONFIG.artworks[0].src), 'na parede, o palco mostra uma obra da parede', s.cap);
-  await pg.click('#nav a[data-nav="comm"]'); await assenta(pg); await espera(pg, 300); s = await palco(pg);
-  chk((await marca()) === 'comm' && s.kind === 'deco', 'o link Comissoes da barra chega as comissoes, com o elenco no palco', `marcado: ${await marca()}, palco: ${s.kind}`);
-  await vaiA(pg, '#shop'); s = await palco(pg);
-  chk((await marca()) === 'shop' && s.kind === 'photo', 'na prateleira da loja, o palco mostra um produto', s.cap);
-  await pg.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' })); await espera(pg, 600); s = await palco(pg);
-  chk(s.kind === 'seal', 'no fundo da pagina, o palco mostra o selo');
-
-  /* a parede: tudo a vista, os filtros, o visualizador */
-  await vaiA(pg, '#work');
-  const visiveis = () => pg.evaluate(() => [...document.querySelectorAll('#wall .fr')].filter(b => b.getClientRects().length).length);
-  chk((await visiveis()) === CONFIG.artworks.length, 'a parede mostra todas as obras', `${CONFIG.artworks.length}`);
+  /* ---------- o trabalho: a parede ---------- */
+  const pt = await pagina('trabalho.html?lang=en');
+  let s = await palco(pt);
+  chk(s.k === chave(CONFIG.artworks[0].src), 'trabalho: o palco abre com a primeira obra da parede', s.cap);
+  const visiveis = () => pt.evaluate(() => [...document.querySelectorAll('#wall .fr')].filter(b => b.getClientRects().length).length);
+  chk((await visiveis()) === CONFIG.artworks.length, 'trabalho: a parede mostra todas as obras', `${CONFIG.artworks.length}`);
   const cats = [...new Set(CONFIG.artworks.map(a => a.cat))]; if (CONFIG.artworks.some(a => a.collab)) cats.push('collab');
   const mausF = [];
   for (const f of cats) {
-    await pg.click(`#filters .chip[data-f="${f}"]`); await espera(pg, 80);
+    await pt.click(`#filters .chip[data-f="${f}"]`); await espera(pt, 80);
     const n = CONFIG.artworks.filter(a => (f === 'collab' ? a.collab : a.cat === f)).length;
-    if ((await visiveis()) !== n || (await pg.textContent('#count')) !== `${n} / ${CONFIG.artworks.length}`) mausF.push(f);
+    if ((await visiveis()) !== n || (await pt.textContent('#count')) !== `${n} / ${CONFIG.artworks.length}`) mausF.push(f);
   }
-  await pg.click('#filters .chip[data-f="all"]');
-  chk(!mausF.length, 'cada filtro mostra as obras da sua categoria', mausF.join(', ') || cats.join(', '));
-  const m6 = pg.locator('#wall .fr').nth(6);
-  await m6.hover(); await espera(pg, 260); await m6.click(); await espera(pg, 300);
-  const v1 = await pg.evaluate(() => ({ aberto: document.querySelector('#viewer').open, t: document.querySelector('#vTitle').textContent, n: document.querySelector('#vN').textContent,
+  await pt.click('#filters .chip[data-f="all"]');
+  chk(!mausF.length, 'trabalho: cada filtro mostra as obras da sua categoria', mausF.join(', ') || cats.join(', '));
+  const m6 = pt.locator('#wall .fr').nth(6);
+  await m6.hover(); await espera(pt, 260); await m6.click(); await espera(pt, 300);
+  const v1 = await pt.evaluate(() => ({ aberto: document.querySelector('#viewer').open, t: document.querySelector('#vTitle').textContent, n: document.querySelector('#vN').textContent,
     dica: document.querySelector('#vHint').textContent, fit: getComputedStyle(document.querySelector('#vPic img')).objectFit }));
   chk(v1.aberto && v1.t === CONFIG.artworks[6].label && v1.n === `007 / 0${CONFIG.artworks.length}` && v1.fit === 'contain' && v1.dica === CONFIG.i18n.en.lightboxHint,
-    'clicar na moldura escolhida abre o visualizador, com o titulo e o numero', `${v1.t}, ${v1.n}`);
-  await pg.keyboard.press('ArrowRight'); await espera(pg, 150);
-  const v2 = await pg.evaluate(() => [document.querySelector('#vTitle').textContent, document.querySelector('#vLive').textContent]);
+    'trabalho: clicar na moldura escolhida abre o visualizador, com o titulo e o numero', `${v1.t}, ${v1.n}`);
+  await pt.keyboard.press('ArrowRight'); await espera(pt, 150);
+  const v2 = await pt.evaluate(() => [document.querySelector('#vTitle').textContent, document.querySelector('#vLive').textContent]);
   chk(v2[0] === CONFIG.artworks[7].label && v2[1].includes(v2[0]) && v2[1].includes('8'), 'as setas do teclado passam a peca seguinte, e quem ouve e avisado', v2[1]);
-  await pg.keyboard.press('Escape'); await espera(pg, 300);
-  const v3 = await pg.evaluate(() => ({ aberto: document.querySelector('#viewer').open, foco: document.activeElement === document.querySelectorAll('#wall .fr')[7], k: GI.palco().p.k }));
+  await pt.keyboard.press('Escape'); await espera(pt, 300);
+  const v3 = await pt.evaluate(() => ({ aberto: document.querySelector('#viewer').open, foco: document.activeElement === document.querySelectorAll('#wall .fr')[7], k: GI.palco().p.k }));
   chk(!v3.aberto && v3.foco && v3.k === chave(CONFIG.artworks[7].src), 'Esc fecha, e o foco e o palco ficam na peca onde se parou');
 
   /* rolar a pagina com o rato parado por cima da parede: as molduras passam por baixo dele e o palco nao vai atras */
-  await vaiA(pg, '#work');
-  const r0 = pg.locator('#wall .fr').nth(0); await r0.hover(); await espera(pg, 260);
-  const antesRoda = await palco(pg);
-  await pg.mouse.wheel(0, 260); await espera(pg, 700);
-  const sob = await pg.evaluate(() => { const e = document.querySelector('#wall .fr:hover'); return e ? e._it.p.k : null; });
-  const depoisRoda = await palco(pg);
+  await vaiA(pt, '#work');
+  const r0 = pt.locator('#wall .fr').nth(0); await r0.hover(); await espera(pt, 260);
+  const antesRoda = await palco(pt);
+  await pt.mouse.wheel(0, 260); await espera(pt, 700);
+  const sob = await pt.evaluate(() => { const e = document.querySelector('#wall .fr:hover'); return e ? e._it.p.k : null; });
+  const depoisRoda = await palco(pt);
   chk(antesRoda.k === depoisRoda.k && sob && sob !== antesRoda.k, 'rolar a pagina com o rato parado nao troca a peca do palco', `ficou ${depoisRoda.cap}`);
 
   /* a barra esta colada ao cimo: foca-la nao pode mexer a pagina, e o que se foca nao pode ficar debaixo dela */
-  await pg.evaluate(() => window.scrollTo({ top: 812, behavior: 'instant' })); await espera(pg, 300);
-  const f1 = await pg.evaluate(async () => { const y0 = scrollY; document.querySelector('#theme').focus(); await new Promise(r => setTimeout(r, 600));
+  await pt.evaluate(() => window.scrollTo({ top: 600, behavior: 'instant' })); await espera(pt, 300);
+  const f1 = await pt.evaluate(async () => { const y0 = scrollY; document.querySelector('#theme').focus(); await new Promise(r => setTimeout(r, 600));
     document.querySelector('#nav a').focus(); await new Promise(r => setTimeout(r, 600)); return [y0, scrollY]; });
-  chk(f1[0] === f1[1], 'focar um botao da barra nao puxa a pagina para cima', `${f1[0]} → ${f1[1]}`);
-  const f2 = await pg.evaluate(async () => { const b = document.querySelectorAll('#wall .fr'); const r = [];
+  chk(f1[0] === f1[1] && f1[0] > 0, 'focar um botao da barra nao puxa a pagina para cima', `${f1[0]} → ${f1[1]}`);
+  const f2 = await pt.evaluate(async () => { const b = document.querySelectorAll('#wall .fr'); const r = [];
     for (const i of [b.length - 1, 0, 20]) { b[i].focus(); await new Promise(x => setTimeout(x, 900)); const q = b[i].getBoundingClientRect(); r.push(q.top >= 60 && q.bottom <= innerHeight); } return r; });
   chk(f2.every(Boolean), 'uma moldura focada fica inteira a vista, nunca debaixo da barra');
 
-  /* os projetos */
-  const pr = await pg.evaluate(() => [...document.querySelectorAll('#projs .proj')].map(a => ({ id: a.id, feat: a.classList.contains('feat'), nome: a.querySelector('.proj-cover').getAttribute('aria-label'),
+  /* trocar de lingua sem perder o sitio */
+  await vaiA(pt, '#work'); await pt.mouse.move(5, 5); await pt.locator('#wall .fr').nth(3).hover(); await espera(pt, 260);
+  const antes = await palco(pt); await pt.click('#lang'); await espera(pt, 300); const depois = await palco(pt);
+  const ling = await pt.evaluate(() => [document.documentElement.lang, location.search, document.querySelector('#workT').textContent, document.title]);
+  chk(ling[0] === 'pt' && ling[1].includes('lang=pt') && ling[2] === CONFIG.i18n.pt.galleryTitle && ling[3].startsWith(CONFIG.i18n.pt.galleryTitle) && antes.k === depois.k,
+    'o botao da lingua troca os textos e o titulo, e deixa no palco a mesma peca', ling[2]);
+  const semLingua = await pt.evaluate(() => [...document.querySelectorAll('a[href*=".html"]')].map(a => a.getAttribute('href')).filter(h => !/^https?:/.test(h) && !h.includes('lang=pt')));
+  chk(!semLingua.length, 'os links para as outras paginas levam a lingua escolhida', semLingua.slice(0, 3).join(', '));
+  await carregaTudo(pt); rc = await recortes(pt);
+  chk(!rc.maus.length && !rc.partidas.length, 'trabalho: nenhuma imagem cortada ou em falta', [...rc.maus, ...rc.partidas].slice(0, 4).join(', ') || `${rc.n} imagens a vista`);
+  const ldG = await pt.evaluate(() => [(document.querySelector('#ldGallery') || {}).textContent || '', !!document.querySelector('#ldPerson')]);
+  const galeria = JSON.parse(ldG[0] || '{}');
+  chk((galeria.associatedMedia || []).length === CONFIG.artworks.length && !/offer|price/i.test(ldG[0]) && !ldG[1], 'JSON-LD do trabalho: a galeria toda, sem nenhuma oferta (a fan art nao se vende)');
+  chk(!/addressLocality|addressCountry|"address"|"location"/i.test(ldP[0] + ldG[0]), 'JSON-LD: sem cidade nem pais');
+  await pt.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' })); await espera(pt, 700);
+  chk((await palco(pt)).kind === 'seal', 'trabalho: no fundo, o palco mostra o selo');
+  await pt.fecha();
+
+  /* ---------- os projetos ---------- */
+  const pp = await pagina('projetos.html?lang=en');
+  const pr = await pp.evaluate(() => [...document.querySelectorAll('#projs .proj')].map(a => ({ id: a.id, feat: a.classList.contains('feat'), nome: a.querySelector('.proj-cover').getAttribute('aria-label'),
     n: a.querySelectorAll('.strip .fr').length, links: [...a.querySelectorAll('.links a')].map(x => x.getAttribute('href')) })));
   const mausP = [];
   if (pr.length !== CONFIG.projects.length || pr[0].id !== 'p-' + CONFIG.featured || !pr[0].feat) mausP.push('ordem');
@@ -412,27 +485,23 @@ async function inicial() {
     const n = p.rows ? p.gallery.length : 1 + (p.gallery || []).length;
     if (c.n !== n || c.nome !== CONFIG.i18n.en.projects[p.key].title || !c.links[0].includes(`projeto.html?p=${p.key}`) || (p.link ? c.links[1] !== p.link : c.links.length !== 1)) mausP.push(p.key);
   }
-  chk(!mausP.length, 'um bloco por projeto, o destacado primeiro, cada um com a sua serie e as suas ligacoes', mausP.join(', ') || pr.map(x => x.n).join(' + ') + ' pecas');
+  chk(!mausP.length, 'projetos: um bloco por projeto, o destacado primeiro, cada um com a sua serie e as suas ligacoes', mausP.join(', ') || pr.map(x => x.n).join(' + ') + ' pecas');
+  const capa = await palco(pp);
+  chk(capa.k === chave(CONFIG.projects.find(p => p.key === CONFIG.featured).src), 'projetos: o palco abre com a capa do projeto destacado', capa.cap);
+  await pp.fecha();
 
-  /* trocar de lingua sem perder o sitio */
-  await vaiA(pg, '#work'); await pg.locator('#wall .fr').nth(3).hover(); await espera(pg, 260);
-  const antes = await palco(pg); await pg.click('#lang'); await espera(pg, 300); const depois = await palco(pg);
-  const ling = await pg.evaluate(() => [document.documentElement.lang, location.search, document.querySelector('#workT').textContent]);
-  chk(ling[0] === 'pt' && ling[1].includes('lang=pt') && ling[2] === CONFIG.i18n.pt.galleryTitle && antes.k === depois.k, 'o botao da lingua troca os textos e deixa no palco a mesma peca', ling[2]);
-  const semLingua = await pg.evaluate(() => [...document.querySelectorAll('a[href*=".html"]')].map(a => a.getAttribute('href')).filter(h => !/^https?:/.test(h) && !h.includes('lang=pt')));
-  chk(!semLingua.length, 'os links para as outras paginas levam a lingua escolhida', semLingua.slice(0, 3).join(', '));
-
-  /* nenhuma imagem cortada, nenhuma partida */
-  await carregaTudo(pg); const rc = await recortes(pg);
-  chk(!rc.maus.length && !rc.partidas.length, 'nenhuma imagem cortada ou em falta', [...rc.maus, ...rc.partidas].slice(0, 4).join(', ') || `${rc.n} imagens a vista`);
-
-  /* os dados para o Google */
-  const ld = await pg.evaluate(() => [document.querySelector('#ldPerson').textContent, document.querySelector('#ldGallery').textContent]);
-  const pessoa = JSON.parse(ld[0]), galeria = JSON.parse(ld[1]);
-  chk(pessoa.makesOffer.length === CONFIG.tiers.length && !/price/i.test(ld[0]), 'JSON-LD: os quatro formatos, sem preco');
-  chk(galeria.associatedMedia.length === CONFIG.artworks.length && !/offer|price/i.test(ld[1]), 'JSON-LD: a galeria toda, sem nenhuma oferta (a fan art nao se vende)');
-  chk(!/addressLocality|addressCountry|"address"|"location"/i.test(ld.join('')), 'JSON-LD: sem cidade nem pais');
-  await pg.fecha();
+  /* ---------- o sobre: a carta, o percurso, o contacto ---------- */
+  const ps = await pagina('sobre.html?lang=en');
+  const a0 = await palco(ps);
+  chk(CONFIG.heroArt.map(chave).includes(a0.k), 'sobre: no palco, uma das seis pecas da abertura', a0.cap);
+  await ps.click('#stageArt'); await espera(ps, 300);
+  const va = await ps.evaluate(() => [document.querySelector('#viewer').open, document.querySelector('#vTitle').textContent]);
+  await ps.keyboard.press('Escape'); await espera(ps, 200);
+  chk(va[0] && va[1] === a0.cap, 'sobre: clicar na peca do palco abre-a grande', va[1]);
+  await ps.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' })); await espera(ps, 700);
+  const fimS = await ps.evaluate(() => [(document.querySelector('#nav a[aria-current="true"]') || { dataset: {} }).dataset.nav, GI.palco().kind]);
+  chk(fimS[0] === 'contact' && fimS[1] === 'seal', 'sobre: ao chegar ao contacto, a barra marca Contacto e o palco mostra o selo', fimS.join(', '));
+  await ps.fecha();
 }
 
 /* ============================================================ 4. os outros ecras */
@@ -447,34 +516,48 @@ async function ecras() {
     await pg.locator('#flip .fr').nth(2).tap(); await espera(pg, 200);
     const cap = await pg.textContent('#heroCap');
     chk(cap.includes(CONFIG.artworks.find(a => a.src === CONFIG.heroArt[2]).label) && cap.includes('3 / 6'), `${l}: tocar numa moldura troca a peca e a legenda`, cap);
-    await vaiA(pg, '#work');
-    const vis = () => pg.evaluate(() => [...document.querySelectorAll('#wall .fr')].filter(b => b.getClientRects().length).length);
-    const n0 = await vis(), botao = await pg.textContent('#more');
-    await pg.tap('#more'); await espera(pg, 150);
+    await pg.fecha();
+
+    const pt = await pagina('trabalho.html?lang=' + l, { vp: P, toque: true });
+    const vis = () => pt.evaluate(() => [...document.querySelectorAll('#wall .fr')].filter(b => b.getClientRects().length).length);
+    const n0 = await vis(), botao = await pt.textContent('#more');
+    await pt.tap('#more'); await espera(pt, 150);
     chk(n0 === CONFIG.wallPreview && botao === CONFIG.i18n[l].wallMore.replace('{n}', CONFIG.artworks.length) && (await vis()) === CONFIG.artworks.length,
       `${l}: a parede abre com ${CONFIG.wallPreview} e o botao mostra as ${CONFIG.artworks.length}`, botao);
+    await pt.fecha();
+
     /* cartoes de projeto compactos, menos o destacado */
-    const cart = await pg.evaluate(() => [...document.querySelectorAll('#projs .proj')].map(a => ({ feat: a.classList.contains('feat'), desc: !!a.querySelector('.proj-desc').getClientRects().length,
+    const pp = await pagina('projetos.html?lang=' + l, { vp: P, toque: true });
+    const cart = await pp.evaluate(() => [...document.querySelectorAll('#projs .proj')].map(a => ({ feat: a.classList.contains('feat'), desc: !!a.querySelector('.proj-desc').getClientRects().length,
       capa: a.querySelector('.proj-cover').getBoundingClientRect().width / a.getBoundingClientRect().width })));
     chk(cart.every(c => (c.feat ? c.desc : !c.desc && c.capa < 0.5)), `${l}: no telemovel so o projeto destacado vai por extenso`);
-    /* alvos de toque */
-    const pequenos = await pg.evaluate(() => [...document.querySelectorAll('a,button,input')].filter(e => e.getClientRects().length && !e.closest('.skip, h1, h2, h3, p:not(.links):not(.foot-links)'))
-      .map(e => { const a = e.matches('input') ? e.closest('label') : e, r = a.getBoundingClientRect(); return { n: (a.textContent || a.getAttribute('aria-label') || a.className).trim().slice(0, 24), w: r.width, h: r.height }; })
-      .filter(x => x.w < 43.5 || x.h < 43.5).map(x => `${x.n} ${Math.round(x.w)}x${Math.round(x.h)}`));
-    chk(!pequenos.length, `${l}: todos os botoes e links tem pelo menos 44px`, pequenos.slice(0, 4).join(' | '));
-    await carregaTudo(pg); const rc = await recortes(pg);
-    chk(!rc.maus.length && !rc.partidas.length, `${l}: nenhuma imagem cortada ou em falta no telemovel`, [...rc.maus, ...rc.partidas].slice(0, 3).join(', ') || `${rc.n} imagens`);
-    await pg.fecha();
+    await pp.fecha();
+
+    /* alvos de toque e recortes, em todas as paginas */
+    const pequenos = [], cortes = [];
+    for (const [url] of SITIO) {
+      const q = await pagina(comLingua(url, l), { vp: P, toque: true });
+      const m = await q.evaluate(() => [...document.querySelectorAll('a,button,input')].filter(e => e.getClientRects().length && !e.closest('.skip, h1, h2, h3, p:not(.links):not(.foot-links)'))
+        .map(e => { const a = e.matches('input') ? e.closest('label') : e, r = a.getBoundingClientRect(); return { n: (a.textContent || a.getAttribute('aria-label') || a.className).trim().slice(0, 24), w: r.width, h: r.height }; })
+        .filter(x => x.w < 43.5 || x.h < 43.5).map(x => `${x.n} ${Math.round(x.w)}x${Math.round(x.h)}`));
+      m.forEach(x => pequenos.push(`${url.split('?')[0]}: ${x}`));
+      await carregaTudo(q); const rc = await recortes(q);
+      [...rc.maus, ...rc.partidas].forEach(x => cortes.push(`${url.split('?')[0]}: ${x}`));
+      await q.fecha();
+    }
+    chk(!pequenos.length, `${l}: todos os botoes e links tem pelo menos 44px, em todas as paginas`, pequenos.slice(0, 4).join(' | '));
+    chk(!cortes.length, `${l}: nenhuma imagem cortada ou em falta no telemovel`, cortes.slice(0, 3).join(', ') || `${SITIO.length} paginas`);
   }
   /* o menu e o visualizador no telemovel */
   for (const w of [390, 320]) {
     const pg = await pagina('index.html?lang=en', { vp: { width: w, height: 700 }, toque: true });
     await pg.tap('#menuBtn'); await espera(pg, 400);
     const menu = await pg.evaluate(() => ({ aberto: document.querySelector('#menuBtn').getAttribute('aria-expanded'), n: [...document.querySelectorAll('#nav a')].filter(a => a.getClientRects().length).length }));
-    await pg.tap('#nav a[data-nav="about"]'); await assenta(pg);
-    const fechado = await pg.evaluate(() => document.querySelector('#menuBtn').getAttribute('aria-expanded') === 'false' && Math.abs(document.querySelector('#about').getBoundingClientRect().top) < 140);
-    chk(menu.aberto === 'true' && menu.n === 6 && fechado, `${w}px: o menu abre com os seis caminhos, e escolher um fecha-o e leva la`);
-    await vaiA(pg, '#work'); await pg.locator('#wall .fr').nth(1).tap(); await espera(pg, 350);
+    await Promise.all([pg.waitForURL(/sobre\.html/), pg.tap('#nav a[data-nav="about"]')]); await pg.waitForLoadState('networkidle');
+    const u = new URL(pg.url());
+    chk(menu.aberto === 'true' && menu.n === 6 && u.pathname.endsWith('/sobre.html') && u.search === '?lang=en', `${w}px: o menu abre com os seis caminhos, e escolher um leva a essa pagina`);
+    await pg.goto(base + 'trabalho.html?lang=en', { waitUntil: 'networkidle' });
+    await pg.locator('#wall .fr').nth(1).tap(); await espera(pg, 350);
     const v = await pg.evaluate(() => { const im = document.querySelector('#vPic').getBoundingClientRect();
       const por = [...document.querySelectorAll('#viewer button')].filter(b => b.getClientRects().length).filter(b => { const r = b.getBoundingClientRect(); return r.bottom > im.top + 1 && r.top < im.bottom - 1; }).length;
       return { aberto: document.querySelector('#viewer').open, por, dica: document.querySelector('#vHint').textContent, setas: [...document.querySelectorAll('.v-touch button')].filter(b => b.getClientRects().length).length }; });
@@ -482,11 +565,12 @@ async function ecras() {
     await pg.fecha();
   }
 
-  /* nada sai do ecra, de 320 a 1600px, nas duas linguas */
+  /* nada sai do ecra, de 320 a 1600px, nas duas linguas, em todas as paginas */
   const sai = [];
-  for (const [url, prep] of [['index.html', null], ['loja.html', 'cesto'], ['projeto.html?p=deck', null], ['projeto.html?p=tr', null]]) {
+  const larguras = [...SITIO.map(([u]) => [u, u === 'loja.html' ? 'cesto' : null]), ['projeto.html?p=deck', null], ['projeto.html?p=tr', null]];
+  for (const [url, prep] of larguras) {
     for (const l of ['en', 'pt']) {
-      const pg = await pagina(url + (url.includes('?') ? '&' : '?') + 'lang=' + l, { vp: { width: 1600, height: 900 } });
+      const pg = await pagina(comLingua(url, l), { vp: { width: 1600, height: 900 } });
       if (prep === 'cesto') {       // a loja mede-se com o cesto cheio: foi assim que um botao mais largo em PT empurrou a pagina
         await pg.evaluate(ids => { localStorage.setItem('gi-cesto', JSON.stringify({ t: Date.now(), itens: ids.map(id => ({ id, q: 10 })) })); }, VISIVEIS.map(m => m.variants[m.variants.length - 1]));
         await pg.reload({ waitUntil: 'networkidle' });
@@ -499,12 +583,12 @@ async function ecras() {
       await pg.fecha();
     }
   }
-  chk(!sai.length, 'nenhuma pagina transborda para o lado, de 320 a 1600px', sai.slice(0, 5).join(' | ') || '3 paginas x 2 linguas x 45 larguras, a loja com o cesto cheio');
+  chk(!sai.length, 'nenhuma pagina transborda para o lado, de 320 a 1600px', sai.slice(0, 5).join(' | ') || `${larguras.length} paginas x 2 linguas x 45 larguras, a loja com o cesto cheio`);
 
-  /* contraste, nos dois temas */
+  /* contraste, nos dois temas, em todas as paginas */
   for (const tema of ['dark', 'light']) {
-    for (const url of ['index.html?lang=en', 'loja.html?lang=pt', 'projeto.html?p=sok&lang=en']) {
-      const pg = await pagina(url);
+    for (const [url] of SITIO) {
+      const pg = await pagina(comLingua(url, tema === 'dark' ? 'en' : 'pt'));
       if (tema === 'light') await pg.click('#theme');
       let maus = await pg.evaluate(() => {
         const lum = c => { const [r, g, b] = c.map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
@@ -568,7 +652,7 @@ async function projetos() {
 
 /* ============================================================ 6. a loja */
 async function loja() {
-  tit('6. A loja');
+  tit('6. A loja e as comissoes');
   for (const l of ['en', 'pt']) {
     const pg = await pagina('loja.html?lang=' + l);
     const T = CONFIG.i18n[l];
@@ -578,13 +662,22 @@ async function loja() {
     const r = await pg.evaluate(() => ({ prods: [...document.querySelectorAll('#prods .prod')].map(a => a.id), palco: GI.palco() && GI.palco().kind,
       tam: [...document.querySelectorAll('#tee .opt[data-k="size"] input')].filter(i => i.checked).length, umaOpcao: document.querySelectorAll('#print .opt').length,
       todo: document.querySelector('#shopAll').href, lr: (document.querySelector('#footLR') || {}).href, lrT: (document.querySelector('#footLR') || { textContent: '' }).textContent,
-      tiers: [...document.querySelectorAll('#tiers .tier h3')].map(x => x.textContent), cta: document.querySelector('#commCta').getAttribute('href'),
-      comm: document.querySelector('#comissoes').innerText, vazio: document.querySelector('#bagEmpty').getClientRects().length > 0 }));
+      comm: !!document.querySelector('#comissoes, #tiers'), vazio: document.querySelector('#bagEmpty').getClientRects().length > 0 }));
     chk(igual(r.prods, VISIVEIS.map(m => m.key)) && r.palco === 'photo', `${l}: um bloco por produto publicado (os retidos nao aparecem), e a fotografia no palco`, r.prods.join(', '));
     chk(r.tam === 0 && r.umaOpcao === 1, `${l}: o tamanho nao vem escolhido; uma opcao com um so valor nao se mostra`);
     chk(r.todo === `${CONFIG.shop}/collections/${CONFIG.merchCollection}` && r.lr === CONFIG.livroReclamacoes && r.lrT.includes(T.footComplaints), `${l}: a loja toda no Shopify e o Livro de Reclamacoes no rodape`);
-    chk(igual(r.tiers, CONFIG.tiers.map(x => T.tiers[x.key].name)) && !/€|\d\s?%|\$/.test(r.comm), `${l}: comissoes com os quatro formatos e nenhum preco`, r.tiers.join(' · '));
-    chk(r.cta === `mailto:${CONFIG.email}?subject=${encodeURIComponent(T.mailSubject)}&body=${encodeURIComponent(T.mailBody)}`, `${l}: o botao das comissoes abre o email com as perguntas ja escritas`);
+    chk(!r.comm, `${l}: a loja e so o merch e o cesto (as comissoes tem a sua pagina)`);
+
+    /* as comissoes, na sua pagina */
+    const pc = await pagina('comissoes.html?lang=' + l);
+    const c = await pc.evaluate(() => ({ tiers: [...document.querySelectorAll('#tiers .tier h3')].map(x => x.textContent), cta: document.querySelector('#commCta').getAttribute('href'),
+      comm: document.querySelector('#comissoes').innerText, badge: document.querySelector('#commBadge').textContent, palco: GI.palco() && GI.palco().kind,
+      lr: (document.querySelector('#footLR') || {}).href }));
+    chk(igual(c.tiers, CONFIG.tiers.map(x => T.tiers[x.key].name)) && !/€|\d\s?%|\$/.test(c.comm) && c.badge === T[CONFIG.commissionsOpen ? 'commOpen' : 'commClosed'],
+      `${l}: comissoes com os quatro formatos e nenhum preco`, c.tiers.join(' · '));
+    chk(c.cta === `mailto:${CONFIG.email}?subject=${encodeURIComponent(T.mailSubject)}&body=${encodeURIComponent(T.mailBody)}`, `${l}: o botao das comissoes abre o email com as perguntas ja escritas`);
+    chk(c.palco === 'deco' && c.lr === CONFIG.livroReclamacoes, `${l}: nas comissoes, o elenco no palco e o Livro de Reclamacoes no rodape`);
+    await pc.fecha();
     chk(!(await textoTodo(pg)).includes('—'), `${l}: nenhum travessao no que se le ou ouve`);
 
     /* o cesto */
@@ -639,7 +732,8 @@ async function resto() {
   await pt.fecha();
 
   /* prefers-reduced-motion: nenhuma transicao com duracao, nenhuma animacao a correr */
-  for (const [url, vp, prep] of [['index.html', { width: 1440, height: 900 }, 'visor'], ['index.html', { width: 390, height: 844 }, 'menu'], ['loja.html', { width: 1440, height: 900 }, null], ['projeto.html?p=tr', { width: 1440, height: 900 }, null]]) {
+  for (const [url, vp, prep] of [['trabalho.html', { width: 1440, height: 900 }, 'visor'], ['index.html', { width: 390, height: 844 }, 'menu'], ['index.html', { width: 1440, height: 900 }, null],
+    ['loja.html', { width: 1440, height: 900 }, null], ['comissoes.html', { width: 1440, height: 900 }, null], ['sobre.html', { width: 1440, height: 900 }, null], ['projeto.html?p=tr', { width: 1440, height: 900 }, null]]) {
     const pg = await pagina(url, { vp, reduz: true, toque: vp.width < 700 });
     if (prep === 'visor') { await pg.evaluate(() => document.querySelector('#wall .fr').click()); await pg.evaluate(() => document.querySelector('#wall .fr').click()); await espera(pg, 200); }
     if (prep === 'menu') { await pg.tap('#menuBtn'); await espera(pg, 200); }
@@ -657,7 +751,8 @@ async function resto() {
   }
 
   /* aberto do disco (file://), como o Frede o abre no computador */
-  for (const [f, sel, n] of [['index.html', '#wall .fr', CONFIG.artworks.length], ['loja.html', '#prods .prod', VISIVEIS.length], ['projeto.html', '#series .fr', 4]]) {
+  for (const [f, sel, n] of [['index.html', '#flip .fr', 6], ['trabalho.html', '#wall .fr', CONFIG.artworks.length], ['projetos.html', '#projs .proj', CONFIG.projects.length],
+    ['loja.html', '#prods .prod', VISIVEIS.length], ['comissoes.html', '#tiers .tier', CONFIG.tiers.length], ['sobre.html', '#tl li', CONFIG.timeline.length], ['projeto.html', '#series .fr', 4]]) {
     const pg = await pagina(pathToFileURL(join(PASTA, f)).href + (f === 'projeto.html' ? '?p=tr' : ''));
     await espera(pg, 300);
     const r = await pg.evaluate(s => ({ n: document.querySelectorAll(s).length, img: [...document.images].some(i => i.naturalWidth > 0), bar: document.querySelectorAll('#nav a').length, links: [...document.querySelectorAll('a[data-go]')].every(a => a.getAttribute('href').includes('lang=')) }), sel);
@@ -667,7 +762,7 @@ async function resto() {
   }
 
   /* leitores de ecra: cada etiqueta segue a lingua */
-  for (const url of ['index.html', 'loja.html', 'projeto.html?p=sok']) {
+  for (const [url] of SITIO) {
     const et = {};
     for (const l of ['en', 'pt']) {
       const pg = await pagina(url + (url.includes('?') ? '&' : '?') + 'lang=' + l);
@@ -679,12 +774,14 @@ async function resto() {
     const nomes = new Set([CONFIG.artistName, CONFIG.realName, ...CONFIG.artworks.map(a => a.label), 'Instagram',
       ...['en', 'pt'].flatMap(l => [...Object.values(CONFIG.i18n[l].projects).map(p => p.title), ...Object.values(CONFIG.i18n[l].merchItems).map(m => m.name)])]);
     const iguais = et.en.filter((x, i) => x === et.pt[i] && !nomes.has(x) && /[a-z]{3}/i.test(x));
-    chk(et.en.length === et.pt.length && et.en.length >= 6 && !iguais.length, `leitores de ecra: ${url.split('?')[0]}, cada etiqueta le-se na lingua da pagina`, iguais.slice(0, 3).join(' | ') || `${et.en.length} etiquetas`);
+    chk(et.en.length === et.pt.length && et.en.length >= 5 && !iguais.length, `leitores de ecra: ${url.split('?')[0]}, cada etiqueta le-se na lingua da pagina`, iguais.slice(0, 3).join(' | ') || `${et.en.length} etiquetas`);
   }
 
   /* nada salta ao carregar (CLS) */
-  const medidas = [['index.html?lang=en', { width: 1440, height: 900 }], ['index.html?lang=pt', { width: 390, height: 844 }], ['loja.html?lang=pt', { width: 1440, height: 900 }],
-    ['loja.html?lang=en', { width: 390, height: 844 }], ['projeto.html?p=deck&lang=en', { width: 1440, height: 900 }], ['projeto.html?p=sok&lang=pt', { width: 390, height: 844 }]];
+  const medidas = [['index.html?lang=en', { width: 1440, height: 900 }], ['trabalho.html?lang=pt', { width: 1440, height: 900 }], ['trabalho.html?lang=en', { width: 390, height: 844 }],
+    ['loja.html?lang=pt', { width: 1440, height: 900 }], ['index.html?lang=pt', { width: 390, height: 844 }], ['loja.html?lang=en', { width: 390, height: 844 }],
+    ['projetos.html?lang=en', { width: 1440, height: 900 }], ['comissoes.html?lang=pt', { width: 390, height: 844 }], ['sobre.html?lang=en', { width: 1440, height: 900 }],
+    ['projeto.html?p=deck&lang=en', { width: 1440, height: 900 }], ['projeto.html?p=sok&lang=pt', { width: 390, height: 844 }]];
   for (const [url, vp] of medidas) {
     const v = await cls(url, vp, false);
     chk(v < 0.01, `CLS ${url.split('?')[0]} ${vp.width}px`, v.toFixed(4));

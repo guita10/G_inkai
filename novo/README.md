@@ -8,6 +8,30 @@ and be creative but maintain the same information").
 **O site atual não foi tocado.** Continua na raiz do repositório e é ele que
 está em `guitaink.com`. Esta pasta só vai para o ar se o Frede decidir.
 
+## Uma página por parte (17 Nov 2026)
+
+A primeira versão era uma página comprida, como o site atual. O Frede pediu
+"different pages instead of an infinite scroll", e agora cada parte tem a
+sua página, com o seu endereço:
+
+| Página | O que tem | No palco |
+| --- | --- | --- |
+| `index.html`, o início | o nome, o que faz, os dois botões e as seis peças; por baixo, o rodapé com as seis páginas | a peça escolhida das seis |
+| `trabalho.html` | a parede: as 37 obras e os filtros | a obra escolhida |
+| `projetos.html` | os quatro projetos, o destacado primeiro, cada um com a sua série | a capa |
+| `projeto.html?p=...` | um projeto (como antes; o "voltar" leva aos projetos) | a peça escolhida da série |
+| `loja.html` | o merch e o cesto, e no fim o caminho para as comissões | a fotografia do produto |
+| `comissoes.html` | os quatro formatos e o pedido por email | o elenco do Survival of Kings |
+| `sobre.html` | a carta, o percurso e o contacto | uma das seis peças do início |
+
+A barra é a mesma em todas, com as seis páginas, e marca aquela onde se
+está. A informação é a mesma de antes, só mudou de sítio: nenhum texto saiu.
+
+**Os endereços antigos continuam a funcionar.** `index.html#work`,
+`#projects`, `#comm`, `#about`, `#timeline`, `#contact` e
+`loja.html#comissoes` (que são também os do site atual) levam à página nova
+dessa parte, com a língua que traziam.
+
 ## Como ver
 
 Abre `novo/index.html` no browser, com dois cliques (do disco funciona tudo,
@@ -27,9 +51,8 @@ pequenas que põem uma peça no quadro grande), levado ao site todo:
 
 - pousar o rato numa moldura (140 ms), focá-la com o teclado ou tocar nela
   põe essa peça no palco; clicar na que já lá está abre o visualizador;
-- ao descer a página, o palco acompanha a secção: a peça da abertura, a obra
-  escolhida na parede, a capa do projeto, a fotografia do produto, o elenco
-  do Survival of Kings nas comissões, o selo no fim;
+- cada página põe no palco a sua peça (a tabela acima), e ao fundo de cada
+  uma, no rodapé, fica o selo;
 - a parede mostra as 37 obras de uma vez, em filas justificadas: cada moldura
   tem a proporção da sua imagem e nenhuma é cortada.
 
@@ -56,8 +79,9 @@ redesenhadas, porque chocavam com as regras da casa:
   email das comissões, o Livro de Reclamações. O `verify.mjs` compara campo a
   campo com o site atual e falha se alguma coisa diferir.
 - **Os endereços**: `index.html`, `projeto.html?p=sok|tr|pamp|deck`,
-  `loja.html`, `404.html`, `?lang=pt|en`, e as âncoras `#work`, `#projects`,
-  `#comm`, `#about`, `#timeline`, `#contact`, `#comissoes`.
+  `loja.html`, `404.html` e `?lang=pt|en` são os mesmos; as âncoras antigas
+  (`#work`, `#comissoes`…) levam às páginas novas. Há quatro páginas a mais:
+  `trabalho.html`, `projetos.html`, `comissoes.html`, `sobre.html`.
 - **A marca**: Midnight Black, Electric Cobalt e Acid Lime com os mesmos
   papéis, as duas letras japonesas, o selo 墨, os sete tamanhos de letra, os
   dois raios, nenhuma sombra. Abre escuro para toda a gente; o ◐ passa a claro.
@@ -74,7 +98,8 @@ redesenhadas, porque chocavam com as regras da casa:
 
 | Antes | Agora |
 | --- | --- |
-| Quatro páginas, cada uma com a sua cópia das cores e do conteúdo; o `verify.mjs` vigia se as cópias ainda batem | Um `dados.js`, um `site.css`, um `site.js`, usados pelas três páginas. Não há cópias |
+| Uma página comprida com quase tudo, e mais duas | Uma página por parte (sete, mais o 404) |
+| Quatro páginas, cada uma com a sua cópia das cores e do conteúdo; o `verify.mjs` vigia se as cópias ainda batem | Um `dados.js`, um `site.css`, um `site.js`, usados por todas as páginas. Não há cópias |
 | O texto é escrito por um script no fim de uma página grande; reserva-se a altura de cada bloco no CSS para a página não saltar | Cada secção desenha-se no momento em que o browser a lê. Não há alturas reservadas e o salto medido é 0 |
 | As obras em passe-partouts iguais (4:5), três por fila, doze à vista | Filas justificadas, cada moldura na proporção da obra, as 37 à vista (no telemóvel doze e um botão, como hoje) |
 | A peça grande só existe na abertura | O palco acompanha a página toda |
@@ -83,24 +108,28 @@ redesenhadas, porque chocavam com as regras da casa:
 | As opções de um produto em caixas de escolha | Botões (um toque em vez de dois), o tamanho continua sem vir escolhido |
 | O visualizador feito à mão | O `<dialog>` do browser: prende o foco e fecha com Esc sem código próprio |
 
-## Três coisas que são decisão do Frede
+## Duas coisas que são decisão do Frede
 
-1. **A loja na página inicial.** Há uma prateleira curta com os quatro
-   produtos e os seus preços, a apontar para a loja. A 1 Nov 2026 o merch
-   saiu da página inicial de propósito (CLAUDE.md, secção 7). Aqui voltou em
-   resumo, porque o pedido de 6 Nov era um site que também "works as
-   merchandise store". Tira-se apagando a secção `#shop` do `index.html`.
-2. **O foco depois do visualizador.** Ao fechar, o foco e o palco ficam na
+1. **O foco depois do visualizador.** Ao fechar, o foco e o palco ficam na
    peça onde se parou, não na que se abriu.
-3. **O menu do telemóvel** aparece abaixo de 821px (hoje 620px): com seis
+2. **O menu do telemóvel** aparece abaixo de 821px (hoje 620px): com seis
    caminhos, em português, a barra não cabia mais cedo.
+
+(Havia uma terceira, a prateleira da loja com preços na página inicial.
+Com as páginas separadas saiu: a página inicial é só a abertura, e o merch
+está na página da loja, como no site atual.)
 
 ## Os ficheiros
 
-    index.html      a página inicial: só a ordem das secções
+    index.html      o início: a abertura e as seis peças
+    trabalho.html   a parede das obras
+    projetos.html   os projetos
     projeto.html    a página de um projeto (?p=...)
-    loja.html       o merch, o cesto e as comissões
+    loja.html       o merch e o cesto
+    comissoes.html  os quatro formatos e o pedido
+    sobre.html      a carta, o percurso e o contacto
     404.html        sozinha (tem as suas próprias cores; não usa mais nada)
+                    (cada página é só a ordem das suas secções)
     dados.js        o CONTEÚDO: textos, obras, projetos, percurso, merch
     dims.js         as medidas de cada imagem (gerado, não se edita à mão)
     site.css        o ASPETO: cores, letras, as duas metades, os ecrãs pequenos
@@ -128,7 +157,7 @@ projetos", os nomes dos naipes…) vivem no `copia-dados.cjs`.
 
 ## Os testes
 
-`node novo/tools/verify.mjs` abre o site num browser a sério e corre 147
+`node novo/tools/verify.mjs` abre o site num browser a sério e corre 192
 verificações; sai com erro se alguma falhar. `--rapido` salta as medições em
 linha lenta, `--so 3,6` corre só essas partes.
 
@@ -136,14 +165,17 @@ linha lenta, `--so 3,6` corre só essas partes.
    os píxeis reais, EN e PT com as mesmas chaves, as regras da secção 9.
 2. **A mesma informação**: campo a campo contra o site atual, e cada texto
    do site atual lido na página.
-3. A página inicial: o nome em duas linhas, o Flip (com rato, com teclado, e
-   o caminho da moldura até à peça grande), o palco em cada secção, os
-   filtros, o visualizador, os projetos, a troca de língua.
-4. Telemóvel e larguras: de 320 a 1600px sem nada sair do ecrã, o menu, os
-   botões com 44px, o contraste nos dois temas.
+3. As páginas: em cada uma, a barra com as seis páginas (com a língua) e a
+   sua marcada, o título do separador na língua escolhida, nenhum erro; o
+   início curto; os endereços antigos a levar às páginas novas; o nome em
+   duas linhas, o Flip (com rato, com teclado, e o caminho da moldura até à
+   peça grande), a parede, os filtros, o visualizador, os projetos, o sobre,
+   a troca de língua.
+4. Telemóvel e larguras, em todas as páginas: de 320 a 1600px sem nada sair
+   do ecrã, o menu, os botões com 44px, o contraste nos dois temas.
 5. As páginas de projeto, nas duas línguas, e um endereço que não existe.
-6. A loja: o cesto, o checkout (T-shirt Monk / White / M =
-   `60968526905678`), as comissões sem preços.
+6. A loja e as comissões: o cesto, o checkout (T-shirt Monk / White / M =
+   `60968526905678`), as comissões sem preços e com o Livro de Reclamações.
 7. O tema, o movimento reduzido, o 404, a abertura do disco, os leitores de
    ecrã, e o salto de layout (CLS), também numa linha de 400 kbps.
 
@@ -153,17 +185,21 @@ diferente do site atual…) e apanharam os 21. Repete-se com
 `python3 novo/tools/bugs-plantados.py . /tmp/plantado` (trabalha numa cópia
 fora do repositório; uns 15 minutos).
 
-Dois bugs a sério apareceram a fazer os testes, e ficaram com teste próprio:
+Três coisas a sério apareceram a fazer os testes, e ficaram com teste próprio:
 
 - com a folga da barra posta na página (`scroll-padding`), focar um botão da
   barra com o Tab puxava a página para cima; a folga passou para cada alvo;
 - com o rato parado, as molduras que passavam por baixo dele ao rolar a
-  página trocavam a peça do palco; agora só conta o rato a mexer-se.
+  página trocavam a peça do palco; agora só conta o rato a mexer-se;
+- ao separar as páginas, os botões das opções da loja tinham 38px num ecrã
+  de toque (o mínimo é 44px): o teste dos 44px passou a correr em todas as
+  páginas, e encontrou-os.
 
 ## Se for para o ar
 
 Não é automático, e pede uma conversa primeiro: o `novo/` usa atalhos para
 `images/` e `fonts/`, por isso o zip faz-se a segui-los
-(`cd novo && zip -r ../site-novo.zip . -x 'tools/*' README.md`), e nesse dia o
+(`cd novo && zip -r ../site-novo.zip . -x 'tools/*' README.md`); o Netlify
+serve as páginas novas sem configuração nenhuma. Nesse dia o
 `CLAUDE.md`, o `DESIGN.md` e o `tools/verify.mjs` do site atual têm de ser
 reescritos para a forma nova. Até lá, os dois ficam lado a lado.

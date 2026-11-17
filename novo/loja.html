@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark" data-page="loja">
+<html lang="en" data-theme="dark" data-page="loja" data-titulo="shopTitle">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- A LOJA: o merch (com o cesto) e as comissoes (quatro formatos, sem precos).
+<!-- A LOJA: o merch e o cesto (as comissoes tem a sua pagina, comissoes.html).
      Compra-se aqui; so o pagamento sai para o checkout do Shopify, com o cesto
      ja la dentro. Nenhum pedido vai ao Shopify antes desse clique. -->
 <title>Shop · Guita_Ink</title>
 <meta name="robots" content="index,follow">
-<meta name="description" content="Guita_Ink · commissions and merch. Four commission formats, from a bust to a full character sheet, and prints made from original art.">
+<meta name="description" content="Clothing, prints, stickers and small things made from original Guita_Ink art. Released in drops.">
 <meta property="og:title" content="Shop · Guita_Ink">
-<meta property="og:description" content="Guita_Ink · commissions and merch. Four commission formats, from a bust to a full character sheet, and prints made from original art.">
+<meta property="og:description" content="Clothing, prints, stickers and small things made from original Guita_Ink art. Released in drops.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://guitaink.com/loja.html">
 <meta property="og:image" content="https://guitaink.com/images/og-card.jpg">
@@ -44,14 +44,8 @@
 
 <!-- A CABECA -->
 <section class="page-head" id="lojaHead" data-sec="loja">
-  <a class="back" href="index.html" data-go="index.html"><span aria-hidden="true">← </span><span data-t="backHome"></span></a>
   <h1 class="page-title"><span data-t="shopTitle"></span> <span class="badge" id="shopDrop"></span></h1>
   <p class="lead" data-t="shopIntro"></p>
-  <nav class="jump" data-ta="a11yJump">
-    <a class="tl" href="#merch" data-t="merchTitle"></a>
-    <a class="tl" href="#cesto" data-t="bagTitle"></a>
-    <a class="tl" href="#comissoes" data-t="commJump"></a>
-  </nav>
 </section>
 <script>GI.r('lojaHead')</script>
 
@@ -60,7 +54,9 @@
 <section id="merch" data-sec="merch" aria-labelledby="merchT">
   <h2 class="sr" id="merchT" data-t="merchTitle"></h2>
   <div class="prods" id="prods"></div>
-  <p class="links"><a class="tl" id="shopAll" href="#" target="_blank" rel="noopener"><span data-t="shopAll"></span><span aria-hidden="true"> ↗</span></a></p>
+  <p class="links"><a class="tl" id="shopAll" href="#" target="_blank" rel="noopener"><span data-t="shopAll"></span><span aria-hidden="true"> ↗</span></a>
+    <!-- as comissoes tambem se compram: o caminho para a pagina delas -->
+    <a class="tl" href="comissoes.html" data-go="comissoes.html"><span data-t="commSee"></span><span aria-hidden="true"> →</span></a></p>
 </section>
 <script>GI.r('merch')</script>
 
@@ -80,24 +76,6 @@
   <a class="btn fill fab" id="fab" href="#cesto"></a>
 </section>
 <script>GI.r('cesto')</script>
-
-<!-- COMISSOES: os quatro formatos e mais nada. Sem precos, sem prazos, sem
-     condicoes (seccao 9.4 do CLAUDE.md): quem quer escreve, e o valor vai por email. -->
-<section id="comissoes" data-sec="comissoes" aria-labelledby="commT">
-  <div class="sec-head">
-    <h2 class="sec-title" id="commT" data-t="commTitle"></h2>
-    <span class="badge" id="commBadge"></span>
-  </div>
-  <p class="lead" data-t="commIntro"></p>
-  <ul class="tiers" id="tiers"></ul>
-  <p class="measure" data-t="commNote"></p>
-  <div class="cta after">
-    <a class="btn fill" id="commCta" href="mailto:frederico@guitaink.com"><span data-t="commCta"></span><span aria-hidden="true"> →</span></a>
-  </div>
-  <p class="small ask"><span data-t="questions"></span> <a id="commMail" href="mailto:frederico@guitaink.com"></a></p>
-  <div class="comm-art" aria-hidden="true"></div>
-</section>
-<script>GI.r('comissoes')</script>
 
 </main>
 <footer class="foot" id="foot" data-sec="foot"></footer>

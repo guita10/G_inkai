@@ -1,4 +1,4 @@
-/* site.js — o comportamento do site novo, partilhado pelas tres paginas.
+/* site.js — o comportamento do site novo, partilhado por todas as paginas.
 
    COMO SE DESENHA A PAGINA: cada seccao desenha-se a si propria assim que o
    browser acaba de a ler (um <script>GI.r('nome')</script> logo a seguir ao
@@ -38,6 +38,21 @@
   /* ================= A LINGUA =================
      Primeiro a do link (?lang=pt), senao a do browser: a regra do site atual. */
   const qs = new URLSearchParams(location.search);
+  /* em que pagina estamos: o <html data-page="..."> de cada uma */
+  const PAG = document.documentElement.dataset.page || 'home';
+  /* OS ENDERECOS ANTIGOS. Ate 17 Nov 2026 isto era uma pagina comprida, e o site
+     atual ainda e: os links para as suas partes (guitaink.com/#work,
+     loja.html#comissoes) podem estar guardados em algum lado. Cada um leva a
+     pagina nova dessa parte, com a lingua que trazia. */
+  (function () {
+    const antigos = {
+      home: { work: 'trabalho.html', projects: 'projetos.html', shop: 'loja.html', comm: 'comissoes.html',
+        about: 'sobre.html', timeline: 'sobre.html#timeline', contact: 'sobre.html#contact' },
+      loja: { comissoes: 'comissoes.html' },
+    }[PAG] || {};
+    const alvo = antigos[location.hash.slice(1)];
+    if (alvo) { const [f, a] = alvo.split('#'); location.replace(f + location.search + (a ? '#' + a : '')); }
+  })();
   const pedida = qs.get('lang');
   let LANG = (pedida === 'pt' || pedida === 'en') ? pedida
     : ((navigator.language || 'en').toLowerCase().startsWith('pt') ? 'pt' : 'en');
@@ -326,17 +341,20 @@
     const it = b ? b._it : (seccaoAtual && palcos[seccaoAtual] ? palcos[seccaoAtual]() : null);
     if (it) pick(it);
   }
-  /* em que pagina estamos (o <html data-page>): os mesmos seis caminhos em todas,
-     mas um caminho para esta mesma pagina e so uma ancora (nao recarrega) */
-  const PAG = document.documentElement.dataset.page || 'home';
-  const AQUI = { home: 'index.html', loja: 'loja.html' }[PAG] || '';
+  /* Os mesmos seis caminhos em todas as paginas, cada um para a sua pagina. Um
+     caminho para a pagina onde ja se esta e so uma ancora (nao recarrega). */
+  const AQUI = { home: 'index.html', trabalho: 'trabalho.html', projetos: 'projetos.html', loja: 'loja.html',
+    comissoes: 'comissoes.html', sobre: 'sobre.html' }[PAG] || '';
   const NAV = [
-    ['work', 'navWork', 'index.html#work'], ['projects', 'navProjects', 'index.html#projects'],
-    ['shop', 'navShop', 'loja.html'], ['comm', 'navComm', PAG === 'loja' ? 'loja.html#comissoes' : 'index.html#comm'],
-    ['about', 'navAbout', 'index.html#about'], ['contact', 'navContact', 'index.html#contact'],
+    ['work', 'navWork', 'trabalho.html'], ['projects', 'navProjects', 'projetos.html'],
+    ['shop', 'navShop', 'loja.html'], ['comm', 'navComm', 'comissoes.html'],
+    ['about', 'navAbout', 'sobre.html'], ['contact', 'navContact', 'sobre.html#contact'],
   ];
-  /* a que caminho da barra pertence cada seccao das outras paginas */
-  const NAVDE = { loja: 'shop', merch: 'shop', cesto: 'shop', comissoes: 'comm', proj: 'projects', outros: 'projects' };
+  /* o caminho marcado na barra: o da pagina (na pagina de um projeto, Projetos);
+     na pagina Sobre, Contacto quando se desce ate ao contacto */
+  const NAVPAG = { trabalho: 'work', projetos: 'projects', projeto: 'projects', loja: 'shop', comissoes: 'comm', sobre: 'about' };
+  const caminhoDe = sec => (PAG === 'sobre' && (sec === 'contact' || sec === 'foot') ? 'contact' : (NAVPAG[PAG] || ''));
+  const marcaCaminho = c => $$('#nav a').forEach(a => a.setAttribute('aria-current', String(a.dataset.nav === c)));
   function liga(a, alvo) {
     const [pg, ancora] = alvo.split('#');
     if (pg === AQUI) a.setAttribute('href', '#' + (ancora || 'main')); else a.setAttribute('data-go', alvo);
@@ -366,8 +384,12 @@
       });
       nav.addEventListener('click', e => { if (e.target.closest('a')) fecha(false); });
       document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) fecha(true); });
+      marcaCaminho(caminhoDe(''));
     }
     fill(bar);
+    /* o titulo do separador, na lingua escolhida (<html data-titulo="chave">) */
+    const tt = document.documentElement.dataset.titulo;
+    if (tt && typeof tx(tt) === 'string') document.title = `${tx(tt)} · ${C.artistName}`;
     /* o nome do botao comeca pelas letras que mostra (quem dita "EN" ao telemovel acerta-lhe) */
     const lg = $('#lang');
     lg.textContent = LANG === 'pt' ? 'EN' : 'PT';
@@ -395,8 +417,7 @@
       const id = fundo && foot ? 'foot' : naLinha;
       if (!id || id === seccaoAtual) return;
       seccaoAtual = id;
-      const caminho = NAVDE[id] || (id === 'foot' && PAG === 'home' ? 'contact' : id);
-      $$('#nav a').forEach(a => a.setAttribute('aria-current', String(a.dataset.nav === caminho)));
+      marcaCaminho(caminhoDe(id));
       const it = palcos[id] && palcos[id]();
       if (it && it !== stage.cur) { show(it, 'fade'); mark(it); }
     };
@@ -465,7 +486,6 @@
     }
     pick(seis[S.heroi]);
     palcos.intro = () => seis[S.heroi];
-    palcos.about = () => seis[S.heroi];
   };
 
   /* ---- a parede: todas as obras, pela ordem do Frede ---- */
@@ -533,36 +553,16 @@
     palcos.projects = () => primeira;
   };
 
-  /* ---- comissoes: os quatro formatos pedem-se na loja; aqui so o caminho ---- */
-  R.comm = () => {
-    const b = $('#commBadge');
-    b.textContent = tx(C.commissionsOpen ? 'commOpen' : 'commClosed');
-    b.classList.toggle('off', !C.commissionsOpen);
-    palcos.comm = elenco;
-  };
-
-  /* ---- a loja, em resumo: o que ha e quanto custa; compra-se na pagina da loja ---- */
-  R.shop = () => {
-    const box = $('#shopRows'); box.textContent = '';
-    const ms = merchVisivel();
-    $('#shop').hidden = !ms.length;
-    $('#shopDrop').textContent = C.shopDrop;
-    ms.forEach(m => {
-      const f = foto(m);
-      const im = h('img', { alt: '', loading: 'lazy', decoding: 'async', width: 40, height: 40, src: m.src });
-      guarda(im, null, m.plate);
-      const a = h('a', { class: 'row', href: go('loja.html#' + m.key) }, [
-        h('span', { class: 'row-a' }, [im, h('span', { text: f.label })]), preco(m),
-      ]);
-      aponta(a, () => a, () => show(f));
-      a.addEventListener('focus', () => show(f));
-      box.append(a);
-    });
-    palcos.shop = () => (ms[0] ? foto(ms[0]) : null);
-  };
 
   /* ---- sobre: a carta e o percurso ---- */
   R.about = () => {
+    /* no palco, a mesma peca que a pagina inicial mostrou nesta visita (so se le,
+       nao avanca a vez: a seguinte e escolhida pela pagina inicial) */
+    let i = 0;
+    try { i = Math.max(0, parseInt(localStorage.getItem('gi-capa') || '0', 10) || 0) % C.heroArt.length; } catch (e) {}
+    const peca = obra(C.heroArt[i], (C.artworks.find(a => a.src === C.heroArt[i]) || {}).label || '');
+    peca.open = quem => openViewer([peca], 0, quem);
+    palcos.about = () => peca;
     const c = $('#letter'); c.textContent = '';
     tx('aboutBody').forEach(p => c.append(h('p', { text: p })));
     const l = $('#tl'); l.textContent = '';
@@ -610,8 +610,8 @@
       const fora = (id, filhos) => h('a', { id, target: '_blank', rel: 'noopener' }, filhos.concat(seta('↗')));
       const nota = h('p', { class: 'foot-note' }, [h('span', { id: 'footY' }), h('span', { 'data-t': 'footerNote' })]);
       f.append(menu);
-      /* a pagina onde se vende leva o Livro de Reclamacoes (obrigatorio por lei) e o Instagram */
-      if (PAG === 'loja') f.append(h('p', { class: 'foot-note foot-links' }, [
+      /* as paginas onde se vende levam o Livro de Reclamacoes (obrigatorio por lei) e o Instagram */
+      if (PAG === 'loja' || PAG === 'comissoes') f.append(h('p', { class: 'foot-note foot-links' }, [
         fora('footLR', [h('span', { 'data-t': 'footComplaints' })]), fora('footIg', [document.createTextNode('Instagram')])]));
       f.append(nota);
     }
@@ -624,14 +624,19 @@
 
   /* ---- dados estruturados (Google): os formatos sem preco; a galeria sem ofertas ---- */
   R.ld = () => {
-    const el = $('#ldPerson'); if (!el) return;
-    let d; try { d = JSON.parse(el.textContent); } catch (e) { return; }
-    const nomes = C.i18n.en.tiers;                                  // o schema fica sempre em EN
-    d.makesOffer = C.tiers.map(x => ({
-      '@type': 'Offer', name: `${nomes[x.key] ? nomes[x.key].name : x.key} commission`,
-      availability: C.commissionsOpen ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-    }));
-    el.textContent = JSON.stringify(d, null, 2);
+    const el = $('#ldPerson');
+    if (el) {
+      let d = null; try { d = JSON.parse(el.textContent); } catch (e) {}
+      if (d) {
+        const nomes = C.i18n.en.tiers;                                // o schema fica sempre em EN
+        d.makesOffer = C.tiers.map(x => ({
+          '@type': 'Offer', name: `${nomes[x.key] ? nomes[x.key].name : x.key} commission`,
+          availability: C.commissionsOpen ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+        }));
+        el.textContent = JSON.stringify(d, null, 2);
+      }
+    }
+    if (PAG !== 'trabalho') return;                                 // a galeria vive na pagina das obras
     const can = $('link[rel="canonical"]');
     const base = (can ? can.href : location.href).replace(/[^/]*$/, '');
     const abs = p => (/^https?:\/\//i.test(p) ? p : base + p.replace(/^\//, ''));
@@ -752,7 +757,6 @@
   R.lojaHead = () => {
     $('#shopDrop').textContent = C.shopDrop;
     $('#shopDrop').hidden = !C.shopOpen;
-    document.title = tx('shopTitle') + ' · ' + C.artistName;
   };
   R.merch = () => {
     const box = $('#prods'); box.textContent = '';
@@ -850,7 +854,7 @@
       stageInit(); if (stage.el) this.r('stage');
       /* se nenhuma seccao pos nada no palco, fica a peca da primeira seccao que tiver uma */
       if (!stage.cur) { const p = $$('[data-sec]').map(x => palcos[x.dataset.sec]).find(Boolean); const it = p && p(); if (it) show(it, 'now'); }
-      vigia(); lojaVigia(); if ($('#ldPerson')) R.ld();
+      vigia(); lojaVigia(); R.ld();
     },
     /* a vista, para o verify.mjs */
     lang: () => LANG, linkCheckout, cesto: () => cesto.slice(), palco: () => stage.cur, pick, openViewer,

@@ -16,7 +16,10 @@ import os, shutil, subprocess, sys, pathlib
 raiz = pathlib.Path(sys.argv[1]).resolve()
 trab = pathlib.Path(sys.argv[2]).resolve()
 novo = raiz / 'novo'
-FICHEIROS = ['index.html', 'loja.html', 'projeto.html', '404.html', 'site.css', 'site.js', 'dados.js', 'dims.js', 'robots.txt', 'sitemap.xml']
+# tudo o que vai para o ar, menos as pastas (que entram como atalhos): todas as
+# paginas, o CSS, o JS, o robots e o sitemap. Lido da pasta, para uma pagina nova
+# nunca ficar de fora (ficou, a 17 Nov 2026, e cada bug "escapava" por isso).
+FICHEIROS = sorted(f.name for f in novo.iterdir() if f.is_file() and f.suffix in ('.html', '.css', '.js', '.txt', '.xml'))
 
 
 def copia():
