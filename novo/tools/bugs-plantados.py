@@ -5,7 +5,7 @@ Copia o site novo para uma pasta de trabalho, estraga UMA coisa de cada vez
 trocado, um texto diferente do site atual...) e confirma que o verify.mjs
 falha, e falha no teste certo. Um teste que nunca falhou nao prova nada.
 
-    python3 novo/tools/bugs-plantados.py . /tmp/plantado          # os 21
+    python3 novo/tools/bugs-plantados.py . /tmp/plantado          # os 24
     python3 novo/tools/bugs-plantados.py . /tmp/plantado 3 10     # so esses
 
 A pasta de trabalho tem de se chamar "plantado" e ficar FORA do repositorio:
@@ -64,9 +64,12 @@ BUGS = [
     ('um pedido a outro servidor', lambda: troca('index.html', '<link rel="stylesheet" href="site.css">', '<link rel="stylesheet" href="site.css">\n<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter">'), 'outro servidor'),
     ('texto cinzento a mais (contraste)', lambda: troca('site.css', '--bone-dim:#9BA0AA;', '--bone-dim:#4A4E57;'), 'contraste'),
     ('um botao pequeno demais para o dedo', lambda: troca('site.css', '.tool{font-family:var(--f-body);font-size:.875rem;font-weight:500;min-width:44px;height:44px;', '.tool{font-family:var(--f-body);font-size:.875rem;font-weight:500;min-width:30px;height:30px;'), '44px'),
+    ('o botao direito volta a guardar imagens', lambda: troca('site.js', "document.addEventListener('contextmenu', e => { if (eImagem(e)) e.preventDefault(); });", ''), 'nao se guardam'),
+    ('o toque longo volta a oferecer "Guardar"', lambda: troca('site.css', 'img{-webkit-touch-callout:none;', 'img{'), 'Guardar'),
+    ('um robo de IA esquecido no robots.txt', lambda: troca('robots.txt', 'User-agent: GPTBot\nDisallow: /\n\n', ''), 'robots.txt'),
 ]
 
-PARTES = [1, 1, 1, 3, 3, 1, 4, 3, 3, 3, 6, 6, 2, 2, 7, 7, 7, 3, 1, 4, 4]      # em que parte do verify.mjs cada bug e apanhado
+PARTES = [1, 1, 1, 3, 3, 1, 4, 3, 3, 3, 6, 6, 2, 2, 7, 7, 7, 3, 1, 4, 4, 3, 1, 1]      # em que parte do verify.mjs cada bug e apanhado
 assert len(PARTES) == len(BUGS)
 assert trab.name == 'plantado' and raiz not in trab.parents and trab != raiz, 'a pasta de trabalho tem de se chamar "plantado" e ficar fora do repositorio'
 so = sys.argv[3:]

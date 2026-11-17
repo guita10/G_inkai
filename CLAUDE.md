@@ -608,6 +608,19 @@ novo/           a SECOND, new version of the site, built from scratch beside
                   #contact, loja.html#comissoes, the live site's too) forward
                   to the new page, in site.js; each page's <html> carries
                   data-page and data-titulo (the tab title's i18n key)
+                  IMAGES HARDER TO SAVE since 17 Nov 2026 (Frede asked if
+                  they could be made impossible to download; impossible
+                  isn't possible, a screenshot always works): on images
+                  only, right-click and drag are blocked (site.js) and the
+                  long-press "Save" (site.css); robots.txt turns away the
+                  AI-training crawlers and every page carries "noai,
+                  noimageai"; and the deploy zip is built by
+                  `python3 novo/tools/faz-zip.py <dir>`, which writes
+                  "Frederico Guita (Guita_Ink)" and the © into each image's
+                  EXIF and XMP without re-encoding (it checks every image's
+                  pixels). Only the zip's copies carry it: novo/images is the
+                  live site's folder, and Frede said "just for the new site".
+                  No watermark (nothing covers the art, §6)
                   From the taste-skill's "split-stage" direction, with its
                   found pictures, cover crops, text over art, marquee and
                   contact form taken out (§9.5 and "art is never cropped")

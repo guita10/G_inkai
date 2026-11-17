@@ -845,6 +845,17 @@
     new IntersectionObserver(es => { R.cesto.aVista = es[0].isIntersecting; $('#fab').classList.toggle('on', cesto.length > 0 && !R.cesto.aVista); }).observe(bag);
   }
 
+  /* ================= AS IMAGENS NAO SE GUARDAM COM UM CLIQUE =================
+     (17 Nov 2026, pedido do Frede.) Impossivel de todo nao e: o que aparece no
+     ecra ja esta no computador de quem visita, e uma captura de ecra funciona
+     sempre. Isto tira os caminhos faceis: o "Guardar imagem como" do botao
+     direito e arrastar a imagem para fora da pagina (o "Guardar" do toque longo
+     sai no site.css). So nas imagens: no resto da pagina o botao direito
+     continua normal (copiar o email, abrir um link noutro separador). */
+  const eImagem = e => e.target instanceof HTMLImageElement;
+  document.addEventListener('contextmenu', e => { if (eImagem(e)) e.preventDefault(); });
+  document.addEventListener('dragstart', e => { if (eImagem(e)) e.preventDefault(); });
+
   /* ================= PARA AS PAGINAS ================= */
   window.GI = {
     /* desenha uma seccao acabada de ler */

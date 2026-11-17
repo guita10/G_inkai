@@ -164,6 +164,16 @@ function estatico() {
       if (!/^https:\/\/guitaink\.com\//.test(m[1])) fora.push(`${f}: ${m[1]}`);
   chk(!fora.length, 'nenhuma pagina carrega ficheiros de outro servidor', fora.slice(0, 3).join(', '));
   for (const f of ['robots.txt', 'sitemap.xml']) chk(existsSync(join(PASTA, f)), `${f} existe`);
+
+  /* as imagens nao se guardam com um gesto, e os robos de IA ficam de fora (17 Nov 2026) */
+  chk(/(^|\n)img\{[^}]*-webkit-touch-callout:none[^}]*-webkit-user-drag:none/.test(le('site.css')), 'site.css: carregar sem largar numa imagem nao oferece "Guardar", e as imagens nao se arrastam');
+  const rob = le('robots.txt');
+  const IA = ['GPTBot', 'ClaudeBot', 'anthropic-ai', 'CCBot', 'Google-Extended', 'Applebot-Extended', 'Bytespider', 'meta-externalagent', 'cohere-ai', 'Diffbot', 'ImagesiftBot'];
+  const faltaIA = IA.filter(b => !new RegExp(`(^|\\n)User-agent: ${b}\\s*\\nDisallow: /\\s*(\\n|$)`).test(rob));
+  chk(!faltaIA.length && /(^|\n)User-agent: \*\s*\nAllow: \/\s*\n/.test(rob) && !/User-agent: (Googlebot|Bingbot)/i.test(rob),
+    'robots.txt: os robos que recolhem imagens para IA ficam de fora; os motores de busca continuam a entrar', faltaIA.join(', ') || `${IA.length} robos de IA`);
+  const semNoai = PAGINAS.filter(p => !/<meta name="robots" content="index, follow, noai, noimageai">/.test(le(p)));
+  chk(!semNoai.length, 'cada pagina pede aos robos "noai, noimageai"', semNoai.join(', '));
   const urls = [...le('sitemap.xml').matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
   const seis = ['', 'trabalho.html', 'projetos.html', 'loja.html', 'comissoes.html', 'sobre.html'];
   chk(urls.length === seis.length + CHAVES.length && seis.every(p => urls.includes('https://guitaink.com/' + p)) && CHAVES.every(k => urls.some(u => u.endsWith('projeto.html?p=' + k))),
@@ -437,6 +447,16 @@ async function inicial() {
   await pt.keyboard.press('Escape'); await espera(pt, 300);
   const v3 = await pt.evaluate(() => ({ aberto: document.querySelector('#viewer').open, foco: document.activeElement === document.querySelectorAll('#wall .fr')[7], k: GI.palco().p.k }));
   chk(!v3.aberto && v3.foco && v3.k === chave(CONFIG.artworks[7].src), 'Esc fecha, e o foco e o palco ficam na peca onde se parou');
+
+  /* as imagens nao se guardam com o botao direito nem se arrastam; o texto e os links ficam como sempre */
+  const guardar = await pt.evaluate(() => {
+    const evita = (el, Tipo, tipo) => { const e = new Tipo(tipo, { bubbles: true, cancelable: true }); el.dispatchEvent(e); return e.defaultPrevented; };
+    const imgs = ['#wall .fr img', '#stageArt img.on', '#vPic img', '.brand img'].map(s => document.querySelector(s));
+    return { imgs: imgs.map(i => !!i && evita(i, MouseEvent, 'contextmenu') && evita(i, DragEvent, 'dragstart')),
+      texto: evita(document.querySelector('#workT'), MouseEvent, 'contextmenu'), link: evita(document.querySelector('#nav a'), MouseEvent, 'contextmenu') };
+  });
+  chk(guardar.imgs.every(Boolean) && !guardar.texto && !guardar.link, 'as imagens nao se guardam com o botao direito nem se arrastam; no texto e nos links o botao direito fica normal',
+    `parede, palco, visualizador, selo: ${guardar.imgs.join(', ')}`);
 
   /* rolar a pagina com o rato parado por cima da parede: as molduras passam por baixo dele e o palco nao vai atras */
   await vaiA(pt, '#work');

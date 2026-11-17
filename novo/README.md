@@ -119,6 +119,39 @@ redesenhadas, porque chocavam com as regras da casa:
 Com as páginas separadas saiu: a página inicial é só a abertura, e o merch
 está na página da loja, como no site atual.)
 
+## As imagens: guardá-las fica mais difícil (17 Nov 2026)
+
+O Frede perguntou se era possível impedir quem visita de descarregar as
+imagens. **Impossível de todo não é**: o que aparece no ecrã já está no
+computador de quem visita, e uma captura de ecrã funciona sempre (no
+Instagram e no ArtStation também). O que se fez, só no site novo:
+
+1. **Sem "Guardar" com um gesto.** Nas imagens, o botão direito não abre o
+   "Guardar imagem como", não se arrastam para fora da página, e no
+   telemóvel carregar sem largar não oferece "Guardar" (`site.js` e
+   `site.css`). No resto da página o botão direito fica normal: copiar o
+   email, abrir um link noutro separador.
+2. **O nome do Frede dentro de cada imagem.** O zip do site novo leva, em
+   cada uma das 364 imagens, o autor e o copyright, nos campos que o Google
+   Imagens e os programas de fotografia leem (EXIF e XMP): "Frederico Guita
+   (Guita_Ink)" e "© Frederico Guita (Guita_Ink)". Sem mexer num píxel: a
+   imagem não é comprimida outra vez, e o `tools/faz-zip.py` confirma-o
+   imagem a imagem. Os ficheiros do repositório não mudam (são os mesmos do
+   site atual); só as cópias que vão no zip levam o nome.
+3. **Os robôs de IA mandados embora.** O `robots.txt` pede aos robôs que
+   recolhem imagens para treinar inteligência artificial (OpenAI, Anthropic,
+   Common Crawl, Google-Extended, Apple, ByteDance, Meta e outros) que não
+   entrem, e cada página pede "noai, noimageai". Os conhecidos respeitam;
+   nem todos o fazem. O Google e os outros motores de busca continuam a
+   entrar, e o site aparece nas pesquisas como antes.
+
+O que não se fez, de propósito: uma marca de água por cima das obras (a
+regra da casa é que nada tapa a arte), camadas invisíveis por cima das
+imagens, ou bloquear o botão direito na página toda (estragam o site e
+contornam-se na mesma). A proteção a sério é o direito de autor, que é
+automático: com a assinatura nas obras e o nome nos ficheiros, o Instagram,
+a Etsy e sites parecidos tiram cópias roubadas quando se denunciam.
+
 ## Os ficheiros
 
     index.html      o início: a abertura e as seis peças
@@ -141,6 +174,7 @@ está na página da loja, como no site atual.)
       imagens.py       faz as miniaturas e o dims.js
       verify.mjs       os testes
       bugs-plantados.py  estraga uma cópia de propósito, para provar que os testes apanham
+      faz-zip.py       o zip para o Netlify, com o nome do Frede dentro de cada imagem
 
 ## Enquanto os dois sites existirem
 
@@ -157,7 +191,7 @@ projetos", os nomes dos naipes…) vivem no `copia-dados.cjs`.
 
 ## Os testes
 
-`node novo/tools/verify.mjs` abre o site num browser a sério e corre 192
+`node novo/tools/verify.mjs` abre o site num browser a sério e corre 196
 verificações; sai com erro se alguma falhar. `--rapido` salta as medições em
 linha lenta, `--so 3,6` corre só essas partes.
 
@@ -179,9 +213,10 @@ linha lenta, `--so 3,6` corre só essas partes.
 7. O tema, o movimento reduzido, o 404, a abertura do disco, os leitores de
    ecrã, e o salto de layout (CLS), também numa linha de 400 kbps.
 
-Foram testados contra 21 bugs plantados de propósito (um preço numa
+Foram testados contra 24 bugs plantados de propósito (um preço numa
 comissão, uma moldura a cortar a obra, um ID do Shopify trocado, um texto
-diferente do site atual…) e apanharam os 21. Repete-se com
+diferente do site atual, o botão direito a guardar imagens outra vez…) e
+apanharam os 24. Repete-se com
 `python3 novo/tools/bugs-plantados.py . /tmp/plantado` (trabalha numa cópia
 fora do repositório; uns 15 minutos).
 
@@ -197,9 +232,11 @@ Três coisas a sério apareceram a fazer os testes, e ficaram com teste próprio
 
 ## Se for para o ar
 
-Não é automático, e pede uma conversa primeiro: o `novo/` usa atalhos para
-`images/` e `fonts/`, por isso o zip faz-se a segui-los
-(`cd novo && zip -r ../site-novo.zip . -x 'tools/*' README.md`); o Netlify
-serve as páginas novas sem configuração nenhuma. Nesse dia o
+Não é automático, e pede uma conversa primeiro. O zip faz-se com
+`python3 novo/tools/faz-zip.py <pasta>`: segue os atalhos para `images/` e
+`fonts/`, deixa de fora `tools/` e este README, e escreve o nome do Frede
+em cada imagem. Para o testar, descompacta-o numa pasta vazia e corre
+`node novo/tools/verify.mjs --pasta <essa pasta>`. O Netlify serve as
+páginas novas sem configuração nenhuma. Nesse dia o
 `CLAUDE.md`, o `DESIGN.md` e o `tools/verify.mjs` do site atual têm de ser
 reescritos para a forma nova. Até lá, os dois ficam lado a lado.

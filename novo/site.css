@@ -70,6 +70,11 @@ main>section,#timeline,.prod{scroll-margin-top:calc(var(--bar) + 28px)}
 body{font-family:var(--f-body);font-size:1rem;line-height:1.6;background:var(--void);color:var(--bone);
   -webkit-font-smoothing:antialiased;min-height:100svh}
 img{display:block;max-width:100%;height:auto}      /* height:auto: sem ele o height="800" do HTML esticava a fotografia */
+/* As imagens nao se guardam com um gesto (ver site.js): no iPhone e no Android,
+   carregar sem largar numa imagem nao abre o "Guardar imagem"; e nao se arrastam
+   nem se selecionam. Uma captura de ecra continua a funcionar: isto so tira os
+   caminhos faceis. */
+img{-webkit-touch-callout:none;-webkit-user-drag:none;user-select:none;-webkit-user-select:none}
 a{color:inherit}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 ul,ol{list-style:none}
