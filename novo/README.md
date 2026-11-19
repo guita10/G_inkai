@@ -229,7 +229,7 @@ projetos", os nomes dos naipes…) vivem no `copia-dados.cjs`.
 
 ## Os testes
 
-`node novo/tools/verify.mjs` abre o site num browser a sério e corre 196
+`node novo/tools/verify.mjs` abre o site num browser a sério e corre 217
 verificações; sai com erro se alguma falhar. `--rapido` salta as medições em
 linha lenta, `--so 3,6` corre só essas partes.
 
