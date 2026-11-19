@@ -540,6 +540,29 @@ async function inicial() {
 /* ============================================================ 4. os outros ecras */
 async function ecras() {
   tit('4. Telemovel, tablet e larguras');
+  /* nada sai do ecra, de 320 a 1600px, nas duas linguas, em todas as paginas.
+     Primeiro de tudo: uma pagina mais larga que o ecra desloca a barra de baixo e
+     os botoes debaixo do dedo, e os toques dos testes seguintes falham sem dizer
+     porque; assim a causa fica escrita antes. */
+  const sai = [];
+  const larguras = [...SITIO.map(([u]) => [u, u === 'loja.html' ? 'cesto' : null]), ['projeto.html?p=deck', null], ['projeto.html?p=tr', null]];
+  for (const [url, prep] of larguras) {
+    for (const l of ['en', 'pt']) {
+      const pg = await pagina(comLingua(url, l), { vp: { width: 1600, height: 900 } });
+      if (prep === 'cesto') {       // a loja mede-se com o cesto cheio: foi assim que um botao mais largo em PT empurrou a pagina
+        await pg.evaluate(ids => { localStorage.setItem('gi-cesto', JSON.stringify({ t: Date.now(), itens: ids.map(id => ({ id, q: 10 })) })); }, VISIVEIS.map(m => m.variants[m.variants.length - 1]));
+        await pg.reload({ waitUntil: 'networkidle' });
+      }
+      for (let w = 320; w <= 1600; w += (w < 1100 ? 20 : 100)) {
+        await pg.setViewportSize({ width: w, height: 900 });
+        const o = await pg.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+        if (o > 0) sai.push(`${url} ${l} ${w}px (+${o})`);
+      }
+      await pg.fecha();
+    }
+  }
+  chk(!sai.length, 'nenhuma pagina transborda para o lado, de 320 a 1600px', sai.slice(0, 5).join(' | ') || `${larguras.length} paginas x 2 linguas x 45 larguras, a loja com o cesto cheio`);
+
   const P = { width: 390, height: 844 };
   for (const l of ['en', 'pt']) {
     const pg = await pagina('index.html?lang=' + l, { vp: P, toque: true });
@@ -616,14 +639,20 @@ async function ecras() {
         marcada: vis.filter(a => a.getAttribute('aria-current') === 'true').map(a => a.dataset.nav), menu: !!document.querySelector('#menuBtn'),
         toque: cs.webkitTapHighlightColor === 'rgba(0, 0, 0, 0)' && ta('#nav a') === 'manipulation' && ta('.chip') === 'manipulation' && ta('#wall .fr') === 'manipulation' };
     });
-    await Promise.all([pg.waitForURL(/sobre\.html/), pg.tap('#nav a[data-nav="about"]')]); await pg.waitForLoadState('networkidle');
-    const u = new URL(pg.url());
+    /* se a barra nao estiver debaixo do dedo (uma pagina mais larga que o ecra
+       desloca-a), o toque falha: isso conta como falha deste teste, e o resto
+       corre (o bug que a desloca e apanhado mais abaixo, no "transborda") */
+    let u = null;
+    try {
+      await Promise.all([pg.waitForURL(/sobre\.html/, { timeout: 8000 }), pg.tap('#nav a[data-nav="about"]', { timeout: 8000 })]);
+      await pg.waitForLoadState('networkidle'); u = new URL(pg.url());
+    } catch (e) { u = null; }
     await pg.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' })); await espera(pg, 600);
     const fim = await pg.evaluate(() => { const nav = document.querySelector('#nav').getBoundingClientRect(), nota = [...document.querySelectorAll('.foot-note')].pop().getBoundingClientRect();
       return { marcada: (document.querySelector('#nav a[aria-current="true"]') || { dataset: {} }).dataset.nav, livre: nota.bottom <= nav.top + 0.5 }; });
     chk(b.fixa && igual(b.nomes, ['work', 'projects', 'shop', 'comm', 'about']) && !b.cabem.length && b.dedo >= 44 && igual(b.marcada, ['work']) && !b.menu,
       `${w}px ${l}: os cinco caminhos sempre a vista na barra de baixo, cada palavra inteira, do tamanho de um dedo, a pagina aberta marcada`, b.cabem.join(', ') || `${b.dedo.toFixed(0)}px`);
-    chk(u.pathname.endsWith('/sobre.html') && u.search === '?lang=' + l && fim.marcada === 'about' && fim.livre,
+    chk(!!u && u.pathname.endsWith('/sobre.html') && u.search === '?lang=' + l && fim.marcada === 'about' && fim.livre,
       `${w}px ${l}: tocar em Sobre leva a essa pagina; ate ao contacto fica marcado o Sobre, e o fim da pagina nao fica debaixo da barra`, `${fim.marcada}, ${fim.livre}`);
     if (w === 390 && l === 'en') chk(b.toque, 'no toque: nada pisca a cinzento e o clique sai logo (sem esperar pelo duplo toque)');
     await pg.goto(base + 'trabalho.html?lang=en', { waitUntil: 'networkidle' });
@@ -634,26 +663,6 @@ async function ecras() {
     chk(v.aberto && v.por === 0 && v.setas === 2 && v.dica === CONFIG.i18n.en.lightboxHintTouch, `${w}px: no visualizador nenhum botao fica por cima da obra, e a dica e a do gesto`, v.dica);
     await pg.fecha();
   }
-
-  /* nada sai do ecra, de 320 a 1600px, nas duas linguas, em todas as paginas */
-  const sai = [];
-  const larguras = [...SITIO.map(([u]) => [u, u === 'loja.html' ? 'cesto' : null]), ['projeto.html?p=deck', null], ['projeto.html?p=tr', null]];
-  for (const [url, prep] of larguras) {
-    for (const l of ['en', 'pt']) {
-      const pg = await pagina(comLingua(url, l), { vp: { width: 1600, height: 900 } });
-      if (prep === 'cesto') {       // a loja mede-se com o cesto cheio: foi assim que um botao mais largo em PT empurrou a pagina
-        await pg.evaluate(ids => { localStorage.setItem('gi-cesto', JSON.stringify({ t: Date.now(), itens: ids.map(id => ({ id, q: 10 })) })); }, VISIVEIS.map(m => m.variants[m.variants.length - 1]));
-        await pg.reload({ waitUntil: 'networkidle' });
-      }
-      for (let w = 320; w <= 1600; w += (w < 1100 ? 20 : 100)) {
-        await pg.setViewportSize({ width: w, height: 900 });
-        const o = await pg.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-        if (o > 0) sai.push(`${url} ${l} ${w}px (+${o})`);
-      }
-      await pg.fecha();
-    }
-  }
-  chk(!sai.length, 'nenhuma pagina transborda para o lado, de 320 a 1600px', sai.slice(0, 5).join(' | ') || `${larguras.length} paginas x 2 linguas x 45 larguras, a loja com o cesto cheio`);
 
   /* contraste, nos dois temas, em todas as paginas */
   for (const tema of ['dark', 'light']) {
