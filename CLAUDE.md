@@ -639,8 +639,23 @@ novo/           a SECOND, new version of the site, built from scratch beside
                   checks as §10 in the new shape, plus one that fails if any
                   field or text differs from the current site). `--rapido`,
                   `--so 3,6` for parts, `--pasta X` to test a copy
+                  THE PHONE since 19 Nov 2026 (Frede: "no telemovel parece
+                  confuso a nivel de organizacao"): below 821px the bar's
+                  links are a fixed bar at the bottom (five: Contacto is the
+                  end of sobre.html; no "Menu" button), the footer drops its
+                  big list and carries the email; below 1060px the wall and a
+                  project's series are a uniform 4:5 grid (contain), the wall
+                  with each title under its piece, and a series project's
+                  cover is the first, large piece of its series instead of a
+                  second copy above it. Plus the mobile-native baseline
+                  (viewport-fit=cover with env() insets, no tap highlight,
+                  touch-action:manipulation, every :hover inside
+                  @media (hover:hover) and (pointer:fine), theme-color
+                  following the toggle, the page locked behind the viewer on
+                  touch). verify.mjs checks each; what needs a real phone is
+                  listed in novo/README.md
                   two things in it are Frede's to confirm: where focus lands
-                  after the viewer closes, and the phone menu starting at
+                  after the viewer closes, and the bottom bar starting at
                   820px (the home page's shop shelf left with the page split)
                 Never deploy it, and never fold it into the root, unless he
                 asks.

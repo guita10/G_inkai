@@ -165,6 +165,19 @@ function estatico() {
   chk(!fora.length, 'nenhuma pagina carrega ficheiros de outro servidor', fora.slice(0, 3).join(', '));
   for (const f of ['robots.txt', 'sitemap.xml']) chk(existsSync(join(PASTA, f)), `${f} existe`);
 
+  /* o telemovel (19 Nov 2026, a skill mobile-native): cada :hover vive no bloco do
+     rato, senao um toque deixa-o preso; o zoom nunca se desliga; e a pagina vai
+     ate as bordas (viewport-fit=cover), sem o que a barra de baixo nao sabe a
+     altura da barrinha do iPhone (env() vale 0) */
+  const css = le('site.css').replace(/\/\*[\s\S]*?\*\//g, m => ' '.repeat(m.length));      // os comentarios nao contam (os indices ficam)
+  const iR = css.indexOf('@media (hover:hover) and (pointer:fine){');
+  let fR = -1;
+  if (iR >= 0) for (let i = css.indexOf('{', iR), d = 0; i < css.length; i++) { if (css[i] === '{') d++; else if (css[i] === '}' && !--d) { fR = i; break; } }
+  const soltos = [...css.matchAll(/:hover/g)].filter(m => !(m.index > iR && m.index < fR)).map(m => css.slice(css.lastIndexOf('}', m.index) + 1, m.index + 6).trim());
+  chk(iR >= 0 && !soltos.length, 'site.css: cada :hover so existe com um rato (num ecra de toque nao fica preso)', soltos.slice(0, 3).join(' | ') || 'no bloco do rato');
+  const vp = PAGINAS.filter(f => { const m = le(f).match(/<meta name="viewport" content="([^"]+)">/); return !m || !/width=device-width/.test(m[1]) || !/viewport-fit=cover/.test(m[1]) || /user-scalable|maximum-scale/.test(m[1]); });
+  chk(!vp.length, 'cada pagina deixa ampliar com os dedos e vai ate as bordas do ecra (viewport-fit=cover)', vp.join(', '));
+
   /* as imagens nao se guardam com um gesto, e os robos de IA ficam de fora (17 Nov 2026) */
   chk(/(^|\n)img\{[^}]*-webkit-touch-callout:none[^}]*-webkit-user-drag:none/.test(le('site.css')), 'site.css: carregar sem largar numa imagem nao oferece "Guardar", e as imagens nao se arrastam');
   const rob = le('robots.txt');
@@ -531,8 +544,8 @@ async function ecras() {
   for (const l of ['en', 'pt']) {
     const pg = await pagina('index.html?lang=' + l, { vp: P, toque: true });
     const h = await pg.evaluate(() => { const f = document.querySelector('#heroM').getBoundingClientRect(), i = document.querySelector('#heroM img');
-      return { dentro: f.top >= 60 && f.bottom <= innerHeight, fit: getComputedStyle(i).objectFit, palco: getComputedStyle(document.querySelector('#stage')).display }; });
-    chk(h.dentro && h.fit === 'contain' && h.palco === 'none', `${l}, 390x844: sem palco, e a peca da abertura inteira no primeiro ecra`);
+      return { dentro: f.top >= 60 && f.bottom <= document.querySelector('#nav').getBoundingClientRect().top, fit: getComputedStyle(i).objectFit, palco: getComputedStyle(document.querySelector('#stage')).display }; });
+    chk(h.dentro && h.fit === 'contain' && h.palco === 'none', `${l}, 390x844: sem palco, e a peca da abertura inteira no primeiro ecra (acima da barra de baixo)`);
     await pg.locator('#flip .fr').nth(2).tap(); await espera(pg, 200);
     const cap = await pg.textContent('#heroCap');
     chk(cap.includes(CONFIG.artworks.find(a => a.src === CONFIG.heroArt[2]).label) && cap.includes('3 / 6'), `${l}: tocar numa moldura troca a peca e a legenda`, cap);
@@ -544,6 +557,21 @@ async function ecras() {
     await pt.tap('#more'); await espera(pt, 150);
     chk(n0 === CONFIG.wallPreview && botao === CONFIG.i18n[l].wallMore.replace('{n}', CONFIG.artworks.length) && (await vis()) === CONFIG.artworks.length,
       `${l}: a parede abre com ${CONFIG.wallPreview} e o botao mostra as ${CONFIG.artworks.length}`, botao);
+    /* no telemovel a parede e uma grelha certa: as molduras todas iguais (4:5), duas
+       colunas, e o nome de cada peca por baixo, numa linha. No ecra largo, as filas
+       justificadas, sem nomes (o nome esta no palco). */
+    const grelha = () => pt.evaluate(() => {
+      const fs = [...document.querySelectorAll('#wall .fr')].filter(b => b.getClientRects().length), im = fs.map(b => b.querySelector('img').getBoundingClientRect());
+      return { iguais: im.every(r => Math.abs(r.width - im[0].width) < 1 && Math.abs(r.height - im[0].height) < 1), ar: im[0].width / im[0].height,
+        col: new Set(im.map(r => Math.round(r.left))).size,
+        nomes: fs.filter(b => { const t = b.querySelector('.fr-t'); return t && t.getClientRects().length && t.textContent === (b._it.cap || b._it.label) && t.getBoundingClientRect().height <= 21; }).length, n: fs.length };
+    });
+    const g = await grelha();
+    chk(g.iguais && Math.abs(g.ar - 0.8) < 0.01 && g.col === 2 && g.nomes === g.n, `${l}: no telemovel a parede e uma grelha certa de duas colunas, com o nome por baixo de cada peca`,
+      `${g.col} colunas, ${g.nomes}/${g.n} nomes, ${g.ar.toFixed(3)}`);
+    await pt.setViewportSize({ width: 1440, height: 900 }); await espera(pt, 150);
+    const gL = await grelha();
+    chk(!gL.iguais && gL.nomes === 0, `${l}: no ecra largo a parede volta as filas justificadas, sem os nomes por baixo`);
     await pt.fecha();
 
     /* cartoes de projeto compactos, menos o destacado */
@@ -554,28 +582,50 @@ async function ecras() {
     await pp.fecha();
 
     /* alvos de toque e recortes, em todas as paginas */
-    const pequenos = [], cortes = [];
+    const pequenos = [], cortes = [], rodape = [];
     for (const [url] of SITIO) {
       const q = await pagina(comLingua(url, l), { vp: P, toque: true });
       const m = await q.evaluate(() => [...document.querySelectorAll('a,button,input')].filter(e => e.getClientRects().length && !e.closest('.skip, h1, h2, h3, p:not(.links):not(.foot-links)'))
         .map(e => { const a = e.matches('input') ? e.closest('label') : e, r = a.getBoundingClientRect(); return { n: (a.textContent || a.getAttribute('aria-label') || a.className).trim().slice(0, 24), w: r.width, h: r.height }; })
         .filter(x => x.w < 43.5 || x.h < 43.5).map(x => `${x.n} ${Math.round(x.w)}x${Math.round(x.h)}`));
       m.forEach(x => pequenos.push(`${url.split('?')[0]}: ${x}`));
+      const rd = await q.evaluate(() => { const fm = document.querySelector('#footMail');
+        return { lista: document.querySelector('.foot-menu').getClientRects().length, mail: fm ? (fm.getClientRects().length ? fm.textContent : 'escondido') : null, pag: document.documentElement.dataset.page }; });
+      if (rd.lista || (rd.pag === 'sobre' ? rd.mail !== null : rd.mail !== CONFIG.email)) rodape.push(`${url.split('?')[0]}: lista ${rd.lista}, email ${rd.mail}`);
       await carregaTudo(q); const rc = await recortes(q);
       [...rc.maus, ...rc.partidas].forEach(x => cortes.push(`${url.split('?')[0]}: ${x}`));
       await q.fecha();
     }
     chk(!pequenos.length, `${l}: todos os botoes e links tem pelo menos 44px, em todas as paginas`, pequenos.slice(0, 4).join(' | '));
     chk(!cortes.length, `${l}: nenhuma imagem cortada ou em falta no telemovel`, cortes.slice(0, 3).join(', ') || `${SITIO.length} paginas`);
+    chk(!rodape.length, `${l}: no telemovel o rodape nao repete os caminhos (estao na barra de baixo) e traz o email (menos no Sobre, que o tem por cima)`, rodape.slice(0, 3).join(' | '));
   }
-  /* o menu e o visualizador no telemovel */
-  for (const w of [390, 320]) {
-    const pg = await pagina('index.html?lang=en', { vp: { width: w, height: 700 }, toque: true });
-    await pg.tap('#menuBtn'); await espera(pg, 400);
-    const menu = await pg.evaluate(() => ({ aberto: document.querySelector('#menuBtn').getAttribute('aria-expanded'), n: [...document.querySelectorAll('#nav a')].filter(a => a.getClientRects().length).length }));
+  /* A BARRA DE BAIXO (19 Nov 2026): no telemovel os caminhos ja nao estao atras
+     de um botao "Menu". Cinco, sempre a vista no fundo do ecra, cada palavra
+     inteira dentro do seu sitio (em ingles "Commissions" chegou a nao caber), do
+     tamanho de um dedo, com a pagina aberta marcada; e o fim da pagina nao fica
+     debaixo dela. Depois, o visualizador. */
+  for (const [w, l] of [[390, 'en'], [390, 'pt'], [320, 'en'], [320, 'pt']]) {
+    const pg = await pagina('trabalho.html?lang=' + l, { vp: { width: w, height: 700 }, toque: true });
+    const b = await pg.evaluate(() => {
+      const nav = document.querySelector('#nav'), r = nav.getBoundingClientRect(), vis = [...nav.querySelectorAll('a')].filter(a => a.getClientRects().length);
+      const cs = getComputedStyle(document.documentElement), ta = s => getComputedStyle(document.querySelector(s)).touchAction;
+      return { fixa: getComputedStyle(nav).position === 'fixed' && Math.abs(r.bottom - innerHeight) < 1, nomes: vis.map(a => a.dataset.nav),
+        cabem: vis.filter(a => a.querySelector('span').getBoundingClientRect().width > a.getBoundingClientRect().width - 2).map(a => a.textContent),
+        dedo: Math.min(...vis.map(a => Math.min(a.getBoundingClientRect().width, a.getBoundingClientRect().height))),
+        marcada: vis.filter(a => a.getAttribute('aria-current') === 'true').map(a => a.dataset.nav), menu: !!document.querySelector('#menuBtn'),
+        toque: cs.webkitTapHighlightColor === 'rgba(0, 0, 0, 0)' && ta('#nav a') === 'manipulation' && ta('.chip') === 'manipulation' && ta('#wall .fr') === 'manipulation' };
+    });
     await Promise.all([pg.waitForURL(/sobre\.html/), pg.tap('#nav a[data-nav="about"]')]); await pg.waitForLoadState('networkidle');
     const u = new URL(pg.url());
-    chk(menu.aberto === 'true' && menu.n === 6 && u.pathname.endsWith('/sobre.html') && u.search === '?lang=en', `${w}px: o menu abre com os seis caminhos, e escolher um leva a essa pagina`);
+    await pg.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' })); await espera(pg, 600);
+    const fim = await pg.evaluate(() => { const nav = document.querySelector('#nav').getBoundingClientRect(), nota = [...document.querySelectorAll('.foot-note')].pop().getBoundingClientRect();
+      return { marcada: (document.querySelector('#nav a[aria-current="true"]') || { dataset: {} }).dataset.nav, livre: nota.bottom <= nav.top + 0.5 }; });
+    chk(b.fixa && igual(b.nomes, ['work', 'projects', 'shop', 'comm', 'about']) && !b.cabem.length && b.dedo >= 44 && igual(b.marcada, ['work']) && !b.menu,
+      `${w}px ${l}: os cinco caminhos sempre a vista na barra de baixo, cada palavra inteira, do tamanho de um dedo, a pagina aberta marcada`, b.cabem.join(', ') || `${b.dedo.toFixed(0)}px`);
+    chk(u.pathname.endsWith('/sobre.html') && u.search === '?lang=' + l && fim.marcada === 'about' && fim.livre,
+      `${w}px ${l}: tocar em Sobre leva a essa pagina; ate ao contacto fica marcado o Sobre, e o fim da pagina nao fica debaixo da barra`, `${fim.marcada}, ${fim.livre}`);
+    if (w === 390 && l === 'en') chk(b.toque, 'no toque: nada pisca a cinzento e o clique sai logo (sem esperar pelo duplo toque)');
     await pg.goto(base + 'trabalho.html?lang=en', { waitUntil: 'networkidle' });
     await pg.locator('#wall .fr').nth(1).tap(); await espera(pg, 350);
     const v = await pg.evaluate(() => { const im = document.querySelector('#vPic').getBoundingClientRect();
@@ -668,6 +718,21 @@ async function projetos() {
   const v = await pg.evaluate(() => [document.querySelector('#viewer').open, document.querySelector('#vN').textContent]);
   chk(c.vis && c.fit === 'contain' && v[0] && v[1] === '004 / 023', 'telemovel: a capa inteira no cimo, e tocar numa carta abre-a', v[1]);
   await pg.fecha();
+  /* num projeto em serie a capa ja e a primeira da serie: no telemovel vai em
+     grande no cimo dela, e nao outra vez por cima (eram duas seguidas) */
+  for (const p of CONFIG.projects.filter(x => (x.gallery || []).length && !x.rows)) {
+    const ps = await pagina(`projeto.html?p=${p.key}&lang=pt`, { vp: { width: 390, height: 844 }, toque: true });
+    await carregaTudo(ps);
+    const s = await ps.evaluate(k => {
+      const sb = document.querySelector('#series').getBoundingClientRect(), f = document.querySelector('#series .fr');
+      const vezes = [...document.images].filter(i => i.getClientRects().length && new RegExp('/' + k + '\\.').test(i.currentSrc || i.src)).length;
+      const linhas = [...document.querySelectorAll('#others .row-a span')].map(x => Math.round(x.getBoundingClientRect().height / parseFloat(getComputedStyle(x).lineHeight)));
+      return { capa: document.querySelector('#projCover').getClientRects().length, larga: f.getBoundingClientRect().width / sb.width, primeira: f._it.p.k === k, vezes, linhas };
+    }, chave(p.src));
+    chk(!s.capa && s.larga > 0.95 && s.primeira && s.vezes === 1 && s.linhas.every(n => n <= 2),
+      `telemovel, ${p.key}: a capa aparece uma vez (a primeira da serie, em grande), e os outros projetos leem-se em duas linhas no maximo`, `${s.vezes}x, ${s.larga.toFixed(2)}, linhas ${s.linhas.join('/')}`);
+    await ps.fecha();
+  }
 }
 
 /* ============================================================ 6. a loja */
@@ -746,17 +811,18 @@ async function resto() {
   }
   /* o botao do tema: claro e de volta */
   const pt = await pagina('index.html?lang=en');
-  await pt.click('#theme'); const claro = await pt.evaluate(() => getComputedStyle(document.body).backgroundColor);
-  await pt.click('#theme'); const escuro = await pt.evaluate(() => getComputedStyle(document.body).backgroundColor);
+  const tc = () => pt.evaluate(() => document.querySelector('meta[name="theme-color"]').content.toUpperCase());
+  await pt.click('#theme'); const claro = await pt.evaluate(() => getComputedStyle(document.body).backgroundColor), tcClaro = await tc();
+  await pt.click('#theme'); const escuro = await pt.evaluate(() => getComputedStyle(document.body).backgroundColor), tcEscuro = await tc();
   chk(claro === 'rgb(243, 244, 246)' && escuro === 'rgb(3, 4, 7)', 'o botao ◐ passa a claro e volta');
+  chk(tcClaro === '#F3F4F6' && tcEscuro === '#030407', 'a barra de estado do telemovel segue o tema (theme-color)', `${tcClaro}, ${tcEscuro}`);
   await pt.fecha();
 
   /* prefers-reduced-motion: nenhuma transicao com duracao, nenhuma animacao a correr */
-  for (const [url, vp, prep] of [['trabalho.html', { width: 1440, height: 900 }, 'visor'], ['index.html', { width: 390, height: 844 }, 'menu'], ['index.html', { width: 1440, height: 900 }, null],
+  for (const [url, vp, prep] of [['trabalho.html', { width: 1440, height: 900 }, 'visor'], ['trabalho.html', { width: 390, height: 844 }, null], ['index.html', { width: 1440, height: 900 }, null],
     ['loja.html', { width: 1440, height: 900 }, null], ['comissoes.html', { width: 1440, height: 900 }, null], ['sobre.html', { width: 1440, height: 900 }, null], ['projeto.html?p=tr', { width: 1440, height: 900 }, null]]) {
     const pg = await pagina(url, { vp, reduz: true, toque: vp.width < 700 });
     if (prep === 'visor') { await pg.evaluate(() => document.querySelector('#wall .fr').click()); await pg.evaluate(() => document.querySelector('#wall .fr').click()); await espera(pg, 200); }
-    if (prep === 'menu') { await pg.tap('#menuBtn'); await espera(pg, 200); }
     const r = await pg.evaluate(() => {
       const maus = [];
       const dura = cs => cs.transitionDuration.split(',').some(d => parseFloat(d) > 0) || cs.animationName !== 'none';

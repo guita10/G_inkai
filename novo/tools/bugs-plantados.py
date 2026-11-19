@@ -5,7 +5,7 @@ Copia o site novo para uma pasta de trabalho, estraga UMA coisa de cada vez
 trocado, um texto diferente do site atual...) e confirma que o verify.mjs
 falha, e falha no teste certo. Um teste que nunca falhou nao prova nada.
 
-    python3 novo/tools/bugs-plantados.py . /tmp/plantado          # os 24
+    python3 novo/tools/bugs-plantados.py . /tmp/plantado          # os 31
     python3 novo/tools/bugs-plantados.py . /tmp/plantado 3 10     # so esses
 
 A pasta de trabalho tem de se chamar "plantado" e ficar FORA do repositorio:
@@ -67,9 +67,17 @@ BUGS = [
     ('o botao direito volta a guardar imagens', lambda: troca('site.js', "document.addEventListener('contextmenu', e => { if (eImagem(e)) e.preventDefault(); });", ''), 'nao se guardam'),
     ('o toque longo volta a oferecer "Guardar"', lambda: troca('site.css', 'img{-webkit-touch-callout:none;', 'img{'), 'Guardar'),
     ('um robo de IA esquecido no robots.txt', lambda: troca('robots.txt', 'User-agent: GPTBot\nDisallow: /\n\n', ''), 'robots.txt'),
+    # o telemovel (19 Nov 2026)
+    ('um :hover fora do bloco do rato (fica preso no toque)', lambda: troca('site.css', '.back{display:inline-block;', '.back:hover{color:var(--bone)}\n.back{display:inline-block;'), 'com um rato'),
+    ('o zoom desligado', lambda: troca('index.html', 'viewport-fit=cover">', 'viewport-fit=cover, maximum-scale=1">'), 'ampliar com os dedos'),
+    ('a barra de baixo tapa o fim da pagina', lambda: troca('site.css', '  body{padding-bottom:var(--tabs)}\n', ''), 'nao fica debaixo da barra'),
+    ('cinco colunas iguais na barra de baixo ("Commissions" nao cabe)', lambda: troca('site.css', '.nav a{flex:1 1 auto;min-width:44px;', '.nav a{flex:1 1 0;min-width:0;'), 'cada palavra inteira'),
+    ('a parede do telemovel sem os nomes', lambda: troca('site.js', 'list: () => todas.filter(cabe), titulos: true', 'list: () => todas.filter(cabe)'), 'grelha certa'),
+    ('a capa de um projeto duas vezes no telemovel', lambda: troca('site.js', 'cf.hidden = !p.rows;', 'cf.hidden = false;'), 'capa aparece uma vez'),
+    ('a barra de estado nao segue o tema', lambda: troca('site.js', "        if (m) m.setAttribute('content', getComputedStyle(r).getPropertyValue('--void').trim());\n", ''), 'barra de estado'),
 ]
 
-PARTES = [1, 1, 1, 3, 3, 1, 4, 3, 3, 3, 6, 6, 2, 2, 7, 7, 7, 3, 1, 4, 4, 3, 1, 1]      # em que parte do verify.mjs cada bug e apanhado
+PARTES = [1, 1, 1, 3, 3, 1, 4, 3, 3, 3, 6, 6, 2, 2, 7, 7, 7, 3, 1, 4, 4, 3, 1, 1, 1, 1, 4, 4, 4, 5, 7]      # em que parte do verify.mjs cada bug e apanhado
 assert len(PARTES) == len(BUGS)
 assert trab.name == 'plantado' and raiz not in trab.parents and trab != raiz, 'a pasta de trabalho tem de se chamar "plantado" e ficar fora do repositorio'
 so = sys.argv[3:]

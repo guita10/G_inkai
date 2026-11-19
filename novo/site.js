@@ -212,7 +212,8 @@
   }
 
   /* ================= UMA FOLHA DE MOLDURAS =================
-     o = { label, list() (as que contam para o visualizador), eager, grupos } */
+     o = { label, list() (as que contam para o visualizador), eager, grupos,
+           titulos (o nome por baixo de cada peca; o CSS so o mostra numa coluna) } */
   function sheet(box, itens, o) {
     o = o || {};
     box.textContent = '';
@@ -227,6 +228,7 @@
       const img = h('img', { alt: '', decoding: 'async', loading: o.eager ? 'eager' : 'lazy', width: it.p.tw, height: it.p.th, src: it.p.mini });
       guarda(img, it.p.thumbJpg, it.label);
       b.append(img); b._it = it; it.btn = b;
+      if (o.titulos) b.append(h('span', { class: 'fr-t', 'aria-hidden': 'true', text: it.cap || it.label }));   // o nome ja esta no aria-label
       it.open = quem => { const L = lista(); openViewer(L, Math.max(0, L.indexOf(it)), quem || b); };
       it.note = () => { const L = lista(), n = L.indexOf(it); return n < 0 ? '' : `${n + 1} / ${L.length}`; };
       return b;
@@ -351,9 +353,11 @@
     ['about', 'navAbout', 'sobre.html'], ['contact', 'navContact', 'sobre.html#contact'],
   ];
   /* o caminho marcado na barra: o da pagina (na pagina de um projeto, Projetos);
-     na pagina Sobre, Contacto quando se desce ate ao contacto */
+     na pagina Sobre, Contacto quando se desce ate ao contacto. Na barra de baixo
+     do telemovel nao ha Contacto (cabem cinco): la fica marcado o Sobre. */
   const NAVPAG = { trabalho: 'work', projetos: 'projects', projeto: 'projects', loja: 'shop', comissoes: 'comm', sobre: 'about' };
-  const caminhoDe = sec => (PAG === 'sobre' && (sec === 'contact' || sec === 'foot') ? 'contact' : (NAVPAG[PAG] || ''));
+  const baixoMq = matchMedia('(max-width:820px)');
+  const caminhoDe = sec => (PAG === 'sobre' && !baixoMq.matches && (sec === 'contact' || sec === 'foot') ? 'contact' : (NAVPAG[PAG] || ''));
   const marcaCaminho = c => $$('#nav a').forEach(a => a.setAttribute('aria-current', String(a.dataset.nav === c)));
   function liga(a, alvo) {
     const [pg, ancora] = alvo.split('#');
@@ -364,27 +368,23 @@
     const bar = $('#bar');
     if (!bar.firstChild) {
       const nav = h('nav', { class: 'nav', id: 'nav', 'data-ta': 'a11yNav' });
-      NAV.forEach(([id, t, alvo], i) => nav.append(liga(h('a', { 'data-nav': id, style: `--i:${i}` }, [h('span', { 'data-t': t })]), alvo)));
+      NAV.forEach(([id, t, alvo]) => nav.append(liga(h('a', { 'data-nav': id }, [h('span', { 'data-t': t })]), alvo)));
       const lg = h('button', { class: 'tool', id: 'lang', type: 'button' });
       const tm = h('button', { class: 'tool', id: 'theme', type: 'button', 'data-ta': 'a11yTheme', text: '◐' });
-      const mb = h('button', { class: 'tool menu-btn', id: 'menuBtn', type: 'button', 'aria-expanded': 'false', 'aria-controls': 'nav', 'data-t': 'navMenu' });
       bar.append(
         h('div', { class: 'bar-a' }, [h('a', { class: 'brand', 'data-go': 'index.html' }, [
           h('img', { src: 'images/logo.svg', alt: '', width: 30, height: 30 }), h('span', { text: C.artistName })])]),
-        h('div', { class: 'bar-b' }, [nav, lg, tm, mb]));
+        h('div', { class: 'bar-b' }, [nav, lg, tm]));
       lg.addEventListener('click', () => setLang(LANG === 'pt' ? 'en' : 'pt'));
       tm.addEventListener('click', () => {
         const r = document.documentElement;
         r.dataset.theme = r.dataset.theme === 'light' ? 'dark' : 'light';
+        /* a barra de estado do telemovel (e a do browser) com a cor do cimo da pagina */
+        const m = $('meta[name="theme-color"]');
+        if (m) m.setAttribute('content', getComputedStyle(r).getPropertyValue('--void').trim());
       });
-      const fecha = volta => { nav.classList.remove('open'); mb.setAttribute('aria-expanded', 'false'); if (volta) mb.focus(); };
-      mb.addEventListener('click', () => {
-        const abre = !nav.classList.contains('open');
-        nav.classList.toggle('open', abre); mb.setAttribute('aria-expanded', String(abre));
-      });
-      nav.addEventListener('click', e => { if (e.target.closest('a')) fecha(false); });
-      document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) fecha(true); });
       marcaCaminho(caminhoDe(''));
+      baixoMq.addEventListener('change', () => marcaCaminho(caminhoDe(seccaoAtual)));
     }
     fill(bar);
     /* o titulo do separador, na lingua escolhida (<html data-titulo="chave">) */
@@ -495,7 +495,7 @@
     if (C.artworks.some(a => a.collab)) cats.push('collab');
     const cabe = it => S.filtro === 'all' || (S.filtro === 'collab' ? !!it.a.collab : it.a.cat === S.filtro);
     const box = $('#wall'), chips = $('#filters'), mais = $('#more'), conta = $('#count'), vazio = $('#wallEmpty');
-    sheet(box, todas, { label: tx('galleryTitle'), list: () => todas.filter(cabe) });
+    sheet(box, todas, { label: tx('galleryTitle'), list: () => todas.filter(cabe), titulos: true });
     const aplica = () => {
       const n = todas.filter(cabe).length;
       todas.forEach((it, i) => { it.btn.hidden = !cabe(it); it.btn.classList.toggle('extra', S.filtro === 'all' && i >= C.wallPreview); });
@@ -610,6 +610,8 @@
       const fora = (id, filhos) => h('a', { id, target: '_blank', rel: 'noopener' }, filhos.concat(seta('↗')));
       const nota = h('p', { class: 'foot-note' }, [h('span', { id: 'footY' }), h('span', { 'data-t': 'footerNote' })]);
       f.append(menu);
+      if (PAG !== 'sobre') f.append(h('p', { class: 'foot-mail' }, [h('span', { 'data-t': 'contactTitle' }), document.createTextNode(' · '),
+        h('a', { id: 'footMail', href: 'mailto:' + C.email, text: C.email })]));
       /* as paginas onde se vende levam o Livro de Reclamacoes (obrigatorio por lei) e o Instagram */
       if (PAG === 'loja' || PAG === 'comissoes') f.append(h('p', { class: 'foot-note foot-links' }, [
         fora('footLR', [h('span', { 'data-t': 'footComplaints' })]), fora('footIg', [document.createTextNode('Instagram')])]));
@@ -681,8 +683,11 @@
       grupos: p.rows ? p.rows.map(r => ({ label: tx('deckRows.' + r[0]), n: r[1] })) : null,
     });
     box.className = p.rows ? 'groups' : 'sheet big';
-    /* no telemovel nao ha palco: a capa vai inteira no cimo da pagina */
-    const cf = $('#projCover'); cf.hidden = false; cf.textContent = '';
+    /* no telemovel nao ha palco: a capa vai inteira no cimo da pagina. So no
+       baralho, que tem a serie em filas (o As de Copas volta a aparecer na fila
+       de Copas, de proposito); nos outros a capa ja e a primeira da serie, em
+       grande, e por cima seria a mesma imagem duas vezes seguidas. */
+    const cf = $('#projCover'); cf.hidden = !p.rows; cf.textContent = '';
     const ci = h('img', { alt: capa.label, width: capa.p.tw, height: capa.p.th });
     ci.sizes = '92vw'; ci.srcset = capa.srcset; ci.src = capa.p.thumb;
     guarda(ci, capa.p.thumbJpg, p.plate);

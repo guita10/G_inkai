@@ -16,7 +16,7 @@ sua página, com o seu endereço:
 
 | Página | O que tem | No palco |
 | --- | --- | --- |
-| `index.html`, o início | o nome, o que faz, os dois botões e as seis peças; por baixo, o rodapé com as seis páginas | a peça escolhida das seis |
+| `index.html`, o início | o nome, o que faz, os dois botões e as seis peças; por baixo, o rodapé (no ecrã largo, com as seis páginas) | a peça escolhida das seis |
 | `trabalho.html` | a parede: as 37 obras e os filtros | a obra escolhida |
 | `projetos.html` | os quatro projetos, o destacado primeiro, cada um com a sua série | a capa |
 | `projeto.html?p=...` | um projeto (como antes; o "voltar" leva aos projetos) | a peça escolhida da série |
@@ -25,7 +25,7 @@ sua página, com o seu endereço:
 | `sobre.html` | a carta, o percurso e o contacto | uma das seis peças do início |
 
 A barra é a mesma em todas, com as seis páginas, e marca aquela onde se
-está. A informação é a mesma de antes, só mudou de sítio: nenhum texto saiu.
+está (no telemóvel vai para o fundo do ecrã: a secção a seguir). A informação é a mesma de antes, só mudou de sítio: nenhum texto saiu.
 
 **Os endereços antigos continuam a funcionar.** `index.html#work`,
 `#projects`, `#comm`, `#about`, `#timeline`, `#contact` e
@@ -58,6 +58,43 @@ pequenas que põem uma peça no quadro grande), levado ao site todo:
 
 Abaixo de 1060px não há palco: é uma coluna só, com a peça da abertura num
 quadro e as molduras a abrir o visualizador com um toque.
+
+## No telemóvel (19 Nov 2026)
+
+O Frede: "Gosto de como o site está no computador mas no telemóvel parece
+confuso a nível de organização." Vi as sete páginas num ecrã de 390px como
+quem visita, e eram quatro coisas. O ecrã largo não mudou.
+
+| O que confundia | O que ficou |
+| --- | --- |
+| Não se via onde se estava. As seis páginas estavam atrás de um botão "Menu", e no fim de cada página vinha outra vez a mesma lista em letra grande (meio ecrã, igual em todas) | **Uma barra no fundo do ecrã** com as cinco páginas (Trabalho, Projetos, Loja, Comissões, Sobre), sempre à vista, ao alcance do polegar, com a página aberta marcada por uma linha. O botão "Menu" saiu. O rodapé deixou de repetir a lista e traz o email; o Contacto é o fim da página Sobre |
+| A parede: com duas peças por fila, cada fila tinha a sua altura e a última ficava a meio; lia-se como uma pilha, e sem nomes | **Uma grelha certa**: molduras todas iguais (4:5), duas colunas, cada peça inteira dentro da sua e **o nome por baixo**. Lê-se da esquerda para a direita, de cima para baixo |
+| Na página de um projeto a capa aparecia duas vezes seguidas (em cima, e outra vez a abrir a série) | A capa é a primeira da série, **em grande**, e as outras em grelha por baixo. (No baralho fica como estava: o Ás de Copas volta na fila de Copas de propósito) |
+| Em "Outros projetos", o título partia-se em quatro linhas ("Tokyo / Revengers, / capas / reinterpretadas") por causa do texto ao lado | O título por cima, numa linha, e o que é por baixo |
+| Na página dos projetos, o destacado trazia uma fila de nove miniaturas | Sai no telemóvel: a série inteira está na página do projeto |
+
+E as coisas pequenas que fazem um site parecer feito para o telemóvel (a
+skill mobile-native, de Emil Kowalski):
+
+- um toque já não pinta um quadrado cinzento por cima do que se toca, e o
+  clique sai logo, sem os 300 ms que o browser espera por um duplo toque;
+- um botão ou um filtro já não fica "aceso" depois de tocado (o efeito do
+  rato só existe onde há rato);
+- carregar sem largar num botão não lhe seleciona o texto (o email continua
+  a copiar-se);
+- a barra de baixo fica acima da barrinha do iPhone, e com o telemóvel
+  deitado nada fica debaixo do entalhe da câmara;
+- com o visualizador aberto, a página por trás já não rola (um deslizar
+  torto levava-a, e ao fechar estava-se noutro sítio);
+- a barra de estado do telemóvel muda de cor com o ◐;
+- ampliar com os dedos continua a funcionar.
+
+**O que só se confirma num telemóvel a sério** (os testes correm num
+Chromium a fingir de telemóvel, que não reproduz estas coisas): a barra de
+baixo acima da barrinha do iPhone, o entalhe com o telemóvel deitado, o
+clique sem espera, a página parada atrás do visualizador e a cor da barra de
+estado. Abre o link de pré-visualização no iPhone e num Android, com o
+telemóvel ao alto e deitado.
 
 A direção veio do taste-skill (`draw.mjs --keep palette,type`, que deu três
 composições; ficou a "split-stage"). Cinco coisas da folha dele foram
@@ -112,8 +149,9 @@ redesenhadas, porque chocavam com as regras da casa:
 
 1. **O foco depois do visualizador.** Ao fechar, o foco e o palco ficam na
    peça onde se parou, não na que se abriu.
-2. **O menu do telemóvel** aparece abaixo de 821px (hoje 620px): com seis
-   caminhos, em português, a barra não cabia mais cedo.
+2. **A barra de baixo** aparece abaixo de 821px (o menu do site atual,
+   abaixo de 620px): com seis caminhos, em português, a barra de cima não
+   cabia mais cedo. Num tablet ao alto também há barra de baixo.
 
 (Havia uma terceira, a prateleira da loja com preços na página inicial.
 Com as páginas separadas saiu: a página inicial é só a abertura, e o merch
@@ -206,17 +244,20 @@ linha lenta, `--so 3,6` corre só essas partes.
    peça grande), a parede, os filtros, o visualizador, os projetos, o sobre,
    a troca de língua.
 4. Telemóvel e larguras, em todas as páginas: de 320 a 1600px sem nada sair
-   do ecrã, o menu, os botões com 44px, o contraste nos dois temas.
+   do ecrã, a barra de baixo (cinco caminhos, cada palavra inteira, a página
+   marcada, o fim da página livre), a parede em grelha com os nomes, o
+   rodapé com o email, os botões com 44px, o contraste nos dois temas.
 5. As páginas de projeto, nas duas línguas, e um endereço que não existe.
 6. A loja e as comissões: o cesto, o checkout (T-shirt Monk / White / M =
    `60968526905678`), as comissões sem preços e com o Livro de Reclamações.
 7. O tema, o movimento reduzido, o 404, a abertura do disco, os leitores de
    ecrã, e o salto de layout (CLS), também numa linha de 400 kbps.
 
-Foram testados contra 24 bugs plantados de propósito (um preço numa
+Foram testados contra 31 bugs plantados de propósito (um preço numa
 comissão, uma moldura a cortar a obra, um ID do Shopify trocado, um texto
-diferente do site atual, o botão direito a guardar imagens outra vez…) e
-apanharam os 24. Repete-se com
+diferente do site atual, o botão direito a guardar imagens outra vez, a
+barra de baixo a tapar o fim da página, a capa de um projeto duas vezes…) e
+apanharam os 31. Repete-se com
 `python3 novo/tools/bugs-plantados.py . /tmp/plantado` (trabalha numa cópia
 fora do repositório; uns 15 minutos).
 
@@ -228,7 +269,10 @@ Três coisas a sério apareceram a fazer os testes, e ficaram com teste próprio
   página trocavam a peça do palco; agora só conta o rato a mexer-se;
 - ao separar as páginas, os botões das opções da loja tinham 38px num ecrã
   de toque (o mínimo é 44px): o teste dos 44px passou a correr em todas as
-  páginas, e encontrou-os.
+  páginas, e encontrou-os;
+- na barra de baixo, com cinco colunas iguais, "Commissions" (80px) não
+  cabia na sua (78px, num ecrã de 390px): cada caminho passou a ter a
+  largura da sua palavra, com o mesmo espaço a mais para todos.
 
 ## Se for para o ar
 
