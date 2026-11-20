@@ -4,6 +4,15 @@ Portfolio site for Frederico Guita, working as Guita_Ink: an anime and manga
 influenced illustrator taking commissions. Live at `https://guitaink.com`,
 deployed to Netlify by drag-and-drop.
 
+**⚠️ Since 18 Nov 2026 what is live is `novo/`, not the root.** Frede dragged
+the new site's zip to Netlify (the `guita-ink` project; the deploy lists
+trabalho.html, sobre.html and the other new pages). A zip of the root would
+put the old site back. Deploy with `python3 novo/tools/faz-zip.py <dir>`,
+test the unzipped copy with `node novo/tools/verify.mjs --pasta <dir>`, and
+Frede drags it. Content still comes from the root (`CONFIG`, `images/`) and
+is copied in by `novo/tools/copia-dados.cjs` and `novo/tools/imagens.py`
+(the novo/ entry in §7); everything else below describes the root files.
+
 **Read this before the first edit.** The architecture is unusual on purpose and
 most of the conventions a front-end tool expects are absent by decision, not by
 neglect.
@@ -590,9 +599,10 @@ novo/           a SECOND, new version of the site, built from scratch beside
                 the current one (15 Nov 2026, Frede: "Review and create a new
                 entire site from scratch and inspired by the current one but
                 do this separately... be creative but maintain the same
-                information"). NOT live, not in the deploy zip, and nothing in
-                the root depends on it. Whether it replaces the current site
-                is Frede's decision and has not been made. Its README.md (in
+                information"). LIVE SINCE 18 NOV 2026: Frede dragged its zip
+                to Netlify himself (see the top of this file); nothing in the
+                root depends on it, and the root stays the source of the
+                content. Its README.md (in
                 Portuguese) explains it to him; the short version:
                   the idea: a split stage. On wide screens half the screen is
                   a mat where one piece is always shown whole (the Flip of
@@ -657,8 +667,11 @@ novo/           a SECOND, new version of the site, built from scratch beside
                   two things in it are Frede's to confirm: where focus lands
                   after the viewer closes, and the bottom bar starting at
                   820px (the home page's shop shelf left with the page split)
-                Never deploy it, and never fold it into the root, unless he
-                asks.
+                Deploy it only with its own zip (faz-zip.py), never a zip of
+                the root; never fold it into the root unless he asks.
+                Uploading from a session through the Netlify connector's
+                deploy-site command was refused by the session's permission
+                check (20 Nov 2026), so the zip goes to Frede, who drags it
 DESIGN.md       the design system in semantic form
 CLAUDE.md       this file
 .claude/skills/ skills for Claude sessions; not served

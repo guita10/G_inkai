@@ -5,8 +5,10 @@ Uma versão nova do site, feita de raiz ao lado da atual, a pedido do Frede
 by the current one but do this separately. Use all the tool at your disposal
 and be creative but maintain the same information").
 
-**O site atual não foi tocado.** Continua na raiz do repositório e é ele que
-está em `guitaink.com`. Esta pasta só vai para o ar se o Frede decidir.
+**Está no ar desde 18 Nov 2026.** O Frede arrastou o zip desta pasta para o
+Netlify, e é ela que está em `guitaink.com`. O site antigo continua na raiz
+do repositório e é de lá que vem o conteúdo (os textos, as obras); um zip
+da raiz poria o site antigo de volta.
 
 ## Uma página por parte (17 Nov 2026)
 
@@ -274,13 +276,18 @@ Três coisas a sério apareceram a fazer os testes, e ficaram com teste próprio
   cabia na sua (78px, num ecrã de 390px): cada caminho passou a ter a
   largura da sua palavra, com o mesmo espaço a mais para todos.
 
-## Se for para o ar
+## Pôr uma versão nova no ar
 
-Não é automático, e pede uma conversa primeiro. O zip faz-se com
+O zip faz-se com
 `python3 novo/tools/faz-zip.py <pasta>`: segue os atalhos para `images/` e
 `fonts/`, deixa de fora `tools/` e este README, e escreve o nome do Frede
 em cada imagem. Para o testar, descompacta-o numa pasta vazia e corre
 `node novo/tools/verify.mjs --pasta <essa pasta>`. O Netlify serve as
-páginas novas sem configuração nenhuma. Nesse dia o
-`CLAUDE.md`, o `DESIGN.md` e o `tools/verify.mjs` do site atual têm de ser
-reescritos para a forma nova. Até lá, os dois ficam lado a lado.
+páginas novas sem configuração nenhuma: o Frede arrasta o zip para o
+projeto `guita-ink` no Netlify (Deploys, a zona de largar ficheiros). Enviar
+a partir de uma sessão do Claude pelo Netlify foi recusado pela verificação
+de permissões da sessão (20 Nov 2026), por isso o zip vai para o Frede.
+
+Falta ainda: o `CLAUDE.md`, o `DESIGN.md` e o `tools/verify.mjs` da raiz
+descrevem o site antigo; um dia, se o Frede quiser, o site novo passa para a
+raiz e eles são reescritos para a forma nova.
