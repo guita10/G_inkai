@@ -96,10 +96,11 @@ const CONFIG = {
      Google le, e do codigo-fonte.
      Os precos verdadeiros vivem em dois sitios, e so dois:
         1. o produto no Shopify        2. Guita_Ink_Comissoes_PT.pdf (Drive)
-     O `handle` fica porque e ele que da o link da loja no email de aceitacao.
-     Fechar comissoes continua a ser DOIS gestos: commissionsOpen:false aqui E
-     no loja.html, e os produtos do Shopify em rascunho, senao a loja continua
-     a aceitar pedidos. */
+     O `handle` fica como referencia do produto no Shopify. Desde 22 Nov 2026
+     os quatro produtos saem da Loja online e cobram-se por uma encomenda em
+     rascunho com fatura (comissoes/README.md, secao 4). Fechar comissoes e
+     commissionsOpen:false aqui E no loja.html; os produtos nao vao para
+     rascunho, senao deixam de se poder cobrar. */
   commissionsOpen: true,
   tiers: [
     { key: "headshot", handle: "commission-headshot-bust" },

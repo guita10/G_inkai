@@ -101,6 +101,31 @@ apagar nada. Enquanto estiver desligada, os pedidos ficam no Gmail sem
 etiqueta e os cartões acumulam-se em Draft 0 com `Onboarding enviado` vazio;
 voltam a ser apanhados quando for religada.
 
+## 4. O pagamento
+
+Desde 22 Nov 2026 (Frede: "esconde as comissões") os quatro produtos das
+comissões no Shopify (`commission-headshot-bust`, `commission-half-body`,
+`commission-full-body`, `commission-character-sheet`) **saem da Loja online**.
+Estavam publicados com o preço; quando a palavra-passe da loja saísse,
+qualquer pessoa os via, e a regra "o cliente escreve primeiro e o número vem
+por email" deixava de valer. Continuam ativos no Shopify.
+
+Tirar um produto da loja é um gesto do Frede, no admin (ficha do produto →
+Publicação → tirar o visto de Loja online): o conector do Shopify recusa
+`publishableUnpublish` por política de segurança, e não se contorna com outra
+mutação. **Não os pôr em Rascunho**: um produto em rascunho já não se cobra.
+
+Cobra-se por uma **encomenda em rascunho com fatura** (Encomendas → Rascunhos
+→ Criar encomenda → Enviar fatura): o produto inteiro para o Headshot, que o
+PDF diz que se paga de uma vez; um item personalizado com metade do valor
+("Sinal 50% · Meio corpo") para cada metade dos outros. O cliente paga no
+checkout do Shopify, por isso precisa do Shopify Payments ativo.
+
+Impostos (testado a 22 Nov 2026 com `draftOrderCalculate`, sem criar nada):
+uma comissão com morada de faturação em Portugal e uma t-shirt enviada para
+Portugal e para Espanha dão 0 € de imposto. O Shopify não está a cobrar IVA,
+como deve ser com a isenção do artigo 53.º.
+
 ## O que continua a ser teu
 
 - Aceitar ou não aceitar (arrastar o cartão)
