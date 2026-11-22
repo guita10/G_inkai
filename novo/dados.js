@@ -40,20 +40,20 @@ window.CONFIG = {
      muda mais depressa). Sao copias: se a Printful voltar a sincronizar um
      produto, e preciso ir busca-los outra vez. */
   merch: [
-    { key: "tee", price: "30", unit: "€", from: false, handle: "t-shirt-drop-01", plate: "衣", src: "images/merch/tshirt.jpg", w: 800, h: 800, opts: [{ k: "design", v: ["Queen", "Monk", "Sumo"] }, { k: "colour", v: ["Black", "White"] }, { k: "size", v: ["S", "M", "L", "XL"], pick: true }],
+    { key: "tee", price: "30", unit: "€", from: false, handle: "t-shirt-drop-01", plate: "衣", src: "images/merch/tshirt.jpg", w: 800, h: 800, foto: "tshirt-{design}-{colour}", opts: [{ k: "design", v: ["Queen", "Monk", "Sumo"] }, { k: "colour", v: ["Black", "White"] }, { k: "size", v: ["S", "M", "L", "XL"], pick: true }],
       variants: ["60968526479694", "60968526512462", "60968526545230", "60968526577998", "60968526610766", "60968526643534",
         "60968526676302", "60968526709070", "60968526741838", "60968526774606", "60968526807374", "60968526840142",
         "60968526872910", "60968526905678", "60968526938446", "60968526971214", "60968527003982", "60968527036750",
         "60968527069518", "60968527102286", "60968527135054", "60968527167822", "60968527200590", "60968527233358"] },
-    { key: "hoodie", price: "45", unit: "€", from: false, handle: "hoodie-drop-01", plate: "帽", src: "images/merch/hoodie.jpg", w: 800, h: 800, opts: [{ k: "design", v: ["Queen", "Monk", "Sumo"] }, { k: "colour", v: ["Black", "White"] }, { k: "size", v: ["S", "M", "L", "XL"], pick: true }],
+    { key: "hoodie", price: "45", unit: "€", from: false, handle: "hoodie-drop-01", plate: "帽", src: "images/merch/hoodie.jpg", w: 800, h: 800, foto: "hoodie-{design}-{colour}", opts: [{ k: "design", v: ["Queen", "Monk", "Sumo"] }, { k: "colour", v: ["Black", "White"] }, { k: "size", v: ["S", "M", "L", "XL"], pick: true }],
       variants: ["60968527331662", "60968527364430", "60968527397198", "60968527429966", "60968527462734", "60968527495502",
         "60968527528270", "60968527561038", "60968527593806", "60968527626574", "60968527659342", "60968527692110",
         "60968527724878", "60968527757646", "60968527790414", "60968527823182", "60968527855950", "60968527888718",
         "60968527921486", "60968527954254", "60968527987022", "60968528019790", "60968528052558", "60968528085326"] },
-    { key: "print", price: "18", unit: "€", from: false, handle: "art-print-drop-01", plate: "版", src: "images/merch/print.jpg", w: 800, h: 800, opts: [{ k: "design", v: ["OC 01", "OC 02", "OC 03"] }, { k: "size", v: ["A4"] }],
+    { key: "print", price: "18", unit: "€", from: false, handle: "art-print-drop-01", plate: "版", src: "images/merch/print.jpg", w: 800, h: 800, foto: "print-{design}", opts: [{ k: "design", v: ["OC 01", "OC 02", "OC 03"] }, { k: "size", v: ["A4"] }],
       variants: ["60968458518862", "60968458551630", "60968458584398"] },
     { key: "limited", price: "45", unit: "€", from: false, handle: "limited-edition-a3-drop-01", plate: "限", hold: true },
-    { key: "sticker", price: "4", unit: "€", from: false, handle: "stickers-drop-01", plate: "貼", src: "images/merch/stickers.jpg", w: 800, h: 800, opts: [{ k: "design", v: ["Queen", "Monk", "Sumo"] }, { k: "finish", v: ["Matte"] }],
+    { key: "sticker", price: "4", unit: "€", from: false, handle: "stickers-drop-01", plate: "貼", src: "images/merch/stickers.jpg", w: 800, h: 800, foto: "sticker-{design}", opts: [{ k: "design", v: ["Queen", "Monk", "Sumo"] }, { k: "finish", v: ["Matte"] }],
       variants: ["60968458649934", "60968458682702", "60968458715470"] },
     { key: "acrylic", price: "12", unit: "€", from: false, handle: "acrylic-keychain-drop-01-pre-order", plate: "鍵", preorder: true, hold: true }
   ],

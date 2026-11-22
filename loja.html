@@ -86,6 +86,13 @@ const CONFIG = {
      handle: o handle do produto no Shopify. Ja nao e o link do cartao (desde
         30 Set 2026 compra-se aqui, com o cesto), mas fica como referencia.
      src: foto do produto, opcional. Vazio → placa tipografica.
+     foto: (so o site novo, desde 22 Nov 2026) o nome da foto de cada escolha,
+        com as opcoes entre chavetas: "tshirt-{design}-{colour}" com Queen e
+        Black da images/merch/tshirt-queen-black.jpg (minusculas, espacos
+        viram hifens: "OC 01" da oc-01). O cartao troca de foto quando se
+        escolhe o desenho ou a cor, e os botoes do desenho levam a miniatura
+        de images/merch/mini/. As fotos saem de merch/ pelo
+        novo/tools/merch-fotos.py.
      opts + variants: o CESTO. Compra-se nesta pagina; o botao "Finalizar
         compra" leva ao checkout do Shopify ja com o cesto dentro, por um link
         do tipo  loja/cart/ID:QTD,ID:QTD  (cart permalink). Por isso cada
@@ -112,7 +119,7 @@ const CONFIG = {
        ou branco, S a XL. Impressa pela Printful por encomenda. Hoodie:
        Gildan 18500 (o hoodie base da Printful), 45 EUR: custa ~20 EUR, ganha
        um pouco mais do que a t-shirt por venda. */
-    { key: "tee",     price: "30", unit: "€", from: false, handle: "t-shirt-drop-01", plate: "衣", src: "images/merch/tshirt.jpg",   w: 800, h: 800,
+    { key: "tee",     price: "30", unit: "€", from: false, handle: "t-shirt-drop-01", plate: "衣", src: "images/merch/tshirt.jpg",   w: 800, h: 800, foto: "tshirt-{design}-{colour}",
       opts: [ { k: "design", v: ["Queen", "Monk", "Sumo"] }, { k: "colour", v: ["Black", "White"] }, { k: "size", v: ["S", "M", "L", "XL"], pick: true } ],
       variants: [
         /* Queen · Black (S M L XL) */ "60968526479694", "60968526512462", "60968526545230", "60968526577998",
@@ -122,7 +129,7 @@ const CONFIG = {
         /* Sumo · Black (S M L XL) */  "60968527003982", "60968527036750", "60968527069518", "60968527102286",
         /* Sumo · White (S M L XL) */  "60968527135054", "60968527167822", "60968527200590", "60968527233358",
       ] },
-    { key: "hoodie",  price: "45", unit: "€", from: false, handle: "hoodie-drop-01",  plate: "帽", src: "images/merch/hoodie.jpg",   w: 800, h: 800,
+    { key: "hoodie",  price: "45", unit: "€", from: false, handle: "hoodie-drop-01",  plate: "帽", src: "images/merch/hoodie.jpg",   w: 800, h: 800, foto: "hoodie-{design}-{colour}",
       opts: [ { k: "design", v: ["Queen", "Monk", "Sumo"] }, { k: "colour", v: ["Black", "White"] }, { k: "size", v: ["S", "M", "L", "XL"], pick: true } ],
       variants: [
         /* Queen · Black (S M L XL) */ "60968527331662", "60968527364430", "60968527397198", "60968527429966",
@@ -132,11 +139,11 @@ const CONFIG = {
         /* Sumo · Black (S M L XL) */  "60968527855950", "60968527888718", "60968527921486", "60968527954254",
         /* Sumo · White (S M L XL) */  "60968527987022", "60968528019790", "60968528052558", "60968528085326",
       ] },
-    { key: "print",   price: "18", unit: "€", from: false, handle: "art-print-drop-01", plate: "版", src: "images/merch/print.jpg",    w: 800, h: 800,  // so A4 (Set 2026): em A3 os ficheiros dao ~214 DPI
+    { key: "print",   price: "18", unit: "€", from: false, handle: "art-print-drop-01", plate: "版", src: "images/merch/print.jpg",    w: 800, h: 800, foto: "print-{design}",  // so A4 (Set 2026): em A3 os ficheiros dao ~214 DPI
       opts: [ { k: "design", v: ["OC 01", "OC 02", "OC 03"] }, { k: "size", v: ["A4"] } ],
       variants: [ "60968458518862", "60968458551630", "60968458584398" ] },
     { key: "limited", price: "45", unit: "€", from: false, handle: "limited-edition-a3-drop-01", plate: "限", hold: true },
-    { key: "sticker", price: "4",  unit: "€", from: false, handle: "stickers-drop-01", plate: "貼", src: "images/merch/stickers.jpg", w: 800, h: 800,
+    { key: "sticker", price: "4",  unit: "€", from: false, handle: "stickers-drop-01", plate: "貼", src: "images/merch/stickers.jpg", w: 800, h: 800, foto: "sticker-{design}",
       opts: [ { k: "design", v: ["Queen", "Monk", "Sumo"] }, { k: "finish", v: ["Matte"] } ],
       variants: [ "60968458649934", "60968458682702", "60968458715470" ] },
     { key: "acrylic", price: "12", unit: "€", from: false, handle: "acrylic-keychain-drop-01-pre-order", plate: "鍵", preorder: true, hold: true },

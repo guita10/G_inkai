@@ -19,3 +19,16 @@ Set 2026), os tres retratos que ja estao na parede. Ficheiros dele a 2363x3542,
 
 Quando a Printful gerar os mockups dela (ao ligar os produtos), esses sao
 melhores para a roupa: mostram a peca real. Estes ficam como fallback.
+
+**No site novo** (22 Nov 2026) estes mockups tambem servem a loja: o
+`novo/tools/merch-fotos.py` recorta cada um para a peca encher o quadro e
+escreve `images/merch/<nome>.jpg` (1000 px) e `images/merch/mini/<nome>.jpg`
+(a zona da estampa, para os botoes do desenho). O cartao troca de foto
+quando se escolhe o desenho e a cor.
+
+Os mockups da Printful entram pelo Drive: o Frede gera-os na Printful e
+poe-nos em `Site [Imagens]/Loja (mockups da Printful)`
+(`1CpZGqf8XhyNGU1TAAyHAsQq93rZ66F8H`). Gravam-se aqui com os mesmos nomes
+(`tshirt-queen-black.jpg`, `print-oc-01.jpg`...), quadrados, corre-se o
+`merch-fotos.py` e, se o fundo nao for liso, revê-se o recorte (ele procura
+a peca pela diferenca para a cor das pontas de cada linha).

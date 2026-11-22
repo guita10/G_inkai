@@ -5,7 +5,7 @@ Copia o site novo para uma pasta de trabalho, estraga UMA coisa de cada vez
 trocado, um texto diferente do site atual...) e confirma que o verify.mjs
 falha, e falha no teste certo. Um teste que nunca falhou nao prova nada.
 
-    python3 novo/tools/bugs-plantados.py . /tmp/plantado          # os 31
+    python3 novo/tools/bugs-plantados.py . /tmp/plantado          # os 33
     python3 novo/tools/bugs-plantados.py . /tmp/plantado 3 10     # so esses
 
 A pasta de trabalho tem de se chamar "plantado" e ficar FORA do repositorio:
@@ -75,9 +75,11 @@ BUGS = [
     ('a parede do telemovel sem os nomes', lambda: troca('site.js', 'list: () => todas.filter(cabe), titulos: true', 'list: () => todas.filter(cabe)'), 'grelha certa'),
     ('a capa de um projeto duas vezes no telemovel', lambda: troca('site.js', 'cf.hidden = !p.rows;', 'cf.hidden = false;'), 'capa aparece uma vez'),
     ('a barra de estado nao segue o tema', lambda: troca('site.js', "        if (m) m.setAttribute('content', getComputedStyle(r).getPropertyValue('--void').trim());\n", ''), 'barra de estado'),
+    ('escolher o desenho e a cor nao troca a foto do merch', lambda: troca('site.js', '        if (!m.foto) return;\n        const e = esc0(m);', '        if (m.foto) return;\n        const e = esc0(m);'), 'Monk e branco'),
+    ('uma combinacao de desenho e cor sem fotografia', lambda: troca('dados.js', 'foto: "tshirt-{design}-{colour}"', 'foto: "tshirt-{design}-{colour}-x"'), 'a sua miniatura'),
 ]
 
-PARTES = [1, 1, 1, 3, 3, 1, 4, 3, 3, 3, 6, 6, 2, 2, 7, 7, 7, 3, 1, 4, 4, 3, 1, 1, 1, 1, 4, 4, 4, 5, 7]      # em que parte do verify.mjs cada bug e apanhado
+PARTES = [1, 1, 1, 3, 3, 1, 4, 3, 3, 3, 6, 6, 2, 2, 7, 7, 7, 3, 1, 4, 4, 3, 1, 1, 1, 1, 4, 4, 4, 5, 7, 6, 6]      # em que parte do verify.mjs cada bug e apanhado
 assert len(PARTES) == len(BUGS)
 assert trab.name == 'plantado' and raiz not in trab.parents and trab != raiz, 'a pasta de trabalho tem de se chamar "plantado" e ficar fora do repositorio'
 so = sys.argv[3:]

@@ -147,6 +147,26 @@ redesenhadas, porque chocavam com as regras da casa:
 | As opções de um produto em caixas de escolha | Botões (um toque em vez de dois), o tamanho continua sem vir escolhido |
 | O visualizador feito à mão | O `<dialog>` do browser: prende o foco e fecha com Esc sem código próprio |
 
+## A loja: a foto segue a escolha (22 Nov 2026)
+
+O Frede: "fazer com que consigas ter um preview dos produtos com os design
+diferentes… as imagens parecem muito básicas e pouco cativantes".
+
+- Escolher o desenho ou a cor troca a foto do cartão e, no computador, a do
+  palco, sem animação (é um gesto que se repete). A foto nova só entra depois
+  de carregada, para o cartão nunca ficar vazio.
+- Os botões do desenho levam uma miniatura da zona da estampa, na cor
+  escolhida, com o nome por baixo.
+- As fotos são as de `merch/` (as mesmas do Shopify), recortadas para a peça
+  encher o quadro: o desenho aparece cerca de 1,3 vezes maior. Faz-as o
+  `tools/merch-fotos.py`, para `images/merch/` (1000 px) e
+  `images/merch/mini/` (160 px). O campo `foto` de cada produto, no CONFIG
+  do `loja.html` da raiz, diz como se monta o nome a partir das escolhas.
+- Continuam a ser desenhos. As fotografias realistas (a peça vestida,
+  dobrada) vêm da Printful: o Frede gera-as lá e põe-as no Drive, em
+  `Site [Imagens]/Loja (mockups da Printful)`; entram em `merch/` com os
+  mesmos nomes e corre-se o `merch-fotos.py` outra vez.
+
 ## Duas coisas que são decisão do Frede
 
 1. **O foco depois do visualizador.** Ao fechar, o foco e o palco ficam na
@@ -215,6 +235,7 @@ a Etsy e sites parecidos tiram cópias roubadas quando se denunciam.
       verify.mjs       os testes
       bugs-plantados.py  estraga uma cópia de propósito, para provar que os testes apanham
       faz-zip.py       o zip para o Netlify, com o nome do Frede dentro de cada imagem
+      merch-fotos.py   as fotos da loja, uma por desenho e cor, e as miniaturas dos botões
 
 ## Enquanto os dois sites existirem
 
@@ -231,7 +252,7 @@ projetos", os nomes dos naipes…) vivem no `copia-dados.cjs`.
 
 ## Os testes
 
-`node novo/tools/verify.mjs` abre o site num browser a sério e corre 217
+`node novo/tools/verify.mjs` abre o site num browser a sério e corre 220
 verificações; sai com erro se alguma falhar. `--rapido` salta as medições em
 linha lenta, `--so 3,6` corre só essas partes.
 
@@ -255,11 +276,11 @@ linha lenta, `--so 3,6` corre só essas partes.
 7. O tema, o movimento reduzido, o 404, a abertura do disco, os leitores de
    ecrã, e o salto de layout (CLS), também numa linha de 400 kbps.
 
-Foram testados contra 31 bugs plantados de propósito (um preço numa
+Foram testados contra 33 bugs plantados de propósito (um preço numa
 comissão, uma moldura a cortar a obra, um ID do Shopify trocado, um texto
 diferente do site atual, o botão direito a guardar imagens outra vez, a
 barra de baixo a tapar o fim da página, a capa de um projeto duas vezes…) e
-apanharam os 31. Repete-se com
+apanharam os 33. Repete-se com
 `python3 novo/tools/bugs-plantados.py . /tmp/plantado` (trabalha numa cópia
 fora do repositório; uns 15 minutos).
 

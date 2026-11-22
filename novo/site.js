@@ -451,7 +451,17 @@
   });
   const selo = () => ({ label: '', kind: 'seal', url: 'images/logo.svg' });
   const merchVisivel = () => (C.shopOpen ? C.merch.filter(m => !m.hold && m.src) : []);
-  const foto = m => ({ label: tx('merchItems.' + m.key + '.name'), kind: 'photo', url: m.src, plate: m.plate });
+  /* a foto do merch segue a escolha (22 Nov 2026): o campo `foto` do CONFIG
+     ("tshirt-{design}-{colour}") da o nome da foto de cada desenho e cor,
+     em images/merch/ (e a miniatura dos botoes em images/merch/mini/). Sem
+     `foto`, fica a foto unica, `src`. As escolhas por defeito sao as que o
+     cartao ja traz marcadas: o primeiro valor de cada opcao sem `pick`. */
+  const esc0 = m => { const e = {}; (m.opts || []).forEach(o => { e[o.k] = o.v.length === 1 || !o.pick ? o.v[0] : null; }); return e; };
+  const fotoUrl = (m, e, mini) => !m.foto ? m.src
+    : 'images/merch/' + (mini ? 'mini/' : '') + m.foto.replace(/\{(\w+)\}/g, (_, k) => String(e[k] || '').toLowerCase().replace(/\s+/g, '-')) + '.jpg';
+  const rotulo = (m, e) => [tx('merchItems.' + m.key + '.name')].concat(
+    !m.foto ? [] : (m.foto.match(/\{(\w+)\}/g) || []).map(x => x.slice(1, -1)).filter(k => (m.opts.find(o => o.k === k) || { v: [] }).v.length > 1).map(k => nomeValor(e[k]))).join(' · ');
+  const foto = (m, e) => { e = e || esc0(m); return { label: rotulo(m, e), kind: 'photo', url: fotoUrl(m, e), plate: m.plate }; };
 
   R.bar = barra;
 
@@ -769,18 +779,28 @@
       if (e.isIntersecting && e.target._foto && e.target._foto.label !== (stage.cur || {}).label) show(e.target._foto, 'fade');
     }), { rootMargin: '-45% 0px -50% 0px' }) : null;
     merchVisivel().forEach(m => {
-      const t = tx('merchItems.' + m.key), f = foto(m);
+      const t = tx('merchItems.' + m.key), e0 = esc0(m), f = foto(m, e0);
       const msg = h('p', { class: 'msg', role: 'status' });
+      const minis = [];                       // [img, desenho]: as miniaturas dos botoes do desenho
       const campos = m.opts.filter(o => o.v.length > 1).map(o => {
         const fs = h('fieldset', { class: 'opt', 'data-k': o.k }, [h('legend', { text: tx('optNames.' + o.k) + (o.pick ? ` (${tx('pickOne').toLowerCase()})` : '') })]);
-        const linha = h('div', { class: 'chips' });
-        o.v.forEach((v, i) => linha.append(h('label', { class: 'chip' }, [
-          h('input', { type: 'radio', name: `${m.key}-${o.k}`, value: v, checked: !o.pick && i === 0 }), document.createTextNode(nomeValor(v)),
-        ])));
+        const comFoto = m.foto && o.k === 'design';
+        const linha = h('div', { class: 'chips' + (comFoto ? ' with-img' : '') });
+        o.v.forEach((v, i) => {
+          let mi = null;
+          if (comFoto) {
+            mi = h('img', { class: 'chip-img', alt: '', width: 40, height: 40, loading: 'lazy', decoding: 'async', src: fotoUrl(m, { ...e0, design: v }, true) });
+            mi.addEventListener('error', () => mi.remove());
+            minis.push([mi, v]);
+          }
+          linha.append(h('label', { class: 'chip' + (comFoto ? ' chip-pic' : '') }, [
+            h('input', { type: 'radio', name: `${m.key}-${o.k}`, value: v, checked: !o.pick && i === 0 }), mi, document.createTextNode(nomeValor(v)),
+          ]));
+        });
         fs.append(linha); return fs;
       });
       const bt = h('button', { class: 'btn fill', type: 'button', text: tx('addToBag') });
-      const fotoM = h('img', { class: 'prod-photo', alt: t.name, loading: 'lazy', decoding: 'async', width: m.w, height: m.h, src: m.src });
+      const fotoM = h('img', { class: 'prod-photo', alt: f.label, loading: 'lazy', decoding: 'async', width: m.foto ? 1000 : m.w, height: m.foto ? 1000 : m.h, src: f.url });
       guarda(fotoM, null, m.plate);
       const art = h('article', { class: 'prod', id: m.key }, [
         h('div', { class: 'prod-head' }, [
@@ -801,8 +821,27 @@
         bt.textContent = tx('added'); setTimeout(() => { bt.textContent = tx('addToBag'); }, 1400);
       });
       art._foto = f;
-      aponta(art, () => art, () => show(f));
-      art.addEventListener('focusin', () => show(f));
+      /* escolher o desenho ou a cor troca a foto do cartao, as miniaturas (que
+         seguem a cor) e, no computador, o palco. Sem animacao: e um gesto que
+         se repete. A foto nova so entra depois de descodificada, para o cartao
+         nunca ficar vazio; o `vez` deita fora uma resposta que chegue tarde. */
+      let vez = 0;
+      art.addEventListener('change', () => {
+        if (!m.foto) return;
+        const e = esc0(m);
+        m.opts.forEach(o => { const c = $(`input[name="${m.key}-${o.k}"]:checked`, art); if (c) e[o.k] = c.value; });
+        const nova = foto(m, e);
+        minis.forEach(([mi, v]) => { const u = fotoUrl(m, { ...e, design: v }, true); if (mi.getAttribute('src') !== u) mi.src = u; });
+        if (nova.url !== art._foto.url) {       // so uma foto nova cancela a anterior: escolher o tamanho nao muda a foto
+          const minha = ++vez, pre = new Image(); pre.src = nova.url;
+          const poe = () => { if (minha === vez) { fotoM.src = nova.url; fotoM.alt = nova.label; } };
+          (pre.decode ? pre.decode() : Promise.resolve()).then(poe, poe);
+        }
+        art._foto = nova;
+        if (wide() && (stage.cur || {}).url !== nova.url) show(nova);
+      });
+      aponta(art, () => art, () => show(art._foto));
+      art.addEventListener('focusin', () => show(art._foto));
       box.append(art);
       if (io) io.observe(art);
     });

@@ -88,7 +88,7 @@ Recebes um email com o número de seguimento quando a encomenda sai.
 
 **Portes**
 Os portes são calculados no checkout, conforme o produto e o país, antes de
-pagares.
+pagares. Para Portugal, são grátis nas encomendas a partir de 25 €.
 
 **Envios para fora da União Europeia**
 Enviamos para todo o mundo. Fora da UE podem ser cobrados direitos aduaneiros,
@@ -223,6 +223,7 @@ You get an email with a tracking number when your order ships.
 
 **Shipping cost**
 Shipping is calculated at checkout, by product and country, before you pay.
+Shipping to Portugal is free on orders from €25.
 
 **Shipping outside the European Union**
 We ship worldwide. Outside the EU, customs duties, import taxes or carrier fees

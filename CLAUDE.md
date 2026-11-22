@@ -210,7 +210,11 @@ images/           70 full-size JPEG (1600px longest side: 37 artworks, 3 project
                   cover and its one card on the wall) + og-card.jpg, and a WebP for most (see below)
 images/thumb/     70 thumbnails (760px) + WebP
 images/merch/     four 800x800 shop-card photos (loja.html). Not artwork: dims.py
-                  and make-webp.py only read images/ itself, so they skip it
+                  and make-webp.py only read images/ itself, so they skip it.
+                  Since 22 Nov 2026 also one 1000x1000 photo per design and
+                  colour (tshirt-queen-black.jpg...) and its 160px swatch in
+                  images/merch/mini/, for novo/'s shop; made from merch/ by
+                  novo/tools/merch-fotos.py, named by each product's `foto`
 images/bg/        Survival of Kings originals, not artwork in the gallery
                   (dims.py and make-webp.py only read images/ itself):
                   cast-cut-1000/1920: the seven, cut out by Frede (no
@@ -354,6 +358,7 @@ it looks like.
 | `Projetos/Tokyo Revengers` | `1WjNVXK7gzKa7_vsJjQc7EiqdJjhwjhbp` | the `tr` project's `gallery` |
 | `Projetos/PAMP` | `1i5Cx9fkAsDVDc9-B0bLJX8rJMyDI69BE` | the `pamp` project's `gallery` |
 | `Projetos/One Piece Deck` | `1TYBFrstwThbw8_M_fQ72_GX6nM30phXM` | the `deck` project's `gallery` (fan art, §9.1) |
+| `Loja (mockups da Printful)` | `1CpZGqf8XhyNGU1TAAyHAsQq93rZ66F8H` | not art for the wall: the Printful mockups of the merch, which replace the drawn ones in `merch/` (same names) and then `novo/tools/merch-fotos.py` (22 Nov 2026) |
 
 `Colaborações` (`1uAPosE-JsJgVAvFYGIiLC3Mo1QbULhxo`) and `Projetos`
 (`1b_M9U5Qw9Z-iqBO3asZykudWIhMe5QH8`) only hold their subfolders: a collab
@@ -686,6 +691,19 @@ novo/           a SECOND, new version of the site, built from scratch beside
                   following the toggle, the page locked behind the viewer on
                   touch). verify.mjs checks each; what needs a real phone is
                   listed in novo/README.md
+                  THE SHOP'S PHOTOS since 22 Nov 2026 (Frede: "um preview dos
+                  produtos com os design diferentes"): choosing the design or
+                  the colour swaps the card's photo and, on wide screens, the
+                  stage's, with no animation and only once decoded; the design
+                  buttons carry a swatch. The photos come from merch/ through
+                  novo/tools/merch-fotos.py, named by `foto` in loja.html's
+                  CONFIG ("tshirt-{design}-{colour}"); verify.mjs checks every
+                  combination has its files and that a choice swaps them
+                  SHIPPING to Portugal is free from 25 EUR since 22 Nov 2026:
+                  an automatic free-shipping discount in Shopify (PT only,
+                  minimum subtotal 25 EUR), below that the Printful rates. The
+                  site does not say so: §9.2 forbids naming a country, and a
+                  line saying it waits for Frede's word
                   two things in it are Frede's to confirm: where focus lands
                   after the viewer closes, and the bottom bar starting at
                   820px (the home page's shop shelf left with the page split)

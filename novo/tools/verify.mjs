@@ -747,6 +747,18 @@ async function projetos() {
 /* ============================================================ 6. a loja */
 async function loja() {
   tit('6. A loja e as comissoes');
+  /* cada desenho e cor tem a sua fotografia e a miniatura do botao (22 Nov 2026):
+     o campo `foto` monta o nome a partir das escolhas, e um nome sem ficheiro
+     so se veria quando alguem escolhesse essa combinacao */
+  const faltam = []; let fotos = 0;
+  VISIVEIS.filter(m => m.foto).forEach(m => {
+    const ops = m.opts.filter(o => m.foto.includes('{' + o.k + '}'));
+    ops.reduce((acc, o) => acc.flatMap(e => o.v.map(v => ({ ...e, [o.k]: v }))), [{}]).forEach(e => {
+      const n = m.foto.replace(/\{(\w+)\}/g, (_, k) => e[k].toLowerCase().replace(/\s+/g, '-'));
+      ['images/merch/', 'images/merch/mini/'].forEach(d => { fotos++; if (!existsSync(join(PASTA, d + n + '.jpg'))) faltam.push(d + n); });
+    });
+  });
+  chk(fotos > 0 && !faltam.length, 'cada desenho e cor do merch tem a sua fotografia e a sua miniatura', faltam.slice(0, 3).join(', ') || `${fotos} ficheiros`);
   for (const l of ['en', 'pt']) {
     const pg = await pagina('loja.html?lang=' + l);
     const T = CONFIG.i18n[l];
@@ -782,6 +794,12 @@ async function loja() {
     await pg.click('#tee .btn'); await espera(pg, 100);
     const link = await pg.getAttribute('#checkout', 'href');
     chk(link === `${CONFIG.shop}/cart/60968526905678:1`, `${l}: T-shirt Monk / White / M abre o checkout do Shopify com a variante certa`, link);
+    await espera(pg, 400);
+    const fo = await pg.evaluate(() => ({ card: document.querySelector('#tee .prod-photo').getAttribute('src'), alt: document.querySelector('#tee .prod-photo').alt,
+      minis: [...document.querySelectorAll('#tee .chip-img')].map(i => i.getAttribute('src')), palco: GI.palco() && GI.palco().url }));
+    chk(fo.card === 'images/merch/tshirt-monk-white.jpg' && fo.alt.includes('Monk') && fo.palco === fo.card
+      && igual(fo.minis, ['queen', 'monk', 'sumo'].map(d => `images/merch/mini/tshirt-${d}-white.jpg`)),
+      `${l}: escolher Monk e branco troca a fotografia do cartao e do palco, e as miniaturas passam a branco`, `${fo.card}; palco ${fo.palco}`);
     const fab = await pg.evaluate(() => { const f = document.querySelector('#fab'); return [f.classList.contains('on'), f.textContent]; });
     chk(fab[0] && fab[1] === `${T.bagShort} · 1`, `${l}: com o cesto fora do ecra, aparece o botao flutuante do cesto`, fab[1]);
     await pg.click('#print .btn'); await pg.click('#bagLines li:first-child .qty button:last-child'); await espera(pg, 100);
