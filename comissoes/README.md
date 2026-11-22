@@ -66,8 +66,10 @@ com os conectores Notion, Gmail e Drive), faz duas coisas por esta ordem:
    `Draft 0 — Esboço & Refs` é o gesto de aceitar o trabalho. Para cada cartão
    aceite e ainda sem email enviado: partilha o PDF da língua do cartão com o
    email do cliente (só leitura), envia o email de aceitação (ver
-   `email-onboarding.md`; o texto em vigor é o do prompt, com a validação e o
-   sinal de 50%) e só depois escreve a data em `Onboarding enviado`.
+   `email-onboarding.md`; o texto em vigor é o do prompt, com a validação e,
+   desde 22 Nov 2026, o pagamento como o PDF o descreve: o Headshot paga-se
+   todo antes de começar, os outros metade quando o esboço é aprovado e metade
+   antes do ficheiro final) e só depois escreve a data em `Onboarding enviado`.
 
 Os PDFs partilhados são `Guita_Ink_Comissoes_PT.pdf`
 (`1q7ltmHMeM4704pkY7ObIm0aY-XpzWVhy`) e `Guita_Ink_Commissions_EN.pdf`
