@@ -360,8 +360,26 @@ it looks like.
 is still an original or fan art (§9.1), so it needs both. The 28 PNGs loose
 at the top of `Site [Imagens]` are the August 2026 originals, already on
 the site: never import them again. Frede's other Drive folders
-(`Capas_TokyoRevengers`, `Survival of Kings`, `Deck OP` at the root) are his
-own and are not read.
+(`Capas_TokyoRevengers`, `Survival of Kings`, `Deck OP`) are his own and are
+not read; since 22 Nov 2026 they sit in `Arte — originais`
+(`10nVBK8b2f9moNHy3yrw_rKxGhg45Xu5L`).
+
+**The Drive's root since 22 Nov 2026** (Frede approved the tidy-up): `Site
+[Imagens]` (unchanged, the ids above), `Arte — originais`, `Comissões — guias
+para clientes` (`1p3ZBE31Gi7gj6lvTpZHj2BY1tfqJAmsA`: the two PDFs the
+commission task shares, ids in `comissoes/README.md`; update them with
+"Manage versions" so the ids stay), `Guita_Ink · Documentação` (shop launch
+plan, costs, policies, and "0 · Comece aqui") and `Arquivo (não usar)`
+(`1gA__UR10fqaTuZy-K2H7-i0tD2AMVw10`: the September site folder with the
+duplicate PDFs, the Miro copy, two outdated docs). Nothing was deleted.
+The plain-language guide for Frede (where everything is, new art, a
+commission end to end, prices, routine) is the Notion page **Guita_Ink —
+Website & Comissões** (`3a954b9bb07981f4bccceaea00aab3af`), with the
+commission database inside it; its August pages are in its "Arquivo (não
+usar)" subpage. Keep that page true when a step changes. The Terms page no
+longer lists prices (Frede, 22 Nov 2026), as in Miro and the site; the
+archived August pages still do, and a card's own "Preço €" is the price
+agreed with that one client.
 
 How a picture comes across (tested 6 Nov 2026 on a 5.8 MB PNG, byte for
 byte): `download_file_content` is too big for the conversation, so the

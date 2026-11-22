@@ -1,5 +1,10 @@
 # Sistema de comissões
 
+> **Arrumado a 22 Nov 2026.** O guia para o Frede, em linguagem simples, está
+> agora no Notion, na página **Guita_Ink — Website & Comissões**
+> (https://app.notion.com/p/3a954b9bb07981f4bccceaea00aab3af), com a base de
+> dados de comissões lá dentro. Este ficheiro é a versão técnica.
+
 Três peças que trabalham juntas. Nenhuma delas vive no site: o site é estático
 no Netlify, não tem servidor, e por isso não envia emails nem escreve no
 Notion. O site só faz uma coisa — recolher o pedido.
@@ -44,14 +49,32 @@ que o sistema usa e que foram acrescentadas para isto:
 
 ## 3. O envio
 
-Arrastar o cartão de `📥 Pedido novo` para `Draft 0 — Esboço & Refs` é o gesto
-de aceitar o trabalho. É esse gesto que dispara o envio. Não há nada a
-carregar: o sistema verifica de hora a hora e, quando encontra um cartão
-aceite e ainda sem email enviado, faz três coisas pela ordem:
+Uma tarefa agendada, **Guita_Ink — comissões: registo e onboarding**
+(`trig_01BBdBkE8JCT7KHHp7JHWq1T`, claude.ai, de hora a hora ao minuto 43,
+com os conectores Notion, Gmail e Drive), faz duas coisas por esta ordem:
 
-1. Partilha o `Guita_Ink_Comissoes_PT.pdf` com o email do cliente (só leitura)
-2. Envia o email de aceitação (ver `email-onboarding.md`)
-3. Escreve a data em `Onboarding enviado`
+1. **Regista os pedidos.** Procura no Gmail `in:inbox
+   -label:"Comissões/Registado" subject:(comissão OR comissao OR commission)`,
+   lê o corpo que o site pré-preenche ("Pedido de comissão" / "Commission
+   request", `comissoes.html` do site novo), cria o cartão em `📥 Pedido novo`
+   (sem Preço nem Prazo, que são do Frede) e só depois põe a etiqueta
+   `Comissões/Registado` (`Label_2`). As opções entre parênteses nas
+   etiquetas do formulário ("busto / meio corpo / ...") não são a resposta:
+   a resposta vem depois dos dois pontos (corrigido no prompt a 22 Nov 2026,
+   quando o formulário do site novo passou a listar as quatro opções).
+2. **Envia o email de aceitação.** Arrastar o cartão de `📥 Pedido novo` para
+   `Draft 0 — Esboço & Refs` é o gesto de aceitar o trabalho. Para cada cartão
+   aceite e ainda sem email enviado: partilha o PDF da língua do cartão com o
+   email do cliente (só leitura), envia o email de aceitação (ver
+   `email-onboarding.md`; o texto em vigor é o do prompt, com a validação e o
+   sinal de 50%) e só depois escreve a data em `Onboarding enviado`.
+
+Os PDFs partilhados são `Guita_Ink_Comissoes_PT.pdf`
+(`1q7ltmHMeM4704pkY7ObIm0aY-XpzWVhy`) e `Guita_Ink_Commissions_EN.pdf`
+(`1wWZaU6wksdHxYZndvuPuAmABkmE6M8BN`), cópias feitas pelo conector do Drive (o
+conector só partilha ficheiros que ele criou), na pasta do Drive **Comissões —
+guias para clientes** (`1p3ZBE31Gi7gj6lvTpZHj2BY1tfqJAmsA`) desde 22 Nov 2026.
+Para atualizar um PDF: Gerir versões no próprio ficheiro, para o id não mudar.
 
 O PDF **nunca fica público**. Cada cliente recebe acesso individual, e podes
 ver e retirar esse acesso a qualquer momento no Drive.
@@ -61,39 +84,37 @@ ver e retirar esse acesso a qualquer momento no Drive.
 O sistema não inventa. Sem Email no cartão, não envia e avisa-te. Sem Preço ou
 sem Prazo, a linha sai do email em vez de ir vazia ou com um número adivinhado.
 
-### ⚠️ Falta um passo para isto correr
+### Ligada desde 22 Nov 2026
 
-A Routine está criada e com o prompt todo escrito, mas **desligada**, porque
-foi criada sem acesso aos conectores. As sessões que ela dispara correriam sem
-Notion, sem Gmail e sem Drive, ou seja, não fariam nada e falhavam de hora a
-hora.
+O Frede pediu para a ligar ("Liga já"). Antes disso confirmou-se: a etiqueta
+`Comissões/Registado` existe (`Label_2`), não havia nenhum pedido por registar,
+e nenhum cartão em Draft 0 (o primeiro envio só acontece quando ele arrastar um).
 
-Para a pôr a funcionar, tem de ser ligada a partir da interface de Routines do
-claude.ai, que é onde os conectores se podem conceder:
-
-1. claude.ai → Routines → **Comissões: enviar onboarding (por ligar conectores)**
-2. Dar-lhe acesso a **Notion**, **Gmail** e **Google Drive**
-3. Ligar
-
-O prompt não precisa de ser reescrito: já lá está, com as regras todas.
+Há uma tarefa mais antiga, de setembro, só com a parte do envio e sem
+conectores: chama-se agora **(antiga, substituída — não ligar) Comissões:
+enviar onboarding** e está desligada. Ligar as duas mandaria dois emails.
 
 ### Para desligar
 
-A Routine chama-se **Comissões: enviar onboarding**. Desligá-la pára o envio
-automático sem apagar nada. Enquanto estiver desligada, os cartões acumulam-se
-em Draft 0 com `Onboarding enviado` vazio, e voltam a ser apanhados quando a
-religares.
+Desligar a tarefa **Guita_Ink — comissões: registo e onboarding** pára tudo sem
+apagar nada. Enquanto estiver desligada, os pedidos ficam no Gmail sem
+etiqueta e os cartões acumulam-se em Draft 0 com `Onboarding enviado` vazio;
+voltam a ser apanhados quando for religada.
 
 ## O que continua a ser teu
 
 - Aceitar ou não aceitar (arrastar o cartão)
 - O valor de cada peça, que só existe no Shopify e no PDF
-- Responder ao primeiro email do cliente e criar o cartão
+- Pôr o Preço e o Prazo no cartão antes de o arrastar (sem eles, essas linhas saem do email)
 
 O sistema trata só do passo repetitivo: o mesmo email, com o mesmo documento,
 sempre que aceitas um trabalho.
 
 ## Os quadros do Miro
+
+**Desde 22 Nov 2026 o quadro em uso é o Processo**; o Fluxo chama-se
+**Arquivo — Fluxo de Comissões (não usar)** e fica guardado (Frede: "um
+principal, outro arquivo").
 
 Dois quadros desenham o mesmo processo, Draft 0 a Final, com as aprovações
 e os pagamentos: **Guita_Ink — Processo de Comissões** (o fluxo, com um
@@ -139,7 +160,8 @@ originais. O que mudou ao recriar:
 
 A cópia de onde foram recriados ficou no Drive da conta guitaink, na pasta
 **Miro — cópia dos quadros de comissões**
-(`1OXHb5wVQ0ZCjCcsRgVoS5P4Ncoq-zQuC`); com os quadros feitos, já não é
+(`1OXHb5wVQ0ZCjCcsRgVoS5P4Ncoq-zQuC`, dentro de **Arquivo (não usar)** desde
+22 Nov 2026); com os quadros feitos, já não é
 precisa, e ainda tem os preços e o nome antigo do PDF. Essa pasta e os
 originais na LOA-D (também com os preços) são do Frede para apagar; o
 Claude não apaga nenhum sem ele dizer.
