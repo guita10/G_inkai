@@ -116,6 +116,9 @@ Tirar um produto da loja é um gesto do Frede, no admin (ficha do produto →
 Publicação → tirar o visto de Loja online): o conector do Shopify recusa
 `publishableUnpublish` por política de segurança, e não se contorna com outra
 mutação. **Não os pôr em Rascunho**: um produto em rascunho já não se cobra.
+Feito pelo Frede a 22 Nov 2026 e confirmado pela API: os quatro com
+`publishedOnPublication: false` na Loja online e estado `ACTIVE`; o merch
+publicado ficou como estava.
 
 Cobra-se por uma **encomenda em rascunho com fatura** (Encomendas → Rascunhos
 → Criar encomenda → Enviar fatura): o produto inteiro para o Headshot, que o
