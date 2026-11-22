@@ -288,6 +288,11 @@ projeto `guita-ink` no Netlify (Deploys, a zona de largar ficheiros). Enviar
 a partir de uma sessão do Claude pelo Netlify foi recusado pela verificação
 de permissões da sessão (20 Nov 2026), por isso o zip vai para o Frede.
 
+Para confirmar o que está no ar, compara os ficheiros do guitaink.com com
+os do zip: o `site.css`, o `site.js` e o `dados.js` têm de ser iguais. Nas
+páginas o Netlify reescreve os links escritos no HTML (`trabalho.html` passa
+a `/trabalho`); é normal, e os dois endereços abrem a mesma página.
+
 Falta ainda: o `CLAUDE.md`, o `DESIGN.md` e o `tools/verify.mjs` da raiz
 descrevem o site antigo; um dia, se o Frede quiser, o site novo passa para a
 raiz e eles são reescritos para a forma nova.

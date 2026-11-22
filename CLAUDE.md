@@ -9,7 +9,11 @@ the new site's zip to Netlify (the `guita-ink` project; the deploy lists
 trabalho.html, sobre.html and the other new pages). A zip of the root would
 put the old site back. Deploy with `python3 novo/tools/faz-zip.py <dir>`,
 test the unzipped copy with `node novo/tools/verify.mjs --pasta <dir>`, and
-Frede drags it. Content still comes from the root (`CONFIG`, `images/`) and
+Frede drags it (the phone version went live this way on 20 Nov 2026).
+Netlify rewrites the links written in the served HTML (`href="trabalho.html"`
+becomes `/trabalho`, its "Pretty URLs"); site.js replaces those hrefs anyway
+and both forms open, so a byte comparison of the live pages with the zip
+differs only there. Content still comes from the root (`CONFIG`, `images/`) and
 is copied in by `novo/tools/copia-dados.cjs` and `novo/tools/imagens.py`
 (the novo/ entry in §7); everything else below describes the root files.
 
