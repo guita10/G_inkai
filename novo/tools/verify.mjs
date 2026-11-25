@@ -387,6 +387,18 @@ async function inicial() {
     await ctx.close();
   }
   chk(!mausA.length, 'os enderecos antigos (index.html#work, loja.html#comissoes...) levam a pagina nova, com a lingua', mausA.join(' | ') || `${antigos.length} enderecos`);
+  /* um endereco com o nome de uma coisa que todos os objetos do JavaScript tem
+     (#constructor, #__proto__...) nao e um endereco antigo: a pagina tem de
+     abrir normal. Ate 24 Nov 2026 rebentava o site.js e a pagina ficava em
+     branco (revisao de seguranca) */
+  const herdados = [];
+  for (const de of ['index.html#constructor', 'index.html#__proto__', 'index.html#toString', 'loja.html#hasOwnProperty']) {
+    const pg = await pagina(de);
+    const r = await pg.evaluate(() => ({ gi: !!window.GI, nome: (document.querySelector('#heroName, #shopT, h1') || {}).textContent || '' }));
+    if (pg.erros.length || !r.gi || !r.nome.trim()) herdados.push(`${de}: ${pg.erros[0] || 'sem conteudo'}`);
+    await pg.fecha();
+  }
+  chk(!herdados.length, 'um endereco como #constructor ou #__proto__ abre a pagina normal, sem erro', herdados.slice(0, 2).join(' | ') || '4 enderecos');
 
   /* o Flip e o palco, com rato */
   const pg = await pagina('index.html?lang=en');
@@ -815,6 +827,15 @@ async function loja() {
     await carregaTudo(pg); const rc = await recortes(pg);
     chk(!rc.maus.length && !rc.partidas.length, `${l}: nenhuma imagem cortada ou em falta`, [...rc.maus, ...rc.partidas].slice(0, 3).join(', '));
     await pg.fecha();
+  }
+  /* um cesto guardado com nomes herdados de Object nao entra nem parte a loja (24 Nov 2026) */
+  {
+    const pc = await pagina('loja.html?lang=en');
+    await pc.evaluate(() => { localStorage.setItem('gi-cesto', JSON.stringify({ t: Date.now(), itens: [{ id: 'constructor', q: 1 }, { id: '__proto__', q: 2 }] })); });
+    await pc.reload({ waitUntil: 'networkidle' });
+    const r = await pc.evaluate(() => ({ n: GI.cesto().length, prods: document.querySelectorAll('#prods .prod').length, href: document.querySelector('#checkout').getAttribute('href') }));
+    chk(!pc.erros.length && r.n === 0 && r.prods === VISIVEIS.length && !/constructor|__proto__/.test(r.href), 'um cesto guardado com "constructor" ou "__proto__" e ignorado, e a loja abre normal', pc.erros[0] || '');
+    await pc.fecha();
   }
   const pg = await pagina('loja.html?lang=pt#print', { vp: { width: 390, height: 844 }, toque: true });
   await espera(pg, 700);

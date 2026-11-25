@@ -252,7 +252,7 @@ projetos", os nomes dos naipes…) vivem no `copia-dados.cjs`.
 
 ## Os testes
 
-`node novo/tools/verify.mjs` abre o site num browser a sério e corre 220
+`node novo/tools/verify.mjs` abre o site num browser a sério e corre 222
 verificações; sai com erro se alguma falhar. `--rapido` salta as medições em
 linha lenta, `--so 3,6` corre só essas partes.
 
@@ -276,11 +276,11 @@ linha lenta, `--so 3,6` corre só essas partes.
 7. O tema, o movimento reduzido, o 404, a abertura do disco, os leitores de
    ecrã, e o salto de layout (CLS), também numa linha de 400 kbps.
 
-Foram testados contra 33 bugs plantados de propósito (um preço numa
+Foram testados contra 35 bugs plantados de propósito (um preço numa
 comissão, uma moldura a cortar a obra, um ID do Shopify trocado, um texto
 diferente do site atual, o botão direito a guardar imagens outra vez, a
 barra de baixo a tapar o fim da página, a capa de um projeto duas vezes…) e
-apanharam os 33. Repete-se com
+apanharam os 35. Repete-se com
 `python3 novo/tools/bugs-plantados.py . /tmp/plantado` (trabalha numa cópia
 fora do repositório; uns 15 minutos).
 

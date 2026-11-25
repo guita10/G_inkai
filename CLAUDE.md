@@ -622,6 +622,14 @@ docs/           nothing here is served (not in the deploy zip)
                   answers `graphify query/path/explain`; relatorio.md is the
                   summary. A snapshot: it does not update itself. Its README
                   says what it covers, what it leaves out and how to redo it
+  seguranca-2026-11-24.md  the security review Frede asked for ("podes
+                  aplicar o claude security aqui"): what is fine, the two
+                  fixes (the #constructor blank page; the commission task's
+                  prompt, section 0.1, treating email text as data), and what
+                  waits for him: the Drive folders open to anyone with the
+                  link (Site [Imagens]'s id is in this file, and this repo is
+                  PUBLIC), the repo's visibility, the task's connectors, and
+                  security headers. Read it before touching any of those
 novo/           a SECOND, new version of the site, built from scratch beside
                 the current one (15 Nov 2026, Frede: "Review and create a new
                 entire site from scratch and inspired by the current one but

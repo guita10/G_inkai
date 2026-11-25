@@ -50,7 +50,11 @@
         about: 'sobre.html', timeline: 'sobre.html#timeline', contact: 'sobre.html#contact' },
       loja: { comissoes: 'comissoes.html' },
     }[PAG] || {};
-    const alvo = antigos[location.hash.slice(1)];
+    /* so as chaves da lista: um endereco como #constructor ou #__proto__ dava
+       uma funcao herdada de Object, o split rebentava e a pagina ficava em
+       branco (encontrado na revisao de seguranca, 24 Nov 2026) */
+    const h = location.hash.slice(1);
+    const alvo = Object.prototype.hasOwnProperty.call(antigos, h) ? antigos[h] : null;
     if (alvo) { const [f, a] = alvo.split('#'); location.replace(f + location.search + (a ? '#' + a : '')); }
   })();
   const pedida = qs.get('lang');
@@ -731,7 +735,7 @@
   };
 
   /* ================= A LOJA ================= o cesto e o checkout: a mesma logica do site atual */
-  const VARIANTES = {};
+  const VARIANTES = Object.create(null);   // sem chaves herdadas: um cesto guardado com "constructor" nao passa (24 Nov 2026)
   C.merch.forEach(m => {
     if (!m.variants || m.hold) return;
     m.variants.forEach((id, i) => {
