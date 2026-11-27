@@ -1,0 +1,46 @@
+# Dominio proprio, activo.
+#
+# Os robos que recolhem imagens e textos para treinar inteligencia artificial
+# ficam de fora (17 Nov 2026, pedido do Frede). Os conhecidos respeitam isto;
+# nem todos o fazem. O Google, o Bing e os outros motores de busca continuam a
+# entrar (a regra do fim): o site aparece nas pesquisas como antes.
+# "Google-Extended" e "Applebot-Extended" so dizem a Google e a Apple que nao
+# usem o site para a IA delas; a pesquisa do Google e da Apple nao muda.
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: meta-externalagent
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: ImagesiftBot
+Disallow: /
+
+User-agent: *
+Allow: /
+
+Sitemap: https://guitaink.com/sitemap.xml
