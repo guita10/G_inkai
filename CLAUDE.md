@@ -373,7 +373,10 @@ not read; since 22 Nov 2026 they sit in `Arte — originais`
 [Imagens]` (unchanged, the ids above), `Arte — originais`, `Comissões — guias
 para clientes` (`1p3ZBE31Gi7gj6lvTpZHj2BY1tfqJAmsA`: the two PDFs the
 commission task shares, ids in `comissoes/README.md`; update them with
-"Manage versions" so the ids stay), `Guita_Ink · Documentação` (shop launch
+"Manage versions" so the ids stay; since 27 Nov 2026 also the logo guides,
+`Guita_Ink_Logotipos_PT.pdf` and `Guita_Ink_Logos_EN.pdf`, in the commission
+PDF's look, which Frede sends by hand; their source, `faz-pdf.cjs`, is in
+`Guita_Ink · Documentação`), `Guita_Ink · Documentação` (shop launch
 plan, costs, policies, and "0 · Comece aqui") and `Arquivo (não usar)`
 (`1gA__UR10fqaTuZy-K2H7-i0tD2AMVw10`: the September site folder with the
 duplicate PDFs, the Miro copy, two outdated docs). Nothing was deleted.

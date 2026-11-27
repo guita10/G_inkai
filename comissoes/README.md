@@ -150,6 +150,14 @@ Claude parte dali e adapta ao contexto. Os valores não se copiam para este
 repositório, que é público. Os das personagens têm de ser iguais aos do
 Shopify e do PDF.
 
+O guia dos logótipos (27 Nov 2026), no mesmo desenho do PDF das comissões:
+`Guita_Ink_Logotipos_PT.pdf` e `Guita_Ink_Logos_EN.pdf`, na pasta do Drive
+**Comissões — guias para clientes**. O Frede envia-o à mão a quem aceita um
+logótipo; a tarefa agendada não o usa. Mostra três peças reais da identidade
+do PAMP. A fonte (`faz-pdf.cjs`, HTML impresso pelo Chromium) está em
+**Guita_Ink · Documentação**: muda-se lá o texto ou um valor e volta a gerar-se,
+e os valores têm de bater com a página das mensagens no Notion.
+
 ## O que continua a ser teu
 
 - Aceitar ou não aceitar (arrastar o cartão)
