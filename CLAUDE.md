@@ -1105,7 +1105,13 @@ and every suggestion in this document.
    that block is what Google prints in the results. Prices live in exactly two
    places: the Shopify product and `Guita_Ink_Comissoes_PT.pdf`. The visitor
    writes first and the number comes back by email, with the PDF. See
-   `comissoes/README.md`.
+   `comissoes/README.md`. **The price messages** Frede sends to whoever asks
+   (characters and, since 27 Nov 2026, logos; PT and EN) live in the Notion
+   page **Mensagens de preços (modelos)** (`42554b9bb0798131b917f0f74c1879b8`,
+   inside the guide page): when he asks for a price message, fetch it and
+   adapt it to the context with the rules written there. Never copy its
+   numbers into this repository, which is public; the character values there
+   must match the Shopify products and the PDF.
 5. **Nothing invented.** Projects with no artwork render a typographic plate on
    purpose. Never substitute an unrelated illustration, never write copy
    asserting anything unverifiable from `CONFIG`. Project copy comes from what

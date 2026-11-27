@@ -141,6 +141,15 @@ uma comissão com morada de faturação em Portugal e uma t-shirt enviada para
 Portugal e para Espanha dão 0 € de imposto. O Shopify não está a cobrar IVA,
 como deve ser com a isenção do artigo 53.º.
 
+## As mensagens de preços
+
+Desde 27 Nov 2026 as mensagens que o Frede manda a quem pergunta preços
+(personagens e logótipos, em português e inglês) estão no Notion, na página
+**Mensagens de preços (modelos)**, dentro do guia. Quando ele pedir uma, o
+Claude parte dali e adapta ao contexto. Os valores não se copiam para este
+repositório, que é público. Os das personagens têm de ser iguais aos do
+Shopify e do PDF.
+
 ## O que continua a ser teu
 
 - Aceitar ou não aceitar (arrastar o cartão)
